@@ -20,27 +20,27 @@ var A_05_00_01 = {
 test(function () {
     var d = newHTMLDocument();
     var t = d.createElement('template');
-    
+
     d.body.appendChild(t);
 
-    assert_equals(t.content.nodeName, '#document-fragment', 'Template content should be ' + 
+    assert_equals(t.content.nodeName, '#document-fragment', 'Template content should be ' +
     		'a documentFragment');
 
 }, 'A_05_00_01_T01', PROPS(A_05_00_01, {
 	  author:'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	  reviewer:''
+	  reviewer:'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
 
 // non empty template
 test(function () {
     var d = newHTMLDocument();
     var t = d.createElement('template');
-    
+
     t.innerHTML = '<div>This is a div</div><span>This is a span</span>';
 
     d.body.appendChild(t);
 
-    assert_equals(t.content.nodeName, '#document-fragment', 'Template content should be ' + 
+    assert_equals(t.content.nodeName, '#document-fragment', 'Template content should be ' +
     		'a documentFragment');
 
 }, 'A_05_00_01_T02', PROPS(A_05_00_01, {
@@ -53,12 +53,12 @@ test(function () {
 test(function () {
     var d = newHTMLDocument();
     var t = d.createElement('template');
-    
+
     t.innerHTML = '<div>This is a div</div>';
 
     d.body.appendChild(t);
 
-    assert_equals(t.content.nodeName, '#document-fragment', 'Template content should be ' + 
+    assert_equals(t.content.nodeName, '#document-fragment', 'Template content should be ' +
     		'a documentFragment');
 
 }, 'A_05_00_01_T03', PROPS(A_05_00_01, {
@@ -71,12 +71,12 @@ test(function () {
 test(function () {
     var d = newHTMLDocument();
     var t = d.createElement('template');
-    
+
     t.innerHTML = 'Some text';
 
     d.body.appendChild(t);
 
-    assert_equals(t.content.nodeName, '#document-fragment', 'Template content should be ' + 
+    assert_equals(t.content.nodeName, '#document-fragment', 'Template content should be ' +
     		'a documentFragment');
 
 }, 'A_05_00_01_T04', PROPS(A_05_00_01, {
@@ -89,17 +89,17 @@ test(function () {
 test(function () {
     var d = newHTMLDocument();
     var t = d.createElement('template');
-    
+
     t.innerHTML = '<template id="t2">Some text</template>';
 
     d.body.appendChild(t);
 
-    assert_equals(t.content.nodeName, '#document-fragment', 'Template content should be ' + 
+    assert_equals(t.content.nodeName, '#document-fragment', 'Template content should be ' +
     		'a documentFragment');
     var t2 = t.content.querySelector("#t2");
-    assert_equals(t2.content.nodeName, '#document-fragment', 'Nested template content should be ' + 
+    assert_equals(t2.content.nodeName, '#document-fragment', 'Nested template content should be ' +
 		'a documentFragment');
-    
+
 
 }, 'A_05_00_01_T05', PROPS(A_05_00_01, {
 	  author:'Sergey G. Grekhov <sgrekhov@unipro.ru>',
