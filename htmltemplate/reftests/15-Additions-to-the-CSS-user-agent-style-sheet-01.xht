@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Template Test: check that template content is invisible by default</title>
+	<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru"/>
+	<link rel="help" href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#css-additions"/>
+	<meta name="flags" content="HTMLonly"/>
+	<meta name="assert" content="Test checks that the template contents are hidden implicitly."/>
+	<link rel="match" href="ref/15-Additions-to-the-CSS-user-agent-style-sheet-01-ref.xht" />
+</head>
+<body>
+	<p>Test passes if there's no anything below this line.</p>
+	<template>
+		<span style="color:red">Test fails if you can see this text</span>
+	</template>
+</body>	
+</html>
