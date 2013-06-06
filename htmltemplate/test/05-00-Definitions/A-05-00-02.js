@@ -1,0 +1,31 @@
+/*
+Distributed under both the W3C Test Suite License [1] and the W3C
+3-clause BSD License [2]. To contribute to a W3C Test Suite, see the
+policies and contribution forms [3].
+
+[1] http://www.w3.org/Consortium/Legal/2008/04-testsuite-license
+[2] http://www.w3.org/Consortium/Legal/2008/03-bsd-license
+[3] http://www.w3.org/2004/10/27-testcases
+*/
+
+var A_05_00_02 = {
+    name:'A_05_00_02',
+    assert:'Test the template contents owner (when there\'s no no browsing context)',
+    link:'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
+    highlight:'If DOCUMENT does not have a browsing context, let TEMPLATE CONTENTS OWNER be DOCUMENT ' +
+    	'and abort these steps.'
+};
+
+// document content owner is the current document (has no browsing content)
+test(function () {
+    var d = newHTMLDocument();
+    var t = d.createElement('template');
+    
+    d.body.appendChild(t);
+
+    assert_equals(t.content.ownerDocument, d, 'Wrong template content owner');
+
+}, 'A_05_00_02_T01', PROPS(A_05_00_02, {
+	  author:'Sergey G. Grekhov <sgrekhov@unipro.ru>',
+	  reviewer:''
+}));
