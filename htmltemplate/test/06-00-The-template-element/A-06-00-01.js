@@ -69,25 +69,6 @@ test(function () {
 }));
 
 
-// Test appendChild
-test(function () {
-    var d = newHTMLDocument();
-    var t = d.createElement('template');
-    
-    var eHtml = d.createElement('html');
-    
-    t.content.appendChild(eHtml);
-    
-    d.body.appendChild(t);
-
-    assert_equals(t.content.childNodes.length, 0, 'Template cannot contain HTML element');
-
-}, 'A_06_00_01_T04', PROPS(A_06_00_01, {
-	  author:'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	  reviewer:''
-}));
-
-
 //Test nested template. innerHTML
 test(function () {
     var d = newHTMLDocument();
@@ -104,32 +85,7 @@ test(function () {
     
     assert_equals(t2.content.childNodes.length, 0, 'Template cannot contain HTML element');
 
-}, 'A_06_00_01_T05', PROPS(A_06_00_01, {
-	  author:'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	  reviewer:''
-}));
-
-
-//Test nested template. appendChild
-test(function () {
-    var d = newHTMLDocument();
-    var t = d.createElement('template');
-    var t2 = d.createElement('template');
-    t2.setAttribute('id', 't2');
-    
-    var eHtml = d.createElement('html');
-    
-    t2.content.appendChild(eHtml);
-    t.content.appendChild(t2);
-    
-    d.body.appendChild(t);
-
-    assert_equals(t.content.childNodes.length, 1, 'Template should contain nested template');
-    assert_equals(t.content.querySelector('#t2'), t2, 'Template should contain nested element');
-    
-    assert_equals(t2.content.childNodes.length, 0, 'Template cannot contain HTML element');
-
-}, 'A_06_00_01_T06', PROPS(A_06_00_01, {
+}, 'A_06_00_01_T04', PROPS(A_06_00_01, {
 	  author:'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	  reviewer:''
 }));
