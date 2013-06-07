@@ -13,8 +13,7 @@ var A_06_00_01 = {
     assert:'HTML element cannot be content of TEMPLATE element',
     link:'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
     highlight:'Any, [[except the html element]], the head element, the body element, ' +
-    	'or the frameset element.',
-    bug: ''
+    	'or the frameset element.'
 };
 
 // Test innerHTML. HTML element only
@@ -86,6 +85,25 @@ test(function () {
     assert_equals(t2.content.childNodes.length, 0, 'Template cannot contain HTML element');
 
 }, 'A_06_00_01_T04', PROPS(A_06_00_01, {
+	  author:'Sergey G. Grekhov <sgrekhov@unipro.ru>',
+	  reviewer:''
+}));
+
+
+
+//Test innerHTML. Valid element inside HTML element
+test(function () {
+    var d = newHTMLDocument();
+    var t = d.createElement('template');
+    
+    t.innerHTML = '<html><div id="dv">Some text</div></html>';
+    
+    d.body.appendChild(t);
+
+    assert_equals(t.content.childNodes.length, 1, 'Template cannot contain HTML element');
+    assert_true(t.content.querySelector('#dv') != null, 'Template should contain valid element');
+
+}, 'A_06_00_01_T05', PROPS(A_06_00_01, {
 	  author:'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	  reviewer:''
 }));
