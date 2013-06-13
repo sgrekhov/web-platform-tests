@@ -8,8 +8,8 @@ policies and contribution forms [3].
 [3] http://www.w3.org/2004/10/27-testcases
  */
 
-var A_05_00_02 = {
-	name : 'A_05_00_02',
+var _05_TEMPLATE_CONTENTS_OWNER_01 = {
+	name : '_05_TEMPLATE_CONTENTS_OWNER_01',
 	assert : 'if enclosing document have no browsing context, it must be template contents owner',
 	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
 	highlight : 'If DOCUMENT does not have a browsing context, let TEMPLATE CONTENTS OWNER be DOCUMENT '
@@ -25,7 +25,7 @@ test(function() {
 
 	assert_equals(t.content.ownerDocument, d, 'Wrong template content owner');
 
-}, 'A_05_00_02_T01', PROPS(A_05_00_02, {
+}, '_05_TEMPLATE_CONTENTS_OWNER_01_T01', PROPS(_05_TEMPLATE_CONTENTS_OWNER_01, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));

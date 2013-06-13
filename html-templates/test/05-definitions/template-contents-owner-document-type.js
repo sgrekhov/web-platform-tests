@@ -8,20 +8,22 @@ policies and contribution forms [3].
 [3] http://www.w3.org/2004/10/27-testcases
  */
 
-var A_05_00_04 = {
-	name : 'A_05_00_04',
+var _05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE = {
+	name : '_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE',
 	assert : 'The template contents owner document type is HTML document, if template is declared in HTML document ',
 	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
 	highlight : 'If DOCUMENT is an HTML document, Mark TEMPLATE CONTENTS OWNER as an HTML document.'
 };
 
-var A_05_00_04_T01 = async_test('A_05_00_04_T01', PROPS(A_05_00_04, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
-}));
+var _05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01 = async_test(
+		'_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01', PROPS(
+				_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE, {
+					author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
+					reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+				}));
 
 // document has browsing context
-A_05_00_04_T01.step(unit(function(ctx) {
+_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01.step(unit(function(ctx) {
 
 	var d = newRenderedHTMLDocument(ctx);
 
@@ -38,7 +40,7 @@ A_05_00_04_T01.step(unit(function(ctx) {
 	assert_equals(t.content.ownerDocument.constructor.name, 'HTMLDocument',
 			'Template content owner ' + 'should be a HTML document');
 
-	A_05_00_04_T01.done();
+	_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01.done();
 }));
 
 // document has no browsing context
@@ -51,7 +53,8 @@ test(function() {
 	assert_equals(t.content.ownerDocument.constructor.name, 'HTMLDocument',
 			'Template content owner ' + 'should be a HTML document');
 
-}, 'A_05_00_04_T02', PROPS(A_05_00_04, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+}, '_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T02', PROPS(
+		_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE, {
+			author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
+			reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));

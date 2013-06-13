@@ -8,72 +8,65 @@ policies and contribution forms [3].
 [3] http://www.w3.org/2004/10/27-testcases
  */
 
-var A_06_00_04 = {
-	name : 'A_06_00_04',
-	assert : 'FRAMESET element cannot be content of TEMPLATE element',
+var _06_TEMPLATE_CONTENT_HTML = {
+	name : '_06_TEMPLATE_CONTENT_HTML',
+	assert : 'HTML element cannot be content of TEMPLATE element',
 	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
-	highlight : 'Any, except the html element, the head element, the body element, '
-			+ 'or [[the frameset element.]]',
-	bug : ''
+	highlight : 'Any, [[except the html element]], the head element, the body element, '
+			+ 'or the frameset element.'
 };
 
-// Test innerHTML. Test FRAMESET element only.
+// Test innerHTML. HTML element only
 test(function() {
 	var d = newHTMLDocument();
 	var t = d.createElement('template');
 
-	t.innerHTML = '<frameset cols="25%,*,25%">' + '<frame src="frame_a.htm">'
-			+ '<frame src="frame_b.htm">' + '<frame src="frame_c.htm">'
-			+ '</frameset>';
+	t.innerHTML = '<html><body></body></html>';
 
 	d.body.appendChild(t);
 
 	assert_equals(t.content.childNodes.length, 0,
-			'Template cannot contain FRAMESET element');
+			'Template cannot contain HTML element');
 
-}, 'A_06_00_04_T01', PROPS(A_06_00_04, {
+}, '_06_TEMPLATE_CONTENT_HTML_T01', PROPS(_06_TEMPLATE_CONTENT_HTML, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
 
-// Test innerHTML. Test FRAMESET element and some valid element.
+// Test innerHTML. Valid element and HTML element
 test(function() {
 	var d = newHTMLDocument();
 	var t = d.createElement('template');
 
-	t.innerHTML = '<div id="dv">Some text</div><frameset cols="25%,*,25%">'
-			+ '<frame src="frame_a.htm">' + '<frame src="frame_b.htm">'
-			+ '<frame src="frame_c.htm">' + '</frameset>';
+	t.innerHTML = '<div id="dv">Some text</div><html><body></body></html>';
 
 	d.body.appendChild(t);
 
 	assert_equals(t.content.childNodes.length, 1,
-			'Template cannot contain FRAMESET element');
+			'Template cannot contain HTML element');
 	assert_true(t.content.querySelector('#dv') != null,
 			'Template should contain valid element');
 
-}, 'A_06_00_04_T02', PROPS(A_06_00_04, {
+}, '_06_TEMPLATE_CONTENT_HTML_T02', PROPS(_06_TEMPLATE_CONTENT_HTML, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
 
-// Test innerHTML. Test FRAMESET element and some valid element.
+// Test innerHTML. Valid element and HTML element
 test(function() {
 	var d = newHTMLDocument();
 	var t = d.createElement('template');
 
-	t.innerHTML = '<frameset cols="25%,*,25%">' + '<frame src="frame_a.htm">'
-			+ '<frame src="frame_b.htm">' + '<frame src="frame_c.htm">'
-			+ '</frameset><div id="dv">Some text</div>';
+	t.innerHTML = '<html><body></body></html><div id="dv">Some text</div>';
 
 	d.body.appendChild(t);
 
 	assert_equals(t.content.childNodes.length, 1,
-			'Template cannot contain FRAMESET element');
+			'Template cannot contain HTML element');
 	assert_true(t.content.querySelector('#dv') != null,
 			'Template should contain valid element');
 
-}, 'A_06_00_04_T03', PROPS(A_06_00_04, {
+}, '_06_TEMPLATE_CONTENT_HTML_T03', PROPS(_06_TEMPLATE_CONTENT_HTML, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
@@ -83,9 +76,7 @@ test(function() {
 	var d = newHTMLDocument();
 	var t = d.createElement('template');
 
-	t.innerHTML = '<template id="t2"><frameset cols="25%,*,25%">'
-			+ '<frame src="frame_a.htm">' + '<frame src="frame_b.htm">'
-			+ '<frame src="frame_c.htm">' + '</frameset></template>';
+	t.innerHTML = '<template id="t2"><html><body></body></html></template>';
 
 	d.body.appendChild(t);
 
@@ -97,9 +88,28 @@ test(function() {
 	var t2 = t.content.querySelector('#t2');
 
 	assert_equals(t2.content.childNodes.length, 0,
-			'Template cannot contain FRAMESET element');
+			'Template cannot contain HTML element');
 
-}, 'A_06_00_04_T04', PROPS(A_06_00_04, {
+}, '_06_TEMPLATE_CONTENT_HTML_T04', PROPS(_06_TEMPLATE_CONTENT_HTML, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+}));
+
+// Test innerHTML. Valid element inside HTML element
+test(function() {
+	var d = newHTMLDocument();
+	var t = d.createElement('template');
+
+	t.innerHTML = '<html><div id="dv">Some text</div></html>';
+
+	d.body.appendChild(t);
+
+	assert_equals(t.content.childNodes.length, 1,
+			'Template cannot contain HTML element');
+	assert_true(t.content.querySelector('#dv') != null,
+			'Template should contain valid element');
+
+}, '_06_TEMPLATE_CONTENT_HTML_T05', PROPS(_06_TEMPLATE_CONTENT_HTML, {
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
+	reviewer : ''
 }));

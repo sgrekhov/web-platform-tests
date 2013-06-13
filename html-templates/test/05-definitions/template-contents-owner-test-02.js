@@ -8,8 +8,8 @@ policies and contribution forms [3].
 [3] http://www.w3.org/2004/10/27-testcases
  */
 
-var A_05_00_03 = {
-	name : 'A_05_00_03',
+var _05_TEMPLATE_CONTENT_OWNER_02 = {
+	name : '_05_TEMPLATE_CONTENT_OWNER_02',
 	assert : 'Template contents owner have no browsing context',
 	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
 	highlight : 'Otherwise, let TEMPLATE CONTENTS OWNER be a new Document node '
@@ -17,12 +17,14 @@ var A_05_00_03 = {
 };
 
 // test document in iframe which has browsing context
-var A_05_00_03_T01 = async_test('A_05_00_03_T01', PROPS(A_05_00_03, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
-}));
+var _05_TEMPLATE_CONTENT_OWNER_02_T01 = async_test(
+		'_05_TEMPLATE_CONTENT_OWNER_02_T01', PROPS(
+				_05_TEMPLATE_CONTENT_OWNER_02, {
+					author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
+					reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+				}));
 
-A_05_00_03_T01.step(unit(function(ctx) {
+_05_TEMPLATE_CONTENT_OWNER_02_T01.step(unit(function(ctx) {
 
 	var d = newRenderedHTMLDocument(ctx);
 
@@ -40,5 +42,5 @@ A_05_00_03_T01.step(unit(function(ctx) {
 	// content owner
 	assert_true(t.content.ownerDocument != d, 'Wrong template owner document');
 
-	A_05_00_03_T01.done();
+	_05_TEMPLATE_CONTENT_OWNER_02_T01.done();
 }));

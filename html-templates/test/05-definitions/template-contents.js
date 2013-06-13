@@ -8,10 +8,10 @@ policies and contribution forms [3].
 [3] http://www.w3.org/2004/10/27-testcases
  */
 
-var A_05_00_01 = {
-	name : 'A_05_00_01',
+var _05_TEMPLATE_CONTENTS = {
+	name : '_05_TEMPLATE_CONTENTS',
 	assert : 'The template contents must be a DocumentFragment',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
 	highlight : 'The template contents must be a DocumentFragment',
 	seealso : 'http://www.w3.org/TR/domcore/#interface-documentfragment'
 };
@@ -26,7 +26,7 @@ test(function() {
 	assert_equals(t.content.nodeName, '#document-fragment',
 			'Template content should be ' + 'a documentFragment');
 
-}, 'A_05_00_01_T01', PROPS(A_05_00_01, {
+}, '_05_TEMPLATE_CONTENTS_T01', PROPS(_05_TEMPLATE_CONTENTS, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
@@ -43,7 +43,7 @@ test(function() {
 	assert_equals(t.content.nodeName, '#document-fragment',
 			'Template content should be ' + 'a documentFragment');
 
-}, 'A_05_00_01_T02', PROPS(A_05_00_01, {
+}, '_05_TEMPLATE_CONTENTS_T02', PROPS(_05_TEMPLATE_CONTENTS, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
@@ -61,7 +61,7 @@ test(function() {
 	assert_equals(t.content.nodeName, '#document-fragment',
 			'Template content should be ' + 'a documentFragment');
 
-}, 'A_05_00_01_T03', PROPS(A_05_00_01, {
+}, '_05_TEMPLATE_CONTENTS_T03', PROPS(_05_TEMPLATE_CONTENTS, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : ''
 }));
@@ -78,7 +78,7 @@ test(function() {
 	assert_equals(t.content.nodeName, '#document-fragment',
 			'Template content should be ' + 'a documentFragment');
 
-}, 'A_05_00_01_T04', PROPS(A_05_00_01, {
+}, '_05_TEMPLATE_CONTENTS_T04', PROPS(_05_TEMPLATE_CONTENTS, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
@@ -98,7 +98,7 @@ test(function() {
 	assert_equals(t2.content.nodeName, '#document-fragment',
 			'Nested template content should be ' + 'a documentFragment');
 
-}, 'A_05_00_01_T05', PROPS(A_05_00_01, {
+}, '_05_TEMPLATE_CONTENTS_T05', PROPS(_05_TEMPLATE_CONTENTS, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));

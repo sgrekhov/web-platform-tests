@@ -8,8 +8,8 @@ policies and contribution forms [3].
 [3] http://www.w3.org/2004/10/27-testcases
  */
 
-var A_06_00_03 = {
-	name : 'A_06_00_03',
+var _06_TEMPLATE_CONTENT_BODY = {
+	name : '_06_TEMPLATE_CONTENT_BODY',
 	assert : 'BODY element cannot be content of TEMPLATE element',
 	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
 	highlight : 'Any, except the html element, the head element, [[the body element]], '
@@ -30,7 +30,7 @@ test(function() {
 	assert_equals(t.content.firstChild.nodeName, 'DIV',
 			'Template should contain children of ignored HEAD element');
 
-}, 'A_06_00_03_T01', PROPS(A_06_00_03, {
+}, '_06_TEMPLATE_CONTENT_BODY_T01', PROPS(_06_TEMPLATE_CONTENT_BODY, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
@@ -45,14 +45,14 @@ test(function() {
 	d.body.appendChild(t);
 
 	assert_equals(t.content.childNodes.length, 2,
-					'Wrong number of template content children');
+			'Wrong number of template content children');
 	assert_true(t.content.querySelector('#dv1') != null,
-					'Template should contain children of '
-							+ 'the ignored BODY element');
+			'Template should contain children of '
+					+ 'the ignored BODY element');
 	assert_true(t.content.querySelector('#dv2') != null,
-					'Template should contain valid element');
+			'Template should contain valid element');
 
-}, 'A_06_00_03_T02', PROPS(A_06_00_03, {
+}, '_06_TEMPLATE_CONTENT_BODY_T02', PROPS(_06_TEMPLATE_CONTENT_BODY, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
@@ -67,14 +67,14 @@ test(function() {
 	d.body.appendChild(t);
 
 	assert_equals(t.content.childNodes.length, 2,
-					'Template cannot contain BODY element');
+			'Template cannot contain BODY element');
 	assert_true(t.content.querySelector('#dv1') != null,
-					'Template should contain valid element');
+			'Template should contain valid element');
 	assert_true(t.content.querySelector('#dv2') != null,
-					'Template should contain children of '
-							+ 'the ignored BODY element');
+			'Template should contain children of '
+					+ 'the ignored BODY element');
 
-}, 'A_06_00_03_T03', PROPS(A_06_00_03, {
+}, '_06_TEMPLATE_CONTENT_BODY_T03', PROPS(_06_TEMPLATE_CONTENT_BODY, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
@@ -89,18 +89,18 @@ test(function() {
 	d.body.appendChild(t);
 
 	assert_equals(t.content.childNodes.length, 1,
-					'Template should contain nested template');
+			'Template should contain nested template');
 	assert_true(t.content.querySelector('#t2') != null,
-					'Template should contain nested element');
+			'Template should contain nested element');
 
 	var t2 = t.content.querySelector('#t2');
 
 	assert_equals(t2.content.childNodes.length, 1,
-					'Template cannot contain BODY element');
+			'Template cannot contain BODY element');
 	assert_equals(t2.content.firstChild.nodeName, 'SPAN',
-					'Template cannot contain BODY element');
+			'Template cannot contain BODY element');
 
-}, 'A_06_00_03_T04', PROPS(A_06_00_03, {
+}, '_06_TEMPLATE_CONTENT_BODY_T04', PROPS(_06_TEMPLATE_CONTENT_BODY, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
@@ -117,7 +117,7 @@ test(function() {
 	assert_equals(t.content.childNodes.length, 0,
 			'Template cannot contain BODY element');
 
-}, 'A_06_00_03_T05', PROPS(A_06_00_03, {
+}, '_06_TEMPLATE_CONTENT_BODY_T05', PROPS(_06_TEMPLATE_CONTENT_BODY, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
 	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
