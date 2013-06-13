@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _05_TEMPLATE_CONTENTS_OWNER_01 = {
 	name : '_05_TEMPLATE_CONTENTS_OWNER_01',
 	assert : 'if enclosing document have no browsing context, it must be template contents owner',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
 	highlight : 'If DOCUMENT does not have a browsing context, let TEMPLATE CONTENTS OWNER be DOCUMENT '
 			+ 'and abort these steps.'
 };
@@ -26,6 +26,5 @@ test(function() {
 	assert_equals(t.content.ownerDocument, d, 'Wrong template content owner');
 
 }, '_05_TEMPLATE_CONTENTS_OWNER_01_T01', PROPS(_05_TEMPLATE_CONTENTS_OWNER_01, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));

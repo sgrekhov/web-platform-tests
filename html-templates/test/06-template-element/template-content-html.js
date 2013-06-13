@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _06_TEMPLATE_CONTENT_HTML = {
 	name : '_06_TEMPLATE_CONTENT_HTML',
 	assert : 'HTML element cannot be content of TEMPLATE element',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
 	highlight : 'Any, [[except the html element]], the head element, the body element, '
 			+ 'or the frameset element.'
 };
@@ -29,8 +29,7 @@ test(function() {
 			'Template cannot contain HTML element');
 
 }, '_06_TEMPLATE_CONTENT_HTML_T01', PROPS(_06_TEMPLATE_CONTENT_HTML, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test innerHTML. Valid element and HTML element
@@ -48,8 +47,7 @@ test(function() {
 			'Template should contain valid element');
 
 }, '_06_TEMPLATE_CONTENT_HTML_T02', PROPS(_06_TEMPLATE_CONTENT_HTML, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test innerHTML. Valid element and HTML element
@@ -67,8 +65,7 @@ test(function() {
 			'Template should contain valid element');
 
 }, '_06_TEMPLATE_CONTENT_HTML_T03', PROPS(_06_TEMPLATE_CONTENT_HTML, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test nested template. innerHTML
@@ -91,8 +88,7 @@ test(function() {
 			'Template cannot contain HTML element');
 
 }, '_06_TEMPLATE_CONTENT_HTML_T04', PROPS(_06_TEMPLATE_CONTENT_HTML, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test innerHTML. Valid element inside HTML element
@@ -110,6 +106,5 @@ test(function() {
 			'Template should contain valid element');
 
 }, '_06_TEMPLATE_CONTENT_HTML_T05', PROPS(_06_TEMPLATE_CONTENT_HTML, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : ''
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));

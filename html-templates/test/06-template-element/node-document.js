@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _06_NODE_DOCUMENT = {
 	name : '_06_NODE_DOCUMENT',
 	assert : 'Node document of the template content attribute must be a document',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
 	highlight : 'Let CONTENTS be a new DocumentFragment object [[whose node document is DOCUMENT]] '
 			+ 'and associated host element is TEMPLATE.'
 };
@@ -24,6 +24,5 @@ test(function() {
 			'Wrong template content owner document');
 
 }, '_06_NODE_DOCUMENT_T01', PROPS(_06_NODE_DOCUMENT, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : ''
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));

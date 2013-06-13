@@ -11,15 +11,14 @@ policies and contribution forms [3].
 var _05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE = {
 	name : '_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE',
 	assert : 'The template contents owner document type is HTML document, if template is declared in HTML document ',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
 	highlight : 'If DOCUMENT is an HTML document, Mark TEMPLATE CONTENTS OWNER as an HTML document.'
 };
 
 var _05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01 = async_test(
 		'_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01', PROPS(
 				_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE, {
-					author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-					reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+					author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 				}));
 
 // document has browsing context
@@ -55,6 +54,5 @@ test(function() {
 
 }, '_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T02', PROPS(
 		_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE, {
-			author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-			reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+			author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));

@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _06_TEMPLATE_CONTENT_HEAD = {
 	name : '_06_TEMPLATE_CONTENT_HEAD',
 	assert : 'HEAD element cannot be content of TEMPLATE element',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
 	highlight : 'Any, except the html element, [[the head element]], the body element, '
 			+ 'or the frameset element.'
 };
@@ -31,8 +31,7 @@ test(function() {
 			'Template should contain ' + 'children of ignored HEAD element');
 
 }, '_06_TEMPLATE_CONTENT_HEAD_T01', PROPS(_06_TEMPLATE_CONTENT_HEAD, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test innerHTML. Test HEAD element and some valid element
@@ -53,8 +52,7 @@ test(function() {
 					+ 'children of ignored HEAD element');
 
 }, '_06_TEMPLATE_CONTENT_HEAD_T02', PROPS(_06_TEMPLATE_CONTENT_HEAD, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test innerHTML. Test HEAD element and some valid element
@@ -75,8 +73,7 @@ test(function() {
 			'Template should contain valid element');
 
 }, '_06_TEMPLATE_CONTENT_HEAD_T03', PROPS(_06_TEMPLATE_CONTENT_HEAD, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test nested template. innerHTML
@@ -102,8 +99,7 @@ test(function() {
 					+ 'children of ignored HEAD element');
 
 }, '_06_TEMPLATE_CONTENT_HEAD_T04', PROPS(_06_TEMPLATE_CONTENT_HEAD, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test innerHTML. Test empty HEAD element
@@ -119,6 +115,5 @@ test(function() {
 			'Template cannot contain HEAD element');
 
 }, '_06_TEMPLATE_CONTENT_HEAD_T05', PROPS(_06_TEMPLATE_CONTENT_HEAD, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));

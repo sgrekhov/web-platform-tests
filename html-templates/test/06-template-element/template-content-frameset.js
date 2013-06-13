@@ -11,10 +11,9 @@ policies and contribution forms [3].
 var _06_TEMPLATE_CONTENT_FRAMESET = {
 	name : '_06_TEMPLATE_CONTENT_FRAMESET',
 	assert : 'FRAMESET element cannot be content of TEMPLATE element',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
 	highlight : 'Any, except the html element, the head element, the body element, '
-			+ 'or [[the frameset element.]]',
-	bug : ''
+			+ 'or [[the frameset element.]]'
 };
 
 // Test innerHTML. Test FRAMESET element only.
@@ -32,8 +31,7 @@ test(function() {
 			'Template cannot contain FRAMESET element');
 
 }, '_06_TEMPLATE_CONTENT_FRAMESET_T01', PROPS(_06_TEMPLATE_CONTENT_FRAMESET, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test innerHTML. Test FRAMESET element and some valid element.
@@ -53,8 +51,7 @@ test(function() {
 			'Template should contain valid element');
 
 }, '_06_TEMPLATE_CONTENT_FRAMESET_T02', PROPS(_06_TEMPLATE_CONTENT_FRAMESET, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test innerHTML. Test FRAMESET element and some valid element.
@@ -74,8 +71,7 @@ test(function() {
 			'Template should contain valid element');
 
 }, '_06_TEMPLATE_CONTENT_FRAMESET_T03', PROPS(_06_TEMPLATE_CONTENT_FRAMESET, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test nested template. innerHTML
@@ -100,6 +96,5 @@ test(function() {
 			'Template cannot contain FRAMESET element');
 
 }, '_06_TEMPLATE_CONTENT_FRAMESET_T04', PROPS(_06_TEMPLATE_CONTENT_FRAMESET, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));

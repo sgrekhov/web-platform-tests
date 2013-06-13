@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _06_TEMPLATE_CONTENT_BODY = {
 	name : '_06_TEMPLATE_CONTENT_BODY',
 	assert : 'BODY element cannot be content of TEMPLATE element',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
 	highlight : 'Any, except the html element, the head element, [[the body element]], '
 			+ 'or the frameset element.'
 };
@@ -31,8 +31,7 @@ test(function() {
 			'Template should contain children of ignored HEAD element');
 
 }, '_06_TEMPLATE_CONTENT_BODY_T01', PROPS(_06_TEMPLATE_CONTENT_BODY, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // innerHTML. Test BODY element and some valid element
@@ -53,8 +52,7 @@ test(function() {
 			'Template should contain valid element');
 
 }, '_06_TEMPLATE_CONTENT_BODY_T02', PROPS(_06_TEMPLATE_CONTENT_BODY, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // innerHTML. Test BODY element and some valid element
@@ -75,8 +73,7 @@ test(function() {
 					+ 'the ignored BODY element');
 
 }, '_06_TEMPLATE_CONTENT_BODY_T03', PROPS(_06_TEMPLATE_CONTENT_BODY, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Test nested template. innerHTML
@@ -101,8 +98,7 @@ test(function() {
 			'Template cannot contain BODY element');
 
 }, '_06_TEMPLATE_CONTENT_BODY_T04', PROPS(_06_TEMPLATE_CONTENT_BODY, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // innerHTML. Test empty BODY element
@@ -118,6 +114,5 @@ test(function() {
 			'Template cannot contain BODY element');
 
 }, '_06_TEMPLATE_CONTENT_BODY_T05', PROPS(_06_TEMPLATE_CONTENT_BODY, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));

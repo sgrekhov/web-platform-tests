@@ -12,10 +12,9 @@ var _06_TEMPLATE_CONTENT = {
 	name : '_06_TEMPLATE_CONTENT',
 	assert : 'Template may contain any element, except the html element, the head element, '
 			+ 'the body element, or the frameset element',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
 	highlight : '[[Any]], except the html element, the head element, the body element, '
-			+ 'or the frameset element.',
-	bug : ''
+			+ 'or the frameset element.'
 };
 
 test(function() {
@@ -36,6 +35,5 @@ test(function() {
 	});
 
 }, '_06_TEMPLATE_CONTENT_T01', PROPS(_06_TEMPLATE_CONTENT, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : ''
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));

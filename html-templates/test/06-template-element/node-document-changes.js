@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _06_NODE_DOCUMENT_CHANGES = {
 	name : '_06_NODE_DOCUMENT_CHANGES',
 	assert : 'When node\'s document changes its owner document should be changed too',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
 	highlight : 'When a template element\'s node document changes, the template element\'s content '
 			+ 'DocumentFragment must be adopted into the new node document\'s template contents owner document.'
 };
@@ -34,8 +34,7 @@ test(function() {
 			'Template content owner document should be changed');
 
 }, '_06_NODE_DOCUMENT_CHANGES_T01', PROPS(_06_NODE_DOCUMENT_CHANGES, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : ''
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Non empty template
@@ -59,8 +58,7 @@ test(function() {
 			'Template content owner document should be changed');
 
 }, '_06_NODE_DOCUMENT_CHANGES_T02', PROPS(_06_NODE_DOCUMENT_CHANGES, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : ''
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // Nested templates
@@ -98,6 +96,5 @@ test(function() {
 			'Nested template content owner document should be changed');
 
 }, '_06_NODE_DOCUMENT_CHANGES_T03', PROPS(_06_NODE_DOCUMENT_CHANGES, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : ''
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));

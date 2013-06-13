@@ -12,8 +12,7 @@ var _05_TEMPLATE_CONTENTS = {
 	name : '_05_TEMPLATE_CONTENTS',
 	assert : 'The template contents must be a DocumentFragment',
 	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
-	highlight : 'The template contents must be a DocumentFragment',
-	seealso : 'http://www.w3.org/TR/domcore/#interface-documentfragment'
+	highlight : 'The template contents must be a DocumentFragment'
 };
 
 // empty template
@@ -27,8 +26,7 @@ test(function() {
 			'Template content should be ' + 'a documentFragment');
 
 }, '_05_TEMPLATE_CONTENTS_T01', PROPS(_05_TEMPLATE_CONTENTS, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // non empty template
@@ -44,8 +42,7 @@ test(function() {
 			'Template content should be ' + 'a documentFragment');
 
 }, '_05_TEMPLATE_CONTENTS_T02', PROPS(_05_TEMPLATE_CONTENTS, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // non empty template containing div which is a Node element, not the document
@@ -62,8 +59,7 @@ test(function() {
 			'Template content should be ' + 'a documentFragment');
 
 }, '_05_TEMPLATE_CONTENTS_T03', PROPS(_05_TEMPLATE_CONTENTS, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : ''
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // non empty template containing text node
@@ -79,8 +75,7 @@ test(function() {
 			'Template content should be ' + 'a documentFragment');
 
 }, '_05_TEMPLATE_CONTENTS_T04', PROPS(_05_TEMPLATE_CONTENTS, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // nested template containing text node
@@ -99,6 +94,5 @@ test(function() {
 			'Nested template content should be ' + 'a documentFragment');
 
 }, '_05_TEMPLATE_CONTENTS_T05', PROPS(_05_TEMPLATE_CONTENTS, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));

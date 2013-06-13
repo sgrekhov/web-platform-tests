@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _06_CONTENT_ATTRIBUTE = {
 	name : '_06_CONTENT_ATTRIBUTE',
 	assert : 'Content attribute of templeate element is read-only',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
 	highlight : '[[content of type DocumentFragment, read-only]]'
 };
 
@@ -30,38 +30,33 @@ test(function() {
 					+ 'should be a read-only');
 
 }, '_06_CONTENT_ATTRIBUTE_T01', PROPS(_06_CONTENT_ATTRIBUTE, {
-	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-	reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
 
 // html content
-test(
-		function() {
-			var d = newHTMLDocument();
-			d.body.innerHTML = '<template id="tmpl1" content="<div id=div1>Div content</div>"></template>';
+test(function() {
+	var d = newHTMLDocument();
+	d.body.innerHTML = '<template id="tmpl1" content="<div id=div1>Div content</div>"></template>';
 
-			var t = d.querySelector('#tmpl1');
+	var t = d.querySelector('#tmpl1');
 
-			assert_equals(t.content.childNodes.length, 0,
-					'Content attribute of templeate element should be a read-only');
+	assert_equals(t.content.childNodes.length, 0,
+			'Content attribute of templeate element should be a read-only');
 
-		}, '_06_CONTENT_ATTRIBUTE_T02', PROPS(_06_CONTENT_ATTRIBUTE, {
-			author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-			reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
-		}));
+}, '_06_CONTENT_ATTRIBUTE_T02', PROPS(_06_CONTENT_ATTRIBUTE, {
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
+}));
 
 // text content
-test(
-		function() {
-			var d = newHTMLDocument();
-			d.body.innerHTML = '<template id="tmpl1" content="Some text as a content"></template>';
+test(function() {
+	var d = newHTMLDocument();
+	d.body.innerHTML = '<template id="tmpl1" content="Some text as a content"></template>';
 
-			var t = d.querySelector('#tmpl1');
+	var t = d.querySelector('#tmpl1');
 
-			assert_equals(t.content.childNodes.length, 0,
-					'Content attribute of templeate element should be a read-only');
+	assert_equals(t.content.childNodes.length, 0,
+			'Content attribute of templeate element should be a read-only');
 
-		}, '_06_CONTENT_ATTRIBUTE_T03', PROPS(_06_CONTENT_ATTRIBUTE, {
-			author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-			reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
-		}));
+}, '_06_CONTENT_ATTRIBUTE_T03', PROPS(_06_CONTENT_ATTRIBUTE, {
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
+}));

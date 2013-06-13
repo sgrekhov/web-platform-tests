@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _05_TEMPLATE_CONTENT_OWNER_02 = {
 	name : '_05_TEMPLATE_CONTENT_OWNER_02',
 	assert : 'Template contents owner have no browsing context',
-	link : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
+	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
 	highlight : 'Otherwise, let TEMPLATE CONTENTS OWNER be a new Document node '
 			+ 'that does not have a browsing context'
 };
@@ -20,8 +20,7 @@ var _05_TEMPLATE_CONTENT_OWNER_02 = {
 var _05_TEMPLATE_CONTENT_OWNER_02_T01 = async_test(
 		'_05_TEMPLATE_CONTENT_OWNER_02_T01', PROPS(
 				_05_TEMPLATE_CONTENT_OWNER_02, {
-					author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>',
-					reviewer : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+					author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 				}));
 
 _05_TEMPLATE_CONTENT_OWNER_02_T01.step(unit(function(ctx) {
