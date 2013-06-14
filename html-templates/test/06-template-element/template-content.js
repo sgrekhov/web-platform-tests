@@ -12,7 +12,7 @@ var _06_TEMPLATE_CONTENT = {
 	name : '_06_TEMPLATE_CONTENT',
 	assert : 'Template may contain any element, except the html element, the head element, '
 			+ 'the body element, or the frameset element',
-	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element',
 	highlight : '[[Any]], except the html element, the head element, the body element, '
 			+ 'or the frameset element.'
 };

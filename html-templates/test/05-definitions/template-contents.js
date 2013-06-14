@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _05_TEMPLATE_CONTENTS = {
 	name : '_05_TEMPLATE_CONTENTS',
 	assert : 'The template contents must be a DocumentFragment',
-	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
+	help : 'http://www.w3.org/TR/2013/WD-html-templates-20130214/#definitions',
 	highlight : 'The template contents must be a DocumentFragment'
 };
 

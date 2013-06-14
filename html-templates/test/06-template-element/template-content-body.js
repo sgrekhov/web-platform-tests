@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _06_TEMPLATE_CONTENT_BODY = {
 	name : '_06_TEMPLATE_CONTENT_BODY',
 	assert : 'BODY element cannot be content of TEMPLATE element',
-	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element',
 	highlight : 'Any, except the html element, the head element, [[the body element]], '
 			+ 'or the frameset element.'
 };

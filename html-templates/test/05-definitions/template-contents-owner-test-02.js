@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _05_TEMPLATE_CONTENT_OWNER_02 = {
 	name : '_05_TEMPLATE_CONTENT_OWNER_02',
 	assert : 'Template contents owner have no browsing context',
-	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
+	help : 'http://www.w3.org/TR/2013/WD-html-templates-20130214/#definitions',
 	highlight : 'Otherwise, let TEMPLATE CONTENTS OWNER be a new Document node '
 			+ 'that does not have a browsing context'
 };

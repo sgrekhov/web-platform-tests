@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _06_NODE_DOCUMENT = {
 	name : '_06_NODE_DOCUMENT',
 	assert : 'Node document of the template content attribute must be a document',
-	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element',
 	highlight : 'Let CONTENTS be a new DocumentFragment object [[whose node document is DOCUMENT]] '
 			+ 'and associated host element is TEMPLATE.'
 };

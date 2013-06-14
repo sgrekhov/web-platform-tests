@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _06_CONTENT_ATTRIBUTE = {
 	name : '_06_CONTENT_ATTRIBUTE',
 	assert : 'Content attribute of templeate element is read-only',
-	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element',
 	highlight : '[[content of type DocumentFragment, read-only]]'
 };
 

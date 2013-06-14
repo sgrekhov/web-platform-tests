@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _06_NODE_DOCUMENT_CHANGES = {
 	name : '_06_NODE_DOCUMENT_CHANGES',
 	assert : 'When node\'s document changes its owner document should be changed too',
-	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element',
+	help : 'http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element',
 	highlight : 'When a template element\'s node document changes, the template element\'s content '
 			+ 'DocumentFragment must be adopted into the new node document\'s template contents owner document.'
 };

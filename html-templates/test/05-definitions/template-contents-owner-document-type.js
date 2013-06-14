@@ -11,7 +11,7 @@ policies and contribution forms [3].
 var _05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE = {
 	name : '_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE',
 	assert : 'The template contents owner document type is HTML document, if template is declared in HTML document ',
-	help : 'https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#definitions',
+	help : 'http://www.w3.org/TR/2013/WD-html-templates-20130214/#definitions',
 	highlight : 'If DOCUMENT is an HTML document, Mark TEMPLATE CONTENTS OWNER as an HTML document.'
 };
 
