@@ -98,7 +98,7 @@ test(function() {
 }));
 
 // the empty template tag inside HTML file loaded in iframe
-testInIFrame('05-definitions/template-contents-empty.html', function(ctx) {
+testInIFrame('resources/template-contents-empty.html', function(ctx) {
 	var d = ctx.iframes[0].contentWindow.document;
 
 	var t = d.getElementsByTagName('template').item(0);
@@ -111,7 +111,7 @@ testInIFrame('05-definitions/template-contents-empty.html', function(ctx) {
 }));
 
 // the non empty template tag inside HTML file loaded in iframe
-testInIFrame('05-definitions/template-contents.html', function(ctx) {
+testInIFrame('resources/template-contents.html', function(ctx) {
 	var d = ctx.iframes[0].contentWindow.document;
 
 	var t = d.getElementsByTagName('template').item(0);
@@ -124,7 +124,7 @@ testInIFrame('05-definitions/template-contents.html', function(ctx) {
 }));
 
 // the template tag with some text inside HTML file loaded in iframe
-testInIFrame('05-definitions/template-contents-text.html', function(ctx) {
+testInIFrame('resources/template-contents-text.html', function(ctx) {
 	var d = ctx.iframes[0].contentWindow.document;
 
 	var t = d.getElementsByTagName('template').item(0);
@@ -137,7 +137,7 @@ testInIFrame('05-definitions/template-contents-text.html', function(ctx) {
 }));
 
 // the template tag with nested template tag inside HTML file loaded in iframe
-testInIFrame('05-definitions/template-contents-nested.html', function(ctx) {
+testInIFrame('resources/template-contents-nested.html', function(ctx) {
 	var d = ctx.iframes[0].contentWindow.document;
 
 	var t = d.getElementsByTagName('template').item(0);
