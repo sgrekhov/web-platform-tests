@@ -23,7 +23,7 @@ var _05_TEMPLATE_CONTENT_OWNER_02_T01 = async_test(
 					author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 				}));
 
-_05_TEMPLATE_CONTENT_OWNER_02_T01.step(unit(function(ctx) {
+_05_TEMPLATE_CONTENT_OWNER_02_T01.step(inContext(function(ctx) {
 
 	var d = newRenderedHTMLDocument(ctx);
 
