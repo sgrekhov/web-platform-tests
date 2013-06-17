@@ -123,7 +123,9 @@ function cleanContext(ctx) {
 	}
 }
 
-function unit(f) {
+// run given test function in context
+// the context is cleaned up after test completes.
+function inContext(f) {
 	return function() {
 		var ctx = newContext();
 		try {
@@ -134,33 +136,18 @@ function unit(f) {
 	};
 }
 
-function step_unit(f, ctx, t) {
-	return function() {
-		var done = false;
-		try {
-			f();
-			done = true;
-		} finally {
-			if (done) {
-				t.done();
-			}
-			cleanContext(ctx);
-		}
-	};
-}
 
 // new context and iframe are created and url (if supplied) is asigned to
 // iframe.src
 // function f is bound to the iframe onload event or executed directly after
 // iframe creation
 // the context is passed to function as argument
-function test_in_iframe(url, f, testName, testProps) {
+function testInIFrame(url, f, testName, testProps) {
 	if (url) {
 		var t = async_test(testName, testProps);
 		t.step(function() {
 			var ctx = newContext();
 			var iframe = newIFrame(ctx, url);
-			addDocumentPrefixed(iframe.contentWindow.document);
 			iframe.onload = t.step_func(function() {
 				try {
 					f(ctx);
@@ -171,7 +158,7 @@ function test_in_iframe(url, f, testName, testProps) {
 			});
 		});
 	} else {
-		test(unit(function(ctx) {
+		test(inContext(function(ctx) {
 			newRenderedHTMLDocument(ctx);
 			f(ctx);
 		}), testName, testProps);
@@ -179,7 +166,8 @@ function test_in_iframe(url, f, testName, testProps) {
 }
 
 // helper method for debugging
-function obj_dump(p) {
+// dump given object to console
+function dumpObject(p) {
 	for ( var o in p) {
 		console.log(o + ': ' + p[o] + '; ');
 	}

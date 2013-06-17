@@ -22,7 +22,7 @@ var _05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01 = async_test(
 				}));
 
 // document has browsing context
-_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01.step(unit(function(ctx) {
+_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01.step(inContext(function(ctx) {
 
 	var d = newRenderedHTMLDocument(ctx);
 

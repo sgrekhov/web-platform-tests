@@ -23,7 +23,7 @@ test(function() {
 	d.body.appendChild(t);
 
 	assert_equals(t.content.nodeName, '#document-fragment',
-			'Template content should be ' + 'a documentFragment');
+			'Template content should be a documentFragment');
 
 }, '_05_TEMPLATE_CONTENTS_T01', PROPS(_05_TEMPLATE_CONTENTS, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
@@ -95,4 +95,61 @@ test(function() {
 
 }, '_05_TEMPLATE_CONTENTS_T05', PROPS(_05_TEMPLATE_CONTENTS, {
 	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
+}));
+
+// the empty template tag inside HTML file loaded in iframe
+testInIFrame('resources/template-contents-empty.html', function(ctx) {
+	var d = ctx.iframes[0].contentWindow.document;
+
+	var t = d.getElementsByTagName('template').item(0);
+
+	assert_equals(t.content.nodeName, '#document-fragment',
+			'Template content should be a documentFragment');
+
+}, '_05_TEMPLATE_CONTENTS_T06', PROPS(_05_TEMPLATE_CONTENTS, {
+	author : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+}));
+
+// the non empty template tag inside HTML file loaded in iframe
+testInIFrame('resources/template-contents.html', function(ctx) {
+	var d = ctx.iframes[0].contentWindow.document;
+
+	var t = d.getElementsByTagName('template').item(0);
+
+	assert_equals(t.content.nodeName, '#document-fragment',
+			'Template content should be a documentFragment');
+
+}, '_05_TEMPLATE_CONTENTS_T07', PROPS(_05_TEMPLATE_CONTENTS, {
+	author : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+}));
+
+// the template tag with some text inside HTML file loaded in iframe
+testInIFrame('resources/template-contents-text.html', function(ctx) {
+	var d = ctx.iframes[0].contentWindow.document;
+
+	var t = d.getElementsByTagName('template').item(0);
+
+	assert_equals(t.content.nodeName, '#document-fragment',
+			'Template content should be a documentFragment');
+
+}, '_05_TEMPLATE_CONTENTS_T08', PROPS(_05_TEMPLATE_CONTENTS, {
+	author : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
+}));
+
+// the template tag with nested template tag inside HTML file loaded in iframe
+testInIFrame('resources/template-contents-nested.html', function(ctx) {
+	var d = ctx.iframes[0].contentWindow.document;
+
+	var t = d.getElementsByTagName('template').item(0);
+
+	assert_equals(t.content.nodeName, '#document-fragment',
+			'Template content should be a documentFragment');
+
+	var t2 = t.content.querySelector("template");
+
+	assert_equals(t2.content.nodeName, '#document-fragment',
+			'Nested template content should be a documentFragment');
+
+}, '_05_TEMPLATE_CONTENTS_T09', PROPS(_05_TEMPLATE_CONTENTS, {
+	author : 'Aleksei Yu. Semenov <a.semenov@unipro.ru>'
 }));
