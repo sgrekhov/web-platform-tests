@@ -15,17 +15,9 @@ var _05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE = {
 	highlight : 'If DOCUMENT is an HTML document, Mark TEMPLATE CONTENTS OWNER as an HTML document.'
 };
 
-var _05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01 = async_test(
-		'_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01', PROPS(
-				_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE, {
-					author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
-				}));
-
 // document has browsing context
-_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01.step(inContext(function(ctx) {
-
-	var d = newRenderedHTMLDocument(ctx);
-
+testInIFrame(null, function(ctx) {
+	var d = ctx.iframes[0].contentDocument;
 	var t = d.createElement('template');
 
 	var div = d.createElement('div');
@@ -37,10 +29,13 @@ _05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01.step(inContext(function(ctx) {
 	d.body.appendChild(t);
 
 	assert_equals(t.content.ownerDocument.constructor.name, 'HTMLDocument',
-			'Template content owner ' + 'should be a HTML document');
+			'Template content owner should be a HTML document');
 
-	_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01.done();
+}, '_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE_T01', PROPS(
+		_05_TEMPLATE_CONTENTS_OWNER_DOCUMENT_TYPE, {
+			author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
+
 
 // document has no browsing context
 test(function() {

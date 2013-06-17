@@ -17,16 +17,8 @@ var _05_TEMPLATE_CONTENT_OWNER_02 = {
 };
 
 // test document in iframe which has browsing context
-var _05_TEMPLATE_CONTENT_OWNER_02_T01 = async_test(
-		'_05_TEMPLATE_CONTENT_OWNER_02_T01', PROPS(
-				_05_TEMPLATE_CONTENT_OWNER_02, {
-					author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
-				}));
-
-_05_TEMPLATE_CONTENT_OWNER_02_T01.step(inContext(function(ctx) {
-
-	var d = newRenderedHTMLDocument(ctx);
-
+testInIFrame(null, function(ctx) {
+	var d = ctx.iframes[0].contentDocument;
 	var t = d.createElement('template');
 
 	var div = d.createElement('div');
@@ -41,5 +33,6 @@ _05_TEMPLATE_CONTENT_OWNER_02_T01.step(inContext(function(ctx) {
 	// content owner
 	assert_true(t.content.ownerDocument != d, 'Wrong template owner document');
 
-	_05_TEMPLATE_CONTENT_OWNER_02_T01.done();
+}, '_05_TEMPLATE_CONTENT_OWNER_02_T01', PROPS(_05_TEMPLATE_CONTENT_OWNER_02, {
+	author : 'Sergey G. Grekhov <sgrekhov@unipro.ru>'
 }));
