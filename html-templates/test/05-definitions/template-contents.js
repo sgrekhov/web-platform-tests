@@ -99,9 +99,9 @@ test(function() {
 
 // the empty template tag inside HTML file loaded in iframe
 testInIFrame('resources/template-contents-empty.html', function(ctx) {
-	var d = ctx.iframes[0].contentWindow.document;
+	var d = ctx.iframes[0].contentDocument;
 
-	var t = d.getElementsByTagName('template').item(0);
+	var t = d.querySelector('template');
 
 	assert_equals(t.content.nodeName, '#document-fragment',
 			'Template content should be a documentFragment');
@@ -112,9 +112,9 @@ testInIFrame('resources/template-contents-empty.html', function(ctx) {
 
 // the non empty template tag inside HTML file loaded in iframe
 testInIFrame('resources/template-contents.html', function(ctx) {
-	var d = ctx.iframes[0].contentWindow.document;
+	var d = ctx.iframes[0].contentDocument;
 
-	var t = d.getElementsByTagName('template').item(0);
+	var t = d.querySelector('template');
 
 	assert_equals(t.content.nodeName, '#document-fragment',
 			'Template content should be a documentFragment');
@@ -125,9 +125,9 @@ testInIFrame('resources/template-contents.html', function(ctx) {
 
 // the template tag with some text inside HTML file loaded in iframe
 testInIFrame('resources/template-contents-text.html', function(ctx) {
-	var d = ctx.iframes[0].contentWindow.document;
+	var d = ctx.iframes[0].contentDocument;
 
-	var t = d.getElementsByTagName('template').item(0);
+	var t = d.querySelector('template');
 
 	assert_equals(t.content.nodeName, '#document-fragment',
 			'Template content should be a documentFragment');
@@ -138,9 +138,9 @@ testInIFrame('resources/template-contents-text.html', function(ctx) {
 
 // the template tag with nested template tag inside HTML file loaded in iframe
 testInIFrame('resources/template-contents-nested.html', function(ctx) {
-	var d = ctx.iframes[0].contentWindow.document;
+	var d = ctx.iframes[0].contentDocument;
 
-	var t = d.getElementsByTagName('template').item(0);
+	var t = d.querySelector('template');
 
 	assert_equals(t.content.nodeName, '#document-fragment',
 			'Template content should be a documentFragment');
