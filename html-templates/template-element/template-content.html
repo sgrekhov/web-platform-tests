@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: HTML elements in template content</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="assert" content="Template may contain any element, except the html element, the head element, the body element, or the frameset element">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+test(function() {
+    var d = newHTMLDocument();
+
+    HTML5_TAG.forEach(function(value) {
+        if (value != 'body' && value != 'html' && value != 'head'
+                && value != 'frameset') {
+            var t = d.createElement('template');
+            var e = d.createElement(value);
+            t.content.appendChild(e);
+
+            d.body.appendChild(t);
+
+            assert_equals(t.content.childNodes.length, 1,
+                    'Template should contain ' + value + ' element');
+        }
+    });
+
+}, 'Template may contain any element, except the html element, '
+    + 'the head element, the body element, or the frameset element');
+
+</script>
+</body>
+</html>

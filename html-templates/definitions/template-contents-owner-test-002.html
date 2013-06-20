@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: The template contents owner document (there's browsing context)</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="assert" content="If template's enclosing document has browsing context, then templates content owner be a new Document node">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#definitions">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+//test document in iframe which has browsing context
+testInIFrame(null, function(ctx) {
+    var d = ctx.iframes[0].contentDocument;
+    var t = d.createElement('template');
+
+    var div = d.createElement('div');
+    div.setAttribute('id', 'div1');
+    div.innerText = 'Some text';
+
+    t.appendChild(div);
+
+    d.body.appendChild(t);
+
+    // d has browsing context. There should be another document as a template
+    // content owner
+    assert_true(t.content.ownerDocument != d, 'Wrong template owner document');
+
+}, 'The template contents owner document (there\'s browsing context)');
+
+</script>
+</body>
+</html>

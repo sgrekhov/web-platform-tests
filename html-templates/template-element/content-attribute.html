@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: Content attribute of templeate element is read-only</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="assert" content="Content attribute of templeate element is read-only">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+//DOM content
+test(function() {
+    var d = newHTMLDocument();
+    var t = d.createElement('template');
+    var el1 = d.createElement('div');
+    var el2 = d.createElement('span');
+    el1.appendChild(el2);
+
+    t.content = el1;
+
+    assert_equals(t.content.childNodes.length, 0,
+            'Content attribute of templeate element '
+                    + 'should be a read-only');
+
+}, 'Content attribute of templeate element is read-only (DOM content)');
+
+// html content
+test(function() {
+    var d = newHTMLDocument();
+    d.body.innerHTML = '<template id="tmpl1" content="<div id=div1>Div content</div>"></template>';
+
+    var t = d.querySelector('#tmpl1');
+
+    assert_equals(t.content.childNodes.length, 0,
+            'Content attribute of templeate element should be a read-only');
+
+}, 'Content attribute of templeate element is read-only (html content)');
+
+// text content
+test(function() {
+    var d = newHTMLDocument();
+    d.body.innerHTML = '<template id="tmpl1" content="Some text as a content"></template>';
+
+    var t = d.querySelector('#tmpl1');
+
+    assert_equals(t.content.childNodes.length, 0,
+            'Content attribute of templeate element should be a read-only');
+
+}, 'Content attribute of templeate element is read-only (text content)');
+
+</script>
+</body>
+</html>

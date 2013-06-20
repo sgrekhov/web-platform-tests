@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: When node's document changes its owner document should be changed too</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="assert" content="When node's document changes its owner document should be changed too">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+// Empty template
+test(function() {
+    var d1 = newHTMLDocument();
+    var t = d1.createElement('template');
+
+    assert_equals(t.ownerDocument, d1, 'Wrong template node owner document');
+    assert_equals(t.content.ownerDocument, d1,
+            'Wrong template content owner document');
+
+    var d2 = newHTMLDocument();
+    d2.body.appendChild(t);
+
+    assert_equals(t.ownerDocument, d2,
+            'Template node owner document should be changed');
+    assert_equals(t.content.ownerDocument, d2,
+            'Template content owner document should be changed');
+
+}, 'Template owner document change (Empty template)');
+
+// Not empty template
+test(function() {
+    var d1 = newHTMLDocument();
+    d1.body.innerHTML = '<template id="tmpl"><div>Div content</div> And some more text</template>';
+
+    var t = d1.querySelector('#tmpl');
+
+    assert_equals(t.ownerDocument, d1,
+            'Wrong template node owner document');
+    assert_equals(t.content.ownerDocument, d1,
+            'Wrong template content owner document');
+
+    var d2 = newHTMLDocument();
+    d2.body.appendChild(t);
+
+    assert_equals(t.ownerDocument, d2,
+            'Template node owner document should be changed');
+    assert_equals(t.content.ownerDocument, d2,
+            'Template content owner document should be changed');
+
+}, 'Template owner document change (Not empty templat)');
+
+// Nested templates
+test(function() {
+    var d1 = newHTMLDocument();
+    d1.body.innerHTML = ''
+            + '<template id="tmpl"><div>Div content</div> And some more text'
+            + '<template id="tmpl2"><div>Template content</div></template>'
+            + '</template>';
+
+    var t = d1.querySelector('#tmpl');
+
+    assert_equals(t.ownerDocument, d1, 'Wrong template node owner document');
+    assert_equals(t.content.ownerDocument, d1,
+            'Wrong template content owner document');
+
+    var t2 = t.content.querySelector('#tmpl2');
+
+    assert_equals(t2.ownerDocument, d1,
+            'Wrong nested template node owner document');
+    assert_equals(t2.content.ownerDocument, d1,
+            'Wrong nested template content owner document');
+
+    var d2 = newHTMLDocument();
+    d2.body.appendChild(t);
+
+    assert_equals(t.ownerDocument, d2,
+            'Template node owner document should be changed');
+    assert_equals(t.content.ownerDocument, d2,
+            'Template content owner document should be changed');
+
+    assert_equals(t2.ownerDocument, d2,
+            'Nested template node owner document should be changed');
+    assert_equals(t2.content.ownerDocument, d2,
+            'Nested template content owner document should be changed');
+
+}, 'Template owner document change (Nested templates)');
+
+</script>
+</body>
+</html>
