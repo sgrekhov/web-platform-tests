@@ -32,8 +32,6 @@ test(function() {
 
     assert_equals(t.ownerDocument, d2,
             'Template node owner document should be changed');
-    assert_equals(t.content.ownerDocument, d2,
-            'Template content owner document should be changed');
 
 }, 'Parsing XHTML: Node\'s node document (empty template)');
 
@@ -49,8 +47,6 @@ test(function() {
 
     assert_equals(t.ownerDocument, d1,
                     'Wrong template node owner document');
-    assert_equals(t.content.ownerDocument, d1,
-                    'Wrong template content owner document');
 
     var d2 = newXHTMLDocument();
     var body2 = d2.createElement('body');
@@ -59,8 +55,6 @@ test(function() {
 
     assert_equals(t.ownerDocument, d2,
             'Template node owner document should be changed');
-    assert_equals(t.content.ownerDocument, d2,
-            'Template content owner document should be changed');
 
 }, 'Parsing XHTML: Node\'s node document (not empty template)');
 
@@ -77,15 +71,12 @@ test(function() {
     var t = d1.querySelector('#tmpl');
 
     assert_equals(t.ownerDocument, d1, 'Wrong template node owner document');
-    assert_equals(t.content.ownerDocument, d1,
-            'Wrong template content owner document');
 
+    assert_true(t.content != null, 'Content attribute of TEMPLATE element shouldn\'t be null');
     var t2 = t.content.querySelector('#tmpl2');
 
     assert_equals(t2.ownerDocument, d1,
             'Wrong nested template node owner document');
-    assert_equals(t2.content.ownerDocument, d1,
-            'Wrong nested template content owner document');
 
     var d2 = newXHTMLDocument();
     var body2 = d2.createElement('body');
@@ -94,19 +85,15 @@ test(function() {
 
     assert_equals(t.ownerDocument, d2,
             'Template node owner document should be changed');
-    assert_equals(t.content.ownerDocument, d2,
-            'Template content owner document should be changed');
 
     assert_equals(t2.ownerDocument, d2,
             'Nested template node owner document should be changed');
-    assert_equals(t2.content.ownerDocument, d2,
-            'Nested template content owner document should be changed');
 
 }, 'Parsing XHTML: Node\'s node document (nested templates)');
 
 
 // load XHTML document from file
-testInIFrame('../resources/template-child-nodes-div.xht', function(ctx) {
+testInIFrame('../resources/template-child-nodes-div.xhtml', function(ctx) {
     var d = ctx.iframes[0].contentDocument;
 
     var t = d.querySelector('template');
