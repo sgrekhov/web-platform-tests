@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: The template owner document propertyt</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="assert" content="ownerDocument property of the element in template is set to the template contents owner of the ownerDocument of the template element">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#creating-an-element-for-a-token">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+//template inside div
+test(function () {
+    var d = newHTMLDocument();
+    d.body.innerHTML = '<div><template id="tmpl1"><div id="dv">DIV</div></template></div>';
+    
+    var t = d.querySelector('#tmpl1');
+        
+    assert_equals(t.content.ownerDocument, t.ownerDocument, 
+            'Wrong template content owner document');
+    
+    var div = t.content.querySelector('#dv');
+    
+    assert_equals(div.ownerDocument, t.ownerDocument, 
+            'Wrong ownerDocument');
+    
+}, 'ownerDocument property of the element in a template (template inside div)');
+
+//template on the root of the body
+test(function () {
+    var d = newHTMLDocument();
+    d.body.innerHTML = '<template id="tmpl1"><div id="dv">DIV</div></template>';
+    
+    var t = d.querySelector('#tmpl1');
+    
+    assert_equals(t.content.ownerDocument, t.ownerDocument, 
+            'Wrong template content owner document');
+    
+    var div = t.content.querySelector('#dv');
+    
+    assert_equals(div.ownerDocument, t.ownerDocument, 
+            'Wrong ownerDocument');
+    
+}, 'ownerDocument property of the element in a template (template on the root of the body)');
+
+
+//template on the root of the head
+test(function () {
+    var d = newHTMLDocument();
+    d.head.innerHTML = '<template id="tmpl1"><div id="dv">DIV</div></template>';
+    
+    var t = d.querySelector('#tmpl1');
+    
+    assert_equals(t.content.ownerDocument, t.ownerDocument, 
+            'Wrong template content owner document');
+    
+    var div = t.content.querySelector('#dv');
+    
+    assert_equals(div.ownerDocument, t.ownerDocument, 
+            'Wrong ownerDocument');
+    
+}, 'ownerDocument property of the element in a template (template on the root of the head)');
+
+
+//template on the root of the frameset
+test(function () {
+    var d = newHTMLDocument();
+    
+    d.open();
+    d.write('<frameset><template id="tmpl1"><div id="dv">DIV</div></template></frameset>');
+    d.close();
+    
+    var t = d.querySelector('#tmpl1');
+    
+    assert_equals(t.content.ownerDocument, t.ownerDocument, 
+            'Wrong template content owner document');
+    
+    var div = t.content.querySelector('#dv');
+    
+    assert_equals(div.ownerDocument, t.ownerDocument, 
+            'Wrong ownerDocument');
+    
+}, 'ownerDocument property of the element in a template (template on the root of the frameset)');
+
+
+//nested template
+test(function () {
+    var d = newHTMLDocument();
+    d.body.innerHTML = '<template id="tmpl1">' 
+        + '<template id="tmpl2"><div id="dv">DIV</div></template></template>';
+    
+    var t1 = d.querySelector('#tmpl1');
+        
+    assert_equals(t1.content.ownerDocument, t1.ownerDocument, 
+            'Wrong template content owner document');
+    
+    var t2 = t1.content.querySelector('#tmpl2');
+    
+    assert_equals(t2.ownerDocument, t1.content.ownerDocument, 
+            'Wrong nested template owner document');
+    
+    assert_equals(t2.content.ownerDocument, t2.ownerDocument, 
+            'Wrong nested template content owner document');
+    
+    var div = t2.content.querySelector('#dv');
+    
+    assert_equals(div.ownerDocument, t2.ownerDocument, 
+            'Wrong ownerDocument');
+    
+}, 'ownerDocument property of the element in a template (nested template)');
+
+</script>
+</body>
+</html>
