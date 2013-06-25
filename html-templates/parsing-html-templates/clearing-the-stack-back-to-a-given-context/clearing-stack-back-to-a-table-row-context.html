@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: Clearing stack back to a table row context</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="assert" content="Clearing the stack back to a table row context must be aborted if the current node is template">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#clearing-the-stack">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+function doTest(d, templateInnerHTML, id, tagName) {
+    
+    d.body.innerHTML = '' +
+        '<table id="tbl">' +
+        '<tr id="tr">' +        
+        '<template id="tmpl1">' +
+        // When parser meets <th>, <td>, </tr> stack must be cleared back to table row context.
+        // But <template> tag should abort this     
+        templateInnerHTML + 
+        '</template>' +
+        '<td id="td">' +
+        '</td>' +
+        '</tr>' + 
+        '</table>';
+    
+    var tbl = d.querySelector('#tbl');
+    var tr = d.querySelector('#tr');
+    var td = d.querySelector('#td');
+    var t = d.querySelector('#tmpl1');
+    
+    assert_equals(tbl.rows.length, 1, 'Wrong number of table rows');
+    assert_equals(tbl.rows[0].cells.length, 1, 'Wrong number of table cells');
+    assert_equals(t.parentNode, tr, 'Wrong template parent');
+    if (id != null) {
+        assert_true(t.content.querySelector('#' + id) != null, 
+                    'Element should present in the template content');
+    }
+    if (tagName != null) {
+        assert_equals(t.content.querySelector('#' + id).tagName, tagName, 
+                'Wrong element in the template content');
+    }
+}
+
+//test <th>
+test(function () {
+    var d = newHTMLDocument();
+    
+    doTest(d, '<th id="thdr">Table header</th>', 'thdr', 'TH');
+    
+    assert_true(d.querySelector('#thdr') == null, 'Table should have no TH element');    
+    
+}, 'Clearing stack back to a table row context: <th>');
+
+
+//test <td>
+test(function () {
+    var d = newHTMLDocument();
+    
+    doTest(d, '<td id="td2">Table cell</td>', 'td2', 'TD');
+    
+    assert_true(d.querySelector('#td2') == null, 'Table should have no additional TD element');    
+    
+}, 'Clearing stack back to a table row context: <td>');
+
+
+//test </tr>
+test(function () {
+    var d = newHTMLDocument();
+    
+    doTest(d, '</tr>', null, null);
+    
+}, 'Clearing stack back to a table row context: </tr>');
+
+</script>
+</body>
+</html>
