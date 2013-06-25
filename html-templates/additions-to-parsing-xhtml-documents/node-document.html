@@ -4,7 +4,7 @@
 <title>HTML Templates: Parsing XHTML: Node's node document</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
-<meta name="assert" content="Parsing XHTML: Node's node document must be set to the element to which it will be appended">
+<meta name="assert" content="Parsing XHTML: Node's node document must be set to that of the element to which it will be appended">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#parsing-xhtml-documents">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -56,6 +56,12 @@ test(function() {
     assert_equals(t.ownerDocument, d2,
             'Template node owner document should be changed');
 
+    assert_true(t.content != null, 'Content attribute of TEMPLATE element shouldn\'t be null');
+
+    var div = t.content.querySelector('div');
+    assert_equals(t.content.ownerDocument, div.ownerDocument,
+            'Wrong DIV node owner document');
+
 }, 'Parsing XHTML: Node\'s node document (not empty template)');
 
 
@@ -89,6 +95,12 @@ test(function() {
     assert_equals(t2.ownerDocument, d2,
             'Nested template node owner document should be changed');
 
+    assert_true(t2.content != null, 'Content attribute of inner TEMPLATE element shouldn\'t be null');
+
+    var div = t2.content.querySelector('div');
+    assert_equals(t.content.ownerDocument, div.ownerDocument,
+            'Wrong DIV node owner document');
+
 }, 'Parsing XHTML: Node\'s node document (nested templates)');
 
 
@@ -99,6 +111,12 @@ testInIFrame('../resources/template-child-nodes-div.xhtml', function(ctx) {
     var t = d.querySelector('template');
 
     assert_equals(t.ownerDocument, d, 'Wrong template node owner document');
+
+    assert_true(t.content != null, 'Content attribute of TEMPLATE element shouldn\'t be null');
+
+    var div = t.content.querySelector('div');
+    assert_equals(t.content.ownerDocument, div.ownerDocument,
+            'Wrong DIV node owner document');
 
 }, 'Parsing XHTML: Node\'s node document (load XHTML document from file)');
 
@@ -115,6 +133,10 @@ testInIFrame('../resources/template-child-nodes-nested.xhtml', function(ctx) {
 
     assert_equals(t2.ownerDocument, t1.content.ownerDocument, 'Wrong template node owner document');
 
+    var div = t2.content.querySelector('div');
+    assert_equals(t2.content.ownerDocument, div.ownerDocument,
+            'Wrong DIV node owner document');
+
 }, 'Parsing XHTML: Node\'s node document (load document with nested templates from file)');
 
 
@@ -130,7 +152,11 @@ testInIFrame('../resources/template-child-nodes-div.xhtml', function(ctx) {
 
     assert_equals(t.ownerDocument, d2, 'Wrong template node owner document');
 
-}, 'Parsing XHTML: Node\'s node document ' 
+    var div = t.content.querySelector('div');
+    assert_equals(t.content.ownerDocument, div.ownerDocument,
+            'Wrong DIV node owner document');
+
+}, 'Parsing XHTML: Node\'s node document '
     + '(load document from file and append template node to other XHTML document)');
 
 
@@ -147,10 +173,15 @@ testInIFrame('../resources/template-child-nodes-nested.xhtml', function(ctx) {
     d2.body.appendChild(t1);
 
     assert_equals(t1.ownerDocument, d2, 'Wrong template node owner document');
-    assert_equals(t2.ownerDocument, t1.content.ownerDocument, 
+    assert_equals(t2.ownerDocument, t1.content.ownerDocument,
             'Wrong template node owner document');
 
-}, 'Parsing XHTML: Node\'s node document ' 
+
+    var div = t2.content.querySelector('div');
+    assert_equals(t2.content.ownerDocument, div.ownerDocument,
+            'Wrong DIV node owner document');
+
+}, 'Parsing XHTML: Node\'s node document '
     + '(load document with nested templates from server and '
     + 'append template node to other XHTML document)');
 
