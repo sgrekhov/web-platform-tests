@@ -3,7 +3,7 @@
 <head>
 <title>HTML Templates: The template contents is a DocumentFragment</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="reviewer" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru"> <!-- 2013-06-26 -->
 <meta name="assert" content="The template contents must be a DocumentFragment">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#definitions">
 <script src="/resources/testharness.js"></script>
@@ -23,7 +23,10 @@ test(function() {
     d.body.appendChild(t);
 
     assert_equals(t.content.nodeName, '#document-fragment',
-            'Template content should be a documentFragment');
+            'Template content should be a DocumentFragment');
+
+    assert_class_string(t.content, 'DocumentFragment',
+            'Template content class should be a DocumentFragment');
 
 }, 'The template contents must be a DocumentFragment (empty template)');
 
@@ -37,7 +40,10 @@ test(function() {
     d.body.appendChild(t);
 
     assert_equals(t.content.nodeName, '#document-fragment',
-            'Template content should be a documentFragment');
+            'Template content should be a DocumentFragment');
+
+    assert_class_string(t.content, 'DocumentFragment',
+            'Template content class should be a DocumentFragment');
 
 }, 'The template contents must be a DocumentFragment (non empty template)');
 
@@ -69,6 +75,9 @@ test(function() {
     assert_equals(t.content.nodeName, '#document-fragment',
             'Template content should be a documentFragment');
 
+    assert_class_string(t.content, 'DocumentFragment',
+            'Template content class should be a DocumentFragment');
+
 }, 'The template contents must be a DocumentFragment (not empty template '
         + 'containing text node)');
 
@@ -83,9 +92,16 @@ test(function() {
 
     assert_equals(t.content.nodeName, '#document-fragment',
             'Template content should be a documentFragment');
+    assert_class_string(t.content, 'DocumentFragment',
+            'Template content class should be a DocumentFragment');
+
     var t2 = t.content.querySelector("#t2");
     assert_equals(t2.content.nodeName, '#document-fragment',
             'Nested template content should be a documentFragment');
+
+    assert_class_string(t2.content, 'DocumentFragment',
+            'Template content class should be a DocumentFragment');
+
 
 }, 'The template contents must be a DocumentFragment (nested template '
         + 'containing a text node)');
@@ -98,6 +114,9 @@ testInIFrame('../resources/template-contents-empty.html', function(ctx) {
 
     assert_equals(t.content.nodeName, '#document-fragment',
             'Template content should be a documentFragment');
+    assert_class_string(t.content, 'DocumentFragment',
+            'Template content class should be a DocumentFragment');
+
 
 }, 'The template contents must be a DocumentFragment (the empty template tag '
         + 'inside HTML file loaded in iframe)');
@@ -110,6 +129,8 @@ testInIFrame('../resources/template-contents.html', function(ctx) {
 
     assert_equals(t.content.nodeName, '#document-fragment',
             'Template content should be a documentFragment');
+    assert_class_string(t.content, 'DocumentFragment',
+            'Template content class should be a DocumentFragment');
 
 }, 'The template contents must be a DocumentFragment (non empty template '
         + 'tag inside HTML file loaded in iframe)');
@@ -122,6 +143,8 @@ testInIFrame('../resources/template-contents-text.html', function(ctx) {
 
     assert_equals(t.content.nodeName, '#document-fragment',
             'Template content should be a documentFragment');
+    assert_class_string(t.content, 'DocumentFragment',
+            'Template content class should be a DocumentFragment');
 
 }, 'The template contents must be a DocumentFragment (the template tag '
         + 'with some text inside HTML file loaded in iframe)');
@@ -134,11 +157,15 @@ testInIFrame('../resources/template-contents-nested.html', function(ctx) {
 
     assert_equals(t.content.nodeName, '#document-fragment',
             'Template content should be a documentFragment');
+    assert_class_string(t.content, 'DocumentFragment',
+            'Template content class should be a DocumentFragment');
 
     var t2 = t.content.querySelector("template");
 
     assert_equals(t2.content.nodeName, '#document-fragment',
             'Nested template content should be a documentFragment');
+    assert_class_string(t2.content, 'DocumentFragment',
+            'Template content class should be a DocumentFragment');
 
 }, 'The template contents must be a DocumentFragment (the template tag '
         + 'with nested template tag inside HTML file loaded in iframe)');
