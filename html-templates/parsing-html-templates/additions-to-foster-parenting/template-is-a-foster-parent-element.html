@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: Template is a foster parent element</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="assert" content="The last template element with either no table element is below it, or a table element immediately below it, in the stack of open elements is the foster parent element (NOT the template's parent!)">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#foster-parent-addition">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+//<table> immediately below <template>
+test(function () {
+    var d = newHTMLDocument();
+    
+    d.body.innerHTML = '' +
+    '<div id="tmplParent">' +
+        '<template id="tmpl1">' +
+            '<table id="tbl">' +
+                '<tr><td>Cell 1</td></tr>' +
+            // Misplaced <div>. It should be foster parented
+            '<div id="orphanDiv">Orphan div content</div>' +
+                '<tr><td>Cell 2</td></tr>' +
+            '</table>' +
+        '</template>' +
+    '</div>';
+    
+    var t = d.querySelector('#tmpl1');
+    var div = t.content.querySelector('#orphanDiv');
+    
+    assert_equals(div.parentNode, t.content, 'Wrong foster parent element');
+    
+}, 'Template is a foster parent element');
+
+
+// <template> element without <table>
+test(function () {
+    var d = newHTMLDocument();
+    
+    d.body.innerHTML = '' +
+    '<div id="tmplParent">' +
+        '<template id="tmpl1">' +
+                '<tr><td>Cell 1</td></tr>' +
+            // Misplaced <div>. It should be foster parented
+            '<div id="orphanDiv">Orphan div content</div>' +
+                '<tr><td>Cell 2</td></tr>' +
+        '</template>' +
+    '</div>';
+    
+    var t = d.querySelector('#tmpl1');
+    var div = t.content.querySelector('#orphanDiv');
+    
+    assert_equals(div.parentNode, t.content, 'Wrong foster parent element');
+    
+}, 'Template is a foster parent element (no table element)');
+
+</script>
+</body>
+</html>
