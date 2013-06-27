@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: When template end tag met implied end tags should be generated</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="assert" content="When template end tag met implied end tags should be generated">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#in-head-addition">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+
+//No end </td></tr></table> tags. Should be added implicitly
+test(function () {
+    var d = newHTMLDocument();
+    
+    d.head.innerHTML = '<template id="tpl"><table id="tbl"><tr id="tr"><td id="td"></template>';
+    
+    var t = d.querySelector("#tpl");
+    
+    assert_true(t != null, 'Template element must be parsed');
+    
+    assert_true(d.querySelector("#tbl") == null, 'Table element should not be available');
+    assert_true(d.querySelector("#tr") == null, 'TR element should not be available');
+    assert_true(d.querySelector("#td") == null, 'TD element should not be available');
+    
+    assert_true(t.content.querySelector("#tbl") != null, 'Template should contain table element');
+    assert_true(t.content.querySelector("#tr") != null, 'Template should contain TR element');
+    assert_true(t.content.querySelector("#td") != null, 'Template should contain TD element');
+    
+}, 'Generating of implied end tags (table elements)');
+
+
+//No end </div> tag. Should be added implicitly
+test(function () {
+    var d = newHTMLDocument();
+    
+    d.head.innerHTML = '<template id="tpl"><div id="dv">Div content</template>';
+    
+    var t = d.querySelector("#tpl");
+    
+    assert_true(t != null, 'Template element must be parsed');
+    
+    assert_true(d.querySelector("#dv") == null, 'DIV element should not be available');
+    
+    assert_true(t.content.querySelector("#dv") != null, 'Template should contain DIV element');
+    
+}, 'Generating of implied end tags (DIV element)');
+
+//No end </div> tag. Should be added implicitly after text content
+test(function () {
+    var d = newHTMLDocument();
+    
+    d.head.innerHTML = '<template id="tpl">Template text<div id="dv">Div content</template>';
+    
+    var t = d.querySelector("#tpl");
+    
+    assert_true(t != null, 'Template element must be parsed');
+    
+    assert_true(d.querySelector("#dv") == null, 'DIV element should not be available');
+    
+    assert_true(t.content.querySelector("#dv") != null, 'Template should contain DIV element');
+    assert_equals(t.content.querySelector("#dv").innerText, "Div content", 'Wrong template content inner text');
+    
+}, 'Generating of implied end tags (some text and DIV element)');
+
+// Wrong end tag. Correct end tag must be added implicitly, wrong one ignored 
+test(function () {
+    var d = newHTMLDocument();
+    
+    d.head.innerHTML = '<template id="tpl"><div id="dv">Div content</span></template>';
+    
+    var t = d.querySelector("#tpl");
+    
+    assert_true(t != null, 'Template element must be parsed');
+    
+    assert_equals(t.content.childNodes.length, 1, 'Wrong number of template\'s children');
+    
+    assert_true(d.querySelector("#dv") == null, 'DIV element should not be available');
+    
+    assert_true(t.content.querySelector("#dv") != null, 'Template should contain DIV element');
+    assert_equals(t.content.querySelector("#dv").innerText, "Div content", 'Wrong template content inner text');
+    
+}, 'Generating of implied end tags (wrong end tag)');
+
+</script>
+</body>
+</html>
