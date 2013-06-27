@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>HTML Templates: When node's document changes its owner document should be changed too</title>
-<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
-<meta name="assert" content="When node's document changes its owner document should be changed too">
-<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script src='../testcommon.js'></script>
-<link rel="stylesheet" href="/resources/testharness.css">
+    <title>
+        HTML Templates: When a template element's node document changes,
+        the template element's content DocumentFragment must be adopted into
+        the new node document's template contents owner document
+    </title>
+    <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+    <meta name="reviewer" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru"> <!-- 2013-06-27 -->
+    <meta name="assert" content="When node's document changes its owner document should be changed too">
+    <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
+    <script src="/resources/testharness.js"></script>
+    <script src="/resources/testharnessreport.js"></script>
+    <script src='../testcommon.js'></script>
+    <link rel="stylesheet" href="/resources/testharness.css">
 </head>
 <body>
 <div id="log"></div>
@@ -54,7 +58,11 @@ test(function() {
     assert_equals(t.content.ownerDocument, d2,
             'Template content owner document should be changed');
 
-}, 'Template owner document change (Not empty templat)');
+    assert_equals(t.content.querySelector('div').ownerDocument, d2,
+            'Template content descendants owner document should be changed');
+
+
+}, 'Template owner document change (Not empty template)');
 
 // Nested templates
 test(function() {
@@ -84,13 +92,62 @@ test(function() {
             'Template node owner document should be changed');
     assert_equals(t.content.ownerDocument, d2,
             'Template content owner document should be changed');
+    assert_equals(t.content.querySelector('div').ownerDocument, d2,
+            'Template content descendants owner document should be changed');
+
 
     assert_equals(t2.ownerDocument, d2,
             'Nested template node owner document should be changed');
     assert_equals(t2.content.ownerDocument, d2,
             'Nested template content owner document should be changed');
+    assert_equals(t2.content.querySelector('div').ownerDocument, d2,
+            'Nested template content descendants owner document should be changed');
 
 }, 'Template owner document change (Nested templates)');
+
+testInIFrame('../resources/template-contents.html', function(ctx){
+    var d = ctx.iframes[0].contentDocument;
+
+    var t = d.body.querySelector('template');
+
+    var d2 = newHTMLDocument();
+    d2.body.appendChild(t);
+
+    assert_equals(t.ownerDocument, d2,
+            'Template node owner document should be changed');
+    assert_equals(t.content.ownerDocument, d2,
+            'Template content owner document should be changed');
+
+    assert_equals(t.content.querySelector('div').ownerDocument, d2,
+            'Template content descendants owner document should be changed');
+
+
+}, 'Template owner document change  (load from file)');
+
+testInIFrame('../resources/template-contents.html', function(ctx){
+    var d = ctx.iframes[0].contentDocument;
+
+    var d2 = newHTMLDocument();
+    var t = d2.createElement('template');
+    var div = d2.createElement('div');
+    t.appendChild(div);
+    d.body.appendChild(t);
+
+    assert_true(t.ownerDocument!=d2,
+            'Template node owner document should be changed');
+    assert_true(t.content.ownerDocument!=d2,
+            'Template content owner document should be changed');
+    assert_true(div.ownerDocument!=d2,
+            'Template content descendants owner document should be changed');
+
+    assert_equals(t.ownerDocument, d,
+            'Template node owner document should be changed');
+    assert_true(t.content.ownerDocument!=d,
+            'Template content owner document should be changed');
+    assert_equals(div.ownerDocument, t.content.ownerDocument,
+            'Template content descendants owner document should be changed');
+
+}, 'Template owner document change (append to loaded document)');
 
 </script>
 </body>

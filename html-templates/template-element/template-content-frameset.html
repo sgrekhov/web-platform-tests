@@ -3,7 +3,7 @@
 <head>
 <title>HTML Templates: FRAMESET element cannot be content of TEMPLATE element</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="reviewer" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru"> <!-- 2013-06-27 -->
 <meta name="assert" content="FRAMESET element cannot be content of TEMPLATE element">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
 <script src="/resources/testharness.js"></script>
@@ -20,7 +20,7 @@ test(function() {
     var d = newHTMLDocument();
     var t = d.createElement('template');
 
-    t.innerHTML = '<frameset cols="25%,*,25%">' 
+    t.innerHTML = '<frameset cols="25%,*,25%">'
         + '<frame src="frame_a.htm">'
         + '<frame src="frame_b.htm">' + '<frame src="frame_c.htm">'
         + '</frameset>';
@@ -33,16 +33,32 @@ test(function() {
 }, 'FRAMESET element cannot be content of TEMPLATE element '
     + '(Test FRAMESET element only)');
 
+// Test FRAMESET element using appendChild
+test(function() {
+    var d = newHTMLDocument();
+    var t = d.createElement('template');
+
+    d.body.appendChild(t);
+
+    var f = d.createElement('frameset');
+    t.appendChild(f);
+
+    assert_equals(t.content.childNodes.length, 0,
+            'Template cannot contain FRAMESET element');
+
+}, 'FRAMESET element cannot be content of TEMPLATE element '
+    + '(using appendCHild)');
+
 // Test FRAMESET element and some valid element before it
 test(function() {
     var d = newHTMLDocument();
     var t = d.createElement('template');
 
-    t.innerHTML = '<div id="dv">Some text</div>' 
+    t.innerHTML = '<div id="dv">Some text</div>'
         + '<frameset cols="25%,*,25%">'
-        + '<frame src="frame_a.htm">' 
+        + '<frame src="frame_a.htm">'
         + '<frame src="frame_b.htm">'
-        + '<frame src="frame_c.htm">' 
+        + '<frame src="frame_c.htm">'
         + '</frameset>';
 
     d.body.appendChild(t);
@@ -60,9 +76,9 @@ test(function() {
     var d = newHTMLDocument();
     var t = d.createElement('template');
 
-    t.innerHTML = '<frameset cols="25%,*,25%">' 
+    t.innerHTML = '<frameset cols="25%,*,25%">'
         + '<frame src="frame_a.htm">'
-        + '<frame src="frame_b.htm">' 
+        + '<frame src="frame_b.htm">'
         + '<frame src="frame_c.htm">'
         + '</frameset><div id="dv">Some text</div>';
 
@@ -81,11 +97,11 @@ test(function() {
     var d = newHTMLDocument();
     var t = d.createElement('template');
 
-    t.innerHTML = '<template id="t2">' 
+    t.innerHTML = '<template id="t2">'
         + '<frameset cols="25%,*,25%">'
-        + '<frame src="frame_a.htm">' 
+        + '<frame src="frame_a.htm">'
         + '<frame src="frame_b.htm">'
-        + '<frame src="frame_c.htm">' 
+        + '<frame src="frame_c.htm">'
         + '</frameset></template>';
 
     d.body.appendChild(t);
@@ -102,6 +118,16 @@ test(function() {
 
 }, 'FRAMESET element cannot be content of TEMPLATE element '
     + '(test nested template)');
+
+testInIFrame('../resources/template-contents-frameset.html', function(ctx){
+    var d = ctx.iframes[0].contentDocument;
+
+    var t = d.body.querySelector('template');
+
+    assert_equals(t.content.childNodes.length, 0,
+            'Template cannot contain FRAMESET element');
+}, 'FRAMESET element cannot be content of TEMPLATE element '
+    + '(load from file)');
 
 </script>
 </body>

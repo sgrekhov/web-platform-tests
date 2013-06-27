@@ -3,7 +3,7 @@
 <head>
 <title>HTML Templates: HEAD element cannot be content of TEMPLATE element</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="reviewer" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru"> <!-- 2013-06-27 -->
 <meta name="assert" content="HEAD element cannot be content of TEMPLATE element">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
 <script src="/resources/testharness.js"></script>
@@ -28,6 +28,21 @@ test(function() {
 
 }, 'HEAD element cannot be content of TEMPLATE element (empty HEAD element)');
 
+// Test empty HEAD element added via appendChild
+test(function() {
+    var d = newHTMLDocument();
+    var t = d.createElement('template');
+
+    d.body.appendChild(t);
+
+    var h = d.createElement('head');
+
+    t.appendChild(h);
+
+    assert_equals(t.content.childNodes.length, 0, 'Template cannot contain HEAD element');
+
+}, 'HEAD element cannot be content of TEMPLATE element (using appendChild)');
+
 // Test HEAD element only
 test(function() {
     var d = newHTMLDocument();
@@ -38,7 +53,7 @@ test(function() {
     d.body.appendChild(t);
 
     assert_equals(t.content.childNodes.length, 1,
-            'Wrong number of templete content children');
+            'Wrong number of template content children');
     assert_equals(t.content.firstChild.nodeName, 'TITLE',
             'Template should contain children of ignored HEAD element');
 
@@ -54,7 +69,7 @@ test(function() {
     d.body.appendChild(t);
 
     assert_equals(t.content.childNodes.length, 2,
-            'Wrong number of templete content children');
+            'Wrong number of template content children');
     assert_true(t.content.querySelector('#dv') != null,
             'Template should contain valid element');
     assert_equals(t.content.lastChild.tagName, 'TITLE',
@@ -74,7 +89,7 @@ test(function() {
     d.body.appendChild(t);
 
     assert_equals(t.content.childNodes.length, 2,
-            'Wrong number of templete content children');
+            'Wrong number of template content children');
     assert_equals(t.content.firstChild.tagName, 'TITLE',
             'Template should contain '
                     + 'children of ignored HEAD element');
@@ -101,12 +116,23 @@ test(function() {
     var t2 = t.content.querySelector('#t2');
 
     assert_equals(t2.content.childNodes.length, 1,
-            'Wrong number of templete content children');
+            'Wrong number of template content children');
     assert_equals(t2.content.firstChild.tagName, 'TITLE',
             'Template should contain children of ignored HEAD element');
 
 }, 'HEAD element cannot be content of TEMPLATE element '
     + '(nested template)');
+
+
+testInIFrame('../resources/template-contents-head.html', function(ctx){
+    var d = ctx.iframes[0].contentDocument;
+
+    var t = d.body.querySelector('template');
+
+    assert_equals(t.content.childNodes.length, 0,
+            'Template cannot contain HEAD element');
+}, 'HEAD element cannot be content of TEMPLATE element '
+    + '(load from file)');
 
 </script>
 </body>

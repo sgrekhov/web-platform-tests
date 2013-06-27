@@ -3,7 +3,7 @@
 <head>
 <title>HTML Templates: HTML element cannot be content of TEMPLATE element</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="reviewer" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru"> <!-- 2013-06-27 -->
 <meta name="assert" content="HTML element cannot be content of TEMPLATE element">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
 <script src="/resources/testharness.js"></script>
@@ -27,7 +27,23 @@ test(function() {
     assert_equals(t.content.childNodes.length, 0,
             'Template cannot contain HTML element');
 
-}, 'HTML element cannot be content of TEMPLATE elemen (HTML element only)');
+}, 'HTML element cannot be content of TEMPLATE element (HTML element only)');
+
+// HTML element added via appendChild
+test(function() {
+    var d = newHTMLDocument();
+
+    var t = d.createElement('template');
+
+    d.body.appendChild(t);
+
+    var h = d.createElement('html');
+    t.appendChild(h);
+
+    assert_equals(t.content.childNodes.length, 0,
+            'Template cannot contain HTML element');
+
+}, 'HTML element cannot be content of TEMPLATE element (using appendChild)');
 
 // Some valid element before HTML element
 test(function() {
@@ -43,7 +59,7 @@ test(function() {
     assert_true(t.content.querySelector('#dv') != null,
             'Template should contain valid element');
 
-}, 'HTML element cannot be content of TEMPLATE elemen '
+}, 'HTML element cannot be content of TEMPLATE element '
     + '(some valid element before HTML element)');
 
 // Some valid element after HTML element
@@ -60,7 +76,7 @@ test(function() {
     assert_true(t.content.querySelector('#dv') != null,
             'Template should contain valid element');
 
-}, 'HTML element cannot be content of TEMPLATE elemen '
+}, 'HTML element cannot be content of TEMPLATE element '
     + '(some valid element after HTML element)');
 
 // Test nested template
@@ -82,7 +98,7 @@ test(function() {
     assert_equals(t2.content.childNodes.length, 0,
             'Template cannot contain HTML element');
 
-}, 'HTML element cannot be content of TEMPLATE elemen '
+}, 'HTML element cannot be content of TEMPLATE element '
     + '(nested template)');
 
 // Valid element inside HTML element
@@ -99,7 +115,7 @@ test(function() {
     assert_true(t.content.querySelector('#dv') != null,
             'Template should contain valid element');
 
-}, 'HTML element cannot be content of TEMPLATE elemen '
+}, 'HTML element cannot be content of TEMPLATE element '
     + '(valid element inside HTML element)');
 
 // Valid element inside HTML and BODY element
@@ -116,9 +132,9 @@ test(function() {
     assert_true(t.content.querySelector('#dv') != null,
             'Template should contain valid element');
 
-}, 'HTML element cannot be content of TEMPLATE elemen '
+}, 'HTML element cannot be content of TEMPLATE element '
     + '(valid element inside HTML and BODY elements)');
-    
+
 //Valid element inside and between HTML and BODY element
 test(function() {
     var d = newHTMLDocument();
@@ -135,9 +151,21 @@ test(function() {
 
     assert_true(t.content.querySelector('#spn') != null,
             'Template should contain valid SPAN element');
-}, 'HTML element cannot be content of TEMPLATE elemen '
+}, 'HTML element cannot be content of TEMPLATE element '
     + '(valid element inside and between HTML and BODY elements)');
-    
+
+
+testInIFrame('../resources/template-contents-html.html', function(ctx) {
+    var d = ctx.iframes[0].contentDocument;
+
+    var t = d.body.querySelector('template');
+
+    assert_equals(t.content.childNodes.length, 0,
+            'Template cannot contain HTML element');
+
+}, 'HTML element cannot be content of TEMPLATE element '
+   + '(load from file)');
+
 </script>
 </body>
 </html>

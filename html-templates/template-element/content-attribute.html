@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>HTML Templates: Content attribute of templeate element is read-only</title>
+<title>HTML Templates: Content attribute of template element is read-only</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
-<meta name="assert" content="Content attribute of templeate element is read-only">
+<meta name="reviewer" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru"> <!-- 2013-06-27 -->
+<meta name="assert" content="Content attribute of template element is read-only">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -26,10 +26,10 @@ test(function() {
     t.content = el1;
 
     assert_equals(t.content.childNodes.length, 0,
-            'Content attribute of templeate element '
+            'Content attribute of template element '
                     + 'should be a read-only');
 
-}, 'Content attribute of templeate element is read-only (DOM content)');
+}, 'Content attribute of template element is read-only (DOM content)');
 
 // html content
 test(function() {
@@ -39,9 +39,9 @@ test(function() {
     var t = d.querySelector('#tmpl1');
 
     assert_equals(t.content.childNodes.length, 0,
-            'Content attribute of templeate element should be a read-only');
+            'Content attribute of template element should be a read-only');
 
-}, 'Content attribute of templeate element is read-only (html content)');
+}, 'Content attribute of template element is read-only (html content)');
 
 // text content
 test(function() {
@@ -51,9 +51,20 @@ test(function() {
     var t = d.querySelector('#tmpl1');
 
     assert_equals(t.content.childNodes.length, 0,
-            'Content attribute of templeate element should be a read-only');
+            'Content attribute of template element should be a read-only');
 
-}, 'Content attribute of templeate element is read-only (text content)');
+}, 'Content attribute of template element is read-only (text content)');
+
+
+testInIFrame('../resources/template-contents-attribute.html', function(ctx){
+    var d = ctx.iframes[0].contentDocument;
+
+    var t = d.body.querySelector('template');
+
+   assert_equals(t.content.childNodes.length, 0,
+            'Content attribute of template element should be a read-only');
+}, 'Content attribute of template element is read-only '
+    + '(load from file)');
 
 </script>
 </body>

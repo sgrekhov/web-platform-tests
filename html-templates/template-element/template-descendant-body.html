@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: Template element as a descendant of the body element.</title>
+<meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
+<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="assert" content="Template element can be a descendant of the body element">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+testInIFrame('../resources/template-contents.html', function(ctx) {
+    var d = ctx.iframes[0].contentDocument;
+
+    assert_true(d.body.querySelector('template')!=null,
+        'Template element should be a descendant of the body element');
+
+}, 'Template element as a descendant of the body element (load from file)');
+
+testInIFrame(null, function(ctx) {
+    var d = ctx.iframes[0].contentDocument;
+
+    d.body.innerHTML = '<template>some text</template>';
+
+    assert_true(d.body.querySelector('template')!=null,
+        'Template element should be a descendant of the body element');
+
+}, 'Template element as a descendant of the body element (using innerHTML)');
+
+testInIFrame(null, function(ctx) {
+    var d = ctx.iframes[0].contentDocument;
+
+    var t = d.createElement('template');
+
+    d.body.appendChild(t);
+
+    assert_true(d.body.querySelector('template')!=null,
+        'Template element should be a descendant of the body element');
+
+}, 'Template element as a descendant of the body element (using appendChild)');
+
+
+</script>
+</body>
+</html>
