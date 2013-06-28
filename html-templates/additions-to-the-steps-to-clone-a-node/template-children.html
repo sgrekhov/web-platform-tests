@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: All the children of template content are copied</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="assert" content="All the children of template content are copied">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#node-clone-additions">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+//Call cloneNode(true)
+test(function () {
+    var d = newHTMLDocument();
+    d.body.innerHTML = '<template id="tmpl1">' +
+        '<div id="div1">This is div inside template</div>' +
+        '<div id="div2">This is another div inside template</div>' +
+        '</template>';
+    
+    var t = d.querySelector('#tmpl1');
+    var copy = t.cloneNode(true);
+    
+    assert_equals(copy.content.childNodes.length, 2, 
+            'Wrong number of template content\'s copy child nodes');
+    assert_true(copy.content.querySelector('#div1') != null, 
+            'Template child node should be copied');
+    assert_true(copy.content.querySelector('#div2') != null, 
+            'Template child node should be copied');
+    
+}, 'Clone template node (call cloneNode(true))');
+
+
+//Call cloneNode() with default parameter (false by default)
+test(function () {
+    var d = newHTMLDocument();
+    d.body.innerHTML = '<template id="tmpl1">' +
+        '<div id="div1">This is div inside template</div>' +
+        '<div id="div2">This is another div inside template</div>' +
+        '</template>';
+    
+    var t = d.querySelector('#tmpl1');
+    var copy = t.cloneNode();
+    
+    assert_equals(copy.content.childNodes.length, 0, 
+            'Wrong number of template content\'s copy child nodes');
+    
+}, 'Clone template node (call cloneNode() with default parameter)');
+
+
+// don't copy children
+test(function () {
+    var d = newHTMLDocument();
+    d.body.innerHTML = '<template id="tmpl1">' +
+        '<div id="div1">This is div inside template</div>' +
+        '<div id="div2">This is another div inside template</div>' +
+        '</template>';
+    
+    var t = d.querySelector('#tmpl1');
+    var copy = t.cloneNode(false);
+    
+    assert_equals(copy.content.childNodes.length, 0, 
+            'Wrong number of template content\'s copy child nodes');
+    
+}, 'Clone template node (don\'t copy children, call cloneNode(false))');
+
+</script>
+</body>
+</html>
