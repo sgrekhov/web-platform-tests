@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: In body insertion mode: A start tag whose tag name is html</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
+<meta name="assert" content="If HTML parser is in 'in body' insertion mode and meets HTML start tag then for each attribute on the token, check to see if the attribute is already present on the top element of the stack of open elements. If it is not, add the attribute and its corresponding value to that element">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#in-body-addition">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+//test <template><html class="htmlClass"></html></template><html id="htmlId">
+//id attribute should be added to root <html> element
+//class attribute should be ignored
+testInIFrame('../../resources/html-start-tag.html', function(ctx){
+    var d = ctx.iframes[0].contentDocument;
+
+    var t = d.body.querySelector('template');
+
+    var html = d.documentElement;
+    
+    assert_equals(html.getAttribute('tabindex'), '5', 'Attribute should be accessible');
+    assert_equals(html.getAttribute('id'), 'htmlId', 'Attribute should be appended and accessible');
+    assert_equals(html.getAttribute('class'), null, 'Attribute should be ignored');
+
+
+}, 'In body insertion mode: A start tag whose tag name is html');
+
+</script>
+</body>
+</html>
