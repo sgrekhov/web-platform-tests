@@ -3,7 +3,6 @@
 <head>
 <title>HTML Templates: The template contents owner document (there's browsing context)</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru"> <!-- 2013-06-26 -->
 <meta name="assert" content="If template's enclosing document has browsing context, then templates content owner be a new Document node">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#definitions">
 <script src="/resources/testharness.js"></script>
@@ -16,49 +15,49 @@
 <script type="text/javascript">
 
 //test document in iframe which has browsing context
-testInIFrame(null, function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
-    var t = d.createElement('template');
+testInIFrame(null, function(context) {
+    var doc = context.iframes[0].contentDocument;
+    var template = doc.createElement('template');
 
-    var div = d.createElement('div');
+    var div = doc.createElement('div');
     div.setAttribute('id', 'div1');
     div.innerText = 'Some text';
 
-    t.appendChild(div);
+    template.appendChild(div);
 
-    d.body.appendChild(t);
+    doc.body.appendChild(template);
 
-    // d has browsing context. There should be another document as a template
+    // doc has browsing context. There should be another document as a template
     // content owner
-    assert_true(t.content.ownerDocument != d, 'Wrong template owner document');
+    assert_true(template.content.ownerDocument != doc, 'Wrong template owner document');
 
 }, 'The template contents owner document (there\'s browsing context)');
 
 //test document in iframe which has browsing context
 // using innerHTML to create template element
-testInIFrame(null, function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
+testInIFrame(null, function(context) {
+    var doc = context.iframes[0].contentDocument;
 
-    d.body.innerHTML = '<template><div>some text</div></template>';
+    doc.body.innerHTML = '<template><div>some text</div></template>';
 
-    var t = d.querySelector('template');
+    var template = doc.querySelector('template');
 
-    // d has browsing context. There should be another document as a template
+    // doc has browsing context. There should be another document as a template
     // content owner
-    assert_true(t.content.ownerDocument != d, 'Wrong template owner document');
+    assert_true(template.content.ownerDocument != doc, 'Wrong template owner document');
 
 }, 'The template contents owner document (there\'s browsing context), using innerHTML');
 
 //test document in iframe which has browsing context
 // loading document from file
-testInIFrame('../resources/template-contents.html', function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
+testInIFrame('../resources/template-contents.html', function(context) {
+    var doc = context.iframes[0].contentDocument;
 
-    var t = d.querySelector('template');
+    var template = doc.querySelector('template');
 
-    // d has browsing context. There should be another document as a template
+    // doc has browsing context. There should be another document as a template
     // content owner
-    assert_true(t.content.ownerDocument != d, 'Wrong template owner document');
+    assert_true(template.content.ownerDocument != doc, 'Wrong template owner document');
 
 }, 'The template contents owner document (there\'s browsing context), loading document from file');
 

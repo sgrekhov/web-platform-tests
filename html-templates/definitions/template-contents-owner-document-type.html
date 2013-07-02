@@ -3,7 +3,6 @@
 <head>
 <title>HTML Templates: The template contents owner document type is HTML document</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru"> <!-- 2013-06-26 -->
 <meta name="assert" content="The template contents owner document type is HTML document, if template is declared in HTML document">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#definitions">
 <script src="/resources/testharness.js"></script>
@@ -16,19 +15,19 @@
 <script type="text/javascript">
 
 // document has browsing context
-testInIFrame(null, function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
-    var t = d.createElement('template');
+testInIFrame(null, function(context) {
+    var doc = context.iframes[0].contentDocument;
+    var template = doc.createElement('template');
 
-    var div = d.createElement('div');
+    var div = doc.createElement('div');
     div.setAttribute('id', 'div1');
     div.innerText = 'Some text';
 
-    t.appendChild(div);
+    template.appendChild(div);
 
-    d.body.appendChild(t);
+    doc.body.appendChild(template);
 
-    assert_equals(t.content.ownerDocument.constructor.name, 'HTMLDocument',
+    assert_equals(template.content.ownerDocument.constructor.name, 'HTMLDocument',
             'Template content owner should be a HTML document');
 
 }, 'The template contents owner document type (document has browsing context)');
@@ -36,12 +35,12 @@ testInIFrame(null, function(ctx) {
 
 // document has no browsing context
 test(function() {
-    var d = newHTMLDocument();
-    var t = d.createElement('template');
+    var doc = newHTMLDocument();
+    var template = doc.createElement('template');
 
-    d.body.appendChild(t);
+    doc.body.appendChild(template);
 
-    assert_equals(t.content.ownerDocument.constructor.name, 'HTMLDocument',
+    assert_equals(template.content.ownerDocument.constructor.name, 'HTMLDocument',
             'Template content owner should be a HTML document');
 
 }, 'The template contents owner document type (document has no browsing context)');
