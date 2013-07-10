@@ -22,13 +22,14 @@ test(function() {
     var el2 = doc.createElement('span');
     el1.appendChild(el2);
 
+    var valueBeforeChange = template.content;
     template.content = el1;
 
-    assert_equals(template.content.childNodes.length, 0,
+    assert_equals(template.content, valueBeforeChange,
             'Content attribute of template element should be read-only');
 
 }, 'Content attribute of template element is read-only. ' +
-    'Attempt to assign some DOM element to content property shouldn\'t be successful');
+    'Assigning value to content property of template should be ignored');
 
 
 test(function() {
@@ -41,7 +42,7 @@ test(function() {
             'Content attribute of template element should be read-only');
 
 }, 'Content attribute of template element is read-only. ' +
-    'Attempt to assign some html content to the content property shouldn\'t be successful');
+    'HTML value of content attribute of template tag should be ignored');
 
 
 test(function() {
@@ -53,8 +54,8 @@ test(function() {
     assert_equals(template.content.childNodes.length, 0,
             'Content attribute of template element should be read-only');
 
-}, 'Content attribute of template element is read-only. ' + 
-    'Attempt to assign some text content to the content property shouldn\'t be successful');
+}, 'Content attribute of template element is read-only. ' +
+    'Text value of content attribute of template tag should be ignored');
 
 
 testInIFrame('../resources/template-contents-attribute.html', function(ctx){
@@ -62,11 +63,12 @@ testInIFrame('../resources/template-contents-attribute.html', function(ctx){
 
     var template = doc.body.querySelector('template');
 
-   assert_equals(template.content.childNodes.length, 0,
+    assert_equals(template.content.childNodes.length, 0,
             'Content attribute of template element should be read-only');
-   
+
 }, 'Content attribute of template element is read-only. '
-    + 'Test loading html from a file');
+    + 'Text value of content attribute of template tag should be ignored, '
+    + 'when loading document from file');
 
 </script>
 </body>

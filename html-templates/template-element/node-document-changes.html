@@ -129,8 +129,8 @@ testInIFrame('../resources/template-contents.html', function(ctx){
     var doc2 = newHTMLDocument();
     var template = doc2.createElement('template');
     var div = doc2.createElement('div');
-    template.appendChild(div);
-    
+    template.content.appendChild(div);
+
     doc1.body.appendChild(template);
 
     assert_not_equals(template.ownerDocument, doc2,
@@ -150,6 +150,37 @@ testInIFrame('../resources/template-contents.html', function(ctx){
             'template content document owner');
 
 }, 'Template owner document change. Test appending to a document loaded from a file');
+
+
+testInIFrame('../resources/template-contents.html', function(ctx){
+    var doc1 = ctx.iframes[0].contentDocument;
+
+    var template = doc1.querySelector('template');
+    var div = template.content.querySelector('div');
+  var templateContentOwner = template.content.ownerDocument;
+
+    var doc2 = document;
+
+    doc2.body.appendChild(template);
+
+
+    assert_not_equals(template.ownerDocument, doc1,
+            'Template node owner document should be changed');
+    assert_not_equals(template.content.ownerDocument, templateContentOwner,
+            'Template content owner document should be changed');
+    assert_not_equals(div.ownerDocument, templateContentOwner,
+            'Template content descendants owner document should be changed');
+
+    assert_equals(template.ownerDocument, doc2,
+            'Template node owner document should be changed');
+    // doc2 has browsing context, so it cannot be template.content.ownerDocument
+    assert_not_equals(template.content.ownerDocument, doc2,
+            'Template content owner document should be a new document');
+    assert_equals(div.ownerDocument, template.content.ownerDocument,
+            'Template content descendants owner document should be ' +
+            'template content document owner');
+
+}, 'Template owner document change. Test appending from and to documents loaded from a file');
 
 </script>
 </body>
