@@ -3,7 +3,6 @@
 <head>
 <title>HTML Templates: HTML elements in template content</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru"> <!-- 2013-06-27 -->
 <meta name="assert" content="Template may contain any element, except the html element, the head element, the body element, or the frameset element">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
 <script src="/resources/testharness.js"></script>
@@ -16,19 +15,19 @@
 <script type="text/javascript">
 
 test(function() {
-    var d = newHTMLDocument();
+    var doc = newHTMLDocument();
 
     HTML5_TAG.forEach(function(value) {
         if (value != 'body' && value != 'html' && value != 'head'
                 && value != 'frameset') {
-            var t = d.createElement('template');
-            var e = d.createElement(value);
-            t.content.appendChild(e);
+            var template = doc.createElement('template');
+            var element = doc.createElement(value);
+            template.content.appendChild(element);
 
-            d.body.appendChild(t);
+            doc.body.appendChild(template);
 
-            assert_equals(t.content.childNodes.length, 1,
-                    'Template should contain ' + value + ' element');
+            assert_true(template.content.querySelector(value) != null,
+                    'Template should contain ' + value + ' element');            
         }
     });
 

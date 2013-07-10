@@ -3,7 +3,7 @@
 <head>
 <title>HTML Templates: Content attribute of template element is read-only</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru"> <!-- 2013-06-27 -->
+<meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <meta name="assert" content="Content attribute of template element is read-only">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
 <script src="/resources/testharness.js"></script>
@@ -15,56 +15,58 @@
 <div id="log"></div>
 <script type="text/javascript">
 
-//DOM content
 test(function() {
-    var d = newHTMLDocument();
-    var t = d.createElement('template');
-    var el1 = d.createElement('div');
-    var el2 = d.createElement('span');
+    var doc = newHTMLDocument();
+    var template = doc.createElement('template');
+    var el1 = doc.createElement('div');
+    var el2 = doc.createElement('span');
     el1.appendChild(el2);
 
-    t.content = el1;
+    template.content = el1;
 
-    assert_equals(t.content.childNodes.length, 0,
-            'Content attribute of template element '
-                    + 'should be a read-only');
+    assert_equals(template.content.childNodes.length, 0,
+            'Content attribute of template element should be read-only');
 
-}, 'Content attribute of template element is read-only (DOM content)');
+}, 'Content attribute of template element is read-only. ' +
+    'Attempt to assign some DOM element to content property shouldn\'t be successful');
 
-// html content
+
 test(function() {
-    var d = newHTMLDocument();
-    d.body.innerHTML = '<template id="tmpl1" content="<div id=div1>Div content</div>"></template>';
+    var doc = newHTMLDocument();
+    doc.body.innerHTML = '<template id="tmpl1" content="<div id=div1>Div content</div>"></template>';
 
-    var t = d.querySelector('#tmpl1');
+    var template = doc.querySelector('#tmpl1');
 
-    assert_equals(t.content.childNodes.length, 0,
-            'Content attribute of template element should be a read-only');
+    assert_equals(template.content.childNodes.length, 0,
+            'Content attribute of template element should be read-only');
 
-}, 'Content attribute of template element is read-only (html content)');
+}, 'Content attribute of template element is read-only. ' +
+    'Attempt to assign some html content to the content property shouldn\'t be successful');
 
-// text content
+
 test(function() {
-    var d = newHTMLDocument();
-    d.body.innerHTML = '<template id="tmpl1" content="Some text as a content"></template>';
+    var doc = newHTMLDocument();
+    doc.body.innerHTML = '<template id="tmpl1" content="Some text as a content"></template>';
 
-    var t = d.querySelector('#tmpl1');
+    var template = doc.querySelector('#tmpl1');
 
-    assert_equals(t.content.childNodes.length, 0,
-            'Content attribute of template element should be a read-only');
+    assert_equals(template.content.childNodes.length, 0,
+            'Content attribute of template element should be read-only');
 
-}, 'Content attribute of template element is read-only (text content)');
+}, 'Content attribute of template element is read-only. ' + 
+    'Attempt to assign some text content to the content property shouldn\'t be successful');
 
 
 testInIFrame('../resources/template-contents-attribute.html', function(ctx){
-    var d = ctx.iframes[0].contentDocument;
+    var doc = ctx.iframes[0].contentDocument;
 
-    var t = d.body.querySelector('template');
+    var template = doc.body.querySelector('template');
 
-   assert_equals(t.content.childNodes.length, 0,
-            'Content attribute of template element should be a read-only');
-}, 'Content attribute of template element is read-only '
-    + '(load from file)');
+   assert_equals(template.content.childNodes.length, 0,
+            'Content attribute of template element should be read-only');
+   
+}, 'Content attribute of template element is read-only. '
+    + 'Test loading html from a file');
 
 </script>
 </body>
