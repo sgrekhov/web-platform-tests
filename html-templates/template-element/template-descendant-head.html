@@ -3,7 +3,6 @@
 <head>
 <title>HTML Templates: Template element as a descendant of the head element.</title>
 <meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
-<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
 <meta name="assert" content="Template element can be a descendant of the head element">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
 <script src="/resources/testharness.js"></script>
@@ -16,34 +15,38 @@
 <script type="text/javascript">
 
 testInIFrame('../resources/template-descendant-head.html', function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
+    var doc = ctx.iframes[0].contentDocument;
 
-    assert_true(d.head.querySelector('template')!=null,
+    assert_true(doc.head.querySelector('template') != null,
         'Template element should be a descendant of the head element');
 
-}, 'Template element as a descendant of the head element (load from file)');
+}, 'Template element as a descendant of the head element. Test loading from a file');
 
-testInIFrame(null, function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
 
-    d.head.innerHTML = '<template>some text</template>';
+test(function() {
+    var doc = newHTMLDocument();
 
-    assert_true(d.head.querySelector('template')!=null,
+    doc.head.innerHTML = '<template>some text</template>';
+
+    assert_true(doc.head.querySelector('template') != null,
         'Template element should be a descendant of the head element');
 
-}, 'Template element as a descendant of the head element (using innerHTML)');
+}, 'Template element as a descendant of the head element. '
+    + ' Test template element appended by innerHTML');
 
-testInIFrame(null, function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
+    
+test(function() {
+    var doc = newHTMLDocument();
 
-    var t = d.createElement('template');
+    var template = doc.createElement('template');
 
-    d.head.appendChild(t);
+    doc.head.appendChild(template);
 
-    assert_true(d.head.querySelector('template')!=null,
+    assert_true(doc.head.querySelector('template') != null,
         'Template element should be a descendant of the head element');
 
-}, 'Template element as a descendant of the head element (using appendChild)');
+}, 'Template element as a descendant of the head element. '
+    + 'Test template element appended by appendChild()');
 
 
 </script>

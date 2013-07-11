@@ -3,7 +3,6 @@
 <head>
 <title>HTML Templates: Template element as a descendant of the body element.</title>
 <meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
-<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
 <meta name="assert" content="Template element can be a descendant of the body element">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
 <script src="/resources/testharness.js"></script>
@@ -16,34 +15,40 @@
 <script type="text/javascript">
 
 testInIFrame('../resources/template-contents.html', function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
+    var doc = ctx.iframes[0].contentDocument;
 
-    assert_true(d.body.querySelector('template')!=null,
+    assert_true(doc.body.querySelector('template') != null,
         'Template element should be a descendant of the body element');
 
-}, 'Template element as a descendant of the body element (load from file)');
+}, 'Template element as a descendant of the body element. Test loading from a file');
 
-testInIFrame(null, function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
 
-    d.body.innerHTML = '<template>some text</template>';
 
-    assert_true(d.body.querySelector('template')!=null,
+test(function() {
+    var doc = newHTMLDocument();
+
+    doc.body.innerHTML = '<template>some text</template>';
+
+    assert_true(doc.body.querySelector('template') != null,
         'Template element should be a descendant of the body element');
 
-}, 'Template element as a descendant of the body element (using innerHTML)');
+}, 'Template element as a descendant of the body element. '
+    + 'Test template element appended by innerHTML');
 
-testInIFrame(null, function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
 
-    var t = d.createElement('template');
 
-    d.body.appendChild(t);
+test(function() {
+    var doc = newHTMLDocument();
 
-    assert_true(d.body.querySelector('template')!=null,
+    var template = doc.createElement('template');
+
+    doc.body.appendChild(template);
+
+    assert_true(doc.body.querySelector('template') != null,
         'Template element should be a descendant of the body element');
 
-}, 'Template element as a descendant of the body element (using appendChild)');
+}, 'Template element as a descendant of the body element. '
+    + 'Test template element appended by appendChild()');
 
 
 </script>

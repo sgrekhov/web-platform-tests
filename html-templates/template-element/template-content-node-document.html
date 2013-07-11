@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML Templates: Node document of the template content attribute must be a document</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="assert" content="Node document of the template content attribute must be a document">
+<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+test(function() {
+    var doc = newHTMLDocument();
+    var template = doc.createElement('template');
+
+    assert_equals(template.content.ownerDocument, doc, 
+            'Wrong node document of the template content attribute');
+
+}, 'Node document of the template content attribute must be a document. ' +
+    'Template element created by createElement');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    doc.body.innerHTML = '<template></template>';
+    var template = doc.querySelector('template');
+
+    assert_equals(template.content.ownerDocument, doc, 
+            'Wrong node document of the template content attribute');
+
+}, 'Node document of the template content attribute must be a document. ' +
+    'Template element created by innerHTML');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var template = doc.createElement('template');
+    var nestedTemplate = doc.createElement('template');
+    template.appendChild(nestedTemplate);
+
+    assert_equals(nestedTemplate.content.ownerDocument, doc, 
+            'Wrong node document of the template content attribute');
+
+}, 'Node document of the template content attribute must be a document. ' +
+    'Nested template element created by createElement');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    doc.body.innerHTML = '<template><template></template></template>';
+    var template = doc.querySelector('template');
+    var nestedTemplate = template.content.querySelector('template');
+
+    assert_equals(nestedTemplate.content.ownerDocument, doc, 
+            'Wrong node document of the template content attribute');
+
+}, 'Node document of the template content attribute must be a document. ' +
+    'Nested template element created by innerHTML');
+    
+</script>
+</body>
+</html>
