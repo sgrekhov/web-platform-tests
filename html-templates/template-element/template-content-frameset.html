@@ -31,23 +31,7 @@ test(function() {
             'Template cannot contain FRAMESET element');
 
 }, 'FRAMESET element cannot be content of TEMPLATE element. '
-    + 'Test FRAMESET element appended by innerHTML');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-    var template = doc.createElement('template');
-
-    doc.body.appendChild(template);
-
-    var frameset = doc.createElement('frameset');
-    template.appendChild(frameset);
-
-    assert_equals(template.content.childNodes.length, 0,
-            'Template cannot contain FRAMESET element');
-
-}, 'FRAMESET element cannot be content of TEMPLATE element. '
-    + 'Test FRAMESET element apended by appendCHild()');
+    + 'Test FRAMESET element assigned to template innerHTML');
 
 
 test(function() {
@@ -69,7 +53,7 @@ test(function() {
             'Template should contain valid element');
 
 }, 'FRAMESET element cannot be content of TEMPLATE element. '
-    + 'Test FRAMESET element and some valid element before it');
+    + 'Test FRAMESET element and some valid element before it, assigned to template's innerHTML');
 
 
 test(function() {
@@ -90,7 +74,7 @@ test(function() {
             'Template should contain valid element');
 
 }, 'FRAMESET element cannot be content of TEMPLATE element. '
-    + 'Test FRAMESET element and some valid element after it');
+    + 'Test FRAMESET element and some valid element after it, assigned to template's innerHTML');
 
 
 test(function() {
@@ -117,7 +101,7 @@ test(function() {
             'Template cannot contain FRAMESET element');
 
 }, 'FRAMESET element cannot be content of TEMPLATE element. '
-    + 'Test nested template');
+    + 'Test FRAMESET tag inside template tag assigned to another template's innerHTML');
 
 
 testInIFrame('../resources/template-contents-frameset.html', function(ctx){
@@ -128,7 +112,7 @@ testInIFrame('../resources/template-contents-frameset.html', function(ctx){
     assert_equals(template.content.childNodes.length, 0,
             'Template cannot contain FRAMESET element');
 }, 'FRAMESET element cannot be content of TEMPLATE element. '
-    + 'Test loading from a file');
+    + 'Test loading a HTML file with FRAMESET tag inside template');
 
 </script>
 </body>

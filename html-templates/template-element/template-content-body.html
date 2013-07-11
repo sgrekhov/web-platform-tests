@@ -24,26 +24,11 @@ test(function() {
 
     doc.body.appendChild(template);
 
-    assert_equals(template.content.childNodes.length, 0, 
-            'Template cannot contain BODY element');
-
-}, 'BODY element cannot be content of TEMPLATE element. ' 
-    + 'Test empty BODY element appended by innerHTML');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-    var template = doc.createElement('template');
-    doc.body.appendChild(template);
-    var body = doc.createElement('body');
-    template.appendChild(body);
-    assert_equals(template.content.childNodes.length, 0, 
+    assert_equals(template.content.childNodes.length, 0,
             'Template cannot contain BODY element');
 
 }, 'BODY element cannot be content of TEMPLATE element. '
-    + 'Test empty BODY element appended by appendChild()');
-
-
+    + 'Test empty BODY element assigned to template innerHTML');
 
 test(function() {
     var doc = newHTMLDocument();
@@ -59,7 +44,7 @@ test(function() {
             'Template should contain children of ignored BODY element');
 
 }, 'BODY element cannot be content of TEMPLATE element.'
-    + 'Test not empty BODY element');
+    + 'Test not empty BODY element assigned to template innerHTML');
 
 
 test(function() {
@@ -78,7 +63,7 @@ test(function() {
             'Template should contain valid element');
 
 }, 'BODY element cannot be content of TEMPLATE element. '
-        + 'Test BODY element and some valid element after BODY tag');
+        + 'Test BODY element and some valid element after BODY tag assigned to template innerHTML');
 
 
 test(function() {
@@ -97,7 +82,7 @@ test(function() {
             'Template should contain children of the ignored BODY element');
 
 }, 'BODY element cannot be content of TEMPLATE element. '
-        + 'Test BODY element and some valid element before BODY tag');
+        + 'Test BODY element and some valid element before BODY tag assigned to template innerHTML');
 
 
 test(function() {
@@ -121,7 +106,7 @@ test(function() {
             'Template cannot contain BODY element');
 
 }, 'BODY element cannot be content of TEMPLATE element. '
-    + 'Test nested template');
+    + 'Test template with not empty BODY element inside assigned to another template's innerHTML');
 
 
 testInIFrame('../resources/template-contents-body.html', function(ctx){
@@ -132,7 +117,7 @@ testInIFrame('../resources/template-contents-body.html', function(ctx){
     assert_equals(template.content.childNodes.length, 0,
             'Template cannot contain BODY element');
 }, 'BODY element cannot be content of TEMPLATE element. '
-    + 'Test loading from a file');
+    + 'Test loading a HTML file with BODY tag inside template');
 
 </script>
 </body>

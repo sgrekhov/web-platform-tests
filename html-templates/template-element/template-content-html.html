@@ -28,24 +28,7 @@ test(function() {
             'Template cannot contain HTML element');
 
 }, 'HTML element cannot be content of TEMPLATE element. '
-    + 'Test HTML element appended by innerHTML');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-
-    var template = doc.createElement('template');
-
-    doc.body.appendChild(template);
-
-    var html = doc.createElement('html');
-    template.appendChild(html);
-
-    assert_equals(template.content.childNodes.length, 0,
-            'Template cannot contain HTML element');
-
-}, 'HTML element cannot be content of TEMPLATE element. '
-    + 'Test HTML element appended by appendChild()');
+    + 'Test HTML element assigned to template innerHTML');
 
 
 test(function() {
@@ -62,7 +45,7 @@ test(function() {
             'Template should contain valid element');
 
 }, 'HTML element cannot be content of TEMPLATE element. '
-    + 'Test some valid element before HTML element');
+    + 'Test HTML element and some valid element before it, assigned to template innerHTML');
 
 
 test(function() {
@@ -79,7 +62,7 @@ test(function() {
             'Template should contain valid element');
 
 }, 'HTML element cannot be content of TEMPLATE element. '
-    + 'Test some valid element after HTML element');
+    + 'Test HEAD element and some valid element after it, assigned to template innerHTML');
 
 
 test(function() {
@@ -101,7 +84,7 @@ test(function() {
             'Template cannot contain HTML element');
 
 }, 'HTML element cannot be content of TEMPLATE element. '
-    + 'Test nested template');
+    + 'Test HTML tag inside template tag assigned to another template's innerHTML');
 
 
 test(function() {
@@ -167,7 +150,7 @@ testInIFrame('../resources/template-contents-html.html', function(ctx) {
             'Template cannot contain HTML element');
 
 }, 'HTML element cannot be content of TEMPLATE element. '
-   + 'Test loading from a file');
+   + 'Test loading a HTML file with HTML tag inside template');
 
 </script>
 </body>

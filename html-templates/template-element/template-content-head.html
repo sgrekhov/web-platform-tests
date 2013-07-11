@@ -24,28 +24,11 @@ test(function() {
 
     doc.body.appendChild(template);
 
-    assert_equals(template.content.childNodes.length, 0, 
+    assert_equals(template.content.childNodes.length, 0,
             'Template cannot contain HEAD element');
 
 }, 'HEAD element cannot be content of TEMPLATE element. '
-    + 'Test empty HEAD element appended by innerHTML');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-    var template = doc.createElement('template');
-
-    doc.body.appendChild(template);
-
-    var head = doc.createElement('head');
-
-    template.appendChild(head);
-
-    assert_equals(template.content.childNodes.length, 0, 
-            'Template cannot contain HEAD element');
-
-}, 'HEAD element cannot be content of TEMPLATE element. '
-    + 'Test empty HEAD element appended by appendChild()');
+    + 'Test empty HEAD element assigned to template innerHTML');
 
 
 test(function() {
@@ -62,7 +45,7 @@ test(function() {
             'Template should contain children of ignored HEAD element');
 
 }, 'HEAD element cannot be content of TEMPLATE element. '
-    + 'Test not empty HEAD element');
+    + 'Test not empty HEAD element assigned to template innerHTML');
 
 
 test(function() {
@@ -81,7 +64,7 @@ test(function() {
             'Template should contain children of ignored HEAD element');
 
 }, 'HEAD element cannot be content of TEMPLATE element. '
-    + 'Test HEAD element and some valid element before it');
+    + 'Test HEAD element and some valid element before it, assigned to template innerHTML');
 
 
 test(function() {
@@ -100,7 +83,7 @@ test(function() {
             'Template should contain valid element');
 
 }, 'HEAD element cannot be content of TEMPLATE element. '
-    + 'Test HEAD element and some valid element after it');
+    + 'Test HEAD element and some valid element after it, assigned to template innerHTML');
 
 
 test(function() {
@@ -124,7 +107,7 @@ test(function() {
             'Template should contain children of ignored HEAD element');
 
 }, 'HEAD element cannot be content of TEMPLATE element. '
-    + 'Test nested template');
+    + 'Test HEAD tag inside template tag assigned to another template's innerHTML');
 
 
 testInIFrame('../resources/template-contents-head.html', function(ctx){
@@ -135,7 +118,7 @@ testInIFrame('../resources/template-contents-head.html', function(ctx){
     assert_equals(template.content.childNodes.length, 0,
             'Template cannot contain HEAD element');
 }, 'HEAD element cannot be content of TEMPLATE element. '
-    + 'Test loading from a file');
+    + 'Test loading a HTML file with HEAD tag inside template');
 
 </script>
 </body>
