@@ -53,7 +53,8 @@ test(function() {
             'Template should contain valid element');
 
 }, 'FRAMESET element cannot be content of TEMPLATE element. '
-    + 'Test FRAMESET element and some valid element before it, assigned to template's innerHTML');
+    + 'Test FRAMESET element and some valid element before it, assigned '
+    + 'to the template\'s innerHTML');
 
 
 test(function() {
@@ -74,7 +75,8 @@ test(function() {
             'Template should contain valid element');
 
 }, 'FRAMESET element cannot be content of TEMPLATE element. '
-    + 'Test FRAMESET element and some valid element after it, assigned to template's innerHTML');
+    + 'Test FRAMESET element and some valid element after it, assigned '
+    + 'to the template\'s innerHTML');
 
 
 test(function() {
@@ -101,7 +103,7 @@ test(function() {
             'Template cannot contain FRAMESET element');
 
 }, 'FRAMESET element cannot be content of TEMPLATE element. '
-    + 'Test FRAMESET tag inside template tag assigned to another template's innerHTML');
+    + 'Test FRAMESET tag inside template tag assigned to another template\'s innerHTML');
 
 
 testInIFrame('../resources/template-contents-frameset.html', function(ctx){
