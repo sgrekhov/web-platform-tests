@@ -3,6 +3,7 @@
 <head>
 <title>HTML Templates: HTML parser appends child nodes only to the template contents node</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <meta name="assert" content="HTML parser must append template's child nodes only to the template contents node.">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#appending-to-a-template">
 <script src="/resources/testharness.js"></script>
@@ -75,6 +76,7 @@ test(function () {
 }, 'Template child nodes must be appended to template content. Test nested template');
 
 
+
 testInIFrame('../../resources/template-contents.html', function(ctx){
     var doc = ctx.iframes[0].contentDocument;
 
@@ -86,7 +88,7 @@ testInIFrame('../../resources/template-contents.html', function(ctx){
             'Element is absent in the template content');
 
 }, 'Template child nodes must be appended to template content node. '
-    +'Load HTML document from server');
+    + 'Load HTML document from a file');
 
 
 testInIFrame('../../resources/template-contents-nested.html', function(ctx){
@@ -106,9 +108,8 @@ testInIFrame('../../resources/template-contents-nested.html', function(ctx){
     assert_true(nestedTemplate.content.querySelector('div') !== null,
             'Element is absent in the template content');
 
-
 }, 'Template child nodes must be appended to nested template content node. '
-    +'Load HTML document from server');
+    + 'Load HTML document from a file');
 
 </script>
 </body>
