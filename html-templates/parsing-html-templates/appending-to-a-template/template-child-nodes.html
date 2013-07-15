@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>HTML Templates: Child nodes of the template element appended to the template content</title>
+<title>HTML Templates: HTML parser appends child nodes only to the template contents node</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="assert" content="Template child node must be appended to the template contents of the template element instead. As a result, the HTML parser will never place any nodes as direct children of a template element">
+<meta name="assert" content="HTML parser must append template's child nodes only to the template contents node.">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#appending-to-a-template">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -21,19 +21,19 @@ test(function () {
         '<div id="div1">This is div inside template</div>' +
         '<div id="div2">This is another div inside template</div>' +
         '</template>';
-    
+
     var template = doc.querySelector('#tmpl1');
-    
+
     assert_equals(template.childNodes.length, 0, 'Wrong number of template child nodes');
     assert_equals(template.content.childNodes.length, 2,
             'Wrong number of template content child nodes');
-    
-    assert_true(template.content.querySelector('#div1') != null,
+
+    assert_true(template.content.querySelector('#div1') !== null,
             'Element is absent in the template content');
-    assert_true(template.content.querySelector('#div2') != null,
+    assert_true(template.content.querySelector('#div2') !== null,
             'Element is absent in the template content');
-    
-}, 'Template child nodes must be appended to template context');
+
+}, 'Template child nodes must be appended to template content node');
 
 
 
@@ -47,17 +47,17 @@ test(function () {
         '<div id="div4">This is another div inside nested template</div>' +
         '</template>' +
         '</template>';
-    
+
     var template = doc.querySelector('#tmpl1');
-    
+
     assert_equals(template.childNodes.length, 0,
             'Wrong number of template child nodes');
     assert_equals(template.content.childNodes.length, 3,
             'Wrong number of template content child nodes');
 
-    assert_true(template.content.querySelector('#div1') != null,
+    assert_true(template.content.querySelector('#div1') !== null,
             'Element is absent in the template content');
-    assert_true(template.content.querySelector('#div2') != null,
+    assert_true(template.content.querySelector('#div2') !== null,
             'Element is absent in the template content');
 
     var nestedTemplate = template.content.querySelector('#tmpl2');
@@ -66,13 +66,49 @@ test(function () {
             'Wrong number of template child nodes');
     assert_equals(nestedTemplate.content.childNodes.length, 2,
             'Wrong number of nested template content child nodes');
-    
-    assert_true(nestedTemplate.content.querySelector('#div3') != null,
+
+    assert_true(nestedTemplate.content.querySelector('#div3') !== null,
             'Element is absent in the template content');
-    assert_true(nestedTemplate.content.querySelector('#div4') != null,
+    assert_true(nestedTemplate.content.querySelector('#div4') !== null,
             'Element is absent in the template content');
-    
-}, 'Template child nodes must be appended to template context. Test nested template');
+
+}, 'Template child nodes must be appended to template content. Test nested template');
+
+
+testInIFrame('../../resources/template-contents.html', function(ctx){
+    var doc = ctx.iframes[0].contentDocument;
+
+    var template = doc.querySelector('template');
+
+    assert_equals(template.childNodes.length, 0, 'Wrong number of template child nodes');
+
+    assert_true(template.content.querySelector('div') !== null,
+            'Element is absent in the template content');
+
+}, 'Template child nodes must be appended to template content node. '
+    +'Load HTML document from server');
+
+
+testInIFrame('../../resources/template-contents-nested.html', function(ctx){
+    var doc = ctx.iframes[0].contentDocument;
+
+    var template = doc.querySelector('template');
+
+    assert_equals(template.childNodes.length, 0, 'Wrong number of template child nodes');
+
+    var nestedTemplate = template.content.querySelector('template');
+
+    assert_true(nestedTemplate !== null,
+            'Element is absent in the template content');
+
+    assert_equals(nestedTemplate.childNodes.length, 0, 'Wrong number of template child nodes');
+
+    assert_true(nestedTemplate.content.querySelector('div') !== null,
+            'Element is absent in the template content');
+
+
+}, 'Template child nodes must be appended to nested template content node. '
+    +'Load HTML document from server');
 
 </script>
 </body>
