@@ -3,6 +3,7 @@
 <head>
 <title>HTML Templates: Child nodes of template element in XHTML documents</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="author" title="Aleksei Yu. Semenov" href="a.semenov@unipro.ru">
 <meta name="assert" content="Child nodes of template element in XHTML documents are always appended to the template content (instead of template itself)">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#parsing-xhtml-documents">
 <script src="/resources/testharness.js"></script>
@@ -31,7 +32,7 @@ test(function() {
     assert_equals(template.content.childNodes.length, 2,
             'Wrong number of template content child nodes');
 
-}, 'Child nodes of template element in XHTML documents must be appended to template context');
+}, 'Child nodes of template element in XHTML documents must be appended to template content');
 
 
 
@@ -60,8 +61,7 @@ test(function() {
     assert_equals(nestedTemplate.content.childNodes.length, 2,
             'Wrong number of nested template content child nodes');
 
-}, 'Child nodes of template element in XHTML documents. '
-    + 'Test nested template');
+}, 'Child nodes of nested template element in XHTML documents must be appended to template content');
 
 
 
@@ -75,7 +75,7 @@ testInIFrame('../resources/template-child-nodes-div.xhtml', function(context) {
     assert_equals(template.content.querySelectorAll('div').length, 2,
             'Wrong number of template content child nodes');
 
-}, 'Child nodes of template element in XHTML documents. '
+}, 'Child nodes of template element in XHTML documents must be appended to template content. '
     + 'Test loading XHTML document from a file');
 
 
@@ -95,8 +95,8 @@ testInIFrame('../resources/template-child-nodes-nested.xhtml', function(context)
     assert_equals(nestedTemplate.content.querySelectorAll('div').length, 2,
             'Wrong number of template content child nodes');
 
-}, 'Child nodes of template element in XHTML documents. '
-    + 'Test loading of the document with the nested templates from a file');
+}, 'Child nodes of nested template element in XHTML documents must be appended to template content. '
+    + 'Test loading XHTML document from a file');
 
 </script>
 </body>

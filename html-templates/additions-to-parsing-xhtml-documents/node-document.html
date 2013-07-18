@@ -18,20 +18,16 @@
 
 
 test(function() {
-    var doc1 = newXHTMLDocument();
-    var template = doc1.createElement('template');
+    var doc = newXHTMLDocument();
+    doc.body = doc.createElement('body');
+    doc.body.innerHTML = '<template id="tmpl"></template>';
 
-    assert_equals(template.ownerDocument, doc1, 'Wrong template node owner document');
-    assert_equals(template.content.ownerDocument, doc1,
-            'Wrong template content owner document');
+    var template = doc.querySelector('#tmpl');
 
-    var doc2 = newXHTMLDocument();
-
-    doc2.body = doc2.createElement('body');
-    doc2.body.appendChild(template);
-
-    assert_equals(template.ownerDocument, doc2,
-            'Template node owner document should be changed');
+    assert_not_null(template, 'Template element should not be null');
+    assert_not_null(template.content, 'Content attribute of template element should not be null');
+    assert_equals(template.ownerDocument, doc.body.ownerDocument, 'Wrong template node owner document');
+    assert_equals(template.content.ownerDocument, doc, 'Wrong template content owner document');
 
 }, 'Parsing XHTML: Node\'s node document must be set to that of the element '
     + 'to which it will be appended. Test empty template');
@@ -39,30 +35,20 @@ test(function() {
 
 
 test(function() {
-    var doc1 = newXHTMLDocument();
+    var doc = newXHTMLDocument();
 
-    doc1.body = doc1.createElement('body');
-    doc1.body.innerHTML = '<template id="tmpl"><div>Div content</div></template>';
+    doc.body = doc.createElement('body');
+    doc.body.innerHTML = '<template id="tmpl"><div>Div content</div></template>';
 
-    var template = doc1.querySelector('#tmpl');
+    var template = doc.querySelector('#tmpl');
 
-    assert_equals(template.ownerDocument, doc1,
-                    'Wrong template node owner document');
+    assert_equals(template.ownerDocument, doc.body.ownerDocument, 'Wrong template node owner document');
 
-    var doc2 = newXHTMLDocument();
-    var body2 = doc2.createElement('body');
-    doc2.body = body2;
-    doc2.body.appendChild(template);
-
-    assert_equals(template.ownerDocument, doc2,
-            'Template node owner document should be changed');
-
-    assert_not_null(template.content,
-            'Content attribute of TEMPLATE element shouldn\'t be null');
+    assert_not_null(template, 'Template element should not be null');
+    assert_not_null(template.content, 'Content attribute of template element should not be null');
 
     var div = template.content.querySelector('div');
-    assert_equals(template.content.ownerDocument, div.ownerDocument,
-            'Wrong DIV node owner document');
+    assert_equals(template.content.ownerDocument, div.ownerDocument, 'Wrong DIV node owner document');
 
 }, 'Parsing XHTML: Node\'s node document must be set to that of the element '
     + 'to which it will be appended. Test not empty template');
@@ -70,41 +56,27 @@ test(function() {
 
 
 test(function() {
-    var doc1 = newXHTMLDocument();
-    doc1.body = doc1.createElement('body');
-    doc1.body.innerHTML = ''
+    var doc = newXHTMLDocument();
+    doc.body = doc.createElement('body');
+    doc.body.innerHTML = ''
             + '<template id="tmpl"><div>Div content</div> And some more text'
             + '<template id="tmpl2"><div>Template content</div></template>'
             + '</template>';
 
-    var template = doc1.querySelector('#tmpl');
-
-    assert_equals(template.ownerDocument, doc1, 'Wrong template node owner document');
-
-    assert_not_null(template.content,
-            'Content attribute of TEMPLATE element shouldn\'t be null');
+    var template = doc.querySelector('#tmpl');
+    assert_not_null(template, 'Template element should not be null');
+    assert_equals(template.ownerDocument, doc, 'Wrong template node owner document');
+    assert_not_null(template.content, 'Content attribute of template element should not be null');
 
     var nestedTemplate = template.content.querySelector('#tmpl2');
-
-    assert_equals(nestedTemplate.ownerDocument, doc1,
+    assert_not_null(nestedTemplate, 'Nested template element should not be null');
+    assert_not_null(nestedTemplate.content, 'Content attribute of nested template element should not be null');
+    assert_equals(nestedTemplate.ownerDocument, template.content.ownerDocument,
             'Wrong nested template node owner document');
 
-    var doc2 = newXHTMLDocument();
-    var body2 = doc2.createElement('body');
-    doc2.body = body2;
-    doc2.body.appendChild(template);
-
-    assert_equals(template.ownerDocument, doc2,
-            'Template node owner document should be changed');
-
-    assert_equals(nestedTemplate.ownerDocument, doc2,
-            'Nested template node owner document should be changed');
-
-    assert_not_null(nestedTemplate.content,
-            'Content attribute of inner TEMPLATE element shouldn\'t be null');
 
     var div = nestedTemplate.content.querySelector('div');
-    assert_equals(template.content.ownerDocument, div.ownerDocument,
+    assert_equals(nestedTemplate.content.ownerDocument, div.ownerDocument,
             'Wrong DIV node owner document');
 
 }, 'Parsing XHTML: Node\'s node document must be set to that of the element '
@@ -120,7 +92,7 @@ testInIFrame('../resources/template-child-nodes-div.xhtml', function(context) {
     assert_equals(template.ownerDocument, doc, 'Wrong template node owner document');
 
     assert_not_null(template.content,
-            'Content attribute of TEMPLATE element shouldn\'t be null');
+            'Content attribute of template element should not be null');
 
     var div = template.content.querySelector('div');
     assert_equals(template.content.ownerDocument, div.ownerDocument,
@@ -150,52 +122,6 @@ testInIFrame('../resources/template-child-nodes-nested.xhtml', function(context)
 }, 'Parsing XHTML: Node\'s node document must be set to that of the element '
     + 'to which it will be appended. Test loading of XHTML document '
     + 'with nested templates from a file');
-
-
-// load document from file and append template node to other XHTML document
-testInIFrame('../resources/template-child-nodes-div.xhtml', function(context) {
-    var doc1 = context.iframes[0].contentDocument;
-
-    var template = doc1.querySelector('template');
-
-    var doc2 = newXHTMLDocument();
-    doc2.body = doc2.createElement('body');
-    doc2.body.appendChild(template);
-
-    assert_equals(template.ownerDocument, doc2, 'Wrong template node owner document');
-
-    var div = template.content.querySelector('div');
-    assert_equals(template.content.ownerDocument, div.ownerDocument,
-            'Wrong DIV node owner document');
-
-}, 'Parsing XHTML: Node\'s node document must be set to that of the element '
-    + 'to which it will be appended. Test loading of XHTML document '
-    + 'from a file and appending of template node to other XHTML document');
-
-
-
-testInIFrame('../resources/template-child-nodes-nested.xhtml', function(context) {
-    var doc1 = context.iframes[0].contentDocument;
-
-    var template = doc1.querySelector('template');
-    var nestedTemplate = template.content.querySelector('template');
-
-    var doc2 = newXHTMLDocument();
-    doc2.body = doc2.createElement('body');
-    doc2.body.appendChild(template);
-
-    assert_equals(template.ownerDocument, doc2, 'Wrong template node owner document');
-    assert_equals(nestedTemplate.ownerDocument, template.content.ownerDocument,
-            'Wrong template node owner document');
-
-
-    var div = nestedTemplate.content.querySelector('div');
-    assert_equals(nestedTemplate.content.ownerDocument, div.ownerDocument,
-            'Wrong DIV node owner document');
-
-}, 'Parsing XHTML: Node\'s node document '
-    + 'Test loading of document with nested templates from server and '
-    + 'append the template node to other XHTML document');
 
 </script>
 </body>
