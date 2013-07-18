@@ -114,7 +114,7 @@ testInIFrame('../../resources/template-contents-table-no-end-tag.html', function
     assert_not_null(template.content.querySelector('tr'), 'Template should contain TR element');
     assert_not_null(template.content.querySelector('td'), 'Template should contain TD element');
 
-}, 'Generating of implied end tags. Test table elements. Load HTML document from file');
+}, 'Generating of implied end tags. Test table elements. Loading of HTML document from a file');
 
 
 testInIFrame('../../resources/template-contents-div-no-end-tag.html', function(context){
@@ -128,7 +128,7 @@ testInIFrame('../../resources/template-contents-div-no-end-tag.html', function(c
     assert_not_null(div, 'Template should contain div element');
     assert_equals(div.innerText, 'Hello, template\n    ', 'Invalid div contents');
 
-}, 'Generating of implied end tags. Test div element. Load HTML document from file');
+}, 'Generating of implied end tags. Test div element. Loading of HTML document from a file');
 </script>
 </body>
 </html>

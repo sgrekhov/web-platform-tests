@@ -71,10 +71,7 @@ test(function () {
 
     assert_equals(copy.content.childNodes.length, 0,
             'Wrong number of template content\'s copy child nodes');
-    assert_null(copy.content.querySelector('#div1'),
-            'Template child node should not be copied');
-    assert_null(copy.content.querySelector('#div2'),
-            'Template child node should not be copied');
+
 }, 'Clone template node. Test call to cloneNode(false)');
 
 
