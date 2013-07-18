@@ -3,7 +3,6 @@
 <head>
 <title>HTML Templates: ownerDocument of copy of template content is set to template content owner</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
 <meta name="assert" content="ownerDocument of copy of template content is set to template content owner">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#node-clone-additions">
 <script src="/resources/testharness.js"></script>
@@ -16,44 +15,42 @@
 <script type="text/javascript">
 
 function checkOwnerDocument(node, doc) {
-    if (node != null && node.childNodes.length > 0) {
+    if (node != null) {
+        assert_equals(node.ownerDocument, doc,
+                'Wrong ownerDocument of the template copy\'s node ' + node.nodeName);
         for (var i = 0; i < node.childNodes.length; i++) {
             if (node.childNodes[i].nodeType == Node.ELEMENT_NODE) {
-                assert_equals(node.childNodes[i].ownerDocument, doc, 
-                'Wrong ownerDocument of template copy\'s node ' + node.nodeName);
-                if (node.childNodes[i].childNodes.length > 0) {
-                    if (node.childNodes[i].nodeName != 'TEMPLATE') {
-                        this.checkOwnerDocument(node.childNodes[i]);
-                    } else {
-                        this.checkOwnerDocument(node.childNodes[i].content);
-                    }
+                checkOwnerDocument(node.childNodes[i], doc);
+                if (node.childNodes[i].nodeName == 'TEMPLATE') {
+                    checkOwnerDocument(node.childNodes[i].content, doc);
                 }
             }
         }                       
     }
 }
 
+
 test(function () {
-    var d = newHTMLDocument();
-    d.body.innerHTML = '<template id="tmpl1">' +
+    var doc = newHTMLDocument();
+    doc.body.innerHTML = '<template id="tmpl1">' +
         '<div id="div1">This is div inside template</div>' +
         '<div id="div2">This is another div inside template</div>' +
         '</template>';
     
-    var t = d.querySelector('#tmpl1');
-    var copy = t.cloneNode(true);        
+    var template = doc.querySelector('#tmpl1');
+    var copy = template.cloneNode(true);        
     
     assert_equals(copy.content.childNodes.length, 2, 
             'Wrong number of template content\'s copy child nodes');
-    checkOwnerDocument(copy.content, d);
+    checkOwnerDocument(copy.content, template.content.ownerDocument);
     
 }, 'ownerDocument of copy of template content is set to template content owner');
 
 
-// test nested nodes
+
 test(function () {
-    var d = newHTMLDocument();
-    d.body.innerHTML = '<template id="tmpl1">' +
+    var doc = newHTMLDocument();
+    doc.body.innerHTML = '<template id="tmpl1">' +
         '<div id="div1">This is div inside template</div>' +
         '<div id="div2">This is another div inside template</div>' +
         '<template id="tmpl2">' +
@@ -62,14 +59,15 @@ test(function () {
         '</template>' +
         '</template>';
     
-    var t = d.querySelector('#tmpl1');
-    var copy = t.cloneNode(true);        
+    var template = doc.querySelector('#tmpl1');
+    var copy = template.cloneNode(true);        
     
     assert_equals(copy.content.childNodes.length, 3, 
             'Wrong number of template content\'s copy child nodes');
-    checkOwnerDocument(copy.content, d);
+    checkOwnerDocument(copy.content, template.content.ownerDocument);
     
-}, 'ownerDocument of copy of template content is set to template content owner (nested template)');
+}, 'ownerDocument of copy of template content is set to template content owner. '
+    + 'Test nested template');
 
 </script>
 </body>

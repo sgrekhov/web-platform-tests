@@ -3,7 +3,6 @@
 <head>
 <title>HTML Templates: Child nodes of template element in XHTML documents</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="reviewer" title="" href="mailto:"> <!-- 2013-06-20 -->
 <meta name="assert" content="Child nodes of template element in XHTML documents are always appended to the template content (instead of template itself)">
 <link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#parsing-xhtml-documents">
 <script src="/resources/testharness.js"></script>
@@ -15,53 +14,31 @@
 <div id="log"></div>
 <script type="text/javascript">
 
-// test innerHTML
-test(function() {
-    var d = newXHTMLDocument();
 
-    d.body = d.createElement('body');
-    d.body.innerHTML = '<template id="tmpl1">'
+test(function() {
+    var doc = newXHTMLDocument();
+
+    doc.body = doc.createElement('body');
+    doc.body.innerHTML = '<template id="tmpl1">'
             + '<div id="div1">This is div inside template</div>'
             + '<div id="div2">This is another div inside template</div>'
             + '</template>';
 
-    var t = d.querySelector('#tmpl1');
+    var template = doc.querySelector('#tmpl1');
 
-    assert_equals(t.childNodes.length, 0,
+    assert_equals(template.childNodes.length, 0,
             'Wrong number of template child nodes');
-    assert_equals(t.content.childNodes.length, 2,
+    assert_equals(template.content.childNodes.length, 2,
             'Wrong number of template content child nodes');
 
-}, 'Child nodes of template element in XHTML documents (test innerHTML)');
+}, 'Child nodes of template element in XHTML documents must be appended to template context');
 
 
-// test appendChild
+
 test(function() {
-    var d = newXHTMLDocument();
-
-    var t = d.createElement('template');
-    d.body = d.createElement('body');
-    d.body.appendChild(t);
-
-    var div1 = d.createElement('div');
-    var div2 = d.createElement('div');
-
-    t.appendChild(div1);
-    t.appendChild(div2);
-
-    assert_equals(t.childNodes.length, 0,
-            'Wrong number of template child nodes');
-    assert_equals(t.content.childNodes.length, 2,
-            'Wrong number of template content child nodes');
-
-}, 'Child nodes of template element in XHTML documents (test appendChild)');
-
-
-// Test nested template. innerHTML
-test(function() {
-    var d = newXHTMLDocument();
-    d.body = d.createElement('body');
-    d.body.innerHTML = '<template id="tmpl1">'
+    var doc = newXHTMLDocument();
+    doc.body = doc.createElement('body');
+    doc.body.innerHTML = '<template id="tmpl1">'
             + '<div id="div1">This is div inside template</div>'
             + '<div id="div2">This is another div inside template</div>'
             + '<template id="tmpl2">'
@@ -69,96 +46,57 @@ test(function() {
             + '<div id="div4">This is another div inside nested template</div>'
             + '</template>' + '</template>';
 
-    var t = d.querySelector('#tmpl1');
+    var template = doc.querySelector('#tmpl1');
 
-    assert_equals(t.childNodes.length, 0,
+    assert_equals(template.childNodes.length, 0,
             'Wrong number of template child nodes');
-    assert_equals(t.content.childNodes.length, 3,
+    assert_equals(template.content.childNodes.length, 3,
             'Wrong number of template content child nodes');
 
-    var t2 = t.content.querySelector('#tmpl2');
+    var nestedTemplate = template.content.querySelector('#tmpl2');
 
-    assert_equals(t2.childNodes.length, 0,
+    assert_equals(nestedTemplate.childNodes.length, 0,
             'Wrong number of template child nodes');
-    assert_equals(t2.content.childNodes.length, 2,
+    assert_equals(nestedTemplate.content.childNodes.length, 2,
             'Wrong number of nested template content child nodes');
 
-}, 'Child nodes of template element in XHTML documents ' 
-    + '(test innerHTML and nested template)');
+}, 'Child nodes of template element in XHTML documents. '
+    + 'Test nested template');
 
 
-// Test nested template. appendChild
-test(function() {
-    var d = newXHTMLDocument();
-    d.body = d.createElement('body');
 
-    var t = d.createElement('template');
-    d.body.appendChild(t);
+testInIFrame('../resources/template-child-nodes-div.xhtml', function(context) {
+    var doc = context.iframes[0].contentDocument;
 
-    var div1 = d.createElement('div');
-    var div2 = d.createElement('div');
+    var template = doc.querySelector('template');
 
-    t.appendChild(div1);
-    t.appendChild(div2);
-
-    var t2 = d.createElement('template');
-
-    var div3 = d.createElement('div');
-    var div4 = d.createElement('div');
-
-    t2.appendChild(div3);
-    t2.appendChild(div4);
-
-    t.appendChild(t2);
-
-    assert_equals(t.childNodes.length, 0,
+    assert_equals(template.childNodes.length, 0,
             'Wrong number of template child nodes');
-    assert_equals(t.content.childNodes.length, 3,
+    assert_equals(template.content.querySelectorAll('div').length, 2,
             'Wrong number of template content child nodes');
 
-    assert_equals(t2.childNodes.length, 0,
-            'Wrong number of nested template child nodes');
-    assert_equals(t2.content.childNodes.length, 2,
-            'Wrong number of nested template content child nodes');
-
-}, 'Child nodes of template element in XHTML documents ' 
-    + '(test appendChild and nested template)');
+}, 'Child nodes of template element in XHTML documents. '
+    + 'Test loading XHTML document from a file');
 
 
-// load XHTML document from file
-testInIFrame('../resources/template-child-nodes-div.xhtml', function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
+testInIFrame('../resources/template-child-nodes-nested.xhtml', function(context) {
+    var doc = context.iframes[0].contentDocument;
 
-    var t = d.querySelector('template');
+    var template = doc.querySelector('template');
 
-    assert_equals(t.childNodes.length, 0,
+    assert_equals(template.childNodes.length, 0,
             'Wrong number of template child nodes');
-    assert_equals(t.content.querySelectorAll('div').length, 2,
+
+    var nestedTemplate = template.content.querySelector('template');
+
+    assert_equals(nestedTemplate.childNodes.length, 0,
+            'Wrong number of template child nodes');
+
+    assert_equals(nestedTemplate.content.querySelectorAll('div').length, 2,
             'Wrong number of template content child nodes');
 
-}, 'Child nodes of template element in XHTML documents ' 
-    + '(load XHTML document from file)');
-
-
-// load document with nested templates from file
-testInIFrame('../resources/template-child-nodes-nested.xhtml', function(ctx) {
-    var d = ctx.iframes[0].contentDocument;
-
-    var t = d.querySelector('template');
-
-    assert_equals(t.childNodes.length, 0,
-            'Wrong number of template child nodes');
-
-    var nt = t.content.querySelector('template');
-
-    assert_equals(nt.childNodes.length, 0,
-            'Wrong number of template child nodes');
-
-    assert_equals(nt.content.querySelectorAll('div').length, 2,
-            'Wrong number of template content child nodes');
-
-}, 'Child nodes of template element in XHTML documents ' 
-    + '(load document with nested templates from file)');
+}, 'Child nodes of template element in XHTML documents. '
+    + 'Test loading of the document with the nested templates from a file');
 
 </script>
 </body>
