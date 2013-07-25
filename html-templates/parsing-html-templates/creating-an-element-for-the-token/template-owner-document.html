@@ -165,7 +165,7 @@ testInIFrame('../../resources/two-templates.html', function(context){
 test(function() {
     var doc = newHTMLDocument();
 
-    HTML5_TAG.forEach(function(value) {
+    HTML5_ELEMNTS.forEach(function(value) {
         if (value != 'body' && value != 'html' && value != 'head'
                 && value != 'frameset') {
 
@@ -186,7 +186,7 @@ test(function() {
 testInIFrame('../../resources/template-contents-text.html', function(context){
     var doc = context.iframes[0].contentDocument;
 
-    HTML5_TAG.forEach(function(value) {
+    HTML5_ELEMNTS.forEach(function(value) {
         if (value != 'body' && value != 'html' && value != 'head'
                 && value != 'frameset') {
 
