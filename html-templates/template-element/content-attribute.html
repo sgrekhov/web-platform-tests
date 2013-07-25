@@ -18,31 +18,41 @@
 test(function() {
     var doc = newHTMLDocument();
     var template = doc.createElement('template');
-    var el1 = doc.createElement('div');
-    var el2 = doc.createElement('span');
-    el1.appendChild(el2);
 
-    var valueBeforeChange = template.content;
-    template.content = el1;
-
-    assert_equals(template.content, valueBeforeChange,
+    assert_readonly(template, 'content',
             'Content attribute of template element should be read-only');
 
 }, 'Content attribute of template element is read-only. ' +
-    'Assigning value to content property of template should be ignored');
+    'Test empty template');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    doc.body.innerHTML = '<template id="tmpl1" content="<div id=div1>Div content</div>"></template>';
+    var template = doc.createElement('template');
+    var el1 = doc.createElement('div');
+    var el2 = doc.createElement('span');
+    el1.appendChild(el2);
 
-    var template = doc.querySelector('#tmpl1');
+    template.content.appendChild(el1);
 
-    assert_equals(template.content.childNodes.length, 0,
+    assert_readonly(template, 'content',
             'Content attribute of template element should be read-only');
 
 }, 'Content attribute of template element is read-only. ' +
-    'HTML value of content attribute of template tag should be ignored');
+    'Test not empty template populated by appendchild()');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    doc.body.innerHTML = '<template>Text<div>DIV</div></template>';
+
+    var template = doc.querySelector('template');
+
+    assert_readonly(template, 'content',
+            'Content attribute of template element should be read-only');
+
+}, 'Content attribute of template element is read-only. ' +
+    'Test not empty template populated by innerHTML');
 
 
 test(function() {
@@ -51,11 +61,29 @@ test(function() {
 
     var template = doc.querySelector('#tmpl1');
 
+    assert_readonly(template, 'content',
+            'Content attribute of template element should be read-only');
+
+}, 'Content attribute of template element is read-only. ' +
+    'Test that custom content attribute named \'content\' doesn\'t ' +
+    'make content IDL attribute writable');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    doc.body.innerHTML = '<template id="tmpl1" content="<div id=div1>Div content</div>"></template>';
+
+    var template = doc.querySelector('#tmpl1');
+
+    assert_readonly(template, 'content',
+            'Content attribute of template element should be read-only');
+
     assert_equals(template.content.childNodes.length, 0,
             'Content attribute of template element should be read-only');
 
 }, 'Content attribute of template element is read-only. ' +
-    'Text value of content attribute of template tag should be ignored');
+    'Test that custom content attribute named \'content\' doesn\'t ' +
+    'affect content IDL attribute');
 
 
 testInIFrame('../resources/template-contents-attribute.html', function(context){
@@ -63,12 +91,12 @@ testInIFrame('../resources/template-contents-attribute.html', function(context){
 
     var template = doc.body.querySelector('template');
 
-    assert_equals(template.content.childNodes.length, 0,
+    assert_readonly(template, 'content',
             'Content attribute of template element should be read-only');
 
 }, 'Content attribute of template element is read-only. '
     + 'Text value of content attribute of template tag should be ignored, '
-    + 'when loading document from file');
+    + 'when loading document from a file');
 
 </script>
 </body>
