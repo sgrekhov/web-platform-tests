@@ -25,21 +25,10 @@ var HTML5_ELEMNTS = [ 'a', 'abbr', 'address', 'area', 'article', 'aside',
         'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'u', 'ul',
         'var', 'video', 'wbr' ];
 
-// only those HTML5 tags which can have end ones
-var HTML5_ELEMENTS_WITH_END_TAG = [ 'a', 'abbr', 'address', 'area', 'article',
-        'aside', 'audio', 'b', 'base', 'bdi', 'bdo', 'blockquote', 'body',
-        'button', 'canvas', 'caption', 'cite', 'code', 'col', 'colgroup',
-        'command', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'div',
-        'dl', 'dt', 'em', 'embed', 'fieldset', 'figcaption', 'figure',
-        'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'header',
-        'hgroup', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'kbd',
-        'keygen', 'label', 'legend', 'li', 'link', 'map', 'mark', 'menu',
-        'meta', 'meter', 'nav', 'noscript', 'object', 'ol', 'optgroup',
-        'option', 'output', 'p', 'param', 'pre', 'progress', 'q', 'rp', 'rt',
-        'ruby', 's', 'samp', 'script', 'section', 'select', 'small', 'source',
-        'span', 'strong', 'style', 'sub', 'table', 'tbody', 'td', 'textarea',
-        'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'u', 'ul',
-        'var', 'video', 'wbr' ];
+// only void (without end tag) HTML5 elements
+var HTML5_VOID_ELEMENTS = [ 'area', 'base', 'br', 'col', 'command', 'embed',
+        'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source',
+        'track', 'wbr' ];
 
 // http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element
 var HTML5_FORM_ASSOCIATED_ELEMENTS = [ 'button', 'fieldset', 'input', 'keygen',
@@ -169,6 +158,15 @@ function assert_nodelist_contents_equal_noorder(actual, expected, message) {
 
 function isVisible(el) {
     return el.offsetTop != 0;
+}
+
+function isVoidElement(elementName) {
+    for ( var i = 0; i < HTML5_VOID_ELEMENTS.length; i++) {
+        if (elementName === HTML5_VOID_ELEMENTS[i]) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function checkTemplateContent(d, obj, html, id, nodeName) {

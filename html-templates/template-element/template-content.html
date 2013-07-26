@@ -18,8 +18,8 @@ var doc = newHTMLDocument();
 var parameters = [];
 
 HTML5_ELEMNTS.forEach(function(value) {
-    if (value != 'body' && value != 'html' && value != 'head'
-            && value != 'frameset') {
+    if (value !== 'body' && value !== 'html' && value !== 'head'
+            && value !== 'frameset') {
 
         var template = doc.createElement('template');
         var element = doc.createElement(value);
