@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>HTML Templates: BODY element cannot be content of TEMPLATE element</title>
+<title>HTML Templates: In body insertion mode: parser should ignore BODY token</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
-<meta name="assert" content="BODY element cannot be content of TEMPLATE element">
-<link rel="help" href="http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-element">
+<meta name="assert" content="http://www.w3.org/TR/2013/WD-html-templates-20130214/#in-body-addition">
+<link rel="help" href="">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
-<script src='../testcommon.js'></script>
+<script src='../../testcommon.js'></script>
 <link rel="stylesheet" href="/resources/testharness.css">
 </head>
 <body>
 <div id="log"></div>
 <script type="text/javascript">
+
+/*
+ * According to http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-contents-insertion-mode
+ * when parser is in "template content" miode and meets <body> tag it should be swiched to
+ * "in body" insertion mode. 
+ * According to http://www.w3.org/TR/2013/WD-html-templates-20130214/#in-body-addition
+ * this token (BODY) should be ignored
+ */
 
 
 test(function() {
@@ -27,8 +35,8 @@ test(function() {
     assert_equals(template.content.childNodes.length, 0,
             'Template cannot contain BODY element');
 
-}, 'BODY element cannot be content of TEMPLATE element. '
-    + 'Test empty BODY element assigned to template innerHTML');
+}, 'Ignore BODY token. Test empty BODY element assigned to template innerHTML');
+
 
 test(function() {
     var doc = newHTMLDocument();
@@ -43,8 +51,7 @@ test(function() {
     assert_equals(template.content.firstChild.nodeName, 'DIV',
             'Template should contain children of ignored BODY element');
 
-}, 'BODY element cannot be content of TEMPLATE element.'
-    + 'Test not empty BODY element assigned to template innerHTML');
+}, 'Ignore BODY token. Test not empty BODY element assigned to template innerHTML');
 
 
 test(function() {
@@ -62,7 +69,7 @@ test(function() {
     assert_true(template.content.querySelector('#dv2') != null,
             'Template should contain valid element');
 
-}, 'BODY element cannot be content of TEMPLATE element. '
+}, 'Ignore BODY token. '
         + 'Test BODY element and some valid element after BODY tag assigned to template innerHTML');
 
 
@@ -81,7 +88,7 @@ test(function() {
     assert_true(template.content.querySelector('#dv2') != null,
             'Template should contain children of the ignored BODY element');
 
-}, 'BODY element cannot be content of TEMPLATE element. '
+}, 'Ignore BODY token. '
         + 'Test BODY element and some valid element before BODY tag assigned to template innerHTML');
 
 
@@ -105,19 +112,20 @@ test(function() {
     assert_equals(nestedTemplate.content.firstChild.nodeName, 'SPAN',
             'Template cannot contain BODY element');
 
-}, 'BODY element cannot be content of TEMPLATE element. '
+}, 'Ignore BODY token. '
     + 'Test template with not empty BODY element inside assigned to another '
     + 'template\'s innerHTML');
 
 
-testInIFrame('../resources/template-contents-body.html', function(context) {
+testInIFrame('../../resources/template-contents-body.html', function(context) {
     var doc = context.iframes[0].contentDocument;
 
     var template = doc.body.querySelector('template');
 
     assert_equals(template.content.childNodes.length, 0,
             'Template cannot contain BODY element');
-}, 'BODY element cannot be content of TEMPLATE element. '
+    
+}, 'Ignore BODY token. '
     + 'Test loading a HTML file with BODY tag inside template');
 
 </script>
