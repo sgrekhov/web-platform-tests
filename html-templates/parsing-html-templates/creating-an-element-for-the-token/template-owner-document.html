@@ -167,7 +167,7 @@ HTML5_ELEMNTS.forEach(function(value) {
     if (value !== 'body' && value !== 'html' && value !== 'head' && value !== 'frameset') {
 
         var doc = newHTMLDocument();
-        
+
         if (isVoidElement(value)) {
             doc.body.innerHTML = '<template><' + value + '/></template>';
         } else {
@@ -196,11 +196,11 @@ parameters = [];
 try {
 
     HTML5_ELEMNTS.forEach(function(value) {
-        
+
         if (value !== 'body' && value !== 'html' && value !== 'head' && value !== 'frameset') {
-            
+
             var doc = newRenderedHTMLDocument(context);
-    
+
             if (isVoidElement(value)) {
                 doc.body.innerHTML = '<template><' + value + '/></template>';
             } else {
@@ -209,9 +209,9 @@ try {
     
             var template = doc.querySelector('template');
             var element = template.content.querySelector(value);
-    
+
             doc.body.appendChild(template);
-    
+
             parameters[parameters.length] = [
                     'Test ownerDocument for the element ' + value + ' in the template. '
                         + 'Document has browsing context',
