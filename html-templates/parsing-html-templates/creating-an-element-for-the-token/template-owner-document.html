@@ -161,13 +161,13 @@ testInIFrame('../../resources/two-templates.html', function(context) {
     + 'Load HTML document from a file, current DOCUMENT has browsing context');
 
 
-
-var doc = newHTMLDocument();
 var parameters = [];
 
 HTML5_ELEMNTS.forEach(function(value) {
-    if (value !== 'body' && value != 'html' && value != 'head' && value != 'frameset') {
+    if (value !== 'body' && value !== 'html' && value !== 'head' && value !== 'frameset') {
 
+        var doc = newHTMLDocument();
+        
         if (isVoidElement(value)) {
             doc.body.innerHTML = '<template><' + value + '/></template>';
         } else {
@@ -190,34 +190,48 @@ generate_tests(assert_equals, parameters,
         'Test ownerDocument property of all HTML5 elements in a template. '
             + 'Current DOCUMENT has no browsing context.');
 
-
-doc = newRenderedHTMLDocument();
+var context = newContext();
 parameters = [];
 
-HTML5_ELEMNTS.forEach(function(value) {
-    if (value !== 'body' && value != 'html' && value != 'head' && value != 'frameset') {
+try {
 
-        if (isVoidElement(value)) {
-            doc.body.innerHTML = '<template><' + value + '/></template>';
-        } else {
-            doc.body.innerHTML = '<template><' + value + '></' + value + '></template>';
+    HTML5_ELEMNTS.forEach(function(value) {
+        
+        if (value !== 'body' && value !== 'html' && value !== 'head' && value !== 'frameset') {
+            
+            var doc = newRenderedHTMLDocument(context);
+    
+            if (isVoidElement(value)) {
+                doc.body.innerHTML = '<template><' + value + '/></template>';
+            } else {
+                doc.body.innerHTML = '<template><' + value + '></' + value + '></template>';
+            }
+    
+            var template = doc.querySelector('template');
+            var element = template.content.querySelector(value);
+    
+            doc.body.appendChild(template);
+    
+            parameters[parameters.length] = [
+                    'Test ownerDocument for the element ' + value + ' in the template. '
+                        + 'Document has browsing context',
+                    element.ownerDocument,
+                    template.content.ownerDocument
+                ];
         }
+    });
+    generate_tests(assert_equals, parameters,
+            'Test ownerDocument property of all HTML5 elements in a template. '
+                + 'Current DOCUMENT has browsing context.');
 
-        var template = doc.querySelector('template');
-        var element = template.content.querySelector(value);
-
-        doc.body.appendChild(template);
-
-        parameters[parameters.length] = [
-                'Test ownerDocument for the element ' + value + ' in the template',
-                element.ownerDocument,
-                template.content.ownerDocument
-            ];
+} finally {
+    try {
+        cleanContext(context);
+    } catch (e) {
+        //do nothing       
     }
-});
-generate_tests(assert_equals, parameters,
-        'Test ownerDocument property of all HTML5 elements in a template. '
-            + 'Current DOCUMENT has browsing context.');
+}
+
 </script>
 </body>
 </html>
