@@ -163,7 +163,7 @@ testInIFrame('../../resources/two-templates.html', function(context) {
 
 var parameters = [];
 
-HTML5_ELEMNTS.forEach(function(value) {
+HTML5_ELEMENTS.forEach(function(value) {
     if (value !== 'body' && value !== 'html' && value !== 'head' && value !== 'frameset') {
 
         var doc = newHTMLDocument();
@@ -179,11 +179,11 @@ HTML5_ELEMNTS.forEach(function(value) {
 
         doc.body.appendChild(template);
 
-        parameters[parameters.length] = [
+        parameters.push([
                 'Test ownerDocument for the element ' + value + ' in the template',
                 element.ownerDocument,
                 template.content.ownerDocument
-            ];
+            ]);
     }
 });
 generate_tests(assert_equals, parameters,
@@ -195,7 +195,7 @@ parameters = [];
 
 try {
 
-    HTML5_ELEMNTS.forEach(function(value) {
+    HTML5_ELEMENTS.forEach(function(value) {
 
         if (value !== 'body' && value !== 'html' && value !== 'head' && value !== 'frameset') {
 
@@ -206,18 +206,18 @@ try {
             } else {
                 doc.body.innerHTML = '<template><' + value + '></' + value + '></template>';
             }
-    
+
             var template = doc.querySelector('template');
             var element = template.content.querySelector(value);
 
             doc.body.appendChild(template);
 
-            parameters[parameters.length] = [
+            parameters.push([
                     'Test ownerDocument for the element ' + value + ' in the template. '
                         + 'Document has browsing context',
                     element.ownerDocument,
                     template.content.ownerDocument
-                ];
+                ]);
         }
     });
     generate_tests(assert_equals, parameters,
@@ -228,7 +228,7 @@ try {
     try {
         cleanContext(context);
     } catch (e) {
-        //do nothing       
+        //do nothing
     }
 }
 
