@@ -17,8 +17,8 @@
 
 /*
  * According to http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-contents-insertion-mode
- * when parser is in "template content" miode and meets <html> tag it should be swiched to
- * "in body" insertion mode. 
+ * when parser is in "template content" mode and meets <html> tag it should be switched to
+ * "in body" insertion mode.
  * According to http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody
  * this token (HTML) should be ignored
  */
@@ -41,13 +41,13 @@ test(function() {
     var doc = newHTMLDocument();
     var template = doc.createElement('template');
 
-    template.innerHTML = '<div id="dv">Some text</div><html><body></body></html>';
+    template.innerHTML = '<div id="div1">Some text</div><html><body></body></html>';
 
     doc.body.appendChild(template);
 
     assert_equals(template.content.childNodes.length, 1,
             'Template cannot contain HTML element');
-    assert_true(template.content.querySelector('#dv') != null,
+    assert_true(template.content.querySelector('#div1') != null,
             'Template should contain valid element');
 
 }, 'Ignore HTML token.'
@@ -58,13 +58,13 @@ test(function() {
     var doc = newHTMLDocument();
     var template = doc.createElement('template');
 
-    template.innerHTML = '<html><body></body></html><div id="dv">Some text</div>';
+    template.innerHTML = '<html><body></body></html><div id="div1">Some text</div>';
 
     doc.body.appendChild(template);
 
     assert_equals(template.content.childNodes.length, 1,
             'Template cannot contain HTML element');
-    assert_true(template.content.querySelector('#dv') != null,
+    assert_true(template.content.querySelector('#div1') != null,
             'Template should contain valid element');
 
 }, 'Ignore HTML token. '
@@ -97,13 +97,13 @@ test(function() {
     var doc = newHTMLDocument();
     var template = doc.createElement('template');
 
-    template.innerHTML = '<html><div id="dv">Some text</div></html>';
+    template.innerHTML = '<html><div id="div1">Some text</div></html>';
 
     doc.body.appendChild(template);
 
     assert_equals(template.content.childNodes.length, 1,
             'Template cannot contain HTML element');
-    assert_true(template.content.querySelector('#dv') != null,
+    assert_true(template.content.querySelector('#div1') != null,
             'Template should contain a valid element');
 
 }, 'Ignore HTML token. Test some valid element inside HTML element');
@@ -113,13 +113,13 @@ test(function() {
     var doc = newHTMLDocument();
     var template = doc.createElement('template');
 
-    template.innerHTML = '<html><body><div id="dv">Some text</div><body></html>';
+    template.innerHTML = '<html><body><div id="div1">Some text</div><body></html>';
 
     doc.body.appendChild(template);
 
     assert_equals(template.content.childNodes.length, 1,
             'Template cannot contain HTML element');
-    assert_true(template.content.querySelector('#dv') != null,
+    assert_true(template.content.querySelector('#div1') != null,
             'Template should contain valid element');
 
 }, 'Ignore HTML token. Test valid element inside HTML and BODY elements');
@@ -129,16 +129,16 @@ test(function() {
     var doc = newHTMLDocument();
     var template = doc.createElement('template');
 
-    template.innerHTML = '<html><span id="spn">Span</span><body><div id="dv">Some text</div><body></html>';
+    template.innerHTML = '<html><span id="span1">Span</span><body><div id="div1">Some text</div><body></html>';
 
     doc.body.appendChild(template);
 
     assert_equals(template.content.childNodes.length, 2,
             'Template cannot contain HTML element');
-    assert_true(template.content.querySelector('#dv') != null,
+    assert_true(template.content.querySelector('#div1') != null,
             'Template should contain valid DIV element');
 
-    assert_true(template.content.querySelector('#spn') != null,
+    assert_true(template.content.querySelector('#span1') != null,
             'Template should contain valid SPAN element');
 
 }, 'Ignore HTML token. Test valid element inside and between HTML and BODY elements');

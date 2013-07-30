@@ -17,8 +17,8 @@
 
 /*
  * According to http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-contents-insertion-mode
- * when parser is in "template content" miode and meets <frameset> tag it should be swiched to
- * "in body" insertion mode. 
+ * when parser is in "template content" mode and meets <frameset> tag it should be switched to
+ * "in body" insertion mode.
  * According to http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody
  * this token (FRAMESET) should be ignored
  */
@@ -44,7 +44,7 @@ test(function() {
     var doc = newHTMLDocument();
     var template = doc.createElement('template');
 
-    template.innerHTML = '<div id="dv">Some text</div>'
+    template.innerHTML = '<div id="div1">Some text</div>'
         + '<frameset cols="25%,*,25%">'
         + '<frame src="frame_a.htm">'
         + '<frame src="frame_b.htm">'
@@ -55,7 +55,7 @@ test(function() {
 
     assert_equals(template.content.childNodes.length, 1,
             'Template cannot contain FRAMESET element');
-    assert_true(template.content.querySelector('#dv') != null,
+    assert_true(template.content.querySelector('#div1') != null,
             'Template should contain valid element');
 
 }, 'Ignore frameset token. '
@@ -71,13 +71,13 @@ test(function() {
         + '<frame src="frame_a.htm">'
         + '<frame src="frame_b.htm">'
         + '<frame src="frame_c.htm">'
-        + '</frameset><div id="dv">Some text</div>';
+        + '</frameset><div id="div1">Some text</div>';
 
     doc.body.appendChild(template);
 
     assert_equals(template.content.childNodes.length, 1,
             'Template cannot contain FRAMESET element');
-    assert_true(template.content.querySelector('#dv') != null,
+    assert_true(template.content.querySelector('#div1') != null,
             'Template should contain valid element');
 
 }, 'Ignore frameset token. '

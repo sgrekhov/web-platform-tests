@@ -57,9 +57,9 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    doc.body.innerHTML = '<template id="tmpl1" content="Some text as a content"></template>';
+    doc.body.innerHTML = '<template id="template1" content="Some text as a content"></template>';
 
-    var template = doc.querySelector('#tmpl1');
+    var template = doc.querySelector('#template1');
 
     assert_readonly(template, 'content',
             'Content attribute of template element should be read-only');
@@ -71,9 +71,9 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    doc.body.innerHTML = '<template id="tmpl1" content="<div id=div1>Div content</div>"></template>';
+    doc.body.innerHTML = '<template id="template1" content="<div id=div1>Div content</div>"></template>';
 
-    var template = doc.querySelector('#tmpl1');
+    var template = doc.querySelector('#template1');
 
     assert_readonly(template, 'content',
             'Content attribute of template element should be read-only');

@@ -17,12 +17,12 @@
 
 /*
  * According to http://www.w3.org/TR/2013/WD-html-templates-20130214/#template-contents-insertion-mode
- * when parser is in "template content" miode and meets <head> tag it should be swiched to
- * "in body" insertion mode. 
+ * when parser is in "template content" mode and meets <head> tag it should be switched to
+ * "in body" insertion mode.
  * According to http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody
  * this token (HEAD) should be ignored
  */
- 
+
 test(function() {
     var doc = newHTMLDocument();
     var template = doc.createElement('template');
@@ -57,13 +57,13 @@ test(function() {
     var doc = newHTMLDocument();
     var template = doc.createElement('template');
 
-    template.innerHTML = '<div id="dv">Some text</div><head><title>test</title></head>';
+    template.innerHTML = '<div id="div1">Some text</div><head><title>test</title></head>';
 
     doc.body.appendChild(template);
 
     assert_equals(template.content.childNodes.length, 2,
             'Wrong number of template content children');
-    assert_true(template.content.querySelector('#dv') != null,
+    assert_true(template.content.querySelector('#div1') != null,
             'Template should contain valid element');
     assert_equals(template.content.lastChild.tagName, 'TITLE',
             'Template should contain children of ignored HEAD element');
@@ -76,7 +76,7 @@ test(function() {
     var doc = newHTMLDocument();
     var template = doc.createElement('template');
 
-    template.innerHTML = '<head><title>test</title></head><div id="dv">Some text</div>';
+    template.innerHTML = '<head><title>test</title></head><div id="div1">Some text</div>';
 
     doc.body.appendChild(template);
 
@@ -84,7 +84,7 @@ test(function() {
             'Wrong number of template content children');
     assert_equals(template.content.firstChild.tagName, 'TITLE',
             'Template should contain children of ignored HEAD element');
-    assert_true(template.content.querySelector('#dv') != null,
+    assert_true(template.content.querySelector('#div1') != null,
             'Template should contain valid element');
 
 }, 'Ignore HEAD token. '
