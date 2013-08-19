@@ -198,6 +198,10 @@ function assert_not_null(value, description) {
     assert_false(value === null, description);
 }
 
+function assert_undefined(value, description) {
+    assert_true(value === undefined, description);
+}
+
 function assert_not_undefined(value, description) {
     assert_false(value === undefined, description);
 }
