@@ -67,7 +67,7 @@ test(function () {
     var template = doc.querySelector('#tmpl1');
     var copy = template.cloneNode(false);
 
-    assert_not_null(copy.content, 'Template clone do not have content attribute');
+    assert_not_undefined(copy.content, 'Template clone do not have content attribute');
 
     assert_equals(copy.content.childNodes.length, 0,
             'Wrong number of template content\'s copy child nodes');
