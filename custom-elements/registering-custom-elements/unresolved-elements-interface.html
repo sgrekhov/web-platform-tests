@@ -4,7 +4,7 @@
 <title>Unresolved element interface must be HTMLElement, if the namespace is HTML Namespace</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="assert" content="When an unresolved element is created, it's element interface must be HTMLElement, if the namespace is HTML Namespace">
-<link rel="help" href="https://dvcs.w3.org/hg/webcomponents/raw-file/default/spec/custom/index.html#concepts">
+<link rel="help" href="http://www.w3.org/TR/custom-elements/#registering-custom-elements">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src='../testcommon.js'></script>
@@ -27,7 +27,23 @@ test(function() {
             'Unregistered custom element must be a HTML element');
     
 
-}, 'Unresolved element interface for HTML namespace');
+}, 'Unresolved element interface with valid name for HTML namespace');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    doc.body.innerHTML = '<xfoo id="xfoo"></xfoo>';
+
+    var xfoo = doc.querySelector('#xfoo');
+
+    assert_not_equals(xfoo, null, 'Element should not be null');
+    
+    assert_class_string(xfoo, 'HTMLUnknownElement',
+            'Element must be a HTML Unknown element');
+    
+
+}, 'Unresolved element interface with invalid name for HTML namespace');
 
 </script>
 </body>
