@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>attributeChanged callback of a custom element</title>
+<title>attributeChanged callback of a custom element. Test attribute setting</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="assert" content="attributeChanged callback must be enqueued whenever custom element's attribute is added, changed or removed">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#types-of-callbacks">
@@ -25,7 +25,7 @@ test(function() {
     }
     
     assert_false(callbackCalled, 'Callback attributeChanged was called after prototype '
-            + 'creation but should not')
+            + 'creation but should not');
     
     var XFoo = doc.register('x-foo-1', {prototype: proto});
     
@@ -39,7 +39,8 @@ test(function() {
     
     assert_true(callbackCalled, 'Callback attributeChanged was not called');
     
-}, 'Test attributeChanged callback of the custom element instantiating in JavaScript');
+}, 'Test attributeChanged callback of the custom element instantiating in JavaScript. '
+    + 'Test setting attribute');
 
 
 test(function() {
@@ -53,7 +54,7 @@ test(function() {
     }
     
     assert_false(callbackCalled, 'Callback attributeChanged was called after prototype creation '
-            + 'but should not')
+            + 'but should not');
     
     var XFoo = doc.register('x-foo-2', {prototype: proto});
     
@@ -69,7 +70,43 @@ test(function() {
     
     assert_true(callbackCalled, 'Callback attributeChanged was not called');
     
-}, 'Test attributeChanged callback of the custom element instantiating in HTML');
+}, 'Test attributeChanged callback of the custom element instantiating in HTML. '
+    + 'Test setting attribute');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var callbackCalled = false;
+    
+    var proto = Object.create(HTMLElement.prototype);
+    proto.attributeChangedCallback = function () {
+        callbackCalled = true;
+    }
+    
+    assert_false(callbackCalled, 'Callback attributeChanged was called after prototype creation '
+            + 'but should not');
+        
+    doc.body.innerHTML = '<x-foo-3 id="xfoo3" class="theClass"></x-foo-3>';
+
+    assert_false(callbackCalled, 'Callback attributeChanged was called');
+    
+    var xfoo3 = doc.querySelector('#xfoo3');
+    
+    xfoo3.setAttribute('class', 'someClass');
+    
+    assert_false(callbackCalled, 'Callback attributeChanged was called but must not');
+    
+    var XFoo = doc.register('x-foo-3', {prototype: proto});
+    
+    assert_false(callbackCalled, 'Callback attributeChanged was called but should not');
+    
+    xfoo3.setAttribute('name', 'someName');
+    
+    assert_true(callbackCalled, 'Callback attributeChanged was not called');
+    
+}, 'Test attributeChanged callback of the custom element instantiating in HTML. '
+    + 'Test attribute setting before element registration');
 
 
 testInIFrame('../../resources/x-foo.html', function(context) {
@@ -83,7 +120,7 @@ testInIFrame('../../resources/x-foo.html', function(context) {
     }
     
     assert_false(callbackCalled, 'Callback attributeChanged was called after prototype '
-            + 'creation but should not')
+            + 'creation but should not');
             
     var XFoo = doc.register('x-foo', {prototype: proto});
 
@@ -97,6 +134,39 @@ testInIFrame('../../resources/x-foo.html', function(context) {
             + 'with browsing context');
 
 }, 'Test attributeChanged callback. Document has browsing context');
+
+
+testInIFrame('../../resources/x-foo.html', function(context) {
+    var doc = context.iframes[0].contentDocument;
+    
+    var callbackCalled = false;
+    
+    var proto = Object.create(HTMLElement.prototype);
+    proto.attributeChangedCallback = function () {
+        callbackCalled = true;
+    }
+    
+    assert_false(callbackCalled, 'Callback attributeChanged was called after prototype '
+            + 'creation but should not');
+    
+    var xfoo = doc.querySelector('#xfoo');
+            
+    xfoo.setAttribute('name', 'someName');
+    
+    assert_false(callbackCalled, 'Callback attributeChanged was called for the document '
+            + 'with browsing context priop element registration');
+            
+    var XFoo = doc.register('x-foo', {prototype: proto});
+
+    assert_false(callbackCalled, 'Callback attributeChanged was called');
+    
+    xfoo.setAttribute('class', 'someClass');
+    
+    assert_true(callbackCalled, 'Callback attributeChanged was not called for the document '
+            + 'with browsing context');
+
+}, 'Test attributeChanged callback. Document has browsing context. '
+    + 'Attribute changed before element registration');
 
     
 </script>

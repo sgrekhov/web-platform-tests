@@ -25,7 +25,7 @@ test(function() {
     }
     
     assert_false(callbackCalled, 'Callback enteredView was called after prototype creation '
-            + 'but should not')
+            + 'but should not');
     
     var XFoo = doc.register('x-foo-1', {prototype: proto});
     
@@ -50,7 +50,7 @@ test(function() {
     }
     
     assert_false(callbackCalled, 'Callback enteredView was called after prototype creation '
-            + 'but should not')
+            + 'but should not');
     
     var XFoo = doc.register('x-foo-2', {prototype: proto});
     
@@ -75,7 +75,7 @@ test(function() {
     }
     
     assert_false(callbackCalled, 'Callback enteredView was called after prototype '
-            + 'creation but should not')
+            + 'creation but should not');
         
     doc.body.innerHTML = '<x-foo-3></x-foo-3>';
     
@@ -100,7 +100,7 @@ testInIFrame('../../resources/x-foo.html', function(context) {
     }
     
     assert_false(callbackCalled, 'Callback enteredView was called after prototype '
-            + 'creation but should not')
+            + 'creation but should not');
             
     var XFoo = doc.register('x-foo', {prototype: proto});
 
