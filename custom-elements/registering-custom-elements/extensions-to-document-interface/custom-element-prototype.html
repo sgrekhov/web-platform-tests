@@ -31,18 +31,8 @@ test(function() {
     var doc = newHTMLDocument();
     
     var XFoo = doc.register('x-foo-2', {
-        prototype: Object.create(HTMLParagraphElement.prototype, {
-            firstMember: {
-                get: function() { return "foo"; },
-                enumerable: true,
-                configurable: true
-            },
-            secondMember: {
-                get: function() { return "foo"; },
-                enumerable: true,
-                configurable: true
-            }
-        })
+        prototype: Object.create(HTMLParagraphElement.prototype),
+        extends: 'p'
     });
     
     var xfoo = new XFoo();
@@ -52,6 +42,20 @@ test(function() {
     
 }, 'Custom element with specified prototype');
 
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var XFoo = doc.register('x-foo-3', {
+        prototype: Object.create(HTMLParagraphElement.prototype)
+    });
+    
+    var xfoo = new XFoo();
+
+    assert_class_string(xfoo, 'HTMLParagraphElement',
+            'Custom element  must be a HTMLParagraphElement');
+    
+}, 'Custom element with specified prototype. Extends is not specified');
 
 </script>
 </body>
