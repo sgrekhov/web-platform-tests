@@ -29,8 +29,6 @@ function doTest(element) {
     
     var xfoo = doc.querySelector('#customElement');
     
-    assert_true(xfoo instanceof XFoo, 'Wrong instance type');
-    
     assert_class_string(xfoo, obj.constructor.name,
             'Custom element  must be a ' + obj.constructor.name);
 }
