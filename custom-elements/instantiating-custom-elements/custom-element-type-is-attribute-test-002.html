@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Custom element type is the value of the is attribute of the custom element</title>
+<title>Custom element type is  the value of the is attribute of the custom element</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="assert" content="The custom element type can be given to a custom element at the time of its instantation as the value of the is attribute of the custom element">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#instantiating-custom-elements">
@@ -20,11 +20,7 @@ function doTest(element) {
     var obj = doc.createElement(element);
     
     var name = 'x-foo-' + element;
-    
-    var proto = Object.create(obj.constructor.prototype);
-    
-    var XFoo = doc.register(name, {prototype: proto, extends: element});
-    
+        
     if (HTML5_TABLE_ELEMENTS.indexOf(element) != -1) {
         doc.body.innerHTML = 
             '<table>' +
@@ -34,12 +30,15 @@ function doTest(element) {
         doc.body.innerHTML = 
             '<' + element + ' id="customElement" is="' + name + '"></' + element + '>';        
     }
+
+    var proto = Object.create(obj.constructor.prototype);
+    
+    var XFoo = doc.register(name, {prototype: proto, extends: element});
     
     var xfoo = doc.querySelector('#customElement');
     
     assert_equals(xfoo.constructor.prototype.constructor.name, name, 
             'Wrong custom element type');
-
 }
 
 
