@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>The :unresolved pseudoclass matching</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="assert" content="The :unresolved pseudoclass must match all custom elements whose created callback has not yet been invoked">
+<link rel="help" href="http://www.w3.org/TR/custom-elements/#unresolved-element-pseudoclass">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    doc.body.innerHTML = '<x-foo-1 id="xfoo"></x-foo-1>';
+
+    var xfoo = doc.querySelector(':unresolved');
+
+    assert_not_equals(xfoo, null, 
+            'Unregistered custom element should be accessible by :unresolved');
+    
+    assert_equals(xfoo.localName, 'x-foo-1', 'Wrong custom element');
+
+}, 'Unregistered custom element should be accessible by :unresolved');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    doc.body.innerHTML = '<x-foo-2 id="xfoo"></x-foo-2>';
+
+    var xfoo = doc.querySelector(':unresolved');
+
+    assert_not_equals(xfoo, null, 
+            'Unregistered custom element should be accessible by :unresolved');
+    
+    assert_equals(xfoo.localName, 'x-foo-2', 'Wrong custom element');
+    
+    doc.register('x-foo-2');
+    
+    var xfoo2 = doc.querySelector(':unresolved');
+    
+    assert_equals(xfoo2, null, 
+            'Registered custom element should not be accessible by :unresolved');
+
+}, 'Registered custom element should not be accessible by :unresolved');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    doc.body.innerHTML = '<x-foo-3 id="xfoo3"></x-foo-3>' 
+        + '<x-foo-4 id="xfoo4"></x-foo-4>';
+
+    var xfoo = doc.querySelector(':unresolved');
+
+    assert_not_equals(xfoo, null, 
+            'Unregistered custom element should be accessible by :unresolved');
+    
+    assert_equals(xfoo.localName, 'x-foo-3', 'Wrong custom element');
+    
+    doc.register('x-foo-3');
+
+    var xfoo = doc.querySelector(':unresolved');
+
+    assert_not_equals(xfoo, null, 
+            'Unregistered custom element should be accessible by :unresolved');
+    
+    assert_equals(xfoo.localName, 'x-foo-4', 'Wrong custom element');
+    
+}, 'Unregistered custom element should be accessible by :unresolved. '
+    + 'There are several unresolved elements');
+
+</script>
+</body>
+</html>
