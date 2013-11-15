@@ -39,12 +39,11 @@ for (var i = 0; i < BASE_CHARS_RANGES.length-1; i=i+2) {
 	    parameters[k] = ['Custom element name x-' + String.fromCharCode(BASE_CHARS_RANGES[i]+j) + "-" + (BASE_CHARS_RANGES[i]+j).toString(16), (BASE_CHARS_RANGES[i]+j)];
 	    k++;
 	}
-//	break;
 }
 
-//for (var i = 0; i < BASE_CHARS_SINGLE.length; i++) {
-    //parameters[k + i] = ['Custom element name x-' + String.fromCharCode(BASE_CHARS_SINGLE[i]) + "-" + BASE_CHARS_SINGLE[i].toString(16), BASE_CHARS_SINGLE[i]];
-//}
+for (var i = 0; i < BASE_CHARS_SINGLE.length; i++) {
+    parameters[k + i] = ['Custom element name x-' + String.fromCharCode(BASE_CHARS_SINGLE[i]) + "-" + BASE_CHARS_SINGLE[i].toString(16), BASE_CHARS_SINGLE[i]];
+}
 
 generate_tests(doTest, parameters, 'Valid custom element types with base char');
 
