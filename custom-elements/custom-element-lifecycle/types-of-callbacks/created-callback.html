@@ -86,6 +86,26 @@ test(function() {
     
 }, 'Test created callback when custom element is instantiating in HTML before '
     + 'registration of a custom element');
+
+
+testInIFrame('../../resources/x-foo.html', function(context) {
+    var doc = context.iframes[0].contentDocument;
+    
+    var callbackCalled = false;
+    
+    var proto = Object.create(HTMLElement.prototype);
+    proto.createdCallback = function () {
+        callbackCalled = true;
+    }
+    
+    assert_false(callbackCalled, 'Callback created was called after prototype '
+            + 'creation but should not');
+            
+    doc.register('x-foo', {prototype: proto});
+
+    assert_true(callbackCalled, 'Callback created was not called');
+
+}, 'Test created callback. Document has browsing context');
 </script>
 </body>
 </html>
