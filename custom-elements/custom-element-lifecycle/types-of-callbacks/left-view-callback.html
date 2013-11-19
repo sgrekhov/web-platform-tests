@@ -77,6 +77,31 @@ test(function() {
 }, 'Test leftView callback when custom element is instantiating in HTML before '
     + 'registration of a custom element. Document has no browsing context');
     
+test(function() {
+    var doc = newHTMLDocument();
+    
+    doc.body.innerHTML = '<x-foo-3 id="xfoo"></x-foo-3>';
+
+    var xfoo = doc.querySelector('#xfoo');
+
+    assert_not_equals(xfoo, null, 
+            'Unregistered custom element should be accessible by id.');
+
+    var callbackCalled = false;
+    
+    var proto = Object.create(HTMLElement.prototype);
+    proto.leftViewCallback = function () {
+        callbackCalled = true;
+    }
+
+    xfoo.constructor.prototype = proto;
+    
+    doc.body.removeChild(xfoo);
+        
+    assert_false(callbackCalled, 'Callback leftView was called when custom element is uregistred.');
+
+}, 'Test leftView callback when custom element is unregistered.');
+
 
 testInIFrame('../../resources/x-foo.html', function(context) {
     var doc = context.iframes[0].contentDocument;
