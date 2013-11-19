@@ -32,6 +32,30 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
+
+    var xfoo = doc.createElement('x-foo-2');
+    
+    assert_class_string(xfoo, 'HTMLElement',
+            'Element must be a HTML element');
+    
+}, 'Unresolved element interface with valid name for HTML namespace. '
+    + 'Element created by createElement');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+
+    var xfoo = doc.createElementNS(HTML_NAMESPACE, 'x-foo-3');
+    
+    assert_class_string(xfoo, 'HTMLElement',
+            'Element must be a HTML element');
+    
+}, 'Unresolved element interface with valid name for HTML namespace. '
+    + 'Element created by createElementNS');
+
+
+test(function() {
+    var doc = newHTMLDocument();
     
     doc.body.innerHTML = '<xfoo id="xfoo"></xfoo>';
 
@@ -44,6 +68,30 @@ test(function() {
     
 
 }, 'Unresolved element interface with invalid name for HTML namespace');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+
+    var xfoo = doc.createElement('xfoo2');
+    
+    assert_class_string(xfoo, 'HTMLUnknownElement',
+            'Element must be a HTML Unknown element');
+    
+}, 'Unresolved element interface with invalid name for HTML namespace. '
+    + 'Element created by createElement');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+
+    var xfoo = doc.createElementNS(HTML_NAMESPACE, 'xfoo3');
+    
+    assert_class_string(xfoo, 'HTMLUnknownElement',
+            'Element must be a HTML Unknown element');
+    
+}, 'Unresolved element interface with invalid name for HTML namespace. '
+    + 'Element created by createElementNS');
 
 </script>
 </body>
