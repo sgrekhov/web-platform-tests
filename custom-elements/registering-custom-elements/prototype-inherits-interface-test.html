@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Prototype interface inherits from SVGElement must be set to SVG Namespace</title>
+<title>If prototype interface inherits from SVGElement then namespace must be SVG Namespace</title>
 <meta name="author" title="Vasiliy Degtyarev" href="mailto:vasya@unipro.ru">
-<meta name="assert" content="If prototype's interface inherits from SVGElement, set NAMESPACE must be SVG Namespace">
+<meta name="assert" content="If prototype's interface inherits from SVGElement, then NAMESPACE must be SVG Namespace">
 <link rel="help" href="https://dvcs.w3.org/hg/webcomponents/raw-file/default/spec/custom/index.html#concepts">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -14,24 +14,22 @@
 <div id="log"></div>
 <script type="text/javascript">
 
-
 test(function() {
     var doc = newHTMLDocument();
 
     var xfoo = doc.createElementNS(SVG_NAMESPACE, 'x-foo');
     
-    assert_equals(xfoo.namespaceURI, SVG_NAMESPACE, 
-    'Wrong custom element namespace');
+    assert_equals(xfoo.namespaceURI, SVG_NAMESPACE, 'Wrong custom element namespace');
     
     var proto = Object.create(xfoo.constructor.prototype);
     var XFoo1 = doc.register('x-foo-1', {prototype: proto});
     
     var xfoo1 = new XFoo1();
     
-    assert_equals(xfoo1.namespaceURI, SVG_NAMESPACE, 
-    'Wrong inherits interface namespace');
+    assert_equals(xfoo1.namespaceURI, SVG_NAMESPACE, 'Wrong namespace');
     
-}, 'Prototype interface inherits from SVGElement set to SVG namespace');
+}, 'Namespace should be SVG for SVGElement');
+
 </script>
 </body>
 </html>
