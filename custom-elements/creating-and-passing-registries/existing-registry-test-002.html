@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>A new document instance must be associated with an existing registry when creating a document for template contents</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="assert" content="When creating a document for template contents, use the registry of the template's document.">
+<link rel="help" href="http://www.w3.org/TR/custom-elements/#creating-and-passing-registries">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+testInIFrame(null, function(context) {
+    var doc = context.iframes[0].contentDocument;
+    
+    var name = 'x-foo-1';
+    
+    var XFoo = doc.register(name);
+    
+    var template = doc.createElement('template');
+
+    var div = doc.createElement('div');
+
+    template.appendChild(div);
+
+    doc.body.appendChild(template);
+
+    // doc has browsing context. There should be another document as a template
+    // content owner
+    var doc2 = template.content.ownerDocument;
+    
+    try {
+        doc2.register(name);    
+    } catch (e) {
+        thrown = true;
+    }
+    
+    assert_true(thrown, 'Exception should be thrown');
+    
+}, 'Test that registry is shared between template\'s and template content\'s owner documents');
+
+
+testInIFrame('../resources/x-foo.html', function(context) {
+    var doc = context.iframes[0].contentDocument;
+    
+    var name = 'x-foo';
+    
+    var XFoo = doc.register(name);
+    
+    var template = doc.createElement('template');
+
+    var div = doc.createElement('div');
+
+    template.appendChild(div);
+
+    doc.body.appendChild(template);
+
+    // doc has browsing context. There should be another document as a template
+    // content owner
+    var doc2 = template.content.ownerDocument;
+    
+    try {
+        doc2.register(name);    
+    } catch (e) {
+        thrown = true;
+    }
+    
+    assert_true(thrown, 'Exception should be thrown');
+    
+}, 'Test that registry is shared between template\'s and template content\'s owner documents.' +
+    'Test actual document with the browsing context');
+
+</script>
+</body>
+</html>

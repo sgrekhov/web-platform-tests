@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>A new document instance must be associated with an existing registry if createDocument or createHTMLDocument methods are invoked</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="assert" content="When DOMImplementation's createDocument method is invoked with namespace set to HTML Namespace or when the createHTMLDocument method is invoked, use the registry of the associated document to the new instance">
+<link rel="help" href="http://www.w3.org/TR/custom-elements/#creating-and-passing-registries">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var name = 'x-foo';
+        
+    var XFoo = doc.register(name);
+    
+    var doc2 = doc.implementation.createHTMLDocument('Document 2');
+    
+    var thrown = false;
+    
+    try {
+        doc2.register(name);    
+    } catch (e) {
+        thrown = true;
+    }
+    
+    assert_true(thrown, 'Exception should be thrown');
+    
+}, 'Document created by createHTMLDocument should share an existing registry');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var name = 'x-foo-1';
+        
+    var XFoo = doc.register(name);
+    
+    var doc2 = doc.implementation.createDocument(HTML_NAMESPACE, 'html', null);
+    
+    var thrown = false;
+    
+    try {
+        doc2.register(name);    
+    } catch (e) {
+        thrown = true;
+    }
+    
+    assert_true(thrown, 'Exception should be thrown');
+    
+}, 'Document created by createDocument with HTML namespace should share an existing registry');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var name = 'x-foo-2';
+        
+    var XFoo = doc.register(name);
+    
+    var doc2 = doc.implementation.createDocument(SVG_NAMESPACE, 'svg', null);
+    
+    var thrown = false;
+    
+    try {
+        doc2.register(name);    
+    } catch (e) {
+        thrown = true;
+    }
+    
+    assert_false(thrown, 'Exception was thrown but should not');
+    
+}, 'Document created by createDocument with SVG namespace should not share an existing registry');
+
+</script>
+</body>
+</html>
