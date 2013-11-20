@@ -57,28 +57,6 @@ test(function() {
     
 }, 'Document created by createDocument with HTML namespace should share an existing registry');
 
-
-test(function() {
-    var doc = newHTMLDocument();
-    
-    var name = 'x-foo-2';
-        
-    var XFoo = doc.register(name);
-    
-    var doc2 = doc.implementation.createDocument(SVG_NAMESPACE, 'svg', null);
-    
-    var thrown = false;
-    
-    try {
-        doc2.register(name);    
-    } catch (e) {
-        thrown = true;
-    }
-    
-    assert_false(thrown, 'Exception was thrown but should not');
-    
-}, 'Document created by createDocument with SVG namespace should not share an existing registry');
-
 </script>
 </body>
 </html>
