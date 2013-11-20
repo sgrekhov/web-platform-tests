@@ -17,12 +17,25 @@
 test(function() {
     var doc = newHTMLDocument();
 
-    var xfoo = doc.createElementNS('http://www.w3.org/2000/svg', 'x-foo');
+    var xfoo = doc.createElementNS(SVG_NAMESPACE, 'x-foo');
     
     assert_class_string(xfoo, 'SVGElement', 'Element must be a SVG element');
     
 }, 'Unresolved element interface with valid name for SVG namespace');
 
+
+test(function() {
+    var doc = newHTMLDocument();
+	
+    doc.body.innerHTML = '<svg xmlns=' + SVG_NAMESPACE + ' version="1.1">' +
+    				'<x-foo-1 id="xfoo"></x-foo-1>' +
+    				'</svg>';
+    				
+    var xfoo = doc.querySelector('#xfoo');
+    				
+    assert_class_string(xfoo, 'SVGElement', 'Element must be a SVG element');
+    
+}, 'Unresolved element interface with valid name is instantiating in HTML for SVG namespace');
 </script>
 </body>
 </html>
