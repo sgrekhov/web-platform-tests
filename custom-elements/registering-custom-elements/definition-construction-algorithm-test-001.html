@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Custom element type should be lowercased</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="assert" content="Custom element type should be lowercased">
+<link rel="help" href="http://www.w3.org/TR/custom-elements/#registering-custom-elements">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var XFoo = doc.register('X-FOO-1');
+
+    var xfoo = new XFoo();
+
+    assert_equals(xfoo.localName, 'x-foo-1', 'Custom element type should be lowercased');
+
+}, 'Custom element type should be lowercased. Test constructor');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var XFoo = doc.register('X-FOO-2');
+
+    doc.body.innerHTML = '<X-FOO-2 id="xfoo2"></X-FOO-2>';
+    
+    var xfoo = doc.querySelector('#xfoo2');
+
+    assert_equals(xfoo.localName, 'x-foo-2', 'Custom element type should be lowercased');
+
+}, 'Custom element type should be lowercased. Custom element created in HTML');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var XFoo = doc.register('X-FOO-3');
+    
+    var xfoo = doc.createElement('X-FOO-3');
+
+    assert_equals(xfoo.localName, 'x-foo-3', 'Custom element type should be lowercased');
+
+}, 'Custom element type should be lowercased. Custom element created by createElement');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var XFoo = doc.register('X-FOO-4');
+    
+    var xfoo = doc.createElementNS(HTML_NAMESPACE, 'X-FOO-4');
+
+    assert_equals(xfoo.localName, 'x-foo-4', 'Custom element type should be lowercased');
+
+}, 'Custom element type should be lowercased. Custom element created by createElementNS');
+
+</script>
+</body>
+</html>
