@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>If namespace is SVG namespace and name is null then error must be thrown</title>
+<meta name="author" title="Vasiliy Degtyarev" href="mailto:vasya@unipro.ru">
+<meta name="assert" content="If namespace is SVG namespace and name is null then error must be thrown">
+<link rel="help" href="http://www.w3.org/TR/custom-elements/#registering-custom-elements">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+test(function() {
+    var doc = newHTMLDocument();
+
+    var xfoo = doc.createElementNS(SVG_NAMESPACE, 'x-foo');
+    var proto = Object.create(xfoo.constructor.prototype);
+    
+    var thrown = false;
+    try {
+        var XFoo = doc.register('x-foo-1', {prototype: proto});
+    } catch (e) {
+        thrown = true;
+    }
+    assert_true(thrown, "Exception should be thrown in case of attempt to register "
+            + "a custom element with SVG namespace and name is null");
+    
+}, 'Error should be thrown if namespace is SVG namespace and local name is null');
+
+</script>
+</body>
+</html>
