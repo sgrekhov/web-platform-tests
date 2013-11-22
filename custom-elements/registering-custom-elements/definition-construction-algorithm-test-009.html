@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>If NAME is null then localName must be set to TYPE</title>
+<meta name="author" title="Vasiliy Degtyarev" href="mailto:vasya@unipro.ru">
+<meta name="assert" content="If NAME is null then localName must be set to TYPE">
+<link rel="help" href="http://www.w3.org/TR/custom-elements/#registering-custom-elements">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+test(function() {
+    var doc = newHTMLDocument();
+
+    var xfoo = doc.createElement('x-foo');
+    xfoo.removeAttribute('localName');
+    var proto = Object.create(xfoo.constructor.prototype);
+    var XFoo = doc.register('x-foo-1', {prototype: proto});
+    var xfoo1 = new XFoo();
+    
+    assert_equals(xfoo1.localName, 'x-foo-1', 'LocalName should be type in case of attempt to register '
+		    + 'a custom element if name is null');
+    
+}, 'If NAME is null then localName must be set to TYPE');
+
+</script>
+</body>
+</html>
