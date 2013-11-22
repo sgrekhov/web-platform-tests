@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Check duplicate definition</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="assert" content="If there already exists a definition with the same TYPE, set ERROR to DuplicateDefinition and stop">
+<link rel="help" href="http://www.w3.org/TR/custom-elements/#registering-custom-elements">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var name = 'x-foo';
+
+    doc.register(name);
+    
+    var thrown = false;
+    
+    try {
+        doc.register('x-foo');    
+    } catch (e) {
+        thrown = true;
+    }
+    
+    assert_true(thrown, 'Exception should be thrown');
+    
+}, 'Check duplicate definition');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var name = 'x-foo-2';
+
+    doc.register(name);
+    
+    var thrown = false;
+    
+    try {
+        doc.register(name, {
+            prototype: Object.create(HTMLParagraphElement.prototype),
+            extends: 'p'        
+        });    
+    } catch (e) {
+        thrown = true;
+    }
+    
+    assert_true(thrown, 'Exception should be thrown');
+    
+}, 'Check duplicate definition. Specify constructor');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    
+    var name = 'x-foo-3';
+    
+    doc.register(name, {
+        prototype: Object.create(HTMLAnchorElement.prototype),
+        extends: 'a'
+    });
+    
+    var thrown = false;
+    
+    try {
+        doc.register(name, {
+            prototype: Object.create(HTMLParagraphElement.prototype),
+            extends: 'p'        
+        });    
+    } catch (e) {
+        thrown = true;
+    }
+    
+    assert_true(thrown, 'Exception should be thrown');
+    
+}, 'Check duplicate definition. Different prototypes and extends');
+
+</script>
+</body>
+</html>

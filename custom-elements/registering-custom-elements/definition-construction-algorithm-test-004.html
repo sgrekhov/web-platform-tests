@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Default namespace is HTML namespace</title>
+<title>For SVG prototype namespace is SVG namespace</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="assert" content="Default namespace is HTML namespace">
+<meta name="assert" content="If PROTOTYPE's interface inherits from SVGElement, set NAMESPACE to SVG Namespace">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#registering-custom-elements">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -16,14 +16,17 @@
 
 test(function() {
     var doc = newHTMLDocument();
+
+    var svg = doc.createElementNS(SVG_NAMESPACE, 'x-foo');
+    var proto = Object.create(svg.constructor.prototype);
     
-    var XFoo = doc.register('X-FOO-1');
-
+    var XFoo = doc.register('x-foo-1', {prototype: proto});
+    
     var xfoo = new XFoo();
-
-    assert_equals(xfoo.namespaceURI, HTML_NAMESPACE, 'Wrong namespace');
-
-}, 'Default namespace is HTML namespace');
+    
+    assert_equals(xfoo.namespaceURI, SVG_NAMESPACE, 'Wrong namespace');
+    
+}, 'For SVG prototype namespace is SVG namespace');
 
 </script>
 </body>
