@@ -17,16 +17,17 @@
 test(function() {
     var doc = newHTMLDocument();
 
-    var xfoo = doc.createElementNS(SVG_NAMESPACE, 'x-foo');
+    var xsvg = doc.createElementNS(SVG_NAMESPACE, 'x-svg');
     
-    assert_equals(xfoo.namespaceURI, SVG_NAMESPACE, 'Wrong custom element namespace');
+    assert_equals(xsvg.namespaceURI, SVG_NAMESPACE, 'Wrong SVG element namespace');
+
+    var proto = Object.create(xsvg.constructor.prototype);
     
-    var proto = Object.create(xfoo.constructor.prototype);
-    var XFoo1 = doc.register('x-foo-1', {prototype: proto});
+    var GeneratedConstructor = doc.register('x-svg-1', {prototype: proto});
     
-    var xfoo1 = new XFoo1();
+    var xsvg1 = new GeneratedConstructor();
     
-    assert_equals(xfoo1.namespaceURI, SVG_NAMESPACE, 'Wrong namespace');
+    assert_equals(xsvg1.namespaceURI, SVG_NAMESPACE, 'Wrong namespace');
     
 }, 'Namespace should be SVG for SVGElement');
 

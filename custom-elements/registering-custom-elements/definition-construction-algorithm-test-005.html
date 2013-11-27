@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Check duplicate definition</title>
+<title>If element interface for name doesn't exists then error must be thrown</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="assert" content="If there already exists a definition with the same TYPE, set ERROR to DuplicateDefinition and stop">
+<meta name="assert" content="If NAME was provided and is not null and if element interface for the name and namespace does not exist or is an interface for a custom element, set ERROR to InvalidName and stop">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#registering-custom-elements">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -17,70 +17,30 @@
 test(function() {
     var doc = newHTMLDocument();
     
-    var name = 'x-foo';
+    var GeneratedConstructor = doc.register('x-a-1', {extends: 'xframe'});
+    
+    var customElement = new GeneratedConstructor();
+    
+    assert_class_string(customElement, 'HTMLUnknownElement', 
+            'Exception should be thrown in case of attempt to register ' + 
+            'a custom element wich extends an unexisting element');
 
-    doc.register(name);
-    
-    var thrown = false;
-    
-    try {
-        doc.register('x-foo');    
-    } catch (e) {
-        thrown = true;
-    }
-    
-    assert_true(thrown, 'Exception should be thrown');
-    
-}, 'Check duplicate definition');
+}, 'Exception should be thrown in case of attempt to register ' + 
+    'a custom element wich extends an unexisting element');
 
 
 test(function() {
     var doc = newHTMLDocument();
     
-    var name = 'x-foo-2';
+    doc.register('x-a-2');
+    
+    assert_throws(null, function() {
+        doc.register('x-a-3', {extends: 'x-a-2'});
+    }, 'Exception should be thrown in case of attempt to register ' + 
+    'a custom element wich extends another custom element');
 
-    doc.register(name);
-    
-    var thrown = false;
-    
-    try {
-        doc.register(name, {
-            prototype: Object.create(HTMLParagraphElement.prototype),
-            extends: 'p'        
-        });    
-    } catch (e) {
-        thrown = true;
-    }
-    
-    assert_true(thrown, 'Exception should be thrown');
-    
-}, 'Check duplicate definition. Specify constructor');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-    
-    var name = 'x-foo-3';
-    
-    doc.register(name, {
-        prototype: Object.create(HTMLAnchorElement.prototype),
-        extends: 'a'
-    });
-    
-    var thrown = false;
-    
-    try {
-        doc.register(name, {
-            prototype: Object.create(HTMLParagraphElement.prototype),
-            extends: 'p'        
-        });    
-    } catch (e) {
-        thrown = true;
-    }
-    
-    assert_true(thrown, 'Exception should be thrown');
-    
-}, 'Check duplicate definition. Different prototypes and extends');
+}, 'Exception should be thrown in case of attempt to register ' + 
+    'a custom element wich extends another custom element');
 
 </script>
 </body>

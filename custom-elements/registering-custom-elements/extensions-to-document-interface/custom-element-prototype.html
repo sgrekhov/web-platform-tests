@@ -17,11 +17,11 @@
 test(function() {
     var doc = newHTMLDocument();
     
-    var XFoo = doc.register('x-foo');
+    var GeneratedConstructor = doc.register('x-a-1');
     
-    var xfoo = new XFoo();
+    var customElement = new GeneratedConstructor();
 
-    assert_class_string(xfoo, 'HTMLElement',
+    assert_class_string(customElement, 'HTMLElement',
             'Custom element without specified prototype must be a HTMLelement');
     
 }, 'Custom element without specified prototype');
@@ -30,14 +30,14 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     
-    var XFoo = doc.register('x-foo-2', {
+    var GeneratedConstructor = doc.register('x-a-2', {
         prototype: Object.create(HTMLParagraphElement.prototype),
         extends: 'p'
     });
     
-    var xfoo = new XFoo();
+    var customElement = new GeneratedConstructor();
 
-    assert_class_string(xfoo, 'HTMLParagraphElement',
+    assert_class_string(customElement, 'HTMLParagraphElement',
             'Custom element  must be a HTMLParagraphElement');
     
 }, 'Custom element with specified prototype');
@@ -46,13 +46,13 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     
-    var XFoo = doc.register('x-foo-3', {
+    var GeneratedConstructor = doc.register('x-a-3', {
         prototype: Object.create(HTMLParagraphElement.prototype)
     });
     
-    var xfoo = new XFoo();
+    var customElement = new GeneratedConstructor();
 
-    assert_class_string(xfoo, 'HTMLParagraphElement',
+    assert_class_string(customElement, 'HTMLParagraphElement',
             'Custom element  must be a HTMLParagraphElement');
     
 }, 'Custom element with specified prototype. Extends is not specified');

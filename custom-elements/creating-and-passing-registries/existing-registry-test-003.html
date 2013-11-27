@@ -21,17 +21,13 @@ testInIFrame('../resources/import-master.html', function(context) {
     
     var doc2 = link.import;
     
-    var name = 'x-foo';
+    var name = 'x-frame';
     
-    var XFoo = doc.register(name);    
+    doc.register(name);
     
-    try {
-        doc2.register(name);    
-    } catch (e) {
-        thrown = true;
-    }
-    
-    assert_true(thrown, 'Exception should be thrown');    
+    assert_throws(null, function () {
+        doc2.register(name); 
+    }, 'Exception should be throw if element with the same type is already registered');
     
 }, 'Registry of the import should share master document registry');
 
@@ -43,21 +39,17 @@ testInIFrame('../resources/import-master.html', function(context) {
     
     var doc2 = link.import;
     
-    var name = 'x-foo';
+    var name = 'x-frame';
     
-    var XFoo = doc.register(name);    
+    doc.register(name);    
     
-    try {
-        doc2.register(name);    
-    } catch (e) {
-        thrown = true;
-    }
-    
-    assert_true(thrown, 'Exception should be thrown');
+    assert_throws(null, function () {
+        doc2.register(name); 
+    }, 'Exception should be throw if element with the same type is already registered');
     
     var doc3 = newHTMLDocument();
     
-    thrown = false;
+    var thrown = false;
     try {
         doc3.register(name);    
     } catch (e) {

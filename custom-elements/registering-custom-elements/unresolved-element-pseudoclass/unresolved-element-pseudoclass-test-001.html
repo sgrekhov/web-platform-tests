@@ -17,64 +17,64 @@
 test(function() {
     var doc = newHTMLDocument();
     
-    doc.body.innerHTML = '<x-foo-1 id="xfoo"></x-foo-1>';
+    doc.body.innerHTML = '<x-a-1 id="xa"></x-a-1>';
 
-    var xfoo = doc.querySelector(':unresolved');
+    var customElement = doc.querySelector(':unresolved');
 
-    assert_not_equals(xfoo, null, 
+    assert_not_equals(customElement, null, 
             'Unregistered custom element should be accessible by :unresolved');
     
-    assert_equals(xfoo.localName, 'x-foo-1', 'Wrong custom element');
+    assert_equals(customElement.localName, 'x-a-1', 'Wrong custom element');
 
-}, 'Unregistered custom element should be accessible by :unresolved');
+}, 'Unresolved custom element should be accessible by :unresolved');
 
 
 test(function() {
     var doc = newHTMLDocument();
     
-    doc.body.innerHTML = '<x-foo-2 id="xfoo"></x-foo-2>';
+    doc.body.innerHTML = '<x-a-2 id="xa"></x-a-2>';
 
-    var xfoo = doc.querySelector(':unresolved');
+    var customElement = doc.querySelector(':unresolved');
 
-    assert_not_equals(xfoo, null, 
-            'Unregistered custom element should be accessible by :unresolved');
+    assert_not_equals(customElement, null, 
+            'Unresolved custom element should be accessible by :unresolved');
     
-    assert_equals(xfoo.localName, 'x-foo-2', 'Wrong custom element');
+    assert_equals(customElement.localName, 'x-a-2', 'Wrong custom element');
     
-    doc.register('x-foo-2');
+    doc.register('x-a-2');
     
-    var xfoo2 = doc.querySelector(':unresolved');
+    customElement = doc.querySelector(':unresolved');
     
-    assert_equals(xfoo2, null, 
-            'Registered custom element should not be accessible by :unresolved');
+    assert_equals(customElement, null, 
+            'Resolved custom element should not be accessible by :unresolved');
 
-}, 'Registered custom element should not be accessible by :unresolved');
+}, 'Resolved custom element should not be accessible by :unresolved');
 
 
 test(function() {
     var doc = newHTMLDocument();
     
-    doc.body.innerHTML = '<x-foo-3 id="xfoo3"></x-foo-3>' 
-        + '<x-foo-4 id="xfoo4"></x-foo-4>';
+    doc.body.innerHTML = '<x-a-3 id="xa3"></x-a-3>' 
+        + '<x-a-4 id="xa4"></x-a-4>';
 
-    var xfoo = doc.querySelector(':unresolved');
+    var customElement = doc.querySelector(':unresolved');
 
-    assert_not_equals(xfoo, null, 
+    assert_not_equals(customElement, null, 
             'Unregistered custom element should be accessible by :unresolved');
     
-    assert_equals(xfoo.localName, 'x-foo-3', 'Wrong custom element');
+    assert_equals(customElement.localName, 'x-a-3', 'Wrong custom element');
     
-    doc.register('x-foo-3');
+    doc.register('x-a-3');
 
-    var xfoo = doc.querySelector(':unresolved');
+    customElement = doc.querySelector(':unresolved');
 
-    assert_not_equals(xfoo, null, 
-            'Unregistered custom element should be accessible by :unresolved');
+    assert_not_equals(customElement, null, 
+            'Unresolved custom element should be accessible by :unresolved');
     
-    assert_equals(xfoo.localName, 'x-foo-4', 'Wrong custom element');
+    assert_equals(customElement.localName, 'x-a-4', 'Wrong custom element');
     
-}, 'Unregistered custom element should be accessible by :unresolved. '
-    + 'There are several unresolved elements');
+}, 'Unresolved custom element should be accessible by :unresolved. ' + 
+    'There are several unresolved elements');
 
 </script>
 </body>

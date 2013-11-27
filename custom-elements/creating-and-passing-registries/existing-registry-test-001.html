@@ -17,21 +17,15 @@
 test(function() {
     var doc = newHTMLDocument();
     
-    var name = 'x-foo';
+    var name = 'x-frame';
         
-    var XFoo = doc.register(name);
+    doc.register(name);
     
     var doc2 = doc.implementation.createHTMLDocument('Document 2');
     
-    var thrown = false;
-    
-    try {
-        doc2.register(name);    
-    } catch (e) {
-        thrown = true;
-    }
-    
-    assert_true(thrown, 'Exception should be thrown');
+    assert_throws(null, function () {
+        doc2.register(name); 
+    }, 'Exception should be throw if element with the same type is already registered');
     
 }, 'Document created by createHTMLDocument should share an existing registry');
 
@@ -39,21 +33,15 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     
-    var name = 'x-foo-1';
+    var name = 'x-frame-1';
         
-    var XFoo = doc.register(name);
+    doc.register(name);
     
     var doc2 = doc.implementation.createDocument(HTML_NAMESPACE, 'html', null);
     
-    var thrown = false;
-    
-    try {
-        doc2.register(name);    
-    } catch (e) {
-        thrown = true;
-    }
-    
-    assert_true(thrown, 'Exception should be thrown');
+    assert_throws(null, function () {
+        doc2.register(name); 
+    }, 'Exception should be throw if element with the same type is already registered');
     
 }, 'Document created by createDocument with HTML namespace should share an existing registry');
 

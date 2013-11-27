@@ -17,59 +17,57 @@
 testInIFrame(null, function(context) {
     var doc = context.iframes[0].contentDocument;
     
-    var name = 'x-foo-1';
-    
-    var XFoo = doc.register(name);
+    var name = 'x-frame-1';
     
     var template = doc.createElement('template');
-
+    
     var div = doc.createElement('div');
 
     template.appendChild(div);
 
     doc.body.appendChild(template);
+    
+    doc = template.ownerDocument;
+    
+    doc.register(name);
 
     // doc has browsing context. There should be another document as a template
     // content owner
     var doc2 = template.content.ownerDocument;
     
-    try {
-        doc2.register(name);    
-    } catch (e) {
-        thrown = true;
-    }
-    
-    assert_true(thrown, 'Exception should be thrown');
-    
+    assert_throws(null, function () {
+        doc2.register(name); 
+    }, 'Exception should be throw if element with the same type is already registered');
+        
 }, 'Test that registry is shared between template\'s and template content\'s owner documents');
 
 
-testInIFrame('../resources/x-foo.html', function(context) {
+testInIFrame('../resources/x-element.html', function(context) {
     var doc = context.iframes[0].contentDocument;
     
-    var name = 'x-foo';
-    
-    var XFoo = doc.register(name);
+    var name = 'x-element';
     
     var template = doc.createElement('template');
+    
+    doc = template.ownerDocument;
 
     var div = doc.createElement('div');
 
     template.appendChild(div);
 
     doc.body.appendChild(template);
+    
+    doc = template.ownerDocument;
+    
+    doc.register(name);
 
     // doc has browsing context. There should be another document as a template
     // content owner
     var doc2 = template.content.ownerDocument;
     
-    try {
-        doc2.register(name);    
-    } catch (e) {
-        thrown = true;
-    }
-    
-    assert_true(thrown, 'Exception should be thrown');
+    assert_throws(null, function () {
+        doc2.register(name); 
+    }, 'Exception should be throw if element with the same type is already registered');
     
 }, 'Test that registry is shared between template\'s and template content\'s owner documents.' +
     'Test actual document with the browsing context');

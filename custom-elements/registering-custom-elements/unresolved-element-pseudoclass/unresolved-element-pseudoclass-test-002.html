@@ -14,55 +14,47 @@
 <div id="log"></div>
 <script type="text/javascript">
 
-function doTest(element) {
-    var doc = newHTMLDocument();
-    
-    var obj = doc.createElement(element);
-    
-    var name = 'x-foo-' + element;
-        
-    if (HTML5_TABLE_ELEMENTS.indexOf(element) != -1) {
-        doc.body.innerHTML = 
-            '<table>' +
-            '<' + element + ' id="customElement" is="' + name + '"></' + element + '>' +
-            '</table>';
-    } else {
-        doc.body.innerHTML = 
-            '<' + element + ' id="customElement" is="' + name + '"></' + element + '>';        
-    }
-    
-    var xfoo = doc.querySelector(':unresolved');
-    
-    assert_not_equals(xfoo, null, 
-            'Unregistered custom element should be accessible by :unresolved');
+test(function() {
+    for (var i = 0; i < HTML5_ELEMENTS.length; i++) {
+        if (HTML5_DOCUMENT_ELEMENTS.indexOf(HTML5_ELEMENTS[i]) == -1) {
+            var element = HTML5_ELEMENTS[i];
+            var doc = newHTMLDocument();
+            
+            var obj = doc.createElement(element);
+            
+            var name = 'x-' + element;
+                
+            if (HTML5_TABLE_ELEMENTS.indexOf(element) != -1) {
+                doc.body.innerHTML = 
+                    '<table>' +
+                    '<' + element + ' id="customElement" is="' + name + '"></' + element + '>' +
+                    '</table>';
+            } else {
+                doc.body.innerHTML = 
+                    '<' + element + ' id="customElement" is="' + name + '"></' + element + '>';        
+            }
+            
+            var customElement = doc.querySelector(':unresolved');
+            
+            assert_not_equals(customElement, null, 
+                    'Unregistered custom element should be accessible by :unresolved');
 
-    assert_equals(xfoo.id, 'customElement', 'Wrong custom element');    
+            assert_equals(customElement.id, 'customElement', 'Wrong custom element');    
 
-    var proto = Object.create(obj.constructor.prototype);
-    
-    doc.register(name, {prototype: proto, extends: element});
-    
-    var xfoo2 = doc.querySelector(':unresolved');
-    
-    assert_equals(xfoo2, null, 
-            'Registered custom element should not be accessible by :unresolved');        
-    
-    assert_equals(xfoo.constructor.prototype.constructor.name, name, 
-            'Wrong custom element type');
-}
-
-
-var parameters = [];
-
-for (var i = 0; i < HTML5_ELEMENTS.length; i++) {
-    if (HTML5_DOCUMENT_ELEMENTS.indexOf(HTML5_ELEMENTS[i]) == -1) {
-        parameters[i] = ['Test :unresolved pseudoclass for custom element extending ' 
-                         + HTML5_ELEMENTS[i], HTML5_ELEMENTS[i]];
-    }
-}
-
-generate_tests(doTest, parameters, 
-        'Test :unresolved pseudoclass for custom element types created by IS attribute');
+            var proto = Object.create(obj.constructor.prototype);
+            
+            doc.register(name, {prototype: proto, extends: element});
+            
+            var customElement2 = doc.querySelector(':unresolved');
+            
+            assert_equals(customElement2, null, 
+                    'Registered custom element should not be accessible by :unresolved');        
+            
+            assert_equals(customElement.constructor.prototype.constructor.name, name, 
+                    'Wrong custom element type');
+        }
+    }    
+}, 'Test :unresolved pseudoclass for custom element types created by IS attribute');
 
 </script>
 </body>
