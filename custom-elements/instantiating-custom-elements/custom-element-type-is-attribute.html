@@ -38,9 +38,9 @@ test(function() {
                     '<' + element + ' id="customElement" is="' + name + '"></' + element + '>';        
             }
             
-            var xfoo = doc.querySelector('#customElement');
+            var customElement = doc.querySelector('#customElement');
             
-            assert_equals(xfoo.constructor.prototype.constructor.name, name, 
+            assert_equals(customElement.constructor.prototype.constructor.name, name, 
                     'Wrong custom element type');
         }
     }

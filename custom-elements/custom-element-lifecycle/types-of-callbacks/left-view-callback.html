@@ -16,29 +16,23 @@
 
 test(function() {
     var doc = newHTMLDocument();
-    
     var callbackCalled = false;
     
     var proto = Object.create(HTMLElement.prototype);
     proto.leftViewCallback = function () {
         callbackCalled = true;
     }
-    
     assert_false(callbackCalled, 'Callback leftView was called after prototype creation ' + 
             'but should not');
     
     doc.register('x-a-1', {prototype: proto});
-    
     assert_false(callbackCalled, 'Callback leftView was called but should not');
     
     doc.body.innerHTML = '<x-a-1 id="xa1"></x-a-1>';
-
     assert_false(callbackCalled, 'Callback leftView was called');
     
     var xa1 = doc.querySelector('#xa1');
-    
     doc.body.removeChild(xa1);
-    
     assert_false(callbackCalled, 'Callback leftView was called for the document ' + 
             'with no browsing context');
     
@@ -48,29 +42,23 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    
     var callbackCalled = false;
     
     var proto = Object.create(HTMLElement.prototype);
     proto.leftViewCallback = function () {
         callbackCalled = true;
     }
-    
     assert_false(callbackCalled, 'Callback leftView was called after prototype ' + 
             'creation but should not');
         
     doc.body.innerHTML = '<x-a-2 id="xa2"></x-a-2>';
-    
     assert_false(callbackCalled, 'Callback leftView was called but should not');
     
     doc.register('x-a-2', {prototype: proto});
-
     assert_false(callbackCalled, 'Callback leftView was called');
     
     var customElement = doc.querySelector('#xa2');
-    
     doc.body.removeChild(customElement);
-    
     assert_false(callbackCalled, 'Callback leftView was called for the document ' + 
             'with no browsing context');
     
@@ -80,24 +68,18 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
+    var callbackCalled = false;
     
     doc.body.innerHTML = '<x-a-3 id="xa3"></x-a-3>';
-
     var customElement = doc.querySelector('#xa3');
-
     assert_not_equals(customElement, null, 'Unregistered custom element should be accessible by id');
-
-    var callbackCalled = false;
     
     var proto = Object.create(HTMLElement.prototype);
     proto.leftViewCallback = function () {
         callbackCalled = true;
     }
-
     customElement.constructor.prototype = proto;
-    
     doc.body.removeChild(customElement);
-        
     assert_false(callbackCalled, 'Callback leftView was called when custom element is uregistred.');
 
 }, 'Test leftView callback when custom element is unregistered.');
@@ -105,25 +87,20 @@ test(function() {
 
 testInIFrame('../../resources/x-element.html', function(context) {
     var doc = context.iframes[0].contentDocument;
-    
     var callbackCalled = false;
     
     var proto = Object.create(HTMLElement.prototype);
     proto.leftViewCallback = function () {
         callbackCalled = true;
     }
-    
     assert_false(callbackCalled, 'Callback leftView was called after prototype ' + 
             'creation but should not');
             
     doc.register('x-element', {prototype: proto});
-
     assert_false(callbackCalled, 'Callback leftView was called');
     
     var customElement = doc.querySelector('#xelement');
-    
     doc.body.removeChild(customElement);
-    
     assert_true(callbackCalled, 'Callback leftView was not called for the document ' + 
             'with browsing context');
 
