@@ -16,9 +16,7 @@
 
 test(function() {
     var doc = newHTMLDocument();
-    
     doc.body.innerHTML = '<x-a-1 id="xa"></x-a-1>';
-
     var customElement = doc.querySelector(':unresolved');
 
     assert_not_equals(customElement, null, 
@@ -31,9 +29,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    
     doc.body.innerHTML = '<x-a-2 id="xa"></x-a-2>';
-
     var customElement = doc.querySelector(':unresolved');
 
     assert_not_equals(customElement, null, 
@@ -42,7 +38,6 @@ test(function() {
     assert_equals(customElement.localName, 'x-a-2', 'Wrong custom element');
     
     doc.register('x-a-2');
-    
     customElement = doc.querySelector(':unresolved');
     
     assert_equals(customElement, null, 
@@ -52,20 +47,17 @@ test(function() {
 
 
 test(function() {
-    var doc = newHTMLDocument();
-    
+    var doc = newHTMLDocument();    
     doc.body.innerHTML = '<x-a-3 id="xa3"></x-a-3>' 
         + '<x-a-4 id="xa4"></x-a-4>';
-
     var customElement = doc.querySelector(':unresolved');
 
     assert_not_equals(customElement, null, 
             'Unregistered custom element should be accessible by :unresolved');
     
     assert_equals(customElement.localName, 'x-a-3', 'Wrong custom element');
-    
-    doc.register('x-a-3');
 
+    doc.register('x-a-3');
     customElement = doc.querySelector(':unresolved');
 
     assert_not_equals(customElement, null, 

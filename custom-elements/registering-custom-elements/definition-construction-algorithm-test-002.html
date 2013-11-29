@@ -16,38 +16,28 @@
 
 test(function() {
     var doc = newHTMLDocument();
-    
     var GeneratedConstructor = doc.register('x-a-1');
-
     var customElement = new GeneratedConstructor();
-
+    
     assert_equals(customElement.namespaceURI, HTML_NAMESPACE, 'Wrong namespace');
-
+    
 }, 'Default namespace is HTML namespace');
 
 
 test(function() {
-    for (var i = 0; i < HTML5_ELEMENTS.length; i++) {
-        var element = HTML5_ELEMENTS[i];
-            
-        var doc = newHTMLDocument();
-        
-        var obj = doc.createElement(element);
-        
+    var doc = newHTMLDocument();
+    HTML5_ELEMENTS.forEach(function (element) {
+        var obj = doc.createElement(element);        
         var name = 'x-' + element;
-        
         var proto = Object.create(obj.constructor.prototype);
-        
         var GeneratedConstructor = doc.register(name, {
             prototype: proto, 
             extends: element
         });
-        
         var customElement = new GeneratedConstructor();
 
         assert_equals(customElement.namespaceURI, HTML_NAMESPACE, 'Wrong namespace');    
-    }
-
+    });
 }, 'Default namespace is HTML namespace. Test constructor of extended HTML element');
 
 

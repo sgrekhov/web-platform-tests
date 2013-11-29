@@ -16,47 +16,37 @@
 
 test(function() {
     var doc = newHTMLDocument();
-    
     var GeneratedConstructor = doc.register('x-a-1');
-    
     var customElement = new GeneratedConstructor();
 
     assert_class_string(customElement, 'HTMLElement',
             'Custom element without specified prototype must be a HTMLelement');
-
-    
 }, 'Custom element without specified prototype');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    
     var GeneratedConstructor = doc.register('x-a-2', {
         prototype: Object.create(HTMLParagraphElement.prototype),
         extends: 'p'
     });
-    
     var customElement = new GeneratedConstructor();
 
     assert_class_string(customElement, 'HTMLParagraphElement',
             'Custom element  must be a HTMLParagraphElement');
-    
 }, 'Custom element with specified prototype');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    
     var GeneratedConstructor = doc.register('x-a-3', {
         prototype: Object.create(HTMLParagraphElement.prototype),
         extends: null
     });
-    
     var customElement = new GeneratedConstructor();
 
     assert_class_string(customElement, 'HTMLUnknownElement',
             'Custom element  must be a HTMLUnknownElement');
-    
 }, 'Custom element with specified prototype. Extends is not specified');
 
 </script>

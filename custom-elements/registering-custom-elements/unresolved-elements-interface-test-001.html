@@ -16,9 +16,7 @@
 
 test(function() {
     var doc = newHTMLDocument();
-    
     doc.body.innerHTML = '<x-a id="xa"></x-a>';
-
     var customElement = doc.querySelector('#xa');
 
     assert_not_equals(customElement, null, 'Unregistered custom element should not be null');
@@ -31,7 +29,6 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-
     var customElement = doc.createElement('x-a-2');
     
     assert_class_string(customElement, 'HTMLElement', 
@@ -43,7 +40,6 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-
     var customElement = doc.createElementNS(HTML_NAMESPACE, 'x-a-3');
     
     assert_class_string(customElement, 'HTMLElement',
@@ -55,9 +51,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    
     doc.body.innerHTML = '<xa id="xa"></xa>';
-
     var xa = doc.querySelector('#xa');
 
     assert_not_equals(xa, null, 'Element should not be null');
@@ -71,7 +65,6 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-
     var xa = doc.createElement('xa2');
     
     assert_class_string(xa, 'HTMLUnknownElement',
@@ -83,7 +76,6 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-
     var xa = doc.createElementNS(HTML_NAMESPACE, 'xa3');
     
     assert_class_string(xa, 'HTMLUnknownElement',

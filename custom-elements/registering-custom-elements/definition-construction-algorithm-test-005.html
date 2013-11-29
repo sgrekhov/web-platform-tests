@@ -16,9 +16,7 @@
 
 test(function() {
     var doc = newHTMLDocument();
-    
     var GeneratedConstructor = doc.register('x-a-1', {extends: 'xframe'});
-    
     var customElement = new GeneratedConstructor();
     
     assert_class_string(customElement, 'HTMLUnknownElement', 
@@ -31,7 +29,6 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    
     doc.register('x-a-2');
     
     assert_throws(null, function() {

@@ -16,41 +16,31 @@
 
 test(function() {
     var doc = newHTMLDocument();
-
     var proto = Object.create(HTMLElement.prototype);
     var GeneratedConstructor = doc.register('x-a-1', {prototype: proto});
-    
     var customElement = new GeneratedConstructor();
     
     assert_equals(customElement.namespaceURI, HTML_NAMESPACE, 'Wrong namespace');
-        
     
 }, 'Namespace should be HTML for HTMLElement');
 
 
 test(function() {
-    for (var i = 0; i < HTML5_ELEMENTS.length; i++) {
-        var element = HTML5_ELEMENTS[i];
-        
-        var doc = newHTMLDocument();
-        
-        var obj = doc.createElement(element);
-        
+    var doc = newHTMLDocument();
+    
+    HTML5_ELEMENTS.forEach(function(element) {
+        var obj = doc.createElement(element);        
         var name = 'x-2-' + element;
-        
         var proto = Object.create(obj.constructor.prototype);
-        
         doc.register(name, {
             prototype: Object.create(proto),
             extends: element
         });
-        
         var customElement = doc.createElement(element, name);
-            
-        assert_equals(customElement.namespaceURI, HTML_NAMESPACE, 
-                'Wrong custom element namespace for element extending ' + element);
-    }
 
+        assert_equals(customElement.namespaceURI, HTML_NAMESPACE, 
+                'Wrong custom element namespace for element extending ' + element);        
+    });
 }, 'Namespace should be HTML for HTMLElement. Test custom element extending HTML element');
 
 </script>

@@ -17,7 +17,6 @@
 
 test(function() {
     var doc = newHTMLDocument();
-
     var svg = doc.createElementNS(SVG_NAMESPACE, 'xsvg');
     var proto = Object.create(svg.constructor.prototype);
     
@@ -31,15 +30,14 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-
     var svg = doc.createElementNS(SVG_NAMESPACE, 'xsvg');
     var proto = Object.create(svg.constructor.prototype);
-    
+
     assert_throws(null, function () {
         doc.register('x-svg-2', {prototype: proto, extends: null});
     }, 'Exception should be thrown in case of attempt to register ' + 
     'a custom element with SVG namespace and name is null');
-    
+
 }, 'Error should be thrown if namespace is SVG and local name is null');
 
 </script>
