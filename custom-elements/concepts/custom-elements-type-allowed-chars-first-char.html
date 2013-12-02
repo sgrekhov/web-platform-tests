@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chars allowed for custom element type </title>
+<meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
+<meta name="assert" content="The custom element type identifies a custom element interface and is a sequence of characters that must match the NCName production">
+<link rel="help" href="https://dvcs.w3.org/hg/webcomponents/raw-file/default/spec/custom/index.html#concepts">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+function ArrayIterator(array) {
+	this.array = array;
+	this.index = 0;
+}
+
+ArrayIterator.prototype.hasNext = function() {
+	return this.index < this.array.length;
+}
+
+ArrayIterator.prototype.next = function() {
+	return this.array[this.index++];
+}
+
+
+function RangesIterator(rangesArray){
+	this.rangesArray = rangesArray;
+	this.currentRange = 0;
+}
+
+RangesIterator.prototype.hasNext = function() {
+	return (this.low !== undefined && this.high !== undefined && this.current <= this.high) ||
+		(this.currentRange + 1 < this.rangesArray.length);
+}
+
+RangesIterator.prototype.next = function(){
+
+	if (this.low !== undefined && this.high !== undefined && this.current <= this.high){
+		return this.current++;
+
+	} else if (this.currentRange + 1 < this.rangesArray.length) {
+		this.low = this.rangesArray[this.currentRange];
+		this.high = this.rangesArray[this.currentRange+1];
+		this.currentRange = this.currentRange + 2;
+		this.current = this.low;
+		return this.current++;
+	}
+}
+
+
+function AggregateIterator(iteratorsArray) {
+	this.iteratorsArray = iteratorsArray;
+	this.current = 0;
+}
+
+AggregateIterator.prototype.hasNext = function() {
+	while((this.current < this.iteratorsArray.length) &&
+			!this.iteratorsArray[this.current].hasNext() ){
+		this.current++;
+	}
+	return this.current < this.iteratorsArray.length && this.iteratorsArray[this.current].hasNext();
+}
+
+AggregateIterator.prototype.next = function() {
+	if (this.hasNext()) {
+		return this.iteratorsArray[this.current].next();
+	}
+}
+
+
+function baseChar() {
+	return new AggregateIterator([new ArrayIterator(BASE_CHARS_SINGLE), new RangesIterator(BASE_CHARS_RANGES)]);
+}
+
+
+function ideographic() {
+	return new AggregateIterator([new ArrayIterator(IDEOGRAPHIC_CHARS_SINGLE), new RangesIterator(IDEOGRAPHIC_CHARS_RANGES)]);
+}
+
+
+function letter(){
+	return new AggregateIterator([baseChar(),ideographic()]);
+}
+
+
+function digit() {
+	return new RangesIterator(DIGIT_CHARS_RANGES);
+}
+
+
+function firstChar() {
+	return new AggregateIterator([letter(),new ArrayIterator(['_'])]);
+}
+
+
+function badFirstChar() {
+	return new AggregateIterator([
+		digit(),
+		new ArrayIterator(['.', '-', ':', '+', '=']),
+		new ArrayIterator(COMBINING_CHARS),
+		new ArrayIterator(EXTENDER_CHARS)
+	]);
+}
+
+test(function() {
+    var doc = newHTMLDocument();
+	var refusedNames = [];
+	var it = firstChar();
+	var probeCount = 0;
+    while(it.hasNext()) {
+    	var c = it.next();
+		var name = String.fromCharCode(c) + '-x' + c.toString(16);
+		try {
+			doc.register(name);
+		} catch (e) {
+			refusedNames.push(name);
+		}
+		probeCount++;
+    }
+
+	assert_equals(refusedNames.length, 0, 'The following valid names should be ok to register ' +
+			'as a custom element name: '+refusedNames.join(', ')+'. Total names: '+probeCount);
+
+}, 'Register custom element types with allowed first char');
+
+
+test(function() {
+
+    var doc = newHTMLDocument();
+	var refusedNames = [];
+	var it = badFirstChar();
+    while(it.hasNext()) {
+    	var c = it.next();
+		var name = String.fromCharCode(c) + '-x' + c.toString(16);
+
+		assert_throws(null,
+					  function() { doc.register(name); },
+					  'Exception should be thrown in case of attempt to register element ' +
+        			  'with the name \'' + name + '\'');
+    }
+
+}, 'Register custom element types with invalid first char');
+
+</script>
+</body>
+</html>
