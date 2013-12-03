@@ -18,7 +18,7 @@ test(function() {
     var doc = newHTMLDocument();
     var name = 'x-a-1';
     doc.register(name);
-    
+    //FIXME Should the type of the exception be specified here?
     assert_throws(null, function() {
         doc.register(name);    
     }, 'Exception should be thrown if definition with the same type already exists');
@@ -31,6 +31,7 @@ test(function() {
     doc.register(name);
     
     HTML5_ELEMENTS.forEach(function (element) {
+        //FIXME Should the type of the exception be specified here?
         assert_throws(null, function() {
             doc.register(name, {
                 prototype: Object.create(bj.constructor.prototype),
@@ -50,6 +51,7 @@ test(function() {
     });
     
     HTML5_ELEMENTS.forEach(function(element) {
+        //FIXME Should the type of the exception be specified here?
         assert_throws(null, function() {
             doc.register(name, {
                 prototype: Object.create(bj.constructor.prototype),

@@ -19,7 +19,7 @@ test(function() {
     var doc = newHTMLDocument();
     var svg = doc.createElementNS(SVG_NAMESPACE, 'xsvg');
     var proto = Object.create(svg.constructor.prototype);
-    
+    //FIXME Should the type of the exception be specified here?
     assert_throws(null, function () {
         doc.register('x-svg-1', {prototype: proto});
     }, 'Exception should be thrown in case of attempt to register ' + 
@@ -32,7 +32,7 @@ test(function() {
     var doc = newHTMLDocument();
     var svg = doc.createElementNS(SVG_NAMESPACE, 'xsvg');
     var proto = Object.create(svg.constructor.prototype);
-
+    //FIXME Should the type of the exception be specified here?
     assert_throws(null, function () {
         doc.register('x-svg-2', {prototype: proto, extends: null});
     }, 'Exception should be thrown in case of attempt to register ' + 

@@ -137,7 +137,7 @@ test(function() {
     while(it.hasNext()) {
     	var c = it.next();
 		var name = String.fromCharCode(c) + '-x' + c.toString(16);
-
+		//FIXME Should the type of the exception be specified here?
 		assert_throws(null,
 					  function() { doc.register(name); },
 					  'Exception should be thrown in case of attempt to register element ' +
