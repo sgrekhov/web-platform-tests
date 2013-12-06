@@ -40,14 +40,26 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var GeneratedConstructor = doc.register('x-a-3', {
+        prototype: Object.create(HTMLParagraphElement.prototype)
+    });
+    var customElement = new GeneratedConstructor();
+
+    assert_class_string(customElement, 'HTMLParagraphElement',
+            'Custom element  must be a HTMLParagraphElement');
+}, 'Custom element with specified prototype. Extends is not specified');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var GeneratedConstructor = doc.register('x-a-4', {
         prototype: Object.create(HTMLParagraphElement.prototype),
         extends: null
     });
     var customElement = new GeneratedConstructor();
 
-    assert_class_string(customElement, 'HTMLUnknownElement',
-            'Custom element  must be a HTMLUnknownElement');
-}, 'Custom element with specified prototype. Extends is not specified');
+    assert_class_string(customElement, 'HTMLParagraphElement',
+            'Custom element  must be a HTMLParagraphElement');
+}, 'Custom element with specified prototype. Extends is null');
 
 </script>
 </body>

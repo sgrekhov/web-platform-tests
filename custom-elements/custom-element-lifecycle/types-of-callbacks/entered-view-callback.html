@@ -131,6 +131,7 @@ testInIFrame('../../resources/blank.html', function(context) {
 
 }, 'Test enteredView callback. Registred element is created via document.createElement() Document has browsing context');
 
+
 testInIFrame('../../resources/blank.html', function(context) {
     var doc = context.iframes[0].contentDocument;
     var callbackCalled = false;
@@ -146,10 +147,10 @@ testInIFrame('../../resources/blank.html', function(context) {
             'creation but should not');
 
     doc.register('x-element', {prototype: proto});
-
     assert_true(callbackCalled, 'Callback enteredView was not called');
 
-}, 'Test enteredView callback. Unregistred element is created via document.createElement() Document has browsing context');
+}, 'Test enteredView callback. Unregistred element is created via document.createElement(). ' +
+    'Document has browsing context');
 
 
 testInIFrame('../../resources/blank.html', function(context) {
@@ -164,11 +165,12 @@ testInIFrame('../../resources/blank.html', function(context) {
             'creation but should not');
 
     doc.register('x-element', {prototype: proto});
-
     doc.body.innerHTML = '<x-element></x-element>';
     assert_true(callbackCalled, 'Callback enteredView was not called');
 
-}, 'Test enteredView callback. Registered element is created via innerHTML property. Document has browsing context');
+}, 'Test enteredView callback. Registered element is created via innerHTML property. ' +
+    'Document has browsing context');
+
 
 testInIFrame('../../resources/blank.html', function(context) {
     var doc = context.iframes[0].contentDocument;
@@ -184,10 +186,10 @@ testInIFrame('../../resources/blank.html', function(context) {
             'creation but should not');
 
     doc.register('x-element', {prototype: proto});
-
     assert_true(callbackCalled, 'Callback enteredView was not called');
 
-}, 'Test enteredView callback. Unregistred element is created via innerHTML property . Document has browsing context');
+}, 'Test enteredView callback. Unresolved element is created via innerHTML property. ' +
+    'Document has browsing context');
 
 </script>
 </body>

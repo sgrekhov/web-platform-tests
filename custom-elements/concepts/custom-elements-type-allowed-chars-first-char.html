@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Chars allowed for custom element type </title>
+<title>First char allowed for custom element type </title>
 <meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="assert" content="The custom element type identifies a custom element interface and is a sequence of characters that must match the NCName production">
 <link rel="help" href="https://dvcs.w3.org/hg/webcomponents/raw-file/default/spec/custom/index.html#concepts">
 <script src="/resources/testharness.js"></script>
@@ -83,19 +84,19 @@ test(function(){
 
 test(function(){
     testArray(newHTMLDocument(), ['.', '-', ':', '+', '='], false);
-}, 'Registering custom element starting with invalid character (general)');
+}, 'Registering custom element starting with invalid character (general) should fail');
 
 test(function(){
     testArray(newHTMLDocument(), COMBINING_CHARS, false);
-}, 'Registering custom element starting with invalid character (combining)');
+}, 'Registering custom element starting with invalid character (combining char) should fail');
 
 test(function(){
     testArray(newHTMLDocument(), EXTENDER_CHARS, false);
-}, 'Registering custom element starting with invalid character (extender)');
+}, 'Registering custom element starting with invalid character (extender char) should fail');
 
 test(function(){
     testRangesArray(newHTMLDocument(), DIGIT_CHARS_RANGES, false);
-}, 'Registering custom element starting with invalid character (digit)');
+}, 'Registering custom element starting with invalid character (digit char) should fail');
 
 
 </script>

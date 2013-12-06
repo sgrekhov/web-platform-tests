@@ -51,6 +51,55 @@ test(function() {
 }, 'Custom element type is the local name of the custom element even if IS attribute provided.' + 
     'Custom element is unresolved at first');
 
+
+test(function() {
+    var doc = newHTMLDocument();
+    doc.register('x-element');
+    
+    HTML5_ELEMENTS.forEach(function(value) {
+        var obj = doc.createElement(value);
+        var name = 'x-' + value + '-01';
+        doc.register(name, {
+            prototype: Object.create(obj.constructor.prototype),
+            extends: value
+        });
+        doc.body.innerHTML = '<x-element id="xelement" is="' + name + '"></x-element>';
+        var customElement = doc.querySelector('#xelement');
+        
+        assert_equals(customElement.constructor.name, 
+                customElement.localName, 'Wrong custom element local name');
+
+        assert_equals(customElement.constructor.name, 'x-element', 
+            'Wrong custom element type');            
+    });
+}, 'Custom element type is the local name of the custom element even if IS attribute provided.' +
+    'Test extension of all HTML5 elements');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    doc.register('x-element-2');
+    
+    HTML5_ELEMENTS.forEach(function(value) {
+        var obj = doc.createElement(value);
+        var name = 'x-' + value + '-02';
+        var id = 'x_' + value + '_02';
+        doc.register(name, {
+            prototype: Object.create(obj.constructor.prototype),
+            extends: value
+        });
+        doc.body.innerHTML = '<' + name + ' id="' + id + '" is="x-element-2"></' + name + '>';
+        var customElement = doc.querySelector('#' + id);
+        
+        assert_equals(customElement.constructor.name, 
+                customElement.localName, 'Wrong custom element local name');
+
+        assert_equals(customElement.constructor.name, name, 
+            'Wrong custom element type');            
+    });
+}, 'Custom element type is the local name of the custom element even if IS attribute provided.' +
+    'Another test of extension of all HTML5 elements.');
+
 </script>
 </body>
 </html>
