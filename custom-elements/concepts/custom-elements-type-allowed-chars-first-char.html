@@ -16,7 +16,7 @@
 <script type="text/javascript">
 
 function testArray(doc, array, positive) {
-    for (var i=0; i<array.length; i++){
+    for (var i = 0; i < array.length; i++){
         var c = array[i];
         var name = String.fromCharCode(c) + '-x' + c.toString(16);
         if (positive) {
@@ -38,10 +38,10 @@ function testArray(doc, array, positive) {
 }
 
 function testRangesArray(doc, array, positive) {
-    for (var i=0; i<array.length; i+=2){
-        var low = array[i];
-        var high = array[i+1];
-        for (var c=low; c<=high; c++){
+    for (var i = 0; i < array.length; i += 2){
+        var rangeStart = array[i];
+        var rangeEnd = array[i+1];
+        for (var c = rangeStart; c <= rangeEnd; c++){
             var name = String.fromCharCode(c) + '-x' + c.toString(16);
             if (positive){
                 try {
