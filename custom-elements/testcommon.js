@@ -334,7 +334,7 @@ function newIFrame(context, src) {
         iframe.src = src;
     }
     document.body.appendChild(iframe);
-    context.iframes.push(iframe);
+    context.addIFrame(iframe);
 
     assert_true(typeof (iframe.contentWindow) != 'undefined'
             && typeof (iframe.contentWindow.document) != 'undefined'
@@ -349,27 +349,30 @@ function newHTMLDocumentWithBrowsingContext(context) {
     return d;
 }
 
-function newContext() {
-    return {
-        iframes : []
-    };
+function Context() {
+    this.iframes = [];
 }
 
-function cleanContext(context) {
-    context.iframes.forEach(function(e) {
+Context.prototype.clean = function () {
+    this.iframes.forEach(function(e) {
         e.parentNode.removeChild(e);
     });
+    this.iframes = [];
+}
+
+Context.prototype.addIFrame = function(iframe){
+    this.iframes.push(iframe)
 }
 
 // run given test function in context
 // the context is cleaned up after test completes.
 function inContext(f) {
     return function() {
-        var context = newContext();
+        var context = new Context();
         try {
             f(context);
         } finally {
-            cleanContext(context);
+            context.clean();
         }
     };
 }
@@ -383,14 +386,14 @@ function testInIFrame(url, f, testName, testProps) {
     if (url) {
         var t = async_test(testName, testProps);
         t.step(function() {
-            var context = newContext();
+            var context = new Context();
             var iframe = newIFrame(context, url);
             iframe.onload = t.step_func(function() {
                 try {
                     f(context);
                     t.done();
                 } finally {
-                    cleanContext(context);
+                    context.clean();
                 }
             });
         });
