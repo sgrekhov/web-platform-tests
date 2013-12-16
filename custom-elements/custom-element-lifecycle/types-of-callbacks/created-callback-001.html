@@ -47,6 +47,21 @@ test(function() {
 
 }, 'Test created callback when custom element is created in HTML');
 
+test(function() {
+    var doc = newHTMLDocument();
+    var callbackCalledCounter = 0;
+
+    var proto = Object.create(HTMLElement.prototype);
+    proto.createdCallback = function () {
+        callbackCalledCounter++;
+    }
+    doc.register('x-a-7', {prototype: proto});
+    doc.body.innerHTML = '<div><x-a-7></x-a-7></div>';
+    assert_equals(callbackCalledCounter, 1, 'Callback created was not called after ' +
+            'element instance was created');
+
+}, 'Test created callback when custom element is created in HTML as descendant of another element');
+
 
 test(function() {
     var doc = newHTMLDocument();
