@@ -118,8 +118,8 @@ testInIFrame('../../resources/x-element.html', function(context) {
 }, 'Test leftView callback is called after changing innerHTML. Document has browsing context');
 
 
-test(function() {
-    var doc = newHTMLDocument();
+testInIFrame('../../resources/blank.html', function(context) {
+    var doc = context.iframes[0].contentDocument;
     var callbackCalledCounter = 0;
 
     doc.body.innerHTML = '<div id="xa4-parent"><x-a-4 id="xa4"></x-a-4></div>';
@@ -139,8 +139,8 @@ test(function() {
     'is removed by removeChild method from document with browsing context');
 
 
-test(function() {
-    var doc = newHTMLDocument();
+testInIFrame('../../resources/blank.html', function(context) {
+    var doc = context.iframes[0].contentDocument;
     var callbackCalledCounter = 0;
 
     doc.body.innerHTML = '<div id="xa4-parent"><x-a-5 id="xa5"></x-a-5></div>';
