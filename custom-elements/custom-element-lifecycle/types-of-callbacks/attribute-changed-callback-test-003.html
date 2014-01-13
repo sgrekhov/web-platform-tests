@@ -26,11 +26,11 @@ test(function() {
     var customElement = new GeneratedConstructor();
     //attributeChangedCallback should be called first time here
     customElement.setAttribute('class', 'someClass');
-  //attributeChangedCallback should be called second time here
+    //attributeChangedCallback should be called second time here
     customElement.removeAttribute('class');
 
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback of the custom element created in JavaScript. ' +
     'Test that callback is called when attribute is removed');
 
@@ -57,7 +57,7 @@ test(function() {
         customElement.removeAttribute('class');
 
         assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged was called ' +
-                'wrong number of times for "' + element + '"');
+            'wrong number of times for "' + element + '"');
     });
 }, 'Test attributeChanged callback of the custom element that extends HTML element. ' +
     'Test that callback is called when attribute is removed');
@@ -76,7 +76,7 @@ test(function() {
     var customElement = doc.querySelector('#xa2');
     customElement.removeAttribute('class');
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback of the custom element created in HTML. ' +
     'Test that callback is called when attribute is removed');
 
@@ -130,7 +130,7 @@ test(function() {
     customElement.removeAttribute('name');
 
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback of the custom element created in HTML. ' +
     'Test attribute removing when element in unresolved at first');
 
@@ -149,7 +149,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     customElement.removeAttribute('class');
 
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback for the document that has browsing context. ' +
     'Test that callback is called wheeb attribute is removed');
 
@@ -202,7 +202,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     customElement.removeAttribute('class');
 
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback for the document that has browsing context. ' +
     'Test attribute removing when element in unresolved at first');
 

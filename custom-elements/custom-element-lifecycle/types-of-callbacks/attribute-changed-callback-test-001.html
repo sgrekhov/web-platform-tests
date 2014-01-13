@@ -27,7 +27,7 @@ test(function() {
     customElement.setAttribute('class', 'someClass');
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback of the custom element created in JavaScript. ' +
     'Test callback calling when attribute value is set');
 
@@ -71,7 +71,7 @@ test(function() {
     customElement.classList.add('someClass');
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback of the custom element created in JavaScript. ' +
     'Test callback calling when attribute value is set by classList.add');
 
@@ -115,7 +115,7 @@ test(function() {
     customElement.className = 'someClass';
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback of the custom element created in JavaScript. ' +
     'Test callback calling when attribute value is set as property');
 
@@ -158,7 +158,7 @@ test(function() {
     doc.body.innerHTML = '<x-a-2 id="xa2" class="theClass"></x-a-2>';
 
     assert_equals(callbackCalledCounter, 0, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback of the custom element created in HTML. ' +
     'Test callback not calling if setAttribute is not called');
 
@@ -177,7 +177,7 @@ test(function() {
     customElement.setAttribute('class', 'someClass');
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback of the custom element created in HTML. ' +
     'Test callback calling when attribute value is set');
 
@@ -226,7 +226,7 @@ test(function() {
     customElement.setAttribute('class', 'someClass2');
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback of the custom element instantiating in HTML. ' +
     'Test that callback is not called when attribute value of unresolved element is set');
 
@@ -248,7 +248,7 @@ test(function() {
         customElement.setAttribute('class', 'someClass');
 
         assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-                'wrong number of times');
+            'wrong number of times');
     });
 }, 'Test attributeChanged callback of the custom element that extends some HTML element. ' +
     'Test that the callback is called');
@@ -271,7 +271,7 @@ test(function() {
         customElement.classList.add('someClass');
 
         assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-                'wrong number of times');
+            'wrong number of times');
     });
 }, 'Test attributeChanged callback of the custom element that extends some HTML element. ' +
     'Test that the callback is called if attribute is set by classList.add');
@@ -321,7 +321,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     customElement.setAttribute('class', 'someClass');
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback for the document which has browsing context. ' +
     'Test that the callback is called');
 
@@ -365,7 +365,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     customElement.classList.add('someClass');
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback for the document which has browsing context. ' +
     'Test that the callback is called if attribute set by classList.add');
 
@@ -411,7 +411,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     customElement.setAttribute('class', 'someClass');
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback for the document which has browsing context. ' +
     'Attribute changed before element registration');
 
@@ -433,7 +433,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
         customElement.setAttribute('class', 'someClass');
 
         assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-                'wrong number of times');
+            'wrong number of times');
     });
 
 }, 'Test attributeChanged callback of the custom element that extends some HTML element. ' +

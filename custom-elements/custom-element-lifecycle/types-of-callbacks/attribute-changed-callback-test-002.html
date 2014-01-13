@@ -27,15 +27,15 @@ test(function() {
     customElement.setAttribute('class', 'someClass');
     customElement.setAttribute('class', 'someClass2');
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 
     customElement.classList.add('someClass3');
     assert_equals(callbackCalledCounter, 3, 'Callback attributeChanged was called ' +
-            'wrong number of times after classList.add');
+        'wrong number of times after classList.add');
 
     customElement.id = 'someId';
     assert_equals(callbackCalledCounter, 4, 'Callback attributeChanged was called ' +
-            'wrong number of times after changing attribute as property');
+        'wrong number of times after changing attribute as property');
 }, 'Test attributeChanged callback of the custom element created in JavaScript. ' +
     'Test that callback is called when attribute is changed');
 
@@ -60,7 +60,7 @@ test(function() {
 
     customElement.setAttribute('class', 'newValue');
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
     assert_equals(argument1, 'class', 'Wrong value of the first argument of ' +
         'attributeChanged callback');
     assert_equals(argument2, 'oldValue', 'Wrong value of the second argument of ' +
@@ -70,7 +70,7 @@ test(function() {
 
     customElement.classList.add('newestValue');
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged was called ' +
-            'wrong number of times after changing attribute by classList.add');
+        'wrong number of times after changing attribute by classList.add');
     assert_equals(argument1, 'class', 'Wrong value of the first argument of ' +
         'attributeChanged callback after changing attribute by classList.add');
     assert_equals(argument2, 'newValue', 'Wrong value of the second argument of ' +
@@ -80,7 +80,7 @@ test(function() {
 
     customElement.className = 'lastValue';
     assert_equals(callbackCalledCounter, 3, 'Callback attributeChanged was called ' +
-            'wrong number of times after changing attribute as a property');
+        'wrong number of times after changing attribute as a property');
     assert_equals(argument1, 'class', 'Wrong value of the first argument of ' +
         'attributeChanged callback after changing attribute by classList.add');
     assert_equals(argument2, 'newValue newestValue', 'Wrong value of the second argument of ' +
@@ -114,13 +114,13 @@ test(function() {
     customElement.setAttribute('class', 'rightValue');
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
     assert_equals(argument1, 'class', 'Wrong value of the first argument of ' +
-            'attributeChanged callback');
+        'attributeChanged callback');
     assert_equals(argument2, 'newestValue', 'Wrong value of the second argument of ' +
-            'attributeChanged callback');
+        'attributeChanged callback');
     assert_equals(argument3, 'rightValue', 'Wrong value of the third argument of ' +
-            'attributeChanged callback');
+        'attributeChanged callback');
 }, 'Test attributeChanged callback of the custom element instantiating in HTML. ' +
     'Test attribute changing of unregistered element');
 
@@ -138,15 +138,15 @@ testInIFrame('../../resources/x-element.html', function(context) {
     customElement.setAttribute('class', 'firstValue');
     customElement.setAttribute('class', 'secondValue');
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 
     customElement.classList.add('someClass3');
     assert_equals(callbackCalledCounter, 3, 'Callback attributeChanged was called ' +
-            'wrong number of times after classList.add');
+        'wrong number of times after classList.add');
 
     customElement.id = 'someId';
     assert_equals(callbackCalledCounter, 4, 'Callback attributeChanged was called ' +
-            'wrong number of times after changing attribute as property');
+        'wrong number of times after changing attribute as property');
 
 }, 'Test attributeChanged callback for document that has browsing context. ' +
     'Test that callback is called when attribute is changed');
@@ -209,7 +209,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     doc.registerElement('x-element', {prototype: proto});
     customElement.setAttribute('class', 'thirdValue');
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged was called ' +
-            'wrong number of times');
+        'wrong number of times');
 }, 'Test attributeChanged callback for document that has browsing context. ' +
     'Test that callback is called when attribute is changed. Element is unregistered ' +
     'at first');

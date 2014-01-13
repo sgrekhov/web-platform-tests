@@ -28,7 +28,7 @@ test(function() {
     var xa1 = doc.querySelector('#xa1');
     doc.body.removeChild(xa1);
     assert_equals(callbackCalledCounter, 0, 'Callback detached was called for the document ' +
-            'with no browsing context');
+        'with no browsing context');
 }, 'Test detached callback when custom element is created in HTML. ' +
     'Document has no browsing context');
 
@@ -46,7 +46,7 @@ test(function() {
     var customElement = doc.querySelector('#xa2');
     doc.body.removeChild(customElement);
     assert_equals(callbackCalledCounter, 0, 'Callback detached was called for the document ' +
-            'with no browsing context');
+        'with no browsing context');
 }, 'Test detached callback when custom element is created in HTML before ' +
     'registration of a custom element. Document has no browsing context');
 
@@ -64,7 +64,7 @@ test(function() {
     customElement.constructor.prototype = proto;
     doc.body.removeChild(customElement);
     assert_equals(callbackCalledCounter, 0, 'Callback detached was called when custom ' +
-            'element is uregistred.');
+        'element is uregistred.');
 
 }, 'Test detached callback when custom element is unregistered.');
 
@@ -81,7 +81,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     var customElement = doc.querySelector('#xelement');
     doc.body.removeChild(customElement);
     assert_equals(callbackCalledCounter, 1, 'Callback detached was not called when ' +
-            'custom element is removed from the document with browsing context');
+        'custom element is removed from the document with browsing context');
 }, 'Test detached callback is called after method removeChild(). Document has browsing context');
 
 
@@ -98,7 +98,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     var div = doc.createElement('div');
     doc.body.replaceChild(div, customElement);
     assert_equals(callbackCalledCounter, 1, 'Callback detached was not called when ' +
-            'custom element is removed from the document with browsing context');
+        'custom element is removed from the document with browsing context');
 }, 'Test detached callback is called after method replaceChild(). Document has browsing context');
 
 
@@ -118,7 +118,7 @@ testInIFrame('../../resources/blank.html', function(context) {
     var replacement = doc.createElement('div');
     doc.body.replaceChild(replacement, parent);
     assert_equals(callbackCalledCounter, 1, 'Callback detached was not called when ' +
-            'custom element is removed from the document with browsing context');
+        'custom element is removed from the document with browsing context');
 }, 'Test detached callback is called after method replaceChild() for custom element\'s parent. ' +
     'Document has browsing context');
 
@@ -135,7 +135,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     var customElement = doc.querySelector('#xelement');
     doc.body.innerHTML = '';
     assert_equals(callbackCalledCounter, 1, 'Callback detached was not called when ' +
-            'custom element is removed from the document with browsing context');
+        'custom element is removed from the document with browsing context');
 }, 'Test detached callback is called after changing innerHTML. Document has browsing context');
 
 
@@ -154,7 +154,7 @@ testInIFrame('../../resources/blank.html', function(context) {
     doc.body.removeChild(div);
     assert_equals(doc.querySelector('#xa4'),null);
     assert_equals(callbackCalledCounter, 1, 'Callback detached was not called when ' +
-            'custom element is removed from the document with browsing context');
+        'custom element is removed from the document with browsing context');
 
 }, 'Test detached callback is called when ancestor node of custom element '+
     'is removed by removeChild method from document with browsing context');
@@ -174,7 +174,7 @@ testInIFrame('../../resources/blank.html', function(context) {
     var div = doc.querySelector('#xa5-parent');
     doc.body.innerHTML = '';
     assert_equals(callbackCalledCounter, 1, 'Callback detached was not called when ' +
-            'custom element is removed from the document with browsing context');
+        'custom element is removed from the document with browsing context');
 
 }, 'Test detached callback is called when ancestor node of custom element '+
     'is removed from document with browsing context');
