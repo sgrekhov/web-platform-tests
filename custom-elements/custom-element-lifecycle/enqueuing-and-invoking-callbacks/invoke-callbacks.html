@@ -23,7 +23,7 @@ test(function(){
     proto.createdCallback = function () {
         callbackThis = this;
     }
-    doc.register('x-a-1', {prototype: proto});
+    doc.registerElement('x-a-1', {prototype: proto});
 
     doc.body.innerHTML = '<x-a-1 id="x-a-1"></x-a-1>';
     assert_equals(doc.querySelector('#x-a-1'), callbackThis, 'Wrong this value ' +
@@ -37,15 +37,15 @@ testInIFrame('../../resources/x-element.html', function(context) {
     var callbackThis = null;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.enteredViewCallback = function () {
+    proto.attachedCallback = function () {
         callbackThis = this;
     }
-    doc.register('x-element', {prototype: proto});
+    doc.registerElement('x-element', {prototype: proto});
 
     assert_equals(doc.querySelector('#xelement'), callbackThis, 'Wrong this value ' +
-        'inside enteredView callback ');
+        'inside attached callback ');
 
-}, 'Test this value inside enteredView callback.');
+}, 'Test this value inside attached callback.');
 
 
 testInIFrame('../../resources/x-element.html', function(context) {
@@ -53,15 +53,15 @@ testInIFrame('../../resources/x-element.html', function(context) {
     var callbackThis = null;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.leftViewCallback = function () {
+    proto.detachedCallback = function () {
         callbackThis = this;
     }
-    doc.register('x-element', {prototype: proto});
+    doc.registerElement('x-element', {prototype: proto});
     var customElement = doc.querySelector('#xelement');
     doc.body.removeChild(customElement);
     assert_equals(customElement, callbackThis, 'Wrong this value ' +
-        'inside leftView callback ');
-}, 'Test this value inside leftView callback.');
+        'inside detached callback ');
+}, 'Test this value inside detached callback.');
 
 test(function() {
     var doc = newHTMLDocument();
@@ -71,7 +71,7 @@ test(function() {
     proto.attributeChangedCallback = function() {
         callbackThis = this;
     }
-    var GeneratedConstructor = doc.register('x-a-2', {prototype: proto});
+    var GeneratedConstructor = doc.registerElement('x-a-2', {prototype: proto});
     var customElement = new GeneratedConstructor();
     customElement.setAttribute('class', 'someClass');
 
@@ -88,7 +88,7 @@ test(function() {
     proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         callbackArgs = [arg1, arg2, arg3];
     }
-    var GeneratedConstructor = doc.register('x-a-3', {prototype: proto});
+    var GeneratedConstructor = doc.registerElement('x-a-3', {prototype: proto});
     var customElement = new GeneratedConstructor();
     customElement.setAttribute('class', 'someClass');
 

@@ -18,7 +18,7 @@
 test(function() {
     var doc = newHTMLDocument();
     assert_throws('SyntaxError',
-                  function() { doc.register('1xa2'); },
+                  function() { doc.registerElement('1xa2'); },
                   'Registering invalid custom element type whould throw SyntaxError');
 
 }, 'Registering invalid custom element type whould throw SyntaxError');

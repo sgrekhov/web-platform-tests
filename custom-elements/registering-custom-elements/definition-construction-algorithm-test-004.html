@@ -17,9 +17,9 @@
 test(function() {
     var doc = newHTMLDocument();
     var name = 'x-a-1';
-    doc.register(name);
+    doc.registerElement(name);
     assert_throws('NotSupportedError', function() {
-        doc.register(name);
+        doc.registerElement(name);
     }, 'Exception should be thrown if definition with the same type already exists');
 }, 'Check duplicate definition');
 
@@ -27,12 +27,12 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var name = 'x-a-2';
-    doc.register(name);
+    doc.registerElement(name);
 
     HTML5_ELEMENTS.forEach(function (element) {
         //FIXME Should the type of the exception be specified here?
         assert_throws(null, function() {
-            doc.register(name, {
+            doc.registerElement(name, {
                 prototype: Object.create(bj.constructor.prototype),
                 extends: element
             });
@@ -44,7 +44,7 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var name = 'x-a-3';
-    doc.register(name, {
+    doc.registerElement(name, {
         prototype: Object.create(HTMLAnchorElement.prototype),
         extends: 'a'
     });
@@ -52,7 +52,7 @@ test(function() {
     HTML5_ELEMENTS.forEach(function(element) {
         //FIXME Should the type of the exception be specified here?
         assert_throws(null, function() {
-            doc.register(name, {
+            doc.registerElement(name, {
                 prototype: Object.create(bj.constructor.prototype),
                 extends: element
             });
