@@ -22,9 +22,9 @@ test(function() {
     //FIXME Should the type of the exception be specified here?
     assert_throws(null, function () {
         doc.registerElement('x-svg-1', {prototype: proto});
-    }, 'Exception should be thrown in case of attempt to register ' + 
-    'a custom element with SVG namespace and name is not specified');
-    
+    }, 'Exception should be thrown in case of attempt to register ' +
+        'a custom element with SVG namespace and name is not specified');
+
 }, 'Error should be thrown if namespace is SVG and local name is not specified');
 
 
@@ -35,8 +35,8 @@ test(function() {
     //FIXME Should the type of the exception be specified here?
     assert_throws(null, function () {
         doc.registerElement('x-svg-2', {prototype: proto, extends: null});
-    }, 'Exception should be thrown in case of attempt to register ' + 
-    'a custom element with SVG namespace and name is null');
+    }, 'Exception should be thrown in case of attempt to register ' +
+        'a custom element with SVG namespace and name is null');
 
 }, 'Error should be thrown if namespace is SVG and local name is null');
 

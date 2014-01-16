@@ -33,7 +33,6 @@ test(function() {
         //FIXME Should the type of the exception be specified here?
         assert_throws(null, function() {
             doc.registerElement(name, {
-                prototype: Object.create(bj.constructor.prototype),
                 extends: element
             });
         }, 'Exception should be thrown if definition with the same type already exists');
@@ -53,7 +52,6 @@ test(function() {
         //FIXME Should the type of the exception be specified here?
         assert_throws(null, function() {
             doc.registerElement(name, {
-                prototype: Object.create(bj.constructor.prototype),
                 extends: element
             });
         }, 'Exception should be thrown if definition with the same type already exists');

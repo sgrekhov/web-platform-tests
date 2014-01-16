@@ -17,12 +17,12 @@
 test(function() {
     var doc = newHTMLDocument();
     var svg = doc.createElementNS(SVG_NAMESPACE, 'x-a');
-    var proto = Object.create(svg.constructor.prototype);    
+    var proto = Object.create(svg.constructor.prototype);
     var GeneratedConstructor = doc.registerElement('x-a-1', {prototype: proto});
     var customElement = new GeneratedConstructor();
-    
+
     assert_equals(customElement.namespaceURI, SVG_NAMESPACE, 'Wrong namespace');
-    
+
 }, 'For SVG prototype namespace is SVG namespace');
 
 </script>
