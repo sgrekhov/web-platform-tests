@@ -38,7 +38,7 @@ test(function() {
     var doc = newHTMLDocument();
     var invalidNames = [
                       'xframe', 'x_frame', 'x.frame', 'x1frame', '-xframe', '1-frame', '1x-frame',
-                      '.-frame', '_frame', 'x-f!rame'
+                      '.-frame', '_frame', 'x-f!rame', 'x-:frame'
                      ];
     invalidNames.forEach(function(value) {
         //FIXME Should the type of the exception be specified here?
