@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Unresolved element interface must be HTMLUnknownElement, if the namespace is neither HTML Namespace nor SVG Namespace</title>
+<meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
+<meta name="assert" content="When an unresolved element is created, it's element interface must be HTMLUnknownElement, if the namespace is neither HTML Namespace nor SVG Namespace">
+<link rel="help" href="http://www.w3.org/TR/custom-elements/#registering-custom-elements">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src='../testcommon.js'></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+
+test(function() {
+    var doc = newHTMLDocument();
+    doc.body.innerHTML =
+        '<math xmlns="http://www.w3.org/1998/Math/MathML">' +
+            '<x-a-1 id="xa"></x-a-1>'+
+        '</math>';
+    var xa = doc.querySelector('#xa');
+
+    assert_not_equals(xa, null, 'Unregistered custom element should not be null');
+
+    assert_class_string(xa, 'HTMLUnknownElement',
+        'Unresolved custom element must be a HTMLUnknownElement');
+
+}, 'Test unresolved element interface with MathML namespace');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var xa = doc.createElementNS('http://www.w3.org/1998/Math/MathML', 'x-a-2');
+
+    assert_class_string(xa, 'HTMLUnknownElement',
+        'Unresolved custom element must be a HTMLUnknownElement');
+
+}, 'Tesst unresolved element interface with MathML namespace, ' +
+    'created by Document.createElementNS');
+
+
+testInIFrame('../resources/x-mathml-element.html', function(context) {
+    var doc = context.iframes[0].contentDocument;
+    var customElement = doc.getElementById('xmathelement');
+
+    assert_not_equals(customElement, null, 'Unregistered custom element should not be null');
+
+    assert_class_string(customElement, 'HTMLUnknownElement',
+        'Unresolved custom element must be a HTMLUnknownElement');
+
+}, 'Test unresolved element interface in loaded HTML document with embedded MathML elements');
+
+
+</script>
+</body>
+</html>

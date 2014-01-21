@@ -43,7 +43,7 @@ test(function() {
         prototype: Object.create(HTMLParagraphElement.prototype)
     });
     var customElement = new GeneratedConstructor();
-    // Extends is nut specifiet therefore expected class string here is HTMLElement
+    // Extends is not specified therefore expected class string here is HTMLElement
     assert_class_string(customElement, 'HTMLElement',
             'Custom element  must be a HTMLElement');
 }, 'Custom element with specified prototype. Extends is not specified');
@@ -56,7 +56,7 @@ test(function() {
         extends: null
     });
     var customElement = new GeneratedConstructor();
-    // Extends is nut specifiet therefore expected class string here is HTMLElement
+    // Extends is not specified therefore expected class string here is HTMLElement
     assert_class_string(customElement, 'HTMLElement',
             'Custom element  must be a HTMLElement');
 }, 'Custom element with specified prototype. Extends is null');
