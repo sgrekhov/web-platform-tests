@@ -20,7 +20,7 @@ test(function() {
     var customElement = new GeneratedConstructor();
 
     assert_class_string(customElement, 'HTMLElement',
-            'Custom element without specified prototype must be a HTMLelement');
+        'Custom element without specified prototype must be a HTMLelement');
 }, 'Custom element without specified prototype');
 
 
@@ -33,33 +33,8 @@ test(function() {
     var customElement = new GeneratedConstructor();
 
     assert_class_string(customElement, 'HTMLParagraphElement',
-            'Custom element  must be a HTMLParagraphElement');
+        'Custom element  must be a HTMLParagraphElement');
 }, 'Custom element with specified prototype');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-    var GeneratedConstructor = doc.registerElement('x-a-3', {
-        prototype: Object.create(HTMLParagraphElement.prototype)
-    });
-    var customElement = new GeneratedConstructor();
-    // Extends is not specified therefore expected class string here is HTMLElement
-    assert_class_string(customElement, 'HTMLElement',
-            'Custom element  must be a HTMLElement');
-}, 'Custom element with specified prototype. Extends is not specified');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-    var GeneratedConstructor = doc.registerElement('x-a-4', {
-        prototype: Object.create(HTMLParagraphElement.prototype),
-        extends: null
-    });
-    var customElement = new GeneratedConstructor();
-    // Extends is not specified therefore expected class string here is HTMLElement
-    assert_class_string(customElement, 'HTMLElement',
-            'Custom element  must be a HTMLElement');
-}, 'Custom element with specified prototype. Extends is null');
 
 </script>
 </body>

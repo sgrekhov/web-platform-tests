@@ -16,7 +16,7 @@
 
 test(function () {
     var doc = newHTMLDocument();
-    
+
     HTML5_ELEMENTS.forEach(function(element) {
         var name = 'x-' + element;
         var obj = doc.createElement(element);
@@ -28,7 +28,7 @@ test(function () {
         var customElement = new GeneratedConstructor();
 
         assert_equals(customElement.localName, element,
-                'Custom element local name must be an EXTENDS value');        
+            'Custom element local name must be an EXTENDS value');
     });
 }, 'Custom element local name is the value of the EXTENDS property');
 
