@@ -308,8 +308,7 @@ test(function() {
     'Test callback arguments');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -326,8 +325,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     'Test that the callback is called');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var argument1 = 'arg1';
     var argument2 = 'arg2';
     var argument3 = 'arg3';
@@ -352,8 +350,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     'Test callback arguments');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -370,8 +367,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     'Test that the callback is called if attribute set by classList.add');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var argument1 = 'arg1';
     var argument2 = 'arg2';
     var argument3 = 'arg3';
@@ -395,8 +391,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
 }, 'Test attributeChanged callback for the document which has browsing context.' +
     'Test callback arguments if attribute set by classList.add');
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -416,8 +411,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     'Attribute changed before element registration');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     HTML5_ELEMENTS.forEach(function(element) {
         var callbackCalledCounter = 0;
         var obj = doc.createElement(element);
@@ -440,8 +434,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     'Document has browsing context. Test that the callback is called');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     HTML5_ELEMENTS.forEach(function(element) {
         var argument1 = 'arg1';
         var argument2 = 'arg2';

@@ -121,8 +121,7 @@ test(function() {
     'should be accessible by :unresolved');
 
 
-testInIFrame('../../resources/x-element.html', function(context){
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
 
     var customElement = doc.querySelector(':unresolved');
 

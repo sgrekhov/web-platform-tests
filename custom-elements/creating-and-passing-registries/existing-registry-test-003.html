@@ -15,8 +15,7 @@
 <div id="log"></div>
 <script type="text/javascript">
 
-testInIFrame('../resources/blank.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../resources/blank.html', function(doc) {
     try {
         doc.registerElement('x-element');
     } catch (e) {
@@ -25,8 +24,7 @@ testInIFrame('../resources/blank.html', function(context) {
 }, 'Document, loaded into browsing context, must have a new empty registry');
 
 
-testInIFrame('../resources/blank.html', function(context) {
-    var loadedDocument = context.iframes[0].contentDocument;
+testInIFrame('../resources/blank.html', function(loadedDocument) {
     var createdDocument = document.implementation.createHTMLDocument('Test Document');
     // Let's check that loadedDocument and createdDocument use different registeries.
     createdDocument.registerElement('x-element');

@@ -50,8 +50,7 @@ test(function() {
     'Element created by createElementNS');
 
 
-testInIFrame('../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../resources/x-element.html', function(doc) {
     var customElement = doc.getElementById('xelement');
 
     assert_not_equals(customElement, null, 'Unregistered custom element should not be null');

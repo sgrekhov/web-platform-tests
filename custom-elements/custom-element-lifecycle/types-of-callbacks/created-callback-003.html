@@ -15,8 +15,7 @@
 <script type="text/javascript">
 
 
-testInIFrame('../../resources/blank.html', function(context){
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/blank.html', function(doc) {
     var callbackLog = [];
 
     var proto = Object.create(HTMLElement.prototype);
@@ -35,8 +34,7 @@ testInIFrame('../../resources/blank.html', function(context){
 }, 'Test attached callback is enqueued after created callback');
 
 
-testInIFrame('../../resources/blank.html', function(context){
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/blank.html', function(doc) {
     var callbackLog = [];
 
     var proto = Object.create(HTMLElement.prototype);
@@ -77,8 +75,7 @@ test(function(){
     'Document has no browsing context');
 
 
-testInIFrame('../../resources/x-element.html', function(context){
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackLog = [];
 
     var proto = Object.create(HTMLElement.prototype);

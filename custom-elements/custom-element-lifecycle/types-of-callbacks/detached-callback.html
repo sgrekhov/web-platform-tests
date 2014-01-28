@@ -69,8 +69,7 @@ test(function() {
 }, 'Test detached callback when custom element is unregistered.');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -85,8 +84,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
 }, 'Test detached callback is called after method removeChild(). Document has browsing context');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -102,8 +100,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
 }, 'Test detached callback is called after method replaceChild(). Document has browsing context');
 
 
-testInIFrame('../../resources/blank.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/blank.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -123,8 +120,7 @@ testInIFrame('../../resources/blank.html', function(context) {
     'Document has browsing context');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -139,8 +135,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
 }, 'Test detached callback is called after changing innerHTML. Document has browsing context');
 
 
-testInIFrame('../../resources/blank.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/blank.html', function(doc) {
     var callbackCalledCounter = 0;
 
     doc.body.innerHTML = '<div id="xa4-parent"><x-a-4 id="xa4"></x-a-4></div>';
@@ -160,8 +155,7 @@ testInIFrame('../../resources/blank.html', function(context) {
     'is removed by removeChild method from document with browsing context');
 
 
-testInIFrame('../../resources/blank.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/blank.html', function(doc) {
     var callbackCalledCounter = 0;
 
     doc.body.innerHTML = '<div id="xa4-parent"><x-a-5 id="xa5"></x-a-5></div>';

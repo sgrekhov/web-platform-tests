@@ -125,8 +125,7 @@ test(function() {
     'Test attribute changing of unregistered element');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -152,8 +151,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     'Test that callback is called when attribute is changed');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var argument1 = 'arg1';
     var argument2 = 'arg2';
     var argument3 = 'arg3';
@@ -195,8 +193,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     'Test callback attributes when attribute is changed');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);

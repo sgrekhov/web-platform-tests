@@ -14,8 +14,7 @@
 <div id="log"></div>
 <script type="text/javascript">
 
-testInIFrame('../resources/import-master.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../resources/import-master.html', function(doc) {
     var link = doc.querySelector('link[rel=import]');
     var doc2 = link.import;
     var name = 'x-frame';
@@ -28,8 +27,7 @@ testInIFrame('../resources/import-master.html', function(context) {
 }, 'Registry of the import should share master document registry');
 
 
-testInIFrame('../resources/import-master.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../resources/import-master.html', function(doc) {
     var link = doc.querySelector('link[rel=import]');
     var doc2 = link.import;
     var name = 'x-frame';

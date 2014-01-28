@@ -37,8 +37,7 @@ test(function() {
 }, 'Unresolved element interface with valid name is instantiating in HTML for SVG namespace');
 
 
-testInIFrame('../resources/x-svg-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../resources/x-svg-element.html', function(doc) {
     var xsvg = doc.getElementById('xsvgelement');
 
     assert_not_equals(xsvg, null, 'Unresolved custom element should not be null');

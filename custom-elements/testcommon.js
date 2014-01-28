@@ -390,7 +390,7 @@ function testInIFrame(url, f, testName, testProps) {
             var iframe = newIFrame(context, url);
             iframe.onload = t.step_func(function() {
                 try {
-                    f(context);
+                    f(iframe.contentDocument);
                     t.done();
                 } finally {
                     context.clean();
@@ -399,8 +399,8 @@ function testInIFrame(url, f, testName, testProps) {
         });
     } else {
         test(inContext(function(context) {
-            newHTMLDocumentWithBrowsingContext(context);
-            f(context);
+            var doc = newHTMLDocumentWithBrowsingContext(context);
+            f(doc);
         }), testName, testProps);
     }
 }

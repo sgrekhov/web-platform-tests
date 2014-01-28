@@ -82,8 +82,7 @@ test(function() {
 }, 'Test attached callback when custom element is unregistered.');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -97,8 +96,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
 }, 'Test attached callback. Document has browsing context');
 
 
-testInIFrame('../../resources/blank.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/blank.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -115,8 +113,7 @@ testInIFrame('../../resources/blank.html', function(context) {
     'Document has browsing context');
 
 
-testInIFrame('../../resources/blank.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/blank.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var x = doc.createElement('x-element');
@@ -133,8 +130,7 @@ testInIFrame('../../resources/blank.html', function(context) {
     'Document has browsing context');
 
 
-testInIFrame('../../resources/blank.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/blank.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -150,8 +146,7 @@ testInIFrame('../../resources/blank.html', function(context) {
     'Document has browsing context');
 
 
-testInIFrame('../../resources/blank.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/blank.html', function(doc) {
     var callbackCalledCounter = 0;
 
     doc.body.innerHTML = '<x-element></x-element>';

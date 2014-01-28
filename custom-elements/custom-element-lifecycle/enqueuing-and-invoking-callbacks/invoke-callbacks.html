@@ -32,8 +32,7 @@ test(function(){
 }, 'Test this value inside created callback.');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackThis = null;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -48,8 +47,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
 }, 'Test this value inside attached callback.');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackThis = null;
 
     var proto = Object.create(HTMLElement.prototype);

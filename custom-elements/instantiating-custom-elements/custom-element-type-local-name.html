@@ -35,8 +35,7 @@ test(function() {
     'Custom element created in HTML');
     
 
-testInIFrame('../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../resources/x-element.html', function(doc) {
     doc.registerElement('x-element');
     var xelement = doc.querySelector('#xelement');
     assert_equals(xelement.constructor.prototype.constructor.name, xelement.localName, 

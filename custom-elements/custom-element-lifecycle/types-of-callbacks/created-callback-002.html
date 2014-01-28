@@ -102,8 +102,7 @@ test(function() {
     'when custom element is created via constructor returned by method register');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackProto;
 
     var proto = Object.create(HTMLElement.prototype);

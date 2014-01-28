@@ -135,8 +135,7 @@ test(function() {
     'Test attribute removing when element in unresolved at first');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -154,8 +153,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     'Test that callback is called wheeb attribute is removed');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var argument1 = 'arg1';
     var argument2 = 'arg2';
     var argument3 = 'arg3';
@@ -181,8 +179,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     'Test that callback arguments');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);

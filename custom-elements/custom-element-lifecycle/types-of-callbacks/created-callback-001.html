@@ -113,8 +113,7 @@ test(function() {
 }, 'Test created callback if custom element is unresolved.');
 
 
-testInIFrame('../../resources/x-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
@@ -128,8 +127,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
     'Document has browsing context');
 
 
-testInIFrame('../../resources/register-and-create-custom-element.html', function(context) {
-    var doc = context.iframes[0].contentDocument;
+testInIFrame('../../resources/register-and-create-custom-element.html', function(doc) {
 
     assert_equals('Created callback was called', doc.querySelector('#log').innerText,
         'Callback created should be called')
