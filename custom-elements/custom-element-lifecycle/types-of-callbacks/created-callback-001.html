@@ -26,7 +26,7 @@ test(function() {
     }
     var GeneratedConstructor = doc.registerElement('x-a', {prototype: proto});
     var customElement = new GeneratedConstructor();
-    assert_equals(callbackCalledCounter, 1, 'Callback created was not called after ' +
+    assert_equals(callbackCalledCounter, 1, 'Callback created should be called after ' +
         'element instance was created');
 
 }, 'Test created callback when custom element is created in JavaScript');
@@ -42,7 +42,7 @@ test(function() {
     }
     doc.registerElement('x-a-2', {prototype: proto});
     doc.body.innerHTML = '<x-a-2></x-a-2>';
-    assert_equals(callbackCalledCounter, 1, 'Callback created was not called after ' +
+    assert_equals(callbackCalledCounter, 1, 'Callback created should be called after ' +
         'element instance was created');
 
 }, 'Test created callback when custom element is created in HTML');
@@ -57,7 +57,7 @@ test(function() {
     }
     doc.registerElement('x-a-7', {prototype: proto});
     doc.body.innerHTML = '<div><x-a-7></x-a-7></div>';
-    assert_equals(callbackCalledCounter, 1, 'Callback created was not called after ' +
+    assert_equals(callbackCalledCounter, 1, 'Callback created should be called after ' +
         'element instance was created');
 
 }, 'Test created callback when custom element is created in HTML as descendant of another element');
@@ -73,7 +73,7 @@ test(function() {
     }
     doc.registerElement('x-a-3', {prototype: proto});
     var customElement = doc.createElement('x-a-3');
-    assert_equals(callbackCalledCounter, 1, 'Callback created was not called after ' +
+    assert_equals(callbackCalledCounter, 1, 'Callback created should be called after ' +
         'element instance was created');
 
 }, 'Test created callback when custom element is created by createElement');
@@ -89,7 +89,7 @@ test(function() {
     }
     doc.body.innerHTML = '<x-a-4></x-a-4>';
     doc.registerElement('x-a-4', {prototype: proto});
-    assert_equals(callbackCalledCounter, 1, 'Callback created was not called after ' +
+    assert_equals(callbackCalledCounter, 1, 'Callback created should be called after ' +
         'element instance was created');
 
 }, 'Test created callback when custom element is created in HTML before ' +
@@ -108,9 +108,9 @@ test(function() {
     }
     customElement.constructor.prototype = proto;
     assert_equals(callbackCalledCounter, 0,
-        'Callback created was called when custom element is unresolved');
+        'Callback created should not be called if custom element is unresolved');
 
-}, 'Test created callback when custom element is unresolved.');
+}, 'Test created callback if custom element is unresolved.');
 
 
 testInIFrame('../../resources/x-element.html', function(context) {
@@ -122,7 +122,7 @@ testInIFrame('../../resources/x-element.html', function(context) {
         callbackCalledCounter++;
     }
     doc.registerElement('x-element', {prototype: proto});
-    assert_equals(callbackCalledCounter, 1, 'Callback created was not called');
+    assert_equals(callbackCalledCounter, 1, 'Callback created should be called');
 
 }, 'Test created callback. Create custom element, then register. ' +
     'Document has browsing context');
@@ -131,8 +131,8 @@ testInIFrame('../../resources/x-element.html', function(context) {
 testInIFrame('../../resources/register-and-create-custom-element.html', function(context) {
     var doc = context.iframes[0].contentDocument;
 
-    assert_equals('Created callback called', doc.querySelector('#log').innerText,
-        'Callback created was not called')
+    assert_equals('Created callback was called', doc.querySelector('#log').innerText,
+        'Callback created should be called')
 }, 'Test created callback. Register custom element, then create. ' +
     'Document has browsing context');
 
@@ -147,7 +147,7 @@ test(function() {
     }
     var customElement = doc.createElement('x-a-6');
     doc.registerElement('x-a-6', {prototype: proto});
-    assert_equals(callbackCalledCounter, 1, 'Callback created was not called after ' +
+    assert_equals(callbackCalledCounter, 1, 'Callback created should be called after ' +
         'registration of custom element');
 
 }, 'Test created callback when custom element is created by createElement '+

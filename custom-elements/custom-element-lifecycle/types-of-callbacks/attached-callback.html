@@ -19,15 +19,15 @@ test(function() {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attachedCallback  = function () {
+    proto.attachedCallback = function () {
         callbackCalledCounter++;
     }
     var GeneratedConstructor = doc.registerElement('x-a-1', {prototype: proto});
     var customElement = new GeneratedConstructor();
-    assert_equals(callbackCalledCounter, 0, 'Callback attached was called for document ' +
-        'that has no browsing content but should not');
+    assert_equals(callbackCalledCounter, 0, 'attachedCallback should not be called '+
+        'in documents that do not have a browsing context');
 
-}, 'Test attached callback when custom element is instantiating in JavaScript. ' +
+}, 'Test attached callback when custom element is instantiated in JavaScript. ' +
     'Document has no browsing context');
 
 
@@ -41,8 +41,8 @@ test(function() {
     }
     doc.registerElement('x-a-2', {prototype: proto});
     doc.body.innerHTML = '<x-a-2></x-a-2>';
-    assert_equals(callbackCalledCounter, 0, 'Callback attached was called for document ' +
-        'that has no browsing content but should not');
+    assert_equals(callbackCalledCounter, 0, 'attachedCallback should not be called '+
+        'in documents that do not have a browsing context');
 
 }, 'Test attached callback when custom element is instantiating in HTML' +
     'Document has no browsing context');
@@ -58,8 +58,8 @@ test(function() {
     }
     doc.body.innerHTML = '<x-a-3></x-a-3>';
     doc.registerElement('x-a-3', {prototype: proto});
-    assert_equals(callbackCalledCounter, 0, 'Callback attached was called for document ' +
-        'that has no browsing content but should not');
+    assert_equals(callbackCalledCounter, 0, 'attachedCallback should not be called '+
+        'in documents that do not have a browsing context');
 
 }, 'Test attached callback when custom element is instantiating in HTML before ' +
     'registration of a custom element. Document has no browsing context');
@@ -76,8 +76,8 @@ test(function() {
         callbackCalledCounter++;
     }
     customElement.constructor.prototype = proto;
-    assert_equals(callbackCalledCounter, 0, 'Callback attached was called ' +
-        'when custom element is uregistred and has no browsing context but should not');
+    assert_equals(callbackCalledCounter, 0, 'Callback attached should not be called ' +
+        'for unregistered custom element in document without browsing context');
 
 }, 'Test attached callback when custom element is unregistered.');
 
@@ -91,8 +91,8 @@ testInIFrame('../../resources/x-element.html', function(context) {
         callbackCalledCounter++;
     }
     doc.registerElement('x-element', {prototype: proto});
-    assert_equals(callbackCalledCounter, 1, 'Callback attached was not called for ' +
-        'the document that has browsing content but should');
+    assert_equals(callbackCalledCounter, 1, 'attachedCallback should be called '+
+        'in documents with browsing context');
 
 }, 'Test attached callback. Document has browsing context');
 
@@ -108,10 +108,10 @@ testInIFrame('../../resources/blank.html', function(context) {
     doc.registerElement('x-element', {prototype: proto});
     var x = doc.createElement('x-element');
     doc.body.appendChild(x);
-    assert_equals(callbackCalledCounter, 1, 'Callback attached was not called for ' +
-        'the document that has browsing content but should');
+    assert_equals(callbackCalledCounter, 1, 'attachedCallback should be called '+
+        'in documents with browsing context');
 
-}, 'Test attached callback. Registred element is created via document.createElement(). ' +
+}, 'Test attached callback. Registered element is created via document.createElement(). ' +
     'Document has browsing context');
 
 
@@ -126,10 +126,10 @@ testInIFrame('../../resources/blank.html', function(context) {
         callbackCalledCounter++;
     }
     doc.registerElement('x-element', {prototype: proto});
-    assert_equals(callbackCalledCounter, 1, 'Callback attached was not called for ' +
-        'the document that has browsing content but should');
+    assert_equals(callbackCalledCounter, 1, 'attachedCallback should be called '+
+        'in documents with browsing context');
 
-}, 'Test attached callback. Unregistred element is created via document.createElement(). ' +
+}, 'Test attached callback. Unregistered element is created via document.createElement(). ' +
     'Document has browsing context');
 
 
@@ -143,8 +143,8 @@ testInIFrame('../../resources/blank.html', function(context) {
     }
     doc.registerElement('x-element', {prototype: proto});
     doc.body.innerHTML = '<x-element></x-element>';
-    assert_equals(callbackCalledCounter, 1, 'Callback attached was not called for ' +
-        'the document that has browsing content but should');
+    assert_equals(callbackCalledCounter, 1, 'attachedCallback should be called '+
+        'in documents with browsing context');
 
 }, 'Test attached callback. Registered element is created via innerHTML property. ' +
     'Document has browsing context');
@@ -160,8 +160,8 @@ testInIFrame('../../resources/blank.html', function(context) {
         callbackCalledCounter++;
     }
     doc.registerElement('x-element', {prototype: proto});
-    assert_equals(callbackCalledCounter, 1, 'Callback attached was not called for ' +
-        'the document that has browsing content but should');
+    assert_equals(callbackCalledCounter, 1, 'attachedCallback should be called '+
+        'in documents with browsing context');
 
 }, 'Test attached callback. Unresolved element is created via innerHTML property. ' +
     'Document has browsing context');

@@ -64,7 +64,7 @@ test(function() {
     customElement.constructor.prototype = proto;
     doc.body.removeChild(customElement);
     assert_equals(callbackCalledCounter, 0, 'Callback detached was called when custom ' +
-        'element is uregistred.');
+        'element is unregistered.');
 
 }, 'Test detached callback when custom element is unregistered.');
 
