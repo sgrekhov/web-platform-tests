@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>The :unresolved pseudoclass matching</title>
+<title>The :unresolved pseudoclass matching custom elements, created by IS attribute</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="assert" content="The :unresolved pseudoclass must match all custom elements whose created callback has not yet been invoked">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#unresolved-element-pseudoclass">
@@ -16,39 +16,79 @@
 
 test(function() {
     var doc = newHTMLDocument();
-    
+
     HTML5_ELEMENTS.forEach(function(element) {
         if (HTML5_DOCUMENT_ELEMENTS.indexOf(element) == -1) {
-            var obj = doc.createElement(element);            
+            var obj = doc.createElement(element);
             var name = 'x-' + element;
             if (HTML5_TABLE_ELEMENTS.indexOf(element) != -1) {
-                doc.body.innerHTML = 
+                doc.body.innerHTML =
                     '<table>' +
                     '<' + element + ' id="customElement" is="' + name + '"></' + element + '>' +
                     '</table>';
             } else {
-                doc.body.innerHTML = 
-                    '<' + element + ' id="customElement" is="' + name + '"></' + element + '>';        
+                doc.body.innerHTML =
+                    '<' + element + ' id="customElement" is="' + name + '"></' + element + '>';
             }
             var customElement = doc.querySelector(':unresolved');
-            
-            assert_not_equals(customElement, null, 
-                    'Unregistered custom element should be accessible by :unresolved');
 
-            assert_equals(customElement.id, 'customElement', 'Wrong custom element');    
+            assert_not_equals(customElement, null,
+                'Unregistered custom element should be accessible by :unresolved');
+
+            assert_equals(customElement.id, 'customElement', 'Wrong custom element');
 
             var proto = Object.create(obj.constructor.prototype);
             doc.registerElement(name, {prototype: proto, extends: element});
             var customElement2 = doc.querySelector(':unresolved');
-            
-            assert_equals(customElement2, null, 
-                    'Registered custom element should not be accessible by :unresolved');        
-            
-            assert_equals(customElement.constructor.prototype.constructor.name, name, 
-                    'Wrong custom element type');
+
+            assert_equals(customElement2, null,
+                'Registered custom element should not be accessible by :unresolved');
+
+            assert_equals(customElement.constructor.prototype.constructor.name, name,
+                'Wrong custom element type');
         }
     });
-}, 'Test :unresolved pseudoclass for custom element types created by IS attribute');
+}, 'Test Document.querySelector(\':unresolved\') to return custom elements created by IS attribute');
+
+/*
+test(function() {
+    var doc = newHTMLDocument();
+    var customElementsNames = [];
+
+    HTML5_ELEMENTS.forEach(function(element) {
+        if (HTML5_DOCUMENT_ELEMENTS.indexOf(element) == -1) {
+            var divElement = doc.createElement('div');
+            doc.body.appendChild(divElement);
+            divElement.setAttribute('id', 'div1');
+
+            var name = 'x-' + element;
+            customElementsNames.push(name);
+            console.log('customElementsNames: '+customElementsNames);
+            if (HTML5_TABLE_ELEMENTS.indexOf(element) != -1) {
+                divElement.innerHTML =
+                    '<table>' +
+                    '<' + element + ' id="cs'+customElementsNames.length+'" is="' + name + '"></' + element + '>' +
+                    '</table>';
+            } else {
+                divElement.innerHTML =
+                    '<' + element + ' id="cs'+customElementsNames.length+'" is="' + name + '"></' + element + '>';
+            }
+            console.log('div.innerHTML: '+divElement.innerHTML);
+            console.log('doc.querySelector(\':unresolved\'): '+doc.querySelector('#div1'));
+
+            var queryResult = doc.querySelectorAll(':unresolved');
+
+            assert_equals(queryResult.length, customElementsNames.length,
+                'Unregistered custom element should be accessible by :unresolved');
+
+            for (var i=0; i<customElementsNames.length; i++) {
+                assert_equals(queryResult.item(i).id, i+1,
+                    'Wrong custom element');
+            }
+        }
+    });
+}, 'Test Document.querySelectorAll(\':unresolved\') to return custom elements created by IS attribute');
+*/
 
 </script>
 </body>
