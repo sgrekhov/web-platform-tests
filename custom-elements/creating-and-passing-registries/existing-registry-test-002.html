@@ -19,8 +19,7 @@ testInIFrame('../resources/import-master.html', function(doc) {
     var doc2 = link.import;
     var name = 'x-frame';
     doc.registerElement(name);
-    //FIXME Should the type of the exception be specified here?
-    assert_throws(null, function () {
+    assert_throws('NotSupportedError', function () {
         doc2.registerElement(name);
     }, 'Registering a custom element type name that is already registered in a shared ' +
         'registry should throw an exception');
@@ -32,8 +31,7 @@ testInIFrame('../resources/import-master.html', function(doc) {
     var doc2 = link.import;
     var name = 'x-frame';
     doc.registerElement(name);
-    //FIXME Should the type of the exception be specified here?
-    assert_throws(null, function () {
+    assert_throws('NotSupportedError', function () {
         doc2.registerElement(name);
     }, 'Registering a custom element type name that is already registered in a shared ' +
         'registry should throw an exception');
