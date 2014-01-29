@@ -19,10 +19,12 @@ testInIFrame('../resources/import-master.html', function(doc) {
     var doc2 = link.import;
     var name = 'x-frame';
     doc.registerElement(name);
-    assert_throws('NotSupportedError', function () {
-        doc2.registerElement(name);
-    }, 'Registering a custom element type name that is already registered in a shared ' +
-        'registry should throw an exception');
+    assert_throws(
+        'NotSupportedError',
+        function () { doc2.registerElement(name); },
+        'Registering a custom element type name that is already registered in a shared ' +
+            'registry should throw an exception');
+
 }, 'Registry of the import should share master document registry');
 
 
@@ -31,10 +33,11 @@ testInIFrame('../resources/import-master.html', function(doc) {
     var doc2 = link.import;
     var name = 'x-frame';
     doc.registerElement(name);
-    assert_throws('NotSupportedError', function () {
-        doc2.registerElement(name);
-    }, 'Registering a custom element type name that is already registered in a shared ' +
-        'registry should throw an exception');
+    assert_throws(
+        'NotSupportedError',
+        function () { doc2.registerElement(name); },
+        'Registering a custom element type name that is already registered in a shared ' +
+            'registry should throw an exception');
 
     var doc3 = newHTMLDocument();
     try {
@@ -43,6 +46,7 @@ testInIFrame('../resources/import-master.html', function(doc) {
         assert_unreached('Unexpected exception while registering a valid custom element ' +
             'in a document which has it\'s own registry');
     }
+
 }, 'Registry of the import should share master document registry only');
 
 </script>
