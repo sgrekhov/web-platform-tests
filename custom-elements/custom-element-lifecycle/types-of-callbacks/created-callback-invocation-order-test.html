@@ -30,7 +30,6 @@ testInIFrame('../../resources/blank.html', function(doc) {
     doc.body.innerHTML = '<x-a-1 id="x-a-1"></x-a-1>';
     assert_equals('created', callbackLog[0], 'The callback '+
         callbackLog[0]+' should be enqueued after created callback');
-
 }, 'Test attached callback is enqueued after created callback');
 
 

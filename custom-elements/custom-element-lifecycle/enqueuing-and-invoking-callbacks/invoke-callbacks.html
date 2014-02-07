@@ -28,7 +28,6 @@ test(function(){
     doc.body.innerHTML = '<x-a-1 id="x-a-1"></x-a-1>';
     assert_equals(doc.querySelector('#x-a-1'), callbackThis, 'Wrong this value ' +
         'inside created callback');
-
 }, 'Test this value inside created callback.');
 
 
@@ -43,7 +42,6 @@ testInIFrame('../../resources/x-element.html', function(doc) {
 
     assert_equals(doc.querySelector('#xelement'), callbackThis, 'Wrong this value ' +
         'inside attached callback');
-
 }, 'Test this value inside attached callback.');
 
 
