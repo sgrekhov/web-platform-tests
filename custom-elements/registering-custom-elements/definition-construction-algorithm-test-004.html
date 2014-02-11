@@ -13,7 +13,6 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-
 test(function() {
     var doc = newHTMLDocument();
     var name = 'x-a-1';
@@ -29,7 +28,7 @@ test(function() {
     var name = 'x-a-2';
     doc.registerElement(name);
 
-    HTML5_ELEMENTS.forEach(function (element) {
+    HTML5_ELEMENTS.forEach(function(element) {
         //FIXME Should the type of the exception be specified here?
         assert_throws(null, function() {
             doc.registerElement(name, {
@@ -57,7 +56,6 @@ test(function() {
         }, 'Exception should be thrown if definition with the same type already exists');
     });
 }, 'Check duplicate definition. Test different prototypes and extends');
-
 </script>
 </body>
 </html>

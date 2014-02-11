@@ -13,7 +13,6 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-
 test(function() {
     var doc = newHTMLDocument();
     doc.body.innerHTML = '<x-a-1 id="xa"></x-a-1>';
@@ -131,7 +130,6 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     assert_equals(customElement.localName, 'x-element', 'Wrong custom element');
 }, 'Document.querySelector(): Unresolved custom element should be accessible by :unresolved '+
     'in loaded document');
-
 </script>
 </body>
 </html>

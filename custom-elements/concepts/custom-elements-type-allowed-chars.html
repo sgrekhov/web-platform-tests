@@ -15,7 +15,6 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-
 function composeName(c) {
     return 'x-' + String.fromCharCode(c) + '-x' + c.toString(16);
 }
@@ -56,7 +55,6 @@ test(function() {
 test(function() {
     testCharCodeArray(newHTMLDocument(), EXTENDER_CHARS, composeName, checkValidName);
 }, 'Registering valid custom element types with extender char');
-
 </script>
 </body>
 </html>

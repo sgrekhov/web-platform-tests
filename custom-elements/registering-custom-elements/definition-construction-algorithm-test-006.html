@@ -14,13 +14,12 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-
 test(function() {
     var doc = newHTMLDocument();
     var svg = doc.createElementNS(SVG_NAMESPACE, 'xsvg');
     var proto = Object.create(svg.constructor.prototype);
     //FIXME Should the type of the exception be specified here?
-    assert_throws(null, function () {
+    assert_throws(null, function() {
         doc.registerElement('x-svg-1', {prototype: proto});
     }, 'Exception should be thrown in case of attempt to register ' +
         'a custom element with SVG namespace and name is not specified');
@@ -33,13 +32,12 @@ test(function() {
     var svg = doc.createElementNS(SVG_NAMESPACE, 'xsvg');
     var proto = Object.create(svg.constructor.prototype);
     //FIXME Should the type of the exception be specified here?
-    assert_throws(null, function () {
+    assert_throws(null, function() {
         doc.registerElement('x-svg-2', {prototype: proto, extends: null});
     }, 'Exception should be thrown in case of attempt to register ' +
         'a custom element with SVG namespace and name is null');
 
 }, 'Error should be thrown if namespace is SVG and local name is null');
-
 </script>
 </body>
 </html>

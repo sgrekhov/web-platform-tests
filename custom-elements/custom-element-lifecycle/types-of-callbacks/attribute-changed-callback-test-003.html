@@ -13,13 +13,12 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-
 test(function() {
     var doc = newHTMLDocument();
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback  = function () {
+    proto.attributeChangedCallback  = function() {
         callbackCalledCounter++;
     }
     var GeneratedConstructor = doc.registerElement('x-a-1', {prototype: proto});
@@ -43,7 +42,7 @@ test(function() {
         var obj = doc.createElement(element);
 
         var proto = Object.create(obj.constructor.prototype);
-        proto.attributeChangedCallback  = function () {
+        proto.attributeChangedCallback  = function() {
             callbackCalledCounter++;
         }
         var GeneratedConstructor = doc.registerElement('x-' + element + '-' + element + '-1', {
@@ -68,7 +67,7 @@ test(function() {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback = function () {
+    proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-a-2', {prototype: proto});
@@ -113,7 +112,7 @@ test(function() {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback = function () {
+    proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
     }
     doc.body.innerHTML = '<x-a-4 id="xa4" class="theClass"></x-a-4>';
@@ -139,7 +138,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback = function () {
+    proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-element', {prototype: proto});
@@ -183,7 +182,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback = function () {
+    proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
     }
     var customElement = doc.querySelector('#xelement');
@@ -202,7 +201,6 @@ testInIFrame('../../resources/x-element.html', function(doc) {
         'wrong number of times');
 }, 'Test attributeChanged callback for the document that has browsing context. ' +
     'Test attribute removing when element in unresolved at first');
-
 </script>
 </body>
 </html>

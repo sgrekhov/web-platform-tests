@@ -14,13 +14,12 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-
 test(function() {
     var doc = newHTMLDocument();
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function () {
+    proto.detachedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-a-1', {prototype: proto});
@@ -38,7 +37,7 @@ test(function() {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function () {
+    proto.detachedCallback = function() {
         callbackCalledCounter++;
     }
     doc.body.innerHTML = '<x-a-2 id="xa2"></x-a-2>';
@@ -58,7 +57,7 @@ test(function() {
     doc.body.innerHTML = '<x-a-3 id="xa3"></x-a-3>';
     var customElement = doc.querySelector('#xa3');
     var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function () {
+    proto.detachedCallback = function() {
         callbackCalled = true;
     }
     customElement.constructor.prototype = proto;
@@ -73,7 +72,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function () {
+    proto.detachedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-element', {prototype: proto});
@@ -88,7 +87,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function () {
+    proto.detachedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-element', {prototype: proto});
@@ -104,7 +103,7 @@ testInIFrame('../../resources/blank.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function () {
+    proto.detachedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-a-6', {prototype: proto});
@@ -124,7 +123,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function () {
+    proto.detachedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-element', {prototype: proto});
@@ -140,7 +139,7 @@ testInIFrame('../../resources/blank.html', function(doc) {
 
     doc.body.innerHTML = '<div id="xa4-parent"><x-a-4 id="xa4"></x-a-4></div>';
     var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function () {
+    proto.detachedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-a-4', {prototype: proto});
@@ -160,7 +159,7 @@ testInIFrame('../../resources/blank.html', function(doc) {
 
     doc.body.innerHTML = '<div id="xa4-parent"><x-a-5 id="xa5"></x-a-5></div>';
     var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function () {
+    proto.detachedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-a-5', {prototype: proto});
@@ -172,7 +171,6 @@ testInIFrame('../../resources/blank.html', function(doc) {
 
 }, 'Test detached callback is called when ancestor node of custom element '+
     'is removed from document with browsing context');
-
 </script>
 </body>
 </html>

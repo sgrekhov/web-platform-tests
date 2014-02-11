@@ -13,8 +13,7 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-
-test(function () {
+test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(value) {
         var obj = doc.createElement(value);
@@ -29,7 +28,7 @@ test(function () {
 }, 'If typeExtension presents in createElement call then type is a type extension');
 
 
-test(function () {
+test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(value) {
         var obj = doc.createElement(value);
@@ -42,7 +41,6 @@ test(function () {
                 'Wrong custom element type');    
     });
 }, 'If typeExtension presents in createElementNS call then type is a type extension');
-
 </script>
 </body>
 </html>

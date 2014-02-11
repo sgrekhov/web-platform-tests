@@ -353,7 +353,7 @@ function Context() {
     this.iframes = [];
 }
 
-Context.prototype.clean = function () {
+Context.prototype.clean = function() {
     this.iframes.forEach(function(e) {
         e.parentNode.removeChild(e);
     });

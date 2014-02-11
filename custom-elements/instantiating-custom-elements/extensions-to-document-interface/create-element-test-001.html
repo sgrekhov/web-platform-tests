@@ -13,7 +13,6 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-
 test(function() {
     var doc = newHTMLDocument();
     var name = 'x-a-1';
@@ -34,8 +33,6 @@ test(function() {
     assert_equals(customElement.constructor.prototype.constructor.name, name, 
             'Wrong custom element type');
 }, 'If typeExtension is not present in createElementNS call then type is a local name');
-
-
 </script>
 </body>
 </html>

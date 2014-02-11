@@ -13,7 +13,6 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-
 test(function() {
     var doc = newHTMLDocument();
     var callbackCalledCounter = 0;
@@ -100,7 +99,7 @@ test(function() {
     var argument3 = 'arg3';
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback = function (arg1, arg2, arg3) {
+    proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         callbackCalledCounter++;
         argument1 = arg1;
         argument2 = arg2;
@@ -129,7 +128,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback = function () {
+    proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-element', {prototype: proto});
@@ -157,7 +156,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var argument3 = 'arg3';
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback = function (arg1, arg2, arg3) {
+    proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         argument1 = arg1;
         argument2 = arg2;
         argument3 = arg3;
@@ -197,7 +196,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback = function () {
+    proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
     }
     var customElement = doc.querySelector('#xelement');
@@ -210,7 +209,6 @@ testInIFrame('../../resources/x-element.html', function(doc) {
 }, 'Test attributeChanged callback for document that has browsing context. ' +
     'Test that callback is called when attribute is changed. Element is unregistered ' +
     'at first');
-
 </script>
 </body>
 </html>
