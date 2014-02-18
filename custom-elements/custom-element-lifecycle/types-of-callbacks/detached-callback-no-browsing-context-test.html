@@ -119,6 +119,61 @@ test(function() {
         'if the document has no browsing context');
 }, 'Test detached callback when removing perent of custom element via innerHTML property. ' +
     'Document has no browsing context');
+
+
+var looseBrowsingContextTest = async_test('Test detached callback is not called, ' +
+    'if document loose browsing context and custom element is removed');
+looseBrowsingContextTest.step(function() {
+    looseBrowsingContextTest.callbackCalledCounter = 0;
+    var iframe = document.createElement('iframe');
+    iframe.src = '../../resources/x-element.html';
+    document.body.appendChild(iframe);
+    iframe.onload = looseBrowsingContextTest.step_func(function(){
+        var doc = iframe.contentDocument;
+        var proto = Object.create(HTMLElement.prototype);
+        proto.detachedCallback = function() {
+            looseBrowsingContextTest.callbackCalledCounter++;
+        };
+        doc.registerElement('x-element', {prototype: proto});
+        var customElement = doc.querySelector('#xelement');
+        iframe.parentNode.removeChild(iframe); // loose browsing context
+        customElement.parentNode.removeChild(customElement);
+        assert_equals(looseBrowsingContextTest.callbackCalledCounter, 0,
+            'Callback detached should not be called '+
+            'if the document has no browsing context');
+        looseBrowsingContextTest.done();
+    });
+});
+
+
+var navigateTest = async_test('Test detached callback is not called, ' +
+    'if document\'s window is navigated to another document and custom element is removed');
+navigateTest.step(function() {
+    navigateTest.callbackCalledCounter = 0;
+    // TODO use newIframe() instead of next three lines
+    var iframe = document.createElement('iframe');
+    iframe.src = '../../resources/x-element.html';
+    document.body.appendChild(iframe);
+    iframe.onload = navigateTest.step_func(function(){
+        var doc = iframe.contentDocument;
+        var proto = Object.create(HTMLElement.prototype);
+        proto.detachedCallback = function() {
+             navigateTest.callbackCalledCounter++;
+        };
+        doc.registerElement('x-element', {prototype: proto});
+        customElement = doc.querySelector('#xelement');
+
+        iframe.onload = navigateTest.step_func(function(){
+            customElement.parentNode.removeChild(customElement);
+            assert_equals(navigateTest.callbackCalledCounter, 0,
+                'Callback detached should not be called '+
+                'if the document has no browsing context');
+            navigateTest.done();
+            iframe.parentNode.removeChild(iframe);
+        });
+        iframe.src = '../../resources/blank.html';
+    });
+});
 </script>
 </body>
 </html>
