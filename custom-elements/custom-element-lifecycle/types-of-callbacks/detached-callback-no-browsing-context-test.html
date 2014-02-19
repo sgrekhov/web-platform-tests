@@ -126,9 +126,7 @@ var loseBrowsingContextTest = async_test('Test detached callback is not called '
 
 loseBrowsingContextTest.step(function() {
     loseBrowsingContextTest.callbackCalledCounter = 0;
-    var iframe = document.createElement('iframe');
-    iframe.src = '../../resources/x-element.html';
-    document.body.appendChild(iframe);
+    var iframe = newIFrame('../../resources/x-element.html');
     iframe.onload = loseBrowsingContextTest.step_func(function(){
         var doc = iframe.contentDocument;
         var proto = Object.create(HTMLElement.prototype);
@@ -152,10 +150,7 @@ var navigateTest = async_test('Test detached callback is not called, ' +
 
 navigateTest.step(function() {
     navigateTest.callbackCalledCounter = 0;
-    // TODO use newIframe() instead of next three lines
-    var iframe = document.createElement('iframe');
-    iframe.src = '../../resources/x-element.html';
-    document.body.appendChild(iframe);
+    var iframe = newIFrame('../../resources/x-element.html');
     iframe.onload = navigateTest.step_func(function(){
         var doc = iframe.contentDocument;
         var proto = Object.create(HTMLElement.prototype);

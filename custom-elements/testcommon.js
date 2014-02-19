@@ -321,10 +321,21 @@ function newXHTMLDocument() {
     return d;
 }
 
-function newIFrame(context, src) {
+
+//Creates new iframe and loads given url into it.
+//Returns reference to created iframe.
+function newIFrame(url){
+    assert_not_equals(url, null, 'argument url should not be null');
+    var iframe = document.createElement('iframe');
+    iframe.src = url;
+    document.body.appendChild(iframe);
+    return iframe;
+}
+
+function _newIFrame(context, src) {
     if (typeof (context) === 'undefined'
             || typeof (context.iframes) !== 'object') {
-        assert_unreached('Illegal context object in newIFrame');
+        assert_unreached('Illegal context object in _newIFrame');
     }
 
     var iframe = document.createElement('iframe');
@@ -344,7 +355,7 @@ function newIFrame(context, src) {
 }
 
 function newHTMLDocumentWithBrowsingContext(context) {
-    var frame = newIFrame(context);
+    var frame = _newIFrame(context);
     var d = frame.contentWindow.document;
     return d;
 }
@@ -387,7 +398,7 @@ function testInIFrame(url, f, testName, testProps) {
         var t = async_test(testName, testProps);
         t.step(function() {
             var context = new Context();
-            var iframe = newIFrame(context, url);
+            var iframe = _newIFrame(context, url);
             iframe.onload = t.step_func(function() {
                 try {
                     f(iframe.contentDocument);

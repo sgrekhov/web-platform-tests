@@ -129,16 +129,12 @@ moveTest.testFunction = function(doc) {
 moveTest.step(function() {
     moveTest.callbackCalledCounter = 0;
 
-    moveTest.iframe1 = document.createElement('iframe');
-    moveTest.iframe1.src = '../../resources/blank.html';
-    document.body.appendChild(moveTest.iframe1);
+    moveTest.iframe1 = newIFrame('../../resources/blank.html');
     moveTest.iframe1.onload = moveTest.step_func(function() {
         moveTest.testFunction(moveTest.iframe1.contentDocument);
     });
 
-    moveTest.iframe2 = document.createElement('iframe');
-    moveTest.iframe2.src = '../../resources/x-element.html';
-    document.body.appendChild(moveTest.iframe2);
+    moveTest.iframe2 = newIFrame('../../resources/x-element.html');
     moveTest.iframe2.onload = moveTest.step_func(function() {
         moveTest.testFunction(moveTest.iframe2.contentDocument);
     });
