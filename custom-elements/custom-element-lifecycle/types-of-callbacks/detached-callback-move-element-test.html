@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Attached callback of a custom element should be called if element is moved</title>
+<title>Test detached callback of a custom element when moving custom element between different documents</title>
 <meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
-<meta name="assert" content="attached callback ... must be enqueued whenever custom element is inserted into a document and this document has a browsing context.">
+<meta name="assert" content="detached callback ... must be enqueued whenever custom element is removed from the document and this document has a browsing context.">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#types-of-callbacks">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -18,21 +18,18 @@ test(function() {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attachedCallback = function() {
+    proto.detachedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-a-1', {prototype: proto});
     var customElement = doc.createElement('x-a-1');
     doc.body.appendChild(customElement);
-    assert_equals(callbackCalledCounter, 0, 'Callback attached should not be called '+
-        'in documents that do not have a browsing context');
-
     var divElement = doc.createElement('div');
     doc.body.appendChild(divElement);
     divElement.appendChild(customElement);
-    assert_equals(callbackCalledCounter, 0, 'Callback attached should not be called '+
-        'in documents that do not have a browsing context');
-}, 'Test attached callback if moving custom element inside document '+
+    assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called '+
+        'in document without a browsing context');
+}, 'Test detached callback is not called if moving custom element inside document '+
     'without browsing context');
 
 
@@ -41,24 +38,22 @@ testInIFrame('../../resources/blank.html', function(docBC) {
     var callbackCalledCounter = 0;
 
     var proto1 = Object.create(HTMLElement.prototype);
-    proto1.attachedCallback = function() {
+    proto1.detachedCallback = function() {
         callbackCalledCounter++;
     }
     docNoBC.registerElement('x-a-2', {prototype: proto1});
     var customElement = docNoBC.createElement('x-a-2');
     docNoBC.body.appendChild(customElement);
-    assert_equals(callbackCalledCounter, 0, 'Callback attached should not be called '+
-        'in documents that do not have a browsing context');
 
     var proto2 = Object.create(HTMLElement.prototype);
-    proto2.attachedCallback = function() {
+    proto2.detachedCallback = function() {
         callbackCalledCounter++;
     }
     docBC.registerElement('x-a-2', {prototype: proto2});
     docBC.body.appendChild(customElement);
-    assert_equals(callbackCalledCounter, 1, 'Callback attached should be called '+
-        'in documents with browsing context');
-}, 'Test attached callback if moving custom element from '+
+    assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called '+
+        'in document without browsing context');
+}, 'Test detached callback is not called if moving custom element from '+
     'document without browsing context to document with browsing context');
 
 
@@ -66,25 +61,23 @@ testInIFrame('../../resources/blank.html', function(docBC) {
     var callbackCalledCounter = 0;
 
     var proto1 = Object.create(HTMLElement.prototype);
-    proto1.attachedCallback = function() {
+    proto1.detachedCallback = function() {
         callbackCalledCounter++;
     }
     docBC.registerElement('x-a-3', {prototype: proto1});
     var customElement = docBC.createElement('x-a-3');
     docBC.body.appendChild(customElement);
-    assert_equals(callbackCalledCounter, 1, 'Callback attached should be called '+
-        'in documents with browsing context');
 
     var docNoBC = newHTMLDocument();
     var proto2 = Object.create(HTMLElement.prototype);
-    proto2.attachedCallback = function() {
+    proto2.detachedCallback = function() {
         callbackCalledCounter++;
     }
     docNoBC.registerElement('x-a-3', {prototype: proto2});
     docNoBC.body.appendChild(customElement);
-    assert_equals(callbackCalledCounter, 1, 'Callback attached should not be called '+
-        'in documents that do not have a browsing context');
-}, 'Test attached callback if moving custom element from '+
+    assert_equals(callbackCalledCounter, 1, 'Callback detached should be called '+
+        'in documents with browsing context');
+}, 'Test detached callback if moving custom element from '+
     'document with browsing context to document without browsing context');
 
 
@@ -92,30 +85,28 @@ testInIFrame('../../resources/blank.html', function(doc) {
     var callbackCalledCounter = 0;
 
     var proto = Object.create(HTMLElement.prototype);
-    proto.attachedCallback = function() {
+    proto.detachedCallback = function() {
         callbackCalledCounter++;
     }
     doc.registerElement('x-a-4', {prototype: proto});
     var customElement = doc.createElement('x-a-4');
     doc.body.appendChild(customElement);
-    assert_equals(callbackCalledCounter, 1, 'Callback attached should be called '+
-        'in documents with browsing context');
 
     var divElement = doc.createElement('div');
     doc.body.appendChild(divElement);
     divElement.appendChild(customElement);
-    assert_equals(callbackCalledCounter, 2, 'Callback attached should be called '+
+    assert_equals(callbackCalledCounter, 1, 'Callback detached should be called '+
         'in documents with browsing context');
-}, 'Test attached callback if moving custom element inside document '+
+}, 'Test detached callback if moving custom element inside document '+
     'with browsing context');
 
 
-var moveTest =  async_test('Test attached callback if moving custom element from '+
+var moveTest =  async_test('Test detached callback if moving custom element from '+
     'document with browsing context to document with browsing context');
 
 moveTest.testFunction = function(doc) {
     var proto = Object.create(HTMLElement.prototype);
-    proto.attachedCallback = function() {
+    proto.detachedCallback = function() {
         moveTest.callbackCalledCounter++;
     }
     doc.registerElement('x-a-6', {prototype: proto});
@@ -123,7 +114,7 @@ moveTest.testFunction = function(doc) {
     if (moveTest.customElement){
         // element already created move element
         doc.body.appendChild(moveTest.customElement);
-        assert_equals(moveTest.callbackCalledCounter, 2, 'Callback attached should be called '+
+        assert_equals(moveTest.callbackCalledCounter, 1, 'Callback detached should be called '+
             'in documents with browsing context');
         moveTest.done();
         moveTest.iframe1.parentNode.removeChild(moveTest.iframe1);
@@ -132,8 +123,6 @@ moveTest.testFunction = function(doc) {
         // create element
         moveTest.customElement = doc.createElement('x-a-6');
         doc.body.appendChild(moveTest.customElement);
-        assert_equals(moveTest.callbackCalledCounter, 1, 'Callback attached should be called '+
-            'in documents with browsing context');
     }
 }
 

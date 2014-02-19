@@ -28,7 +28,7 @@ test(function() {
     doc.body.removeChild(xa1);
     assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called '+
         'if the document has no browsing context');
-}, 'Test detached callback when custom element is created via innerHTML property. ' +
+}, 'Test detached callback if custom element is created via innerHTML property. ' +
     'Document has no browsing context');
 
 
@@ -46,7 +46,7 @@ test(function() {
     doc.body.removeChild(customElement);
     assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called '+
         'if the document has no browsing context');
-}, 'Test detached callback when custom element is via innerHTML property before ' +
+}, 'Test detached callback if custom element is via innerHTML property before ' +
     'registration of a custom element. Document has no browsing context');
 
 
@@ -65,7 +65,7 @@ test(function() {
     assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called '+
         'if the document has no browsing context');
 
-}, 'Test detached callback when custom element is unregistered. '+
+}, 'Test detached callback if custom element is unregistered. '+
     'Document has no browsing context');
 
 
@@ -82,7 +82,7 @@ test(function() {
     doc.body.innerHTML = '';
     assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called '+
         'if the document has no browsing context');
-}, 'Test detached callback when removing custom element via innerHTML property. ' +
+}, 'Test detached callback if removing custom element via innerHTML property. ' +
     'Document has no browsing context');
 
 
@@ -100,7 +100,7 @@ test(function() {
     doc.body.removeChild(parent);
     assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called '+
         'if the document has no browsing context');
-}, 'Test detached callback when removing perent of custom element. ' +
+}, 'Test detached callback if removing perent of custom element. ' +
     'Document has no browsing context');
 
 
@@ -117,37 +117,39 @@ test(function() {
     doc.body.innerHTML = '';
     assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called '+
         'if the document has no browsing context');
-}, 'Test detached callback when removing perent of custom element via innerHTML property. ' +
+}, 'Test detached callback if removing perent of custom element via innerHTML property. ' +
     'Document has no browsing context');
 
 
-var looseBrowsingContextTest = async_test('Test detached callback is not called, ' +
-    'if document loose browsing context and custom element is removed');
-looseBrowsingContextTest.step(function() {
-    looseBrowsingContextTest.callbackCalledCounter = 0;
+var loseBrowsingContextTest = async_test('Test detached callback is not called ' +
+    'if document lose browsing context and custom element is removed');
+
+loseBrowsingContextTest.step(function() {
+    loseBrowsingContextTest.callbackCalledCounter = 0;
     var iframe = document.createElement('iframe');
     iframe.src = '../../resources/x-element.html';
     document.body.appendChild(iframe);
-    iframe.onload = looseBrowsingContextTest.step_func(function(){
+    iframe.onload = loseBrowsingContextTest.step_func(function(){
         var doc = iframe.contentDocument;
         var proto = Object.create(HTMLElement.prototype);
         proto.detachedCallback = function() {
-            looseBrowsingContextTest.callbackCalledCounter++;
+            loseBrowsingContextTest.callbackCalledCounter++;
         };
         doc.registerElement('x-element', {prototype: proto});
         var customElement = doc.querySelector('#xelement');
-        iframe.parentNode.removeChild(iframe); // loose browsing context
+        iframe.parentNode.removeChild(iframe); // lose browsing context
         customElement.parentNode.removeChild(customElement);
-        assert_equals(looseBrowsingContextTest.callbackCalledCounter, 0,
+        assert_equals(loseBrowsingContextTest.callbackCalledCounter, 0,
             'Callback detached should not be called '+
             'if the document has no browsing context');
-        looseBrowsingContextTest.done();
+        loseBrowsingContextTest.done();
     });
 });
 
 
 var navigateTest = async_test('Test detached callback is not called, ' +
     'if document\'s window is navigated to another document and custom element is removed');
+
 navigateTest.step(function() {
     navigateTest.callbackCalledCounter = 0;
     // TODO use newIframe() instead of next three lines
