@@ -4,7 +4,7 @@
 <title>Invoke CALLBACK with ELEMENT as callback this value and, if present, using string values in CALLBACK as arguments</title>
 <meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <meta name="assert" content="Invoke CALLBACK with ELEMENT as callback this value and, if present, using string values in CALLBACK as arguments.">
-<link rel="help" href="http://www.w3.org/TR/custom-elements/#types-of-callbacks">
+<link rel="help" href="http://www.w3.org/TR/custom-elements/#enqueuing-and-invoking-callbacks">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../../testcommon.js"></script>
@@ -13,7 +13,7 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-test(function(){
+test(function() {
     var doc = newHTMLDocument();
     var callbackThis = null;
 
@@ -91,6 +91,60 @@ test(function() {
                         callbackArgs,
                         'Wrong arguments are passed to attributeChanged callback');
 }, 'Test attributeChanged callback\'s arguments.');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var callbackArgs = null;
+
+    var proto = Object.create(HTMLElement.prototype);
+    proto.attributeChangedCallback = function(arg1, arg2, arg3) {
+        callbackArgs = [arg1, arg2, arg3];
+    }
+    var GeneratedConstructor = doc.registerElement('x-a-4', {prototype: proto});
+    var customElement = new GeneratedConstructor();
+    customElement.classList.add('someClass');
+
+    assert_array_equals(['class', null, 'someClass'],
+                        callbackArgs,
+                        'Wrong arguments are passed to attributeChanged callback');
+}, 'Test attributeChanged callback\'s arguments. Callback called via classList.add()');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var callbackArgs = null;
+
+    var proto = Object.create(HTMLElement.prototype);
+    proto.attributeChangedCallback = function(arg1, arg2, arg3) {
+        callbackArgs = [arg1, arg2, arg3];
+    }
+    var GeneratedConstructor = doc.registerElement('x-a-5', {prototype: proto});
+    var customElement = new GeneratedConstructor();
+    customElement.classList.toggle('someClass');
+
+    assert_array_equals(['class', null, 'someClass'],
+                        callbackArgs,
+                        'Wrong arguments are passed to attributeChanged callback');
+}, 'Test attributeChanged callback\'s arguments. Callback called via classList.toggle()');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var callbackArgs = null;
+
+    var proto = Object.create(HTMLElement.prototype);
+    proto.attributeChangedCallback = function(arg1, arg2, arg3) {
+        callbackArgs = [arg1, arg2, arg3];
+    }
+    var GeneratedConstructor = doc.registerElement('x-a-6', {prototype: proto});
+    var customElement = new GeneratedConstructor();
+    customElement.className = 'someClass';
+
+    assert_array_equals(['class', null, 'someClass'],
+                        callbackArgs,
+                        'Wrong arguments are passed to attributeChanged callback');
+}, 'Test attributeChanged callback\'s arguments. Callback called via className = value');
 </script>
 </body>
 </html>
