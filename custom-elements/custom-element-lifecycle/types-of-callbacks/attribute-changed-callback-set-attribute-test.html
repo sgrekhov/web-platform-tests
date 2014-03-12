@@ -3,6 +3,7 @@
 <head>
 <title>Test attributeChanged callback is called if custom element attribute value is set</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <meta name="assert" content="attributeChanged callback ... must be enqueued whenever custom element's attribute is added, changed or removed.">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#types-of-callbacks">
 <script src="/resources/testharness.js"></script>
@@ -27,7 +28,7 @@ test(function() {
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged should be called');
 }, 'Test attributeChanged callback is called if attribute value is set by method setAttribute(). '+
-    'The custom element created via constructor.');
+    'The custom element is created via constructor.');
 
 
 test(function() {
@@ -45,7 +46,7 @@ test(function() {
     assert_array_equals(callbackArgs, ['class', null, 'someClass'],
         'Unexpected callback attributeChanged arguments');
 }, 'Test attributeChanged callback arguments if attribute value is set by method setAttribute(). '+
-    'The custom element created via constructor.');
+    'The custom element is created via constructor.');
 
 
 test(function() {
@@ -62,7 +63,7 @@ test(function() {
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged should be called');
 }, 'Test attributeChanged callback is called if attribute value is set by method classList.add(). '+
-    'The custom element created via constructor.');
+    'The custom element is created via constructor.');
 
 
 test(function() {
@@ -80,7 +81,7 @@ test(function() {
     assert_array_equals(callbackArgs, ['class', null, 'someClass'],
         'Unexpected callback attributeChanged arguments');
 }, 'Test attributeChanged callback arguments if attribute value is set by method classList.add(). '+
-    'The custom element created via constructor.');
+    'The custom element is created via constructor.');
 
 
 test(function() {
@@ -97,7 +98,7 @@ test(function() {
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged should be called');
 }, 'Test attributeChanged callback is called if attribute value is set as property. '+
-    'The custom element created via constructor.');
+    'The custom element is created via constructor.');
 
 
 test(function() {
@@ -115,7 +116,7 @@ test(function() {
     assert_array_equals(callbackArgs, ['class', null, 'someClass'],
         'Unexpected callback attributeChanged arguments');
 }, 'Test attributeChanged callback arguments if attribute value is set as property. '+
-    'The custom element created via constructor.');
+    'The custom element is created via constructor.');
 
 
 test(function() {
@@ -131,7 +132,7 @@ test(function() {
 
     assert_equals(callbackCalledCounter, 0, 'Callback attributeChanged should not be called');
 }, 'Test attributeChanged callback is not called if attribute value is specified in HTML. '+
-    'The custom element created via innerHTML property.');
+    'The custom element is created via innerHTML property.');
 
 
 test(function() {
@@ -149,7 +150,7 @@ test(function() {
 
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged should be called');
 }, 'Test attributeChanged callback is called if attribute value is set by method setAttribute(). '+
-    'The custom element created via innerHTML property.');
+    'The custom element is created via innerHTML property.');
 
 
 test(function() {
@@ -168,7 +169,7 @@ test(function() {
     assert_array_equals(callbackArgs, ['class', null, 'someClass'],
         'Unexpected callback attributeChanged arguments');
 }, 'Test attributeChanged callback arguments if attribute value is set by method setAttribute(). '+
-    'The custom element created via innerHTML property.');
+    'The custom element is created via innerHTML property.');
 
 
 test(function() {
