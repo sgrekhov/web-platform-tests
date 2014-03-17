@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>If typeExtension presents in createElement call then typeExtension is a type</title>
+<title>If typeExtension is unresolved when createElement called then local name is a type</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="assert" content="If typeExtension presents in createElement call then typeExtension is a type">
+<meta name="assert" content="If an element definition with matching localName, namespace, and TYPE is not registered with token's document, set TYPE to localName">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#extensions-to-document-interface-to-instantiate">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -13,32 +13,37 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-test(function() {
+test (function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(value) {
-        var obj = doc.createElement(value);
+        var obj = doc.createElement(value);        
         var name = 'x-1-' + value;
         var proto = Object.create(obj.constructor.prototype);
-        doc.registerElement(name, {prototype: proto, extends: value});
         var customElement = doc.createElement(value, name);
+        assert_equals(customElement.constructor.prototype.constructor.name, 
+            obj.constructor.name, 
+            'Custom element type should be a local name');
+        doc.registerElement(name, {prototype: proto, extends: value});
         assert_equals(customElement.constructor.prototype.constructor.name, name, 
-                'Custom element type should be the type extension');
+            'Custom element type should be the type extension');
     });
-}, 'If typeExtension presents in createElement call then type is a type extension');
+}, 'If typeExtension is unresolved when createElement called then local name is a type');
 
 
-test(function() {
+test (function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(value) {
         var obj = doc.createElement(value);
         var name = 'x-2-' + value;
         var proto = Object.create(obj.constructor.prototype);
-        doc.registerElement(name, {prototype: proto, extends: value});
         var customElement = doc.createElementNS(HTML_NAMESPACE, value, name);
+        assert_equals(customElement.constructor.prototype.constructor.name, 
+            obj.constructor.name, 'Custom element type should be a local name');
+        doc.registerElement(name, {prototype: proto, extends: value});
         assert_equals(customElement.constructor.prototype.constructor.name, name, 
-                'Custom element type should be the type extension');
+            'Custom element type should be the type extension');
     });
-}, 'If typeExtension presents in createElementNS call then type is a type extension');
+}, 'If typeExtension is unresolved when createElementNS called then local name is a type');
 </script>
 </body>
 </html>

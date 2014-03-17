@@ -19,7 +19,7 @@ test(function() {
     doc.registerElement(name);
     var customElement = doc.createElement(name);
     assert_equals(customElement.namespaceURI, HTML_NAMESPACE, 
-            'Custom element namespace should be HTML Namespace');
+        'Custom element namespace should be HTML Namespace');
 }, 'Namespace for createElement is HTML Namespace');
 
 
@@ -35,8 +35,8 @@ test(function() {
         });        
         var customElement = doc.createElement(value, name);
         assert_equals(customElement.namespaceURI, HTML_NAMESPACE, 
-                'Custom element namespace for the element extending ' + value +
-                ' should be HTML Namespace');
+            'Custom element namespace for the element extending ' + value +
+            ' should be HTML Namespace');
     });
 }, 'Namespace for createElement is HTML Namespace. Type extension specified');
 </script>

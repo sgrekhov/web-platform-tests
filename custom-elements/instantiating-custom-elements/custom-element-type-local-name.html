@@ -18,8 +18,8 @@ test(function() {
     var GeneratedConstructor = doc.registerElement('x-a-1');
     var customElement = new GeneratedConstructor();
     assert_equals(customElement.constructor.prototype.constructor.name, 
-            customElement.localName,
-            'Custom element type should be the local name of the custom element');
+        customElement.localName,
+        'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element. ' + 
     'Custom element created via constructor');
 

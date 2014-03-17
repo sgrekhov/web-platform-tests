@@ -51,7 +51,6 @@ test(function() {
     var name = 'x-a-3';
     var customElement = doc.createElementNS(HTML_NAMESPACE, name);
     assert_false(callbackCalled, 'Callback created should not be called');
-    
     doc.registerElement(name, {prototype: proto});
     assert_true(callbackCalled, 'Callback created should be called');
 }, 'Created callback should be called if createElementNS is called. ' +
