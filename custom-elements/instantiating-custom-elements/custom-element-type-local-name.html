@@ -18,9 +18,10 @@ test(function() {
     var GeneratedConstructor = doc.registerElement('x-a-1');
     var customElement = new GeneratedConstructor();
     assert_equals(customElement.constructor.prototype.constructor.name, 
-            customElement.localName, 'Wrong custom element type');
+            customElement.localName,
+            'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element. ' + 
-    'Custom element created in JavaScript');
+    'Custom element created via constructor');
 
 
 test(function() {
@@ -29,18 +30,18 @@ test(function() {
     doc.body.innerHTML = '<x-a-2 id="ce2"></x-a-2>';
     var customElement = doc.querySelector('#ce2');
     assert_equals(customElement.constructor.prototype.constructor.name, customElement.localName, 
-        'Wrong custom element type');
+        'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element.' + 
-    'Custom element created in HTML');
+    'Custom element created via innerHTML property');
     
 
 testInIFrame('../resources/x-element.html', function(doc) {
     doc.registerElement('x-element');
     var xelement = doc.querySelector('#xelement');
     assert_equals(xelement.constructor.prototype.constructor.name, xelement.localName, 
-        'Wrong custom element type');
+        'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element. ' + 
-    'Custom element created in HTML. Document has browsing context');
+    'Custom element created via innerHTML property and the document has browsing context');
 </script>
 </body>
 </html>

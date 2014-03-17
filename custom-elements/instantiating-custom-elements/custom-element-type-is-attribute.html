@@ -33,7 +33,7 @@ test(function() {
             }
             var customElement = doc.querySelector('#customElement');
             assert_equals(customElement.constructor.prototype.constructor.name, name, 
-                    'Wrong custom element type');
+                'Custom element type should be value of the IS attribute');
         }        
     });
 }, 'Custom element type is the value of the IS attribute of the custom element');
@@ -59,7 +59,7 @@ test(function() {
             var customElement = doc.querySelector('#customElement');
             
             assert_equals(customElement.constructor.prototype.constructor.name, name, 
-                    'Wrong custom element type');
+                'Custom element type should be value of the IS attribute');
         }
     });
 }, 'Custom element type is the value of the IS attribute of the custom element. ' + 

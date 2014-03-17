@@ -31,13 +31,11 @@ test(function() {
             var customElement = doc.querySelector('#customElement');
             var obj = doc.createElement(element);
             assert_class_string(customElement, obj.constructor.name,
-                    'Custom element  must be a ' + obj.constructor.name);
-            
+                    'Custom element must be a ' + obj.constructor.name);
             HTML5_ELEMENTS.forEach(function(value) {
                 var name2 = 'x-' + element + '-' + value;        
                 doc.registerElement(name2);
                 customElement.setAttribute('is', name2);
-
                 assert_class_string(customElement, obj.constructor.name,
                         'Custom element must not be changed and should be a ' + 
                         obj.constructor.name);                

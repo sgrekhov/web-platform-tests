@@ -21,9 +21,8 @@ test(function() {
         var proto = Object.create(obj.constructor.prototype);
         doc.registerElement(name, {prototype: proto, extends: value});
         var customElement = doc.createElement(value, name);
-            
         assert_equals(customElement.constructor.prototype.constructor.name, name, 
-                'Wrong custom element type');    
+                'Custom element type should be the type extension');
     });
 }, 'If typeExtension presents in createElement call then type is a type extension');
 
@@ -36,9 +35,8 @@ test(function() {
         var proto = Object.create(obj.constructor.prototype);
         doc.registerElement(name, {prototype: proto, extends: value});
         var customElement = doc.createElementNS(HTML_NAMESPACE, value, name);
-            
         assert_equals(customElement.constructor.prototype.constructor.name, name, 
-                'Wrong custom element type');    
+                'Custom element type should be the type extension');
     });
 }, 'If typeExtension presents in createElementNS call then type is a type extension');
 </script>

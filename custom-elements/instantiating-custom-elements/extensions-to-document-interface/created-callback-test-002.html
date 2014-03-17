@@ -23,9 +23,7 @@ test(function() {
     var name = 'x-a-1';
     doc.registerElement(name, {prototype: proto});
     var customElement = doc.createElementNS(HTML_NAMESPACE, name);
-
-    assert_true(callbackCalled, 'Callback created was not called');
-
+    assert_true(callbackCalled, 'Callback created should be called');
 }, 'Created callback should be called if createElementNS is called. Type is not specified');
 
 
@@ -39,9 +37,7 @@ test(function() {
     var name = 'x-a-2';
     doc.registerElement(name, {prototype: proto});
     var customElement = doc.createElementNS(HTML_NAMESPACE, name, name);
-
-    assert_true(callbackCalled, 'Callback created was not called');
-
+    assert_true(callbackCalled, 'Callback created should be called');
 }, 'Created callback should be called if createElementNS is called. Type is specified');
 
 
@@ -54,11 +50,10 @@ test(function() {
     }
     var name = 'x-a-3';
     var customElement = doc.createElementNS(HTML_NAMESPACE, name);
-    assert_false(callbackCalled, 'Callback created was not called');
+    assert_false(callbackCalled, 'Callback created should not be called');
     
     doc.registerElement(name, {prototype: proto});
-    assert_true(callbackCalled, 'Callback created was not called');
-    
+    assert_true(callbackCalled, 'Callback created should be called');
 }, 'Created callback should be called if createElementNS is called. ' +
     'Element is unresolved at first');
 
@@ -74,10 +69,9 @@ test(function() {
         }    
         doc.registerElement(name, {prototype: proto, extends: value});
         var customElement = doc.createElementNS(HTML_NAMESPACE, value, name);
-
-        assert_true(callbackCalled, 'Callback created was not called');
+        assert_true(callbackCalled, 'Callback created should be called');
     });
-}, 'Created callback should be called if createElement is called. Test different types');
+}, 'Created callback should be called if createElementNS is called. Test different types');
 </script>
 </body>
 </html>

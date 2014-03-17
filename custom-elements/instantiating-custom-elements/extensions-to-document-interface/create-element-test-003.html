@@ -22,13 +22,12 @@ test (function() {
         var customElement = doc.createElement(value, name);
         assert_equals(customElement.constructor.prototype.constructor.name, 
                 obj.constructor.name, 
-                'Wrong custom element type before registration of the custom element type');
-        
+                'Custom element type should be a local name');
         doc.registerElement(name, {prototype: proto, extends: value});
         assert_equals(customElement.constructor.prototype.constructor.name, name, 
-                'Wrong custom element type after registration of the custom element type');        
+                'Custom element type should be the type extension');
     });
-}, 'If typeExtension presents in createElement call then type is a type extension');
+}, 'If typeExtension is unresolved when createElement called then local name is a type');
 
 
 test (function() {
@@ -39,14 +38,12 @@ test (function() {
         var proto = Object.create(obj.constructor.prototype);
         var customElement = doc.createElementNS(HTML_NAMESPACE, value, name);
         assert_equals(customElement.constructor.prototype.constructor.name, 
-                obj.constructor.name, 
-                'Wrong custom element type before registration of the custom element type');
-        
+                obj.constructor.name, 'Custom element type should be a local name');
         doc.registerElement(name, {prototype: proto, extends: value});
         assert_equals(customElement.constructor.prototype.constructor.name, name, 
-                'Wrong custom element type after registration of the custom element type');        
+                'Custom element type should be the type extension');
     });
-}, 'If typeExtension presents in createElementNS call then type is a type extension');
+}, 'If typeExtension is unresolved when createElementNS called then local name is a type');
 </script>
 </body>
 </html>
