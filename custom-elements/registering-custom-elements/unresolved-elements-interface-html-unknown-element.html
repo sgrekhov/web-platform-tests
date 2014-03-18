@@ -17,7 +17,7 @@ test(function() {
     var doc = newHTMLDocument();
     doc.body.innerHTML =
         '<math xmlns="http://www.w3.org/1998/Math/MathML">' +
-            '<x-a-1 id="xa"></x-a-1>'+
+            '<x-a-1 id="xa"></x-a-1>' +
         '</math>';
     var xa = doc.querySelector('#xa');
 
@@ -25,7 +25,6 @@ test(function() {
 
     assert_class_string(xa, 'HTMLUnknownElement',
         'Unresolved custom element must be a HTMLUnknownElement');
-
 }, 'Test unresolved element interface with MathML namespace');
 
 
@@ -35,7 +34,6 @@ test(function() {
 
     assert_class_string(xa, 'HTMLUnknownElement',
         'Unresolved custom element must be a HTMLUnknownElement');
-
 }, 'Tesst unresolved element interface with MathML namespace, ' +
     'created by Document.createElementNS');
 
@@ -47,7 +45,6 @@ testInIFrame('../resources/x-mathml-element.html', function(doc) {
 
     assert_class_string(customElement, 'HTMLUnknownElement',
         'Unresolved custom element must be a HTMLUnknownElement');
-
 }, 'Test unresolved element interface in loaded HTML document with embedded MathML elements');
 </script>
 </body>

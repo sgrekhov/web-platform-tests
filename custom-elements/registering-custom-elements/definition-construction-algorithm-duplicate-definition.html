@@ -27,10 +27,8 @@ test(function() {
     var doc = newHTMLDocument();
     var name = 'x-a-2';
     doc.registerElement(name);
-
     HTML5_ELEMENTS.forEach(function(element) {
-        //FIXME Should the type of the exception be specified here?
-        assert_throws(null, function() {
+        assert_throws('NotSupportedError', function() {
             doc.registerElement(name, {
                 extends: element
             });
@@ -46,10 +44,8 @@ test(function() {
         prototype: Object.create(HTMLAnchorElement.prototype),
         extends: 'a'
     });
-
     HTML5_ELEMENTS.forEach(function(element) {
-        //FIXME Should the type of the exception be specified here?
-        assert_throws(null, function() {
+        assert_throws('NotSupportedError', function() {
             doc.registerElement(name, {
                 extends: element
             });

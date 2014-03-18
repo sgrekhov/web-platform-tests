@@ -16,16 +16,13 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-
     HTML5_ELEMENTS.forEach(function(value) {
         var name = 'x-1-' + value;
         var element = doc.createElement(value);
         element.removeAttribute('localName');
-
         var proto = Object.create(element.constructor.prototype);
         var GeneratedConstructor = doc.registerElement(name, {prototype: proto});
         var customElement = new GeneratedConstructor();
-
         assert_equals(customElement.localName, name, 'LocalName should be a type in case of ' +
             'attempt to register a custom element if name is null');
     });
@@ -34,7 +31,6 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-
     HTML5_ELEMENTS.forEach(function(value) {
         var name = 'x-2-' + value;
         var element = doc.createElement(value);
@@ -42,7 +38,6 @@ test(function() {
         var proto = Object.create(element.constructor.prototype);
         var GeneratedConstructor = doc.registerElement(name, {prototype: proto, extends: null});
         var customElement = new GeneratedConstructor();
-
         assert_equals(customElement.localName, name, 'LocalName should be a type in case of ' +
             'attempt to register a custom element if name is null');
     });
