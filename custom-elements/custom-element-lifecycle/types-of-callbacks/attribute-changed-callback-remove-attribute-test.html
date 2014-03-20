@@ -16,7 +16,6 @@
 test(function() {
     var doc = newHTMLDocument();
     var callbackCalledCounter = 0;
-
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback  = function() {
         callbackCalledCounter++;
@@ -27,7 +26,6 @@ test(function() {
     customElement.setAttribute('class', 'someClass');
     //attributeChangedCallback should be called the second time here
     customElement.removeAttribute('class');
-
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged should be called ' +
         'after setAttribute() and removeAttribute() calls');
 }, 'Test attributeChanged callback if attribute is removed. ' +
@@ -36,11 +34,9 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-
     HTML5_ELEMENTS.forEach(function(element) {
         var callbackCalledCounter = 0;
         var obj = doc.createElement(element);
-
         var proto = Object.create(obj.constructor.prototype);
         proto.attributeChangedCallback  = function() {
             callbackCalledCounter++;
@@ -54,7 +50,6 @@ test(function() {
         customElement.setAttribute('class', 'someClass');
         //attributeChangedCallback should be called the second time here
         customElement.removeAttribute('class');
-
         assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged should be called ' +
             'after setAttribute() and removeAttribute() calls for "' + element + '"');
     });
@@ -65,7 +60,6 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var callbackCalledCounter = 0;
-
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
@@ -83,7 +77,6 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var callbackArgs = null;
-
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         callbackArgs = [arg1, arg2, arg3];
@@ -92,7 +85,6 @@ test(function() {
     doc.body.innerHTML = '<x-a-3 id="xa3" class="theClass"></x-a-3>';
     var customElement = doc.querySelector('#xa3');
     customElement.removeAttribute('class');
-
     assert_array_equals(callbackArgs, ['class', 'theClass', null],
         'Unexpected attributeChanged callback arguments');
 }, 'Test attributeChanged callback arguments if attribute is removed. ' +
@@ -102,7 +94,6 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var callbackCalledCounter = 0;
-
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
@@ -113,15 +104,12 @@ test(function() {
     customElement.setAttribute('class', 'someClass');
     // this one should not too
     customElement.removeAttribute('class');
-
     assert_equals(callbackCalledCounter, 0, 'Callback attributeChanged should not be called');
-    
     doc.registerElement('x-a-4', {prototype: proto});
     // this call invokes attributeChangedCallback
     customElement.setAttribute('name', 'someName');
     // and this one
     customElement.removeAttribute('name');
-
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged should be called ' +
         'after setAttribute() and removeAttribute() calls');
 }, 'Test attributeChanged callback arguments if attribute is removed. ' +
@@ -130,7 +118,6 @@ test(function() {
 
 testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
-
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
@@ -139,7 +126,6 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var customElement = doc.querySelector('#xelement');
     customElement.setAttribute('class', 'someClass');
     customElement.removeAttribute('class');
-
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged should be called ' +
         'after setAttribute() and removeAttribute() calls');
 }, 'Test attributeChanged callback arguments if attribute is removed. ' +
@@ -148,7 +134,6 @@ testInIFrame('../../resources/x-element.html', function(doc) {
 
 testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackArgs = null;
-
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         callbackArgs = [arg1, arg2, arg3];
@@ -157,7 +142,6 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     doc.body.innerHTML = '<x-element id="xelement" class="theClass"></x-element>';
     var customElement = doc.querySelector('#xelement');
     customElement.removeAttribute('class');
-
     assert_array_equals(callbackArgs, ['class', 'theClass', null],
         'Unexpected attributeChanged callback arguments');
 }, 'Test attributeChanged callback arguments if attribute is removed. ' +
@@ -166,7 +150,6 @@ testInIFrame('../../resources/x-element.html', function(doc) {
 
 testInIFrame('../../resources/x-element.html', function(doc) {
     var callbackCalledCounter = 0;
-
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
@@ -176,15 +159,12 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     customElement.setAttribute('name', 'someName');
     // this one too
     customElement.removeAttribute('name');
-
     assert_equals(callbackCalledCounter, 0, 'Callback attributeChanged should not be called');
-
     doc.registerElement('x-element', {prototype: proto});
     // this call invokes attributeChangedCallback
     customElement.setAttribute('class', 'someClass');
     // this call invokes attributeChangedCallback at second time
     customElement.removeAttribute('class');
-
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged should be called ' +
         'after setAttribute() and removeAttribute() calls');
 }, 'Test attributeChanged callback arguments if attribute is removed. ' +
