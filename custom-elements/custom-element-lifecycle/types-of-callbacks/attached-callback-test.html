@@ -20,7 +20,7 @@ test(function() {
     proto.attachedCallback = function() {
         callbackCalledCounter++;
     };
-    var GeneratedConstructor = doc.registerElement('x-a-1', {prototype: proto});
+    var GeneratedConstructor = doc.registerElement('x-a', {prototype: proto});
 
     var customElement = new GeneratedConstructor();
     assert_equals(callbackCalledCounter, 0, 'Callback attached should not be called ' +
@@ -36,9 +36,9 @@ test(function() {
     proto.attachedCallback = function() {
         callbackCalledCounter++;
     };
-    doc.registerElement('x-a-2', {prototype: proto});
+    doc.registerElement('x-b', {prototype: proto});
 
-    doc.body.innerHTML = '<x-a-2></x-a-2>';
+    doc.body.innerHTML = '<x-b></x-b>';
     assert_equals(callbackCalledCounter, 0, 'Callback attached should not be called ' +
         'in documents that do not have a browsing context');
 }, 'Test attached callback if custom element is created via innerHTML property. ' +
@@ -52,8 +52,8 @@ test(function() {
     proto.attachedCallback = function() {
         callbackCalledCounter++;
     };
-    doc.body.innerHTML = '<x-a-3></x-a-3>';
-    doc.registerElement('x-a-3', {prototype: proto});
+    doc.body.innerHTML = '<x-c></x-c>';
+    doc.registerElement('x-c', {prototype: proto});
     assert_equals(callbackCalledCounter, 0, 'Callback attached should not be called ' +
         'in documents that do not have a browsing context');
 }, 'Test attached callback if custom element is created via innerHTML property before ' +
@@ -63,8 +63,8 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var callbackCalledCounter = 0;
-    doc.body.innerHTML = '<x-a-4 id="xa"></x-a-4>';
-    var customElement = doc.querySelector('#xa');
+    doc.body.innerHTML = '<x-d id="x-d"></x-d>';
+    var customElement = doc.querySelector('#x-d');
     var proto = Object.create(HTMLElement.prototype);
     proto.attachedCallback = function() {
         callbackCalledCounter++;

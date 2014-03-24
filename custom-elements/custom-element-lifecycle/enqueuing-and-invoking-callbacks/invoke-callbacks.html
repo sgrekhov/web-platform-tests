@@ -20,10 +20,10 @@ test(function() {
     proto.createdCallback = function() {
         callbackThis = this;
     };
-    doc.registerElement('x-a-1', {prototype: proto});
+    doc.registerElement('x-a', {prototype: proto});
 
-    doc.body.innerHTML = '<x-a-1 id="x-a-1"></x-a-1>';
-    assert_equals(doc.querySelector('#x-a-1'), callbackThis, '\'this\' value' +
+    doc.body.innerHTML = '<x-a id="x-a"></x-a>';
+    assert_equals(doc.querySelector('#x-a'), callbackThis, '\'this\' value' +
         ' of the created callback should be the custom element');
 }, 'Test \'this\' value inside created callback.');
 
@@ -62,7 +62,7 @@ test(function() {
     proto.attributeChangedCallback = function() {
         callbackThis = this;
     };
-    var GeneratedConstructor = doc.registerElement('x-a-2', {prototype: proto});
+    var GeneratedConstructor = doc.registerElement('x-b', {prototype: proto});
 
     var customElement = new GeneratedConstructor();
     customElement.setAttribute('class', 'someClass');
@@ -78,7 +78,7 @@ test(function() {
     proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         callbackArgs = [arg1, arg2, arg3];
     };
-    var GeneratedConstructor = doc.registerElement('x-a-3', {prototype: proto});
+    var GeneratedConstructor = doc.registerElement('x-c', {prototype: proto});
 
     var customElement = new GeneratedConstructor();
     customElement.setAttribute('class', 'someClass');

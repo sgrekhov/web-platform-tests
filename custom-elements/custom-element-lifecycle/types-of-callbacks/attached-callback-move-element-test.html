@@ -20,9 +20,9 @@ test(function() {
     proto.attachedCallback = function() {
         callbackCalledCounter++;
     };
-    doc.registerElement('x-a-1', {prototype: proto});
+    doc.registerElement('x-a', {prototype: proto});
 
-    var customElement = doc.createElement('x-a-1');
+    var customElement = doc.createElement('x-a');
     doc.body.appendChild(customElement);
     assert_equals(callbackCalledCounter, 0, 'Callback attached should not be called ' +
         'in documents that do not have a browsing context');
@@ -43,9 +43,9 @@ testInIFrame('../../resources/blank.html', function(docWithBrowsingContext) {
     proto1.attachedCallback = function() {
         callbackCalledCounter++;
     };
-    docNoBrowsingContext.registerElement('x-a-2', {prototype: proto1});
+    docNoBrowsingContext.registerElement('x-b', {prototype: proto1});
 
-    var customElement = docNoBrowsingContext.createElement('x-a-2');
+    var customElement = docNoBrowsingContext.createElement('x-b');
     docNoBrowsingContext.body.appendChild(customElement);
     assert_equals(callbackCalledCounter, 0, 'Callback attached should not be called ' +
         'in documents that do not have a browsing context');
@@ -54,7 +54,7 @@ testInIFrame('../../resources/blank.html', function(docWithBrowsingContext) {
     proto2.attachedCallback = function() {
         callbackCalledCounter++;
     };
-    docWithBrowsingContext.registerElement('x-a-2', {prototype: proto2});
+    docWithBrowsingContext.registerElement('x-b', {prototype: proto2});
     docWithBrowsingContext.body.appendChild(customElement);
     assert_equals(callbackCalledCounter, 1, 'Callback attached should be called ' +
         'in documents with browsing context');
@@ -68,9 +68,9 @@ testInIFrame('../../resources/blank.html', function(docWithBrowsingContext) {
     proto1.attachedCallback = function() {
         callbackCalledCounter++;
     };
-    docWithBrowsingContext.registerElement('x-a-3', {prototype: proto1});
+    docWithBrowsingContext.registerElement('x-c', {prototype: proto1});
 
-    var customElement = docWithBrowsingContext.createElement('x-a-3');
+    var customElement = docWithBrowsingContext.createElement('x-c');
     docWithBrowsingContext.body.appendChild(customElement);
     assert_equals(callbackCalledCounter, 1, 'Callback attached should be called ' +
         'in documents with browsing context');
@@ -80,7 +80,7 @@ testInIFrame('../../resources/blank.html', function(docWithBrowsingContext) {
     proto2.attachedCallback = function() {
         callbackCalledCounter++;
     };
-    docNoBrowsingContext.registerElement('x-a-3', {prototype: proto2});
+    docNoBrowsingContext.registerElement('x-c', {prototype: proto2});
     docNoBrowsingContext.body.appendChild(customElement);
     assert_equals(callbackCalledCounter, 1, 'Callback attached should not be called ' +
         'in documents that do not have a browsing context');
@@ -95,9 +95,9 @@ testInIFrame('../../resources/blank.html', function(doc) {
     proto.attachedCallback = function() {
         callbackCalledCounter++;
     };
-    doc.registerElement('x-a-4', {prototype: proto});
+    doc.registerElement('x-d', {prototype: proto});
 
-    var customElement = doc.createElement('x-a-4');
+    var customElement = doc.createElement('x-d');
     doc.body.appendChild(customElement);
     assert_equals(callbackCalledCounter, 1, 'Callback attached should be called ' +
         'in documents with browsing context');
@@ -119,11 +119,11 @@ moveTest.registerCustomElement = function(doc) {
     proto.attachedCallback = function() {
         moveTest.callbackCalledCounter++;
     };
-    doc.registerElement('x-a-6', {prototype: proto});
+    doc.registerElement('x-e', {prototype: proto});
 };
 
 moveTest.createCustomElement = function(doc) {
-    moveTest.customElement = doc.createElement('x-a-6');
+    moveTest.customElement = doc.createElement('x-e');
     doc.body.appendChild(moveTest.customElement);
     assert_equals(moveTest.callbackCalledCounter, 1, 'Callback attached should be called ' +
         'in documents with browsing context');

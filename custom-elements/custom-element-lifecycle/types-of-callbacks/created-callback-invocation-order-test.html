@@ -22,9 +22,9 @@ testInIFrame('../../resources/blank.html', function(doc) {
     proto.attachedCallback = function() {
         callbackLog.push('attachedCallback');
     };
-    doc.registerElement('x-a-1', {prototype: proto});
+    doc.registerElement('x-a', {prototype: proto});
 
-    doc.body.innerHTML = '<x-a-1 id="x-a-1"></x-a-1>';
+    doc.body.innerHTML = '<x-a id="x-a"></x-a>';
     assert_equals('created', callbackLog[0], 'The callback ' +
         callbackLog[0] + ' should be enqueued after created callback');
 }, 'Test attached callback is enqueued after created callback');
@@ -39,9 +39,9 @@ testInIFrame('../../resources/blank.html', function(doc) {
     proto.attributeChangedCallback = function() {
         callbackLog.push('attributeChangedCallback');
     };
-    doc.registerElement('x-a-2', {prototype: proto});
+    doc.registerElement('x-b', {prototype: proto});
 
-    doc.body.innerHTML = '<x-a-2 id="x-a-2"></x-a-2>';
+    doc.body.innerHTML = '<x-b id="x-b"></x-b>';
     assert_equals('created', callbackLog[0], 'The callback ' +
         callbackLog[0] + ' should not be enqueued before created callback');
 }, 'Test attributeChangedCallback callback is enqueued after created callback. ' +
@@ -58,9 +58,9 @@ test(function(){
     proto.attributeChangedCallback = function() {
         callbackLog.push('attributeChangedCallback');
     };
-    doc.registerElement('x-a-3', {prototype: proto});
+    doc.registerElement('x-c', {prototype: proto});
 
-    doc.body.innerHTML = '<x-a-3 id="x-a-3"></x-a-3>';
+    doc.body.innerHTML = '<x-c id="x-c"></x-c>';
     assert_equals('created', callbackLog[0], 'The callback ' +
         callbackLog[0] + ' should not be enqueued before created callback');
 }, 'Test attributeChangedCallback callback is enqueued after created callback. ' +
