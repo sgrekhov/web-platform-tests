@@ -86,57 +86,6 @@ test(function() {
                         callbackArgs,
                         'Wrong arguments passed to attributeChanged callback');
 }, 'Test attributeChanged callback\'s arguments.');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-    var callbackArgs = null;
-    var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback = function(arg1, arg2, arg3) {
-        callbackArgs = [arg1, arg2, arg3];
-    };
-    var GeneratedConstructor = doc.registerElement('x-a-4', {prototype: proto});
-
-    var customElement = new GeneratedConstructor();
-    customElement.classList.add('someClass');
-    assert_array_equals(['class', null, 'someClass'],
-                        callbackArgs,
-                        'Wrong arguments passed to attributeChanged callback');
-}, 'Test attributeChanged callback\'s arguments. Callback called via classList.add()');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-    var callbackArgs = null;
-    var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback = function(arg1, arg2, arg3) {
-        callbackArgs = [arg1, arg2, arg3];
-    };
-    var GeneratedConstructor = doc.registerElement('x-a-5', {prototype: proto});
-
-    var customElement = new GeneratedConstructor();
-    customElement.classList.toggle('someClass');
-    assert_array_equals(['class', null, 'someClass'],
-                        callbackArgs,
-                        'Wrong arguments are passed to attributeChanged callback');
-}, 'Test attributeChanged callback\'s arguments. Callback called via classList.toggle()');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-    var callbackArgs = null;
-    var proto = Object.create(HTMLElement.prototype);
-    proto.attributeChangedCallback = function(arg1, arg2, arg3) {
-        callbackArgs = [arg1, arg2, arg3];
-    };
-    var GeneratedConstructor = doc.registerElement('x-a-6', {prototype: proto});
-
-    var customElement = new GeneratedConstructor();
-    customElement.className = 'someClass';
-    assert_array_equals(['class', null, 'someClass'],
-                        callbackArgs,
-                        'Wrong arguments are passed to attributeChanged callback');
-}, 'Test attributeChanged callback\'s arguments. Callback called via className = value');
 </script>
 </body>
 </html>

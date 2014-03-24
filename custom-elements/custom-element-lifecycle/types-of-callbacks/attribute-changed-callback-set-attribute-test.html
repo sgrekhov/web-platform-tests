@@ -87,6 +87,39 @@ test(function() {
     proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
     };
+    var GeneratedConstructor = doc.registerElement('x-c-1-1', {prototype: proto});
+
+    var customElement = new GeneratedConstructor();
+    customElement.classList.toggle('someClass');
+    assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged should be called');
+}, 'Test attributeChanged callback is called if attribute value is set by method ' +
+    'classList.toggle(). The custom element is created via constructor.');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var callbackArgs = null;
+    var proto = Object.create(HTMLElement.prototype);
+    proto.attributeChangedCallback = function(arg1, arg2, arg3) {
+        callbackArgs = [arg1, arg2, arg3];
+    };
+    var GeneratedConstructor = doc.registerElement('x-c-1-2', {prototype: proto});
+
+    var customElement = new GeneratedConstructor();
+    customElement.classList.toggle('someClass');
+    assert_array_equals(callbackArgs, ['class', null, 'someClass'],
+        'Unexpected callback attributeChanged arguments');
+}, 'Test attributeChanged callback arguments if attribute value is set by method ' +
+    'classList.toggle(). The custom element is created via constructor.');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var callbackCalledCounter = 0;
+    var proto = Object.create(HTMLElement.prototype);
+    proto.attributeChangedCallback = function() {
+        callbackCalledCounter++;
+    };
     var GeneratedConstructor = doc.registerElement('x-a-1-2', {prototype: proto});
 
     var customElement = new GeneratedConstructor();
