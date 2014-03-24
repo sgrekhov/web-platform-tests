@@ -114,39 +114,45 @@ testInIFrame('../../resources/blank.html', function(doc) {
 var moveTest =  async_test('Test attached callback if moving custom element from ' +
     'document with browsing context to document with browsing context');
 
-moveTest.testFunction = function(doc) {
+moveTest.registerCustomElement = function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.attachedCallback = function() {
         moveTest.callbackCalledCounter++;
     };
     doc.registerElement('x-a-6', {prototype: proto});
+};
 
-    if (moveTest.customElement) {
-        // element already created move element
-        doc.body.appendChild(moveTest.customElement);
-        assert_equals(moveTest.callbackCalledCounter, 2, 'Callback attached should be called ' +
-            'in documents with browsing context');
-        moveTest.done();
-        moveTest.iframe1.parentNode.removeChild(moveTest.iframe1);
-        moveTest.iframe2.parentNode.removeChild(moveTest.iframe2);
-    } else {
-        // create element
-        moveTest.customElement = doc.createElement('x-a-6');
-        doc.body.appendChild(moveTest.customElement);
-        assert_equals(moveTest.callbackCalledCounter, 1, 'Callback attached should be called ' +
-            'in documents with browsing context');
-    }
-}
+moveTest.createCustomElement = function(doc) {
+    moveTest.customElement = doc.createElement('x-a-6');
+    doc.body.appendChild(moveTest.customElement);
+    assert_equals(moveTest.callbackCalledCounter, 1, 'Callback attached should be called ' +
+        'in documents with browsing context');
+    // set test's next step
+    moveTest.testFunction = moveTest.moveCustomElement;
+};
+
+moveTest.moveCustomElement = function(doc) {
+    doc.body.appendChild(moveTest.customElement);
+    assert_equals(moveTest.callbackCalledCounter, 2, 'Callback attached should be called ' +
+        'in documents with browsing context');
+    // test clean up
+    moveTest.done();
+    moveTest.iframe1.parentNode.removeChild(moveTest.iframe1);
+    moveTest.iframe2.parentNode.removeChild(moveTest.iframe2);
+};
 
 moveTest.step(function() {
     moveTest.callbackCalledCounter = 0;
+    moveTest.testFunction = moveTest.createCustomElement;
 
     moveTest.iframe1 = newIFrame('../../resources/blank.html');
     moveTest.iframe1.onload = moveTest.step_func(function() {
+        moveTest.registerCustomElement(moveTest.iframe1.contentDocument);
         moveTest.testFunction(moveTest.iframe1.contentDocument);
     });
     moveTest.iframe2 = newIFrame('../../resources/x-element.html');
     moveTest.iframe2.onload = moveTest.step_func(function() {
+        moveTest.registerCustomElement(moveTest.iframe2.contentDocument);
         moveTest.testFunction(moveTest.iframe2.contentDocument);
     });
 });
