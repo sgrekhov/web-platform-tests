@@ -20,8 +20,9 @@ test(function() {
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     var GeneratedConstructor = doc.registerElement('x-a-1', {prototype: proto});
+
     var customElement = new GeneratedConstructor();
     customElement.setAttribute('class', 'someClass');
     callbackCalledCounter = 0;
@@ -39,8 +40,9 @@ test(function() {
     proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         callbackCalledCounter++;
         callbackArgs = [arg1, arg2, arg3];
-    }
+    };
     doc.registerElement('x-a-2', {prototype: proto});
+
     doc.body.innerHTML = '<x-a-2 id="xa2" class="oldValue"></x-a-2>';
     var customElement = doc.querySelector('#xa2');
     customElement.setAttribute('class', 'newValue');
@@ -57,8 +59,9 @@ test(function() {
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     var GeneratedConstructor = doc.registerElement('x-a-1-2', {prototype: proto});
+
     var customElement = new GeneratedConstructor();
     customElement.setAttribute('class', 'someClass');
     callbackCalledCounter = 0;
@@ -76,8 +79,9 @@ test(function() {
     proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         callbackCalledCounter++;
         callbackArgs = [arg1, arg2, arg3];
-    }
+    };
     doc.registerElement('x-a-2-2', {prototype: proto});
+
     doc.body.innerHTML = '<x-a-2-2 id="xa2" class="oldValue"></x-a-2-2>';
     var customElement = doc.querySelector('#xa2');
     customElement.classList.add('newestValue');
@@ -94,8 +98,9 @@ test(function() {
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     var GeneratedConstructor = doc.registerElement('x-a-1-3', {prototype: proto});
+
     var customElement = new GeneratedConstructor();
     customElement.setAttribute('class', 'someClass');
     callbackCalledCounter = 0;
@@ -113,8 +118,9 @@ test(function() {
     proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         callbackCalledCounter++;
         callbackArgs = [arg1, arg2, arg3];
-    }
+    };
     doc.registerElement('x-a-2-3', {prototype: proto});
+
     doc.body.innerHTML = '<x-a-2-3 id="xa2" class="oldValue"></x-a-2-3>';
     var customElement = doc.querySelector('#xa2');
     customElement.className = 'lastValue';
@@ -133,12 +139,14 @@ test(function() {
     proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         callbackCalledCounter++;
         callbackArgs = [arg1, arg2, arg3];
-    }
+    };
     doc.body.innerHTML = '<x-a-3 id="xa3" class="oldValue"></x-a-3>';
+
     var customElement = doc.querySelector('#xa3');
     customElement.setAttribute('class', 'newValue');
     customElement.setAttribute('class', 'newestValue');
     assert_equals(callbackCalledCounter, 0, 'Callback attributeChanged should not be called');
+
     doc.registerElement('x-a-3', {prototype: proto});
     customElement.setAttribute('class', 'rightValue');
     assert_array_equals(callbackArgs, ['class', 'newestValue', 'rightValue'],
@@ -151,16 +159,19 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     doc.registerElement('x-element', {prototype: proto});
+
     var customElement = doc.querySelector('#xelement');
     customElement.setAttribute('class', 'firstValue');
     customElement.setAttribute('class', 'secondValue');
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged should be called ' +
         'after call to setAttribute()');
+
     customElement.classList.add('someClass3');
     assert_equals(callbackCalledCounter, 3, 'Callback attributeChanged should be called ' +
         'after call to classList.add()');
+
     customElement.id = 'someId';
     assert_equals(callbackCalledCounter, 4, 'Callback attributeChanged should be called ' +
         'after changing attribute as property');
@@ -173,18 +184,21 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         callbackArgs = [arg1, arg2, arg3];
-    }
+    };
     doc.registerElement('x-element', {prototype: proto});
+
     var customElement = doc.querySelector('#xelement');
     customElement.setAttribute('class', 'firstValue');
     customElement.setAttribute('class', 'secondValue');
     assert_array_equals(callbackArgs, ['class', 'firstValue', 'secondValue'],
         'Unexpected callback attributeChanged arguments ' +
         'after call to setAttribute()');
+
     customElement.classList.add('newestValue');
     assert_array_equals(callbackArgs, ['class', 'secondValue', 'secondValue newestValue'],
         'Unexpected callback attributeChanged arguments ' +
         'after call to classList.add()');
+
     customElement.className = 'lastValue';
     assert_array_equals(callbackArgs, ['class', 'secondValue newestValue', 'lastValue'],
         'Unexpected callback attributeChanged arguments ' +
@@ -198,11 +212,13 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.attributeChangedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
+
     var customElement = doc.querySelector('#xelement');
     customElement.setAttribute('class', 'firstValue');
     customElement.setAttribute('class', 'secondValue');
     assert_equals(callbackCalledCounter, 0, 'Callback attributeChanged should not be called');
+
     doc.registerElement('x-element', {prototype: proto});
     customElement.setAttribute('class', 'thirdValue');
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged should be called');

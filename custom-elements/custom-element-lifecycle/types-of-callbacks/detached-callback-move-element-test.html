@@ -19,8 +19,9 @@ test(function() {
     var proto = Object.create(HTMLElement.prototype);
     proto.detachedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     doc.registerElement('x-a-1', {prototype: proto});
+
     var customElement = doc.createElement('x-a-1');
     doc.body.appendChild(customElement);
     var divElement = doc.createElement('div');
@@ -32,45 +33,47 @@ test(function() {
     'without browsing context');
 
 
-testInIFrame('../../resources/blank.html', function(docBC) {
-    var docNoBC = newHTMLDocument();
+testInIFrame('../../resources/blank.html', function(docWithBrowsingContext) {
+    var docNoBrowsingContext = newHTMLDocument();
     var callbackCalledCounter = 0;
     var proto1 = Object.create(HTMLElement.prototype);
     proto1.detachedCallback = function() {
         callbackCalledCounter++;
-    }
-    docNoBC.registerElement('x-a-2', {prototype: proto1});
-    var customElement = docNoBC.createElement('x-a-2');
-    docNoBC.body.appendChild(customElement);
+    };
+    docNoBrowsingContext.registerElement('x-a-2', {prototype: proto1});
+
+    var customElement = docNoBrowsingContext.createElement('x-a-2');
+    docNoBrowsingContext.body.appendChild(customElement);
     var proto2 = Object.create(HTMLElement.prototype);
     proto2.detachedCallback = function() {
         callbackCalledCounter++;
-    }
-    docBC.registerElement('x-a-2', {prototype: proto2});
-    docBC.body.appendChild(customElement);
+    };
+    docWithBrowsingContext.registerElement('x-a-2', {prototype: proto2});
+    docWithBrowsingContext.body.appendChild(customElement);
     assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called ' +
         'in document without browsing context');
 }, 'Test detached callback is not called if moving custom element from ' +
     'document without browsing context to document with browsing context');
 
 
-testInIFrame('../../resources/blank.html', function(docBC) {
+testInIFrame('../../resources/blank.html', function(docWithBrowsingContext) {
     var callbackCalledCounter = 0;
     var proto1 = Object.create(HTMLElement.prototype);
     proto1.detachedCallback = function() {
         callbackCalledCounter++;
-    }
-    docBC.registerElement('x-a-3', {prototype: proto1});
-    var customElement = docBC.createElement('x-a-3');
-    docBC.body.appendChild(customElement);
+    };
+    docWithBrowsingContext.registerElement('x-a-3', {prototype: proto1});
 
-    var docNoBC = newHTMLDocument();
+    var customElement = docWithBrowsingContext.createElement('x-a-3');
+    docWithBrowsingContext.body.appendChild(customElement);
+
+    var docNoBrowsingContext = newHTMLDocument();
     var proto2 = Object.create(HTMLElement.prototype);
     proto2.detachedCallback = function() {
         callbackCalledCounter++;
-    }
-    docNoBC.registerElement('x-a-3', {prototype: proto2});
-    docNoBC.body.appendChild(customElement);
+    };
+    docNoBrowsingContext.registerElement('x-a-3', {prototype: proto2});
+    docNoBrowsingContext.body.appendChild(customElement);
     assert_equals(callbackCalledCounter, 1, 'Callback detached should be called ' +
         'in documents with browsing context');
 }, 'Test detached callback if moving custom element from ' +
@@ -82,8 +85,9 @@ testInIFrame('../../resources/blank.html', function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.detachedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     doc.registerElement('x-a-4', {prototype: proto});
+
     var customElement = doc.createElement('x-a-4');
     doc.body.appendChild(customElement);
     var divElement = doc.createElement('div');
@@ -102,7 +106,7 @@ moveTest.testFunction = function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.detachedCallback = function() {
         moveTest.callbackCalledCounter++;
-    }
+    };
     doc.registerElement('x-a-6', {prototype: proto});
     if (moveTest.customElement){
         // element already created move element

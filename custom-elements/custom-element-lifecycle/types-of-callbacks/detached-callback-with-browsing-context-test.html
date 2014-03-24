@@ -19,8 +19,9 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.detachedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     doc.registerElement('x-element', {prototype: proto});
+
     var customElement = doc.querySelector('#xelement');
     doc.body.removeChild(customElement);
     assert_equals(callbackCalledCounter, 1, 'Callback detached should be called ' +
@@ -35,8 +36,9 @@ testInIFrame('../../resources/blank.html', function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.detachedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     doc.registerElement('x-a-4', {prototype: proto});
+
     var div = doc.querySelector('#xa4-parent');
     doc.body.removeChild(div);
     assert_equals(callbackCalledCounter, 1, 'Callback detached should be called ' +
@@ -50,8 +52,9 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.detachedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     doc.registerElement('x-element', {prototype: proto});
+
     var customElement = doc.querySelector('#xelement');
     var div = doc.createElement('div');
     doc.body.replaceChild(div, customElement);
@@ -66,8 +69,9 @@ testInIFrame('../../resources/blank.html', function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.detachedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     doc.registerElement('x-a-6', {prototype: proto});
+
     doc.body.innerHTML = '<div id="x-a-6-parent"><x-a-6 id="xelement"></x-a-6></div>';
     var parent = doc.querySelector('#x-a-6-parent');
     var replacement = doc.createElement('div');
@@ -83,8 +87,9 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.detachedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     doc.registerElement('x-element', {prototype: proto});
+
     var customElement = doc.querySelector('#xelement');
     doc.body.innerHTML = '';
     assert_equals(callbackCalledCounter, 1, 'Callback detached should be called ' +
@@ -99,8 +104,9 @@ testInIFrame('../../resources/blank.html', function(doc) {
     var proto = Object.create(HTMLElement.prototype);
     proto.detachedCallback = function() {
         callbackCalledCounter++;
-    }
+    };
     doc.registerElement('x-a-5', {prototype: proto});
+
     var div = doc.querySelector('#xa5-parent');
     doc.body.innerHTML = '';
     assert_equals(callbackCalledCounter, 1, 'Callback detached should be called ' +
