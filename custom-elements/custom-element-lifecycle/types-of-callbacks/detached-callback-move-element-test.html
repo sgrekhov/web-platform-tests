@@ -108,60 +108,51 @@ testInIFrame('../../resources/blank.html', function(doc) {
 var moveTest =  async_test('Test detached callback if moving custom element from ' +
     'document with browsing context to document with browsing context');
 
-moveTest.detachedCallback1 = function() {
-        moveTest.callbackCalledCounter1++;
-};
-
-moveTest.detachedCallback2 = function() {
-        moveTest.callbackCalledCounter2++;
-};
-
-moveTest.registerCustomElement = function(doc, callback) {
-    var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = callback;
-    doc.registerElement('x-e', {prototype: proto});
-};
-
-moveTest.createCustomElement = function(doc) {
-    moveTest.customElement = doc.createElement('x-e');
-    doc.body.appendChild(moveTest.customElement);
-    assert_equals(moveTest.callbackCalledCounter1, 0,
-        'Callback detached should not be called when element is created');
-    assert_equals(moveTest.callbackCalledCounter2, 0,
-        'Unexpected initial value of moveTest.callbackCalledCounter2');
-    // set test's next step
-    moveTest.testFunction = moveTest.moveCustomElement;
-};
-
-moveTest.moveCustomElement = function(doc) {
-    doc.body.appendChild(moveTest.customElement);
-    assert_equals(moveTest.callbackCalledCounter1, 1,
-        'Callback detached should be called in documents with browsing context');
-    assert_equals(moveTest.callbackCalledCounter2, 0,
-        'Callback detached, defined in receiving document, should not be called');
-    // test clean up
-    moveTest.done();
-    moveTest.iframe1.parentNode.removeChild(moveTest.iframe1);
-    moveTest.iframe2.parentNode.removeChild(moveTest.iframe2);
-};
-
 moveTest.step(function() {
-    moveTest.callbackCalledCounter1 = 0;
-    moveTest.callbackCalledCounter2 = 0;
-    moveTest.callback = moveTest.detachedCallback1;
-    moveTest.testFunction = moveTest.createCustomElement;
+    var iframe1 = newIFrame('../../resources/blank.html');
+    iframe1.onload = moveTest.step_func(function() {
+        var doc1 = iframe1.contentDocument;
 
-    moveTest.iframe1 = newIFrame('../../resources/blank.html');
-    moveTest.iframe1.onload = moveTest.step_func(function() {
-        moveTest.registerCustomElement(moveTest.iframe1.contentDocument, moveTest.callback);
-        moveTest.callback = moveTest.detachedCallback2;
-        moveTest.testFunction(moveTest.iframe1.contentDocument);
-    });
-    moveTest.iframe2 = newIFrame('../../resources/x-element.html');
-    moveTest.iframe2.onload = moveTest.step_func(function() {
-        moveTest.registerCustomElement(moveTest.iframe2.contentDocument, moveTest.callback);
-        moveTest.callback = moveTest.detachedCallback2;
-        moveTest.testFunction(moveTest.iframe2.contentDocument);
+        // register custom element type
+        var callbackCalledCounter1 = 0;
+        var proto1 = Object.create(HTMLElement.prototype);
+        proto1.detachedCallback = function(){
+            callbackCalledCounter1++;
+        };
+        doc1.registerElement('x-e', {prototype: proto1});
+
+        // create custom element
+        var customElement = doc1.createElement('x-e');
+        doc1.body.appendChild(customElement);
+        assert_equals(callbackCalledCounter1, 0,
+            'Callback detached should not be called when element is created');
+
+        // create second iframe
+        var iframe2 = newIFrame('../../resources/x-element.html');
+        iframe.onload = step_func(function() {
+            var doc2 = iframe2.contentDocument;
+
+            // register custom element type
+            var callbackCalledCounter2 = 0;
+            var proto2 = Object.create(HTMLElement.prototype);
+            proto2.detachedCallback = function(){
+                callbackCalledCounter2++;
+            };
+            doc2.registerElement('x-e', {prototype: proto2});
+
+            // move element
+            doc2.body.appendChild(customElement);
+            assert_equals(callbackCalledCounter1, 1,
+                'Callback detached should be called in documents with browsing context');
+            assert_equals(callbackCalledCounter2, 0,
+                'Callback detached, defined in receiving document, should not be called');
+
+            // test clean up
+            iframe1.parentNode.removeChild(iframe1);
+            iframe2.parentNode.removeChild(iframe2);
+            moveTest.done();
+        });
+
     });
 });
 </script>
