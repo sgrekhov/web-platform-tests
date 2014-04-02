@@ -16,13 +16,13 @@
 test(function() {
     HTML5_ELEMENTS.forEach(function(element) {
         var doc = newHTMLDocument();
-        if (HTML5_DOCUMENT_ELEMENTS.indexOf(element) == -1) {
+        if (HTML5_DOCUMENT_ELEMENTS.indexOf(element) === -1) {
             var obj = doc.createElement(element);
             var name = 'x-1-' + element;
             var proto = Object.create(obj.constructor.prototype);
             doc.registerElement(name, {prototype: proto, extends: element});
             
-            if (HTML5_TABLE_ELEMENTS.indexOf(element) != -1) {
+            if (HTML5_TABLE_ELEMENTS.indexOf(element) !== -1) {
                 doc.body.innerHTML = 
                     '<table>' +
                     '<' + element + ' id="customElement" is="' + name + '"></' + element + '>' +
@@ -42,10 +42,10 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(element) {
-        if (HTML5_DOCUMENT_ELEMENTS.indexOf(element) == -1) {
+        if (HTML5_DOCUMENT_ELEMENTS.indexOf(element) === -1) {
             var obj = doc.createElement(element);
             var name = 'x-2-' + element;
-            if (HTML5_TABLE_ELEMENTS.indexOf(element) != -1) {
+            if (HTML5_TABLE_ELEMENTS.indexOf(element) !== -1) {
                 doc.body.innerHTML = 
                     '<table>' +
                     '<' + element + ' id="customElement" is="' + name + '"></' + element + '>' +

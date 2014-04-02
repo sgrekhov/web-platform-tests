@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Changing IS attribute of the custom element after element is instatiated</title>
+<title>Changing IS attribute of the custom element after element is instantiated</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="assert" content="After a custom element is instantiated, changing the value of the is attribute must not affect this element's custom element type">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#instantiating-custom-elements">
@@ -16,10 +16,10 @@
 test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(element) {
-        if (HTML5_DOCUMENT_ELEMENTS.indexOf(element) == -1) {
+        if (HTML5_DOCUMENT_ELEMENTS.indexOf(element) === -1) {
             var name = 'x-' + element;
             doc.registerElement(name);
-            if (HTML5_TABLE_ELEMENTS.indexOf(element) != -1) {
+            if (HTML5_TABLE_ELEMENTS.indexOf(element) !== -1) {
                 doc.body.innerHTML = 
                     '<table>' +
                     '<' + element + ' id="customElement" is="' + name + '"></' + element + '>' +
