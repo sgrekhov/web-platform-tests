@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Animation timeline test</title>
+<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<meta name="assert" content="Returns the time value for this timeline or null if this timeline is not started">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-animationtimeline-interface">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+</head>
+<body>
+<div id="log"></div>
+<script type="text/javascript">
+test(function() {
+    var doc = newHTMLDocument();
+    var timeline = doc.timeline;
+    assert_equals(timeline.currentTime, null, 'Time value for the timeline should be null');
+}, 'If timeline is not started time value for this timeline is null');
+
+testInBlankDocumentWithBrowsingContext(function(doc) {
+    var timeline = doc.timeline;
+    assert_equals(timeline.currentTime, null, 'Time value for the timeline should be null');    
+}, 'If timeline is not started time value for this timeline is null. ' +
+    'Test for document with browsing context');
+    
+// TODO: add tests for the case when timeline is started.
+// The time values of the document timeline are calculated as a fixed offset from the global 
+// clock such that the zero time corresponds to the navigationStart moment
+</script>
+</body>
+</html>
