@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Custom element node document should be owner document of the custom element</title>
+<title>Custom element node document should be the document, where custom element type is registered</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="assert" content="When custom element constructor is called then custom element's node document should be set to owner document of the custom element">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#instantiating-custom-elements">
@@ -18,8 +18,8 @@ test(function() {
     var GeneratedConstructor = doc.registerElement('x-a');
     var customElement = new GeneratedConstructor();
     assert_equals(customElement.ownerDocument, doc,
-        'Custom element node document should be owner document of the custom element');
-}, 'Custom element node document should be owner document of the custom element');
+        'Custom element node document should be the document, where custom element type is registered');
+}, 'Custom element node document should be the document, where custom element type is registered');
 
 
 test(function() {
@@ -35,9 +35,9 @@ test(function() {
         var customElement = new GeneratedConstructor();
 
         assert_equals(customElement.ownerDocument, doc,
-            'Custom element node document should be owner document of the custom element');
+            'Custom element node document should be the document, where custom element type is registered');
     });
-}, 'Custom element node document should be owner document of the custom element. ' +
+}, 'Custom element node document should be the document, where custom element type is registered. ' +
     'Test constructor of extended HTML element');
 
 
@@ -45,7 +45,7 @@ testInIFrame('../resources/blank.html', function(doc) {
     var GeneratedConstructor = doc.registerElement('x-b');
     var customElement = new GeneratedConstructor();
     assert_equals(customElement.ownerDocument, doc,
-        'Custom element node document should be owner document of the custom element');
+        'Custom element node document should be the document, where custom element type is registered');
 }, 'Custom element local name should be the name from custom element definition. ' +
     'Document has browsing context');
 
@@ -62,9 +62,9 @@ testInIFrame('../resources/blank.html', function(doc) {
         var customElement = new GeneratedConstructor();
 
         assert_equals(customElement.ownerDocument, doc,
-            'Custom element node document should be owner document of the custom element');
+            'Custom element node document should be the document, where custom element type is registered');
     });
-}, 'Custom element node document should be owner document of the custom element. ' +
+}, 'Custom element node document should be the document, where custom element type is registered. ' +
     'Test constructor of extended HTML element. Document has browsing context');
 
 </script>

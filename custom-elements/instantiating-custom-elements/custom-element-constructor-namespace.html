@@ -18,8 +18,8 @@ test(function() {
     var GeneratedConstructor = doc.registerElement('x-a');
     var customElement = new GeneratedConstructor();
     assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
-        'Custom element local namespace should be namespace in custom element definition');
-}, 'Custom element local namespace should be the namespace in custom element definition');
+        'Custom element namespace should be namespace in custom element definition');
+}, 'Custom element namespace should be the namespace in custom element definition');
 
 
 test(function() {
@@ -35,9 +35,9 @@ test(function() {
         var customElement = new GeneratedConstructor();
 
         assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
-            'Custom element namespace should be  namespace in custom element definition');
+            'Custom element namespace should be namespace in custom element definition');
     });
-}, 'Custom element local namespace should be the namespace in custom element definition. ' +
+}, 'Custom element namespace should be the namespace in custom element definition. ' +
     'Test constructor of extended HTML element');
 
 
@@ -45,8 +45,8 @@ testInIFrame('../resources/blank.html', function(doc) {
     var GeneratedConstructor = doc.registerElement('x-c');
     var customElement = new GeneratedConstructor();
     assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
-        'Custom element local namespace should be the namespace in custom element definition');
-}, 'Custom element local namespace should be the namespace in custom element definition. ' +
+        'Custom element namespace should be the namespace in custom element definition');
+}, 'Custom element namespace should be the namespace in custom element definition. ' +
     'Document has browsing context');
 
 
@@ -62,9 +62,9 @@ testInIFrame('../resources/blank.html', function(doc) {
         var customElement = new GeneratedConstructor();
 
         assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
-            'Custom element namespace should be  namespace in custom element definition');
+            'Custom element namespace should be namespace in custom element definition');
     });
-}, 'Custom element local namespace should be the namespace in custom element definition. ' +
+}, 'Custom element namespace should be the namespace in custom element definition. ' +
     'Test constructor of extended HTML element. Document has browsing context');
 </script>
 </body>
