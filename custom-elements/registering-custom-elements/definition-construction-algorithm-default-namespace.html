@@ -15,7 +15,7 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-    var GeneratedConstructor = doc.registerElement('x-a-1');
+    var GeneratedConstructor = doc.registerElement('x-a');
     var customElement = new GeneratedConstructor();
     
     assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
@@ -27,7 +27,7 @@ test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(element) {
         var obj = doc.createElement(element);        
-        var name = 'x-' + element;
+        var name = 'x-b-' + element;
         var proto = Object.create(obj.constructor.prototype);
         var GeneratedConstructor = doc.registerElement(name, {
             prototype: proto, 

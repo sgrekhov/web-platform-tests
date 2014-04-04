@@ -16,7 +16,7 @@
 test(function() {
     var doc = document.implementation.createDocument(null, 'test', null);
     assert_throws('NotSupportedError', function(){
-                      doc.registerElement('x-a-1');
+                      doc.registerElement('x-a');
                   }, 'Registering valid custom element in document ' +
                       'without registry should throw NotSupportedError');
 
@@ -29,7 +29,7 @@ test(function() {
     var proto = Object.create(HTMLElement.prototype);
 
     assert_throws('NotSupportedError', function(){
-                      doc.registerElement('x-a-2', { prototype: proto, extends: 'a'});
+                      doc.registerElement('x-b', { prototype: proto, extends: 'a'});
                   }, 'Registering valid custom element in document ' +
                       'without registry should throw NotSupportedError');
 

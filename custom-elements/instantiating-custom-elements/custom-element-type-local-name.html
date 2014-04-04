@@ -15,7 +15,7 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-    var GeneratedConstructor = doc.registerElement('x-a-1');
+    var GeneratedConstructor = doc.registerElement('x-a');
     var customElement = new GeneratedConstructor();
     assert_equals(customElement.constructor.prototype.constructor.name, 
         customElement.localName,
@@ -26,9 +26,9 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    doc.registerElement('x-a-2');
-    doc.body.innerHTML = '<x-a-2 id="ce2"></x-a-2>';
-    var customElement = doc.querySelector('#ce2');
+    doc.registerElement('x-b');
+    doc.body.innerHTML = '<x-b id="xb"></x-b>';
+    var customElement = doc.querySelector('#xb');
     assert_equals(customElement.constructor.prototype.constructor.name, customElement.localName, 
         'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element.' + 

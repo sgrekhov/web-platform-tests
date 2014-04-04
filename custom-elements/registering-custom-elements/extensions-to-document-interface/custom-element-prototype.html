@@ -15,7 +15,7 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-    var GeneratedConstructor = doc.registerElement('x-a-1');
+    var GeneratedConstructor = doc.registerElement('x-a');
     var customElement = new GeneratedConstructor();
 
     assert_class_string(customElement, 'HTMLElement',
@@ -25,7 +25,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var GeneratedConstructor = doc.registerElement('x-a-2', {
+    var GeneratedConstructor = doc.registerElement('x-b', {
         prototype: Object.create(HTMLParagraphElement.prototype),
         extends: 'p'
     });

@@ -15,7 +15,7 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-    var name = 'x-a-1';
+    var name = 'x-a';
     doc.registerElement(name);
     assert_throws('NotSupportedError', function() {
         doc.registerElement(name);
@@ -25,7 +25,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var name = 'x-a-2';
+    var name = 'x-b';
     doc.registerElement(name);
     HTML5_ELEMENTS.forEach(function(element) {
         assert_throws('NotSupportedError', function() {
@@ -39,7 +39,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var name = 'x-a-3';
+    var name = 'x-c';
     doc.registerElement(name, {
         prototype: Object.create(HTMLAnchorElement.prototype),
         extends: 'a'

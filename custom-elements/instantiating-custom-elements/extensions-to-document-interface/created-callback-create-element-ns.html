@@ -20,7 +20,7 @@ test(function() {
     proto.createdCallback = function() {
         callbackCalled = true;
     };
-    var name = 'x-a-1';
+    var name = 'x-a';
     doc.registerElement(name, {prototype: proto});
     var customElement = doc.createElementNS(HTML_NAMESPACE, name);
     assert_true(callbackCalled, 'Callback created should be called');
@@ -34,7 +34,7 @@ test(function() {
     proto.createdCallback = function() {
         callbackCalled = true;
     };
-    var name = 'x-a-2';
+    var name = 'x-b';
     doc.registerElement(name, {prototype: proto});
     var customElement = doc.createElementNS(HTML_NAMESPACE, name, name);
     assert_true(callbackCalled, 'Callback created should be called');
@@ -48,7 +48,7 @@ test(function() {
     proto.createdCallback = function() {
         callbackCalled = true;
     };
-    var name = 'x-a-3';
+    var name = 'x-c';
     var customElement = doc.createElementNS(HTML_NAMESPACE, name);
     assert_false(callbackCalled, 'Callback created should not be called');
     doc.registerElement(name, {prototype: proto});
@@ -61,7 +61,7 @@ test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(value) {
         var obj = doc.createElement(value);        
-        var name = 'x-' + value;
+        var name = 'x-d-' + value;
         var proto = Object.create(obj.constructor.prototype);
         proto.createdCallback = function() {
             callbackCalled = true;

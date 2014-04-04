@@ -28,7 +28,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var customElement = doc.createElement('x-a-2');
+    var customElement = doc.createElement('x-b');
 
     assert_class_string(customElement, 'HTMLElement',
         'Unresolved custom element must be a HTML element');
@@ -38,7 +38,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var customElement = doc.createElementNS(HTML_NAMESPACE, 'x-a-3');
+    var customElement = doc.createElementNS(HTML_NAMESPACE, 'x-c');
 
     assert_class_string(customElement, 'HTMLElement',
         'Unresolved custom element must be a HTML element');

@@ -18,7 +18,7 @@ test(function() {
         var doc = newHTMLDocument();
         if (HTML5_DOCUMENT_ELEMENTS.indexOf(element) === -1) {
             var obj = doc.createElement(element);
-            var name = 'x-1-' + element;
+            var name = 'x-a-' + element;
             var proto = Object.create(obj.constructor.prototype);
             doc.registerElement(name, {prototype: proto, extends: element});
             
@@ -44,7 +44,7 @@ test(function() {
     HTML5_ELEMENTS.forEach(function(element) {
         if (HTML5_DOCUMENT_ELEMENTS.indexOf(element) === -1) {
             var obj = doc.createElement(element);
-            var name = 'x-2-' + element;
+            var name = 'x-b-' + element;
             if (HTML5_TABLE_ELEMENTS.indexOf(element) !== -1) {
                 doc.body.innerHTML = 
                     '<table>' +

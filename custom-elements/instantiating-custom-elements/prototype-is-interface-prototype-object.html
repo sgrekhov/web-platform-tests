@@ -17,7 +17,7 @@ test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(element) {
         var obj = doc.createElement(element);        
-        var name = 'x-' + element;
+        var name = 'xa-' + element;
         assert_throws('NotSupportedError', function() {
             doc.registerElement(name, {prototype: obj.constructor.prototype});
         }, 'Exception should be thrown in case of attempt to register element ' +
@@ -30,11 +30,11 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var proto = Object.create(HTMLElement.prototype);
-    doc.registerElement('x-a-1', {
+    doc.registerElement('x-b', {
         prototype: proto
     });
     assert_throws('NotSupportedError', function() {
-        doc.registerElement('x-a-1', {
+        doc.registerElement('x-b', {
             prototype: proto
         });                
     }, 'Exception should be thrown if custom element with already used prototype is registered');

@@ -17,7 +17,7 @@ test(function() {
     var doc = newHTMLDocument();
     doc.body.innerHTML =
         '<math xmlns="http://www.w3.org/1998/Math/MathML">' +
-            '<x-a-1 id="xa"></x-a-1>' +
+            '<x-a id="xa"></x-a>' +
         '</math>';
     var xa = doc.querySelector('#xa');
 
@@ -30,7 +30,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var xa = doc.createElementNS('http://www.w3.org/1998/Math/MathML', 'x-a-2');
+    var xa = doc.createElementNS('http://www.w3.org/1998/Math/MathML', 'x-b');
 
     assert_class_string(xa, 'HTMLUnknownElement',
         'Unresolved custom element must be a HTMLUnknownElement');
