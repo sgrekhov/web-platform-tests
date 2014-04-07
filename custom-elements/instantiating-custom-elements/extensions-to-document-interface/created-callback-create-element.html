@@ -67,7 +67,7 @@ test(function() {
             callbackCalled = true;
         };    
         doc.registerElement(name, {prototype: proto, extends: value});
-        var createElement = doc.createElement(value, name);
+        var customElement = doc.createElement(value, name);
         assert_true(callbackCalled, 'Callback created should be called');
     });
 }, 'Created callback should be called if createElement is called. Test different types');
