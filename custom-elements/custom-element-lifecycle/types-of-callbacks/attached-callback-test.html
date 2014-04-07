@@ -15,10 +15,11 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-    var callbacks = newCustomElementWithCallbacks(doc, 'x-a');
+    var proto = newHTMLElementPrototype();
+    var GeneratedConstructor = doc.registerElement('x-a', {prototype: proto});
+    var customElement = new GeneratedConstructor();
 
-    var customElement = new callbacks.GeneratedConstructor();
-    assert_equals(callbacks.attachedCallbackCalledCounter, 0, 'Callback attached ' +
+    assert_equals(proto.attachedCallbackCalledCounter, 0, 'Callback attached ' +
         'should not be called in documents that do not have a browsing context');
 }, 'Test attached callback if custom element is instantiated via constructor. ' +
     'Document has no browsing context');
@@ -26,10 +27,11 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var callbacks = newCustomElementWithCallbacks(doc, 'x-b');
+    var proto = newHTMLElementPrototype();
 
+    doc.registerElement('x-b', {prototype: proto});
     doc.body.innerHTML = '<x-b></x-b>';
-    assert_equals(callbacks.attachedCallbackCalledCounter, 0, 'Callback attached ' +
+    assert_equals(proto.attachedCallbackCalledCounter, 0, 'Callback attached ' +
         'should not be called in documents that do not have a browsing context');
 }, 'Test attached callback if custom element is created via innerHTML property. ' +
     'Document has no browsing context');
@@ -38,9 +40,10 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     doc.body.innerHTML = '<x-c></x-c>';
-    var callbacks = newCustomElementWithCallbacks(doc, 'x-c');
+    var proto = newHTMLElementPrototype();
+    doc.registerElement('x-c', {prototype: proto});
 
-    assert_equals(callbacks.attachedCallbackCalledCounter, 0, 'Callback attached ' +
+    assert_equals(proto.attachedCallbackCalledCounter, 0, 'Callback attached ' +
         'should not be called in documents that do not have a browsing context');
 }, 'Test attached callback if custom element is created via innerHTML property before ' +
     'registration. Document has no browsing context');
@@ -51,29 +54,34 @@ test(function() {
     doc.body.innerHTML = '<x-d id="x-d"></x-d>';
     var customElement = doc.querySelector('#x-d');
 
-    var callbacks = newCustomElementWithCallbacks(doc, 'x-d');
-    customElement.constructor.prototype = callbacks.proto;
-    assert_equals(callbacks.attachedCallbackCalledCounter, 0, 'Callback attached should ' +
+    var proto = newHTMLElementPrototype();
+    var GeneratedConstructor = doc.registerElement('x-d', {prototype: proto});
+
+    customElement.constructor.prototype = proto;
+    assert_equals(proto.attachedCallbackCalledCounter, 0, 'Callback attached should ' +
         'not be called for unregistered custom element in document without browsing context');
 }, 'Test attached callback if custom element is unregistered');
 
 
 testInIFrame('../../resources/x-element.html', function(doc) {
-    var callbacks = newCustomElementWithCallbacks(doc, 'x-element');
-    assert_equals(callbacks.attachedCallbackCalledCounter, 1, 'Callback attached should be ' +
+    var proto = newHTMLElementPrototype();
+    doc.registerElement('x-element', {prototype: proto});
+
+    assert_equals(proto.attachedCallbackCalledCounter, 1, 'Callback attached should be ' +
         'called in documents with browsing context');
 }, 'Test attached callback. Document has browsing context');
 
 
 testInIFrame('../../resources/blank.html', function(doc) {
-    var callbacks = newCustomElementWithCallbacks(doc, 'x-element');
+    var proto = newHTMLElementPrototype();
+    doc.registerElement('x-element', {prototype: proto});
 
     var x = doc.createElement('x-element');
-    assert_equals(callbacks.attachedCallbackCalledCounter, 0, 'Callback attached should not ' +
+    assert_equals(proto.attachedCallbackCalledCounter, 0, 'Callback attached should not ' +
         'be called before element is added to document with browsing context');
 
     doc.body.appendChild(x);
-    assert_equals(callbacks.attachedCallbackCalledCounter, 1, 'Callback attached should be called ' +
+    assert_equals(proto.attachedCallbackCalledCounter, 1, 'Callback attached should be called ' +
         'in documents with browsing context');
 }, 'Test attached callback. Registered element is created via document.createElement(). ' +
     'Document has browsing context');
@@ -83,18 +91,20 @@ testInIFrame('../../resources/blank.html', function(doc) {
     var x = doc.createElement('x-element');
     doc.body.appendChild(x);
 
-    var callbacks = newCustomElementWithCallbacks(doc, 'x-element');
-    assert_equals(callbacks.attachedCallbackCalledCounter, 1, 'Callback attached should ' +
+    var proto = newHTMLElementPrototype();
+    doc.registerElement('x-element', {prototype: proto});
+    assert_equals(proto.attachedCallbackCalledCounter, 1, 'Callback attached should ' +
         'be called in documents with browsing context');
 }, 'Test attached callback. Unregistered element is created via document.createElement(). ' +
     'Document has browsing context');
 
 
 testInIFrame('../../resources/blank.html', function(doc) {
-    var callbacks = newCustomElementWithCallbacks(doc, 'x-element');
-    doc.body.innerHTML = '<x-element></x-element>';
+    var proto = newHTMLElementPrototype();
+    doc.registerElement('x-element', {prototype: proto});
 
-    assert_equals(callbacks.attachedCallbackCalledCounter, 1, 'Callback attached should ' +
+    doc.body.innerHTML = '<x-element></x-element>';
+    assert_equals(proto.attachedCallbackCalledCounter, 1, 'Callback attached should ' +
         'be called in documents with browsing context');
 }, 'Test attached callback. Registered element is created via innerHTML property. ' +
     'Document has browsing context');
@@ -102,9 +112,10 @@ testInIFrame('../../resources/blank.html', function(doc) {
 
 testInIFrame('../../resources/blank.html', function(doc) {
     doc.body.innerHTML = '<x-element></x-element>';
-    var callbacks = newCustomElementWithCallbacks(doc, 'x-element');
+    var proto = newHTMLElementPrototype();
+    doc.registerElement('x-element', {prototype: proto});
 
-    assert_equals(callbacks.attachedCallbackCalledCounter, 1, 'Callback attached should ' +
+    assert_equals(proto.attachedCallbackCalledCounter, 1, 'Callback attached should ' +
         'be called in documents with browsing context');
 }, 'Test attached callback. Unresolved element is created via innerHTML property. ' +
     'Document has browsing context');

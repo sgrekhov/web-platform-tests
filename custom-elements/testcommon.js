@@ -370,54 +370,47 @@ function h2d(h) {
     return parseInt(h, 16);
 }
 
-function newCustomElementWithCallbacks(doc, localName) {
-    var customElementCallbacks = {
-        GeneratedConstructor: null,
-        proto: null,
+function newHTMLElementPrototype() {
+    return newCustomElementPrototype(HTMLElement.prototype);
+}
 
-        createdCallbackThis: null,
-        createdCallbackCalledCounter: 0,
-        createdCallbackArgs: null,
+function newCustomElementPrototype(parent) {
+    var proto = Object.create(parent);
+    proto.createdCallbackThis = null;
+    proto.createdCallbackCalledCounter = 0;
+    proto.createdCallbackArgs = null;
 
-        attachedCallbackThis: null,
-        attachedCallbackCalledCounter: 0,
-        attachedCallbackArgs: null,
+    proto.attachedCallbackThis = null;
+    proto.attachedCallbackCalledCounter = 0;
+    proto.attachedCallbackArgs = null;
 
-        detachedCallbackThis: null,
-        detachedCallbackCalledCounter: 0,
-        detachedCallbackArgs: null,
+    proto.detachedCallbackThis = null;
+    proto.detachedCallbackCalledCounter = 0;
+    proto.detachedCallbackArgs = null;
 
-        attributeChangedCallbackThis: null,
-        attributeChangedCallbackCalledCounter: 0,
-        attributeChangedCallbackArgs: null,
-    };
-    var proto = Object.create(HTMLElement.prototype);
+    proto.attributeChangedCallbackThis = null;
+    proto.attributeChangedCallbackCalledCounter = 0;
+    proto.attributeChangedCallbackArgs = null;
 
     proto.createdCallback = function(arg1, arg2, arg3) {
-        customElementCallbacks.createdCallbackThis = this;
-        customElementCallbacks.createdCallbackCalledCounter++;
-        customElementCallbacks.createdCallbackArgs = [arg1, arg2, arg3];
+        proto.createdCallbackThis = this;
+        proto.createdCallbackCalledCounter++;
+        proto.createdCallbackArgs = [arg1, arg2, arg3];
     };
     proto.attachedCallback = function(arg1, arg2, arg3) {
-        customElementCallbacks.attachedCallbackThis = this;
-        customElementCallbacks.attachedCallbackCalledCounter++;
-        customElementCallbacks.attachedCallbackArgs = [arg1, arg2, arg3];
+        proto.attachedCallbackThis = this;
+        proto.attachedCallbackCalledCounter++;
+        proto.attachedCallbackArgs = [arg1, arg2, arg3];
     };
     proto.detachedCallback = function(arg1, arg2, arg3) {
-        customElementCallbacks.detachedCallbackThis = this;
-        customElementCallbacks.detachedCallbackCalledCounter++;
-        customElementCallbacks.detachedCallbackArgs = [arg1, arg2, arg3];
+        proto.detachedCallbackThis = this;
+        proto.detachedCallbackCalledCounter++;
+        proto.detachedCallbackArgs = [arg1, arg2, arg3];
     };
     proto.attributeChangedCallback = function(arg1, arg2, arg3) {
-        customElementCallbacks.attributeChangedCallbackThis = this;
-        customElementCallbacks.attributeChangedCallbackCalledCounter++;
-        customElementCallbacks.attributeChangedCallbackArgs = [arg1, arg2, arg3];
+        proto.attributeChangedCallbackThis = this;
+        proto.attributeChangedCallbackCalledCounter++;
+        proto.attributeChangedCallbackArgs = [arg1, arg2, arg3];
     };
-
-    customElementCallbacks.GeneratedConstructor = doc.registerElement(localName, {
-        prototype: proto
-    });
-    customElementCallbacks.proto = proto;
-
-    return customElementCallbacks;
+    return proto;
 }
