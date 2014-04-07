@@ -369,3 +369,55 @@ function d2h(d) {
 function h2d(h) {
     return parseInt(h, 16);
 }
+
+function newCustomElementWithCallbacks(doc, localName) {
+    var customElementCallbacks = {
+        GeneratedConstructor: null,
+        proto: null,
+
+        createdCallbackThis: null,
+        createdCallbackCalledCounter: 0,
+        createdCallbackArgs: null,
+
+        attachedCallbackThis: null,
+        attachedCallbackCalledCounter: 0,
+        attachedCallbackArgs: null,
+
+        detachedCallbackThis: null,
+        detachedCallbackCalledCounter: 0,
+        detachedCallbackArgs: null,
+
+        attributeChangedCallbackThis: null,
+        attributeChangedCallbackCalledCounter: 0,
+        attributeChangedCallbackArgs: null,
+    };
+    var proto = Object.create(HTMLElement.prototype);
+
+    proto.createdCallback = function(arg1, arg2, arg3) {
+        customElementCallbacks.createdCallbackThis = this;
+        customElementCallbacks.createdCallbackCalledCounter++;
+        customElementCallbacks.createdCallbackArgs = [arg1, arg2, arg3];
+    };
+    proto.attachedCallback = function(arg1, arg2, arg3) {
+        customElementCallbacks.attachedCallbackThis = this;
+        customElementCallbacks.attachedCallbackCalledCounter++;
+        customElementCallbacks.attachedCallbackArgs = [arg1, arg2, arg3];
+    };
+    proto.detachedCallback = function(arg1, arg2, arg3) {
+        customElementCallbacks.detachedCallbackThis = this;
+        customElementCallbacks.detachedCallbackCalledCounter++;
+        customElementCallbacks.detachedCallbackArgs = [arg1, arg2, arg3];
+    };
+    proto.attributeChangedCallback = function(arg1, arg2, arg3) {
+        customElementCallbacks.attributeChangedCallbackThis = this;
+        customElementCallbacks.attributeChangedCallbackCalledCounter++;
+        customElementCallbacks.attributeChangedCallbackArgs = [arg1, arg2, arg3];
+    };
+
+    customElementCallbacks.GeneratedConstructor = doc.registerElement(localName, {
+        prototype: proto
+    });
+    customElementCallbacks.proto = proto;
+
+    return customElementCallbacks;
+}

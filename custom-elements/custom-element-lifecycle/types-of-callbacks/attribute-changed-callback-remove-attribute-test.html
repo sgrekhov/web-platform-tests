@@ -132,7 +132,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     };
     doc.registerElement('x-element', {prototype: proto});
 
-    var customElement = doc.querySelector('#xelement');
+    var customElement = doc.querySelector('#x-element');
     customElement.setAttribute('class', 'someClass');
     customElement.removeAttribute('class');
     assert_equals(callbackCalledCounter, 2, 'Callback attributeChanged should be called ' +
@@ -149,8 +149,8 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     };
     doc.registerElement('x-element', {prototype: proto});
 
-    doc.body.innerHTML = '<x-element id="xelement" class="theClass"></x-element>';
-    var customElement = doc.querySelector('#xelement');
+    doc.body.innerHTML = '<x-element id="x-element" class="theClass"></x-element>';
+    var customElement = doc.querySelector('#x-element');
     customElement.removeAttribute('class');
     assert_equals(callbackArgs[2], null, 'Removing an attribute should invoke ' +
         'the attributeChanged callback with a null new value');
@@ -167,7 +167,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
         callbackCalledCounter++;
     };
 
-    var customElement = doc.querySelector('#xelement');
+    var customElement = doc.querySelector('#x-element');
     // this should not call or enqueue attributeChangedCallback
     customElement.setAttribute('name', 'someName');
     // this one too

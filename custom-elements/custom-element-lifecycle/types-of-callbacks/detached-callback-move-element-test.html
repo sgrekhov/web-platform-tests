@@ -61,7 +61,6 @@ testInIFrame('../../resources/blank.html', function(docWithBrowsingContext) {
 
 testInIFrame('../../resources/blank.html', function(docWithBrowsingContext) {
     var callbackCalledCounter1 = 0;
-    var callbackCalledCounter2 = 0;
     var proto1 = Object.create(HTMLElement.prototype);
     proto1.detachedCallback = function() {
         callbackCalledCounter1++;
@@ -72,6 +71,7 @@ testInIFrame('../../resources/blank.html', function(docWithBrowsingContext) {
     docWithBrowsingContext.body.appendChild(customElement);
 
     var docNoBrowsingContext = newHTMLDocument();
+    var callbackCalledCounter2 = 0;
     var proto2 = Object.create(HTMLElement.prototype);
     proto2.detachedCallback = function() {
         callbackCalledCounter2++;
@@ -116,7 +116,7 @@ moveTest.step(function() {
         // register custom element type
         var callbackCalledCounter1 = 0;
         var proto1 = Object.create(HTMLElement.prototype);
-        proto1.detachedCallback = function(){
+        proto1.detachedCallback = function() {
             callbackCalledCounter1++;
         };
         doc1.registerElement('x-e', {prototype: proto1});
@@ -135,7 +135,7 @@ moveTest.step(function() {
             // register custom element type
             var callbackCalledCounter2 = 0;
             var proto2 = Object.create(HTMLElement.prototype);
-            proto2.detachedCallback = function(){
+            proto2.detachedCallback = function() {
                 callbackCalledCounter2++;
             };
             doc2.registerElement('x-e', {prototype: proto2});

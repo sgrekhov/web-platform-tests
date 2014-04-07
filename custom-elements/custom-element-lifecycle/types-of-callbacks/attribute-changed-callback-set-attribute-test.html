@@ -293,7 +293,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     };
     doc.registerElement('x-element', {prototype: proto});
 
-    var customElement = doc.querySelector('#xelement');
+    var customElement = doc.querySelector('#x-element');
     customElement.setAttribute('class', 'someClass');
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged should be called');
 }, 'Test attributeChanged callback is called if attribute value is set by method setAttribute(). '+
@@ -308,7 +308,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     };
     doc.registerElement('x-element', {prototype: proto});
 
-    var customElement = doc.querySelector('#xelement');
+    var customElement = doc.querySelector('#x-element');
     customElement.setAttribute('class', 'someClass');
     assert_array_equals(callbackArgs, ['class', null, 'someClass'],
         'Unexpected callback attributeChanged arguments');
@@ -324,7 +324,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     };
     doc.registerElement('x-element', {prototype: proto});
 
-    var customElement = doc.querySelector('#xelement');
+    var customElement = doc.querySelector('#x-element');
     customElement.classList.add('someClass');
     assert_equals(callbackCalledCounter, 1, 'Callback attributeChanged should be called');
 }, 'Test attributeChanged callback is called if attribute value is set by method classList.add(). '+
@@ -339,7 +339,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     };
     doc.registerElement('x-element', {prototype: proto});
 
-    var customElement = doc.querySelector('#xelement');
+    var customElement = doc.querySelector('#x-element');
     customElement.classList.add('someClass');
     assert_array_equals(callbackArgs, ['class', null, 'someClass'],
         'Unexpected callback attributeChanged arguments');
@@ -354,7 +354,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
         callbackCalledCounter++;
     };
 
-    var customElement = doc.querySelector('#xelement');
+    var customElement = doc.querySelector('#x-element');
     // this call shouldn't invoke or enqueue the callback
     customElement.setAttribute('name', 'someName');
     assert_equals(callbackCalledCounter, 0, 'Callback attributeChanged should not be called');

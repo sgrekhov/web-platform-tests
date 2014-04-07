@@ -133,7 +133,7 @@ loseBrowsingContextTest.step(function() {
         };
         doc.registerElement('x-element', {prototype: proto});
 
-        var customElement = doc.querySelector('#xelement');
+        var customElement = doc.querySelector('#x-element');
         iframe.parentNode.removeChild(iframe); // lose browsing context
         customElement.parentNode.removeChild(customElement);
         assert_equals(loseBrowsingContextTest.callbackCalledCounter, 0,
@@ -150,7 +150,7 @@ var navigateTest = async_test('Test detached callback is not called, ' +
 navigateTest.step(function() {
     navigateTest.callbackCalledCounter = 0;
     var iframe = newIFrame('../../resources/x-element.html');
-    iframe.onload = navigateTest.step_func(function(){
+    iframe.onload = navigateTest.step_func(function() {
         var doc = iframe.contentDocument;
         var proto = Object.create(HTMLElement.prototype);
         proto.detachedCallback = function() {
@@ -159,7 +159,7 @@ navigateTest.step(function() {
         doc.registerElement('x-element', {prototype: proto});
         customElement = doc.querySelector('#xelement');
 
-        iframe.onload = navigateTest.step_func(function(){
+        iframe.onload = navigateTest.step_func(function() {
             customElement.parentNode.removeChild(customElement);
             assert_equals(navigateTest.callbackCalledCounter, 0,
                 'Callback detached should not be called ' +
