@@ -378,34 +378,28 @@ function newCustomElementPrototype(parent) {
     var proto = Object.create(parent);
     proto.createdCallbackThis = null;
     proto.createdCallbackCalledCounter = 0;
-    proto.createdCallbackArgs = null;
 
     proto.attachedCallbackThis = null;
     proto.attachedCallbackCalledCounter = 0;
-    proto.attachedCallbackArgs = null;
 
     proto.detachedCallbackThis = null;
     proto.detachedCallbackCalledCounter = 0;
-    proto.detachedCallbackArgs = null;
 
     proto.attributeChangedCallbackThis = null;
     proto.attributeChangedCallbackCalledCounter = 0;
     proto.attributeChangedCallbackArgs = null;
 
-    proto.createdCallback = function(arg1, arg2, arg3) {
+    proto.createdCallback = function() {
         proto.createdCallbackThis = this;
         proto.createdCallbackCalledCounter++;
-        proto.createdCallbackArgs = [arg1, arg2, arg3];
     };
-    proto.attachedCallback = function(arg1, arg2, arg3) {
+    proto.attachedCallback = function() {
         proto.attachedCallbackThis = this;
         proto.attachedCallbackCalledCounter++;
-        proto.attachedCallbackArgs = [arg1, arg2, arg3];
     };
-    proto.detachedCallback = function(arg1, arg2, arg3) {
+    proto.detachedCallback = function() {
         proto.detachedCallbackThis = this;
         proto.detachedCallbackCalledCounter++;
-        proto.detachedCallbackArgs = [arg1, arg2, arg3];
     };
     proto.attributeChangedCallback = function(arg1, arg2, arg3) {
         proto.attributeChangedCallbackThis = this;
