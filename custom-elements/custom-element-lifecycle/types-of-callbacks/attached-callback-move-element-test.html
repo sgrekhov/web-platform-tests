@@ -123,7 +123,6 @@ moveTest.step(function() {
         var doc1 = iframe1.contentDocument;
 
         // register custom element type
-        var callbackCalledCounter1 = 0;
         var proto1 = newHTMLElementPrototype();
         doc1.registerElement('x-f', {prototype: proto1});
 
@@ -139,7 +138,6 @@ moveTest.step(function() {
             var doc2 = iframe2.contentDocument;
             
             // register custom element type
-            var callbackCalledCounter2 = 0;
             var proto2 = newHTMLElementPrototype();
             doc2.registerElement('x-f', {prototype: proto2});
 
