@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Detached callback of a custom element should  be called if document has browsing context</title>
+<title>Detached callback of a custom element should be called if document has browsing context</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <meta name="assert" content="detached callback ... must be enqueued whenever custom element is removed from the document and this document has a browsing context.">
@@ -19,7 +19,6 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     doc.registerElement('x-element', {prototype: proto});
     var customElement = doc.querySelector('#x-element');
     doc.body.removeChild(customElement);
-
     assert_equals(proto.detachedCallbackCalledCounter, 1, 'Callback detached should be ' +
         'called if custom element is removed from the document with browsing context');
 }, 'Test detached callback is called if custom element is removed by method removeChild() ' +
@@ -27,12 +26,11 @@ testInIFrame('../../resources/x-element.html', function(doc) {
 
 
 testInIFrame('../../resources/blank.html', function(doc) {
-    doc.body.innerHTML = '<div id="x-a-parent"><x-a id="xa"></x-a></div>';
+    doc.body.innerHTML = '<div id="x-a-parent"><x-a id="x-a"></x-a></div>';
     var proto = newHTMLElementPrototype();
     doc.registerElement('x-a', {prototype: proto});
     var div = doc.querySelector('#x-a-parent');
     doc.body.removeChild(div);
-
     assert_equals(proto.detachedCallbackCalledCounter, 1, 'Callback detached should be ' +
         'called if custom element is removed from the document with browsing context');
 }, 'Test detached callback is called if ancestor node of custom element ' +
@@ -45,7 +43,6 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var customElement = doc.querySelector('#x-element');
     var div = doc.createElement('div');
     doc.body.replaceChild(div, customElement);
-
     assert_equals(proto.detachedCallbackCalledCounter, 1, 'Callback detached should be ' +
         'called if custom element is removed from the document with browsing context');
 }, 'Test detached callback is called if custom element is removed by method replaceChild() ' +
@@ -59,7 +56,6 @@ testInIFrame('../../resources/blank.html', function(doc) {
     var parent = doc.querySelector('#x-b-parent');
     var replacement = doc.createElement('div');
     doc.body.replaceChild(replacement, parent);
-
     assert_equals(proto.detachedCallbackCalledCounter, 1, 'Callback detached should be ' +
         'called if custom element is removed from the document with browsing context');
 }, 'Test detached callback is called if ancestor node of custom element ' +
@@ -69,9 +65,7 @@ testInIFrame('../../resources/blank.html', function(doc) {
 testInIFrame('../../resources/x-element.html', function(doc) {
     var proto = newHTMLElementPrototype();
     doc.registerElement('x-element', {prototype: proto});
-    var customElement = doc.querySelector('#x-element');
     doc.body.innerHTML = '';
-
     assert_equals(proto.detachedCallbackCalledCounter, 1, 'Callback detached should be ' +
         'called if custom element is removed from the document with browsing context');
 }, 'Test detached callback is called after changing custom element direct parent ' +
@@ -79,12 +73,10 @@ testInIFrame('../../resources/x-element.html', function(doc) {
 
 
 testInIFrame('../../resources/blank.html', function(doc) {
-    doc.body.innerHTML = '<div id="x-c-parent"><x-c id="x-c"></x-c></div>';
+    doc.body.innerHTML = '<div><x-c></x-c></div>';
     var proto = newHTMLElementPrototype();
     doc.registerElement('x-c', {prototype: proto});
-    var div = doc.querySelector('#x-c-parent');
     doc.body.innerHTML = '';
-
     assert_equals(proto.detachedCallbackCalledCounter, 1, 'Callback detached should be ' +
         'called if custom element is removed from the document with browsing context');
 }, 'Test detached callback is called after changing custom element ancestor ' +

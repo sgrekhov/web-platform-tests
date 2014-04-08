@@ -19,8 +19,8 @@ test(function() {
     var proto = newHTMLElementPrototype();
     doc.registerElement('x-a', {prototype: proto});
     doc.body.innerHTML = '<x-a id="x-a"></x-a>';
-    var xa1 = doc.querySelector('#x-a');
-    doc.body.removeChild(xa1);
+    var customElement = doc.querySelector('#x-a');
+    doc.body.removeChild(customElement);
 
     assert_equals(proto.detachedCallbackCalledCounter, 0,
         'Callback detached should not be called if the document has no browsing context');
@@ -104,7 +104,6 @@ var loseBrowsingContextTest = async_test('Test detached callback is not called '
     'if document lose browsing context and custom element is removed');
 
 loseBrowsingContextTest.step(function() {
-    loseBrowsingContextTest.callbackCalledCounter = 0;
     var iframe = newIFrame('../../resources/x-element.html');
     iframe.onload = loseBrowsingContextTest.step_func(function(){
         var doc = iframe.contentDocument;
@@ -126,7 +125,6 @@ var navigateTest = async_test('Test detached callback is not called, ' +
     'if document\'s window is navigated to another document and custom element is removed');
 
 navigateTest.step(function() {
-    navigateTest.callbackCalledCounter = 0;
     var iframe = newIFrame('../../resources/x-element.html');
     iframe.onload = navigateTest.step_func(function() {
         var doc = iframe.contentDocument;
