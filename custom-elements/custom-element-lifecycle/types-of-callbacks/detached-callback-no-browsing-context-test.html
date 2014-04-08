@@ -16,105 +16,86 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-    var callbackCalledCounter = 0;
-    var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function() {
-        callbackCalledCounter++;
-    };
+    var proto = newHTMLElementPrototype();
     doc.registerElement('x-a', {prototype: proto});
-
     doc.body.innerHTML = '<x-a id="x-a"></x-a>';
     var xa1 = doc.querySelector('#x-a');
     doc.body.removeChild(xa1);
-    assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called ' +
-        'if the document has no browsing context');
+
+    assert_equals(proto.detachedCallbackCalledCounter, 0,
+        'Callback detached should not be called if the document has no browsing context');
 }, 'Test detached callback if custom element is created via innerHTML property. ' +
     'Document has no browsing context');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    var callbackCalledCounter = 0;
-    var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function() {
-        callbackCalledCounter++;
-    };
+    var proto = newHTMLElementPrototype();
     doc.body.innerHTML = '<x-b id="x-b"></x-b>';
     doc.registerElement('x-b', {prototype: proto});
-
     var customElement = doc.querySelector('#x-b');
     doc.body.removeChild(customElement);
-    assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called ' +
-        'if the document has no browsing context');
+
+    assert_equals(proto.detachedCallbackCalledCounter, 0,
+        'Callback detached should not be called if the document has no browsing context');
 }, 'Test detached callback if custom element is via innerHTML property before ' +
     'registration of a custom element. Document has no browsing context');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    var callbackCalledCounter = 0;
     doc.body.innerHTML = '<x-c id="x-c"></x-c>';
     var customElement = doc.querySelector('#x-c');
-    var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function() {
-        callbackCalled = true;
-    };
+
+    var proto = newHTMLElementPrototype();
     customElement.constructor.prototype = proto;
     doc.body.removeChild(customElement);
-    assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called ' +
-        'if the document has no browsing context');
+
+    assert_equals(proto.detachedCallbackCalledCounter, 0,
+        'Callback detached should not be called if the document has no browsing context');
 }, 'Test detached callback if custom element is unregistered. ' +
     'Document has no browsing context');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    var callbackCalledCounter = 0;
-    var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function() {
-        callbackCalledCounter++;
-    };
-    doc.registerElement('x-d', {prototype: proto});
+    var proto = newHTMLElementPrototype();
 
+    doc.registerElement('x-d', {prototype: proto});
     doc.body.innerHTML = '<x-d id="x-d"></x-d>';
     doc.body.innerHTML = '';
-    assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called ' +
-        'if the document has no browsing context');
+
+    assert_equals(proto.detachedCallbackCalledCounter, 0,
+        'Callback detached should not be called if the document has no browsing context');
 }, 'Test detached callback if removing custom element via innerHTML property. ' +
     'Document has no browsing context');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    var callbackCalledCounter = 0;
-    var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function() {
-        callbackCalledCounter++;
-    };
-    doc.registerElement('x-e', {prototype: proto});
+    var proto = newHTMLElementPrototype();
 
+    doc.registerElement('x-e', {prototype: proto});
     doc.body.innerHTML = '<div id="customParent"><x-e id="x-e"></x-e></div>';
     var parent = doc.querySelector('#customParent');
     doc.body.removeChild(parent);
-    assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called ' +
-        'if the document has no browsing context');
+
+    assert_equals(proto.detachedCallbackCalledCounter, 0,
+        'Callback detached should not be called if the document has no browsing context');
 }, 'Test detached callback if removing perent of custom element. ' +
     'Document has no browsing context');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    var callbackCalledCounter = 0;
-    var proto = Object.create(HTMLElement.prototype);
-    proto.detachedCallback = function() {
-        callbackCalledCounter++;
-    };
-    doc.registerElement('x-f', {prototype: proto});
+    var proto = newHTMLElementPrototype();
 
+    doc.registerElement('x-f', {prototype: proto});
     doc.body.innerHTML = '<div><x-f id="x-f"></x-f></div>';
     doc.body.innerHTML = '';
-    assert_equals(callbackCalledCounter, 0, 'Callback detached should not be called ' +
-        'if the document has no browsing context');
+
+    assert_equals(proto.detachedCallbackCalledCounter, 0,
+        'Callback detached should not be called if the document has no browsing context');
 }, 'Test detached callback if removing perent of custom element via innerHTML property. ' +
     'Document has no browsing context');
 
@@ -127,18 +108,15 @@ loseBrowsingContextTest.step(function() {
     var iframe = newIFrame('../../resources/x-element.html');
     iframe.onload = loseBrowsingContextTest.step_func(function(){
         var doc = iframe.contentDocument;
-        var proto = Object.create(HTMLElement.prototype);
-        proto.detachedCallback = function() {
-            loseBrowsingContextTest.callbackCalledCounter++;
-        };
+        var proto = newHTMLElementPrototype();
         doc.registerElement('x-element', {prototype: proto});
 
         var customElement = doc.querySelector('#x-element');
-        iframe.parentNode.removeChild(iframe); // lose browsing context
+        iframe.parentNode.removeChild(iframe);
         customElement.parentNode.removeChild(customElement);
-        assert_equals(loseBrowsingContextTest.callbackCalledCounter, 0,
-            'Callback detached should not be called ' +
-            'if the document has no browsing context');
+
+        assert_equals(proto.detachedCallbackCalledCounter, 0,
+            'Callback detached should not be called if the document has no browsing context');
         loseBrowsingContextTest.done();
     });
 });
@@ -152,16 +130,13 @@ navigateTest.step(function() {
     var iframe = newIFrame('../../resources/x-element.html');
     iframe.onload = navigateTest.step_func(function() {
         var doc = iframe.contentDocument;
-        var proto = Object.create(HTMLElement.prototype);
-        proto.detachedCallback = function() {
-             navigateTest.callbackCalledCounter++;
-        };
+        var proto = newHTMLElementPrototype();
         doc.registerElement('x-element', {prototype: proto});
-        customElement = doc.querySelector('#xelement');
+        customElement = doc.querySelector('#x-element');
 
         iframe.onload = navigateTest.step_func(function() {
             customElement.parentNode.removeChild(customElement);
-            assert_equals(navigateTest.callbackCalledCounter, 0,
+            assert_equals(proto.detachedCallbackCalledCounter, 0,
                 'Callback detached should not be called ' +
                 'if the document has no browsing context');
             navigateTest.done();
