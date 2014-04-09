@@ -52,7 +52,7 @@ testInIFrame('../../resources/blank.html', function(doc) {
 
     assert_equals(proto.callbackLog[0], 'created', 'The callback ' +
         proto.callbackLog[0] + ' should not be enqueued before created callback');
-    assert_in_array('attributeChanged', proto.callbackLog, 
+    assert_in_array('attributeChanged', proto.callbackLog,
         'The callback attributeChanged should be called');
 }, 'Test attributeChanged callback is enqueued after created callback. ' +
     'Document has browsing context');
@@ -84,6 +84,62 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     assert_in_array('detached', proto.callbackLog, 
         'The callback detached should be called');
 }, 'Test detached callback is enqueued after created callback.');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var callbackLog = [];
+    var proto1 = Object.create(HTMLElement.prototype);
+    proto1.createdCallback = function() {
+        callbackLog.push('Proto 1 created');
+        var xe = doc.querySelector('#x-e');
+        xe.setAttribute('key', 'value');
+    };
+    proto1.attributeChangedCallback = function() {
+        callbackLog.push('Proto 1 attributeChanged');
+    };
+    var proto2 = Object.create(HTMLElement.prototype);
+    proto2.createdCallback = function() {
+        callbackLog.push('Proto 2 created');
+    };
+    proto2.attributeChangedCallback = function() {
+        callbackLog.push('Proto 2 attributeChanged');
+    };
+    doc.registerElement('x-d', {prototype: proto1});
+    doc.registerElement('x-e', {prototype: proto2});
+    doc.body.innerHTML = '<x-d id="x-d"><x-e id="x-e"></x-e></x-d>';
+
+    assert_array_equals(callbackLog, ['Proto 1 created', 'Proto 2 created'],
+        'attributeChanged callback should not be called before created callback');
+}, 'Test attributeChanged callback is enqueued during created callback. ' +
+    'Document has no browsing context');
+
+
+testInIFrame('../../resources/blank.html', function(doc) {
+    var callbackLog = [];
+    var proto1 = Object.create(HTMLElement.prototype);
+    proto1.createdCallback = function() {
+        callbackLog.push('Proto 1 created');
+        var xe = doc.querySelector('#x-g');
+        xe.setAttribute('key', 'value');
+    };
+    proto1.attributeChangedCallback = function() {
+        callbackLog.push('Proto 1 attributeChanged');
+    };
+    var proto2 = Object.create(HTMLElement.prototype);
+    proto2.createdCallback = function() {
+        callbackLog.push('Proto 2 created');
+    };
+    proto2.attributeChangedCallback = function() {
+        callbackLog.push('Proto 2 attributeChanged');
+    };
+    doc.registerElement('x-f', {prototype: proto1});
+    doc.registerElement('x-g', {prototype: proto2});
+    doc.body.innerHTML = '<x-f id="x-f"><x-g id="x-g"></x-g></x-f>';
+
+    assert_array_equals(callbackLog, ['Proto 1 created', 'Proto 2 created'],
+        'attributeChanged callback should not be called during created callback');
+}, 'Test detached callback is enqueued after created callback. Document has browsing context');
 </script>
 </body>
 </html>
