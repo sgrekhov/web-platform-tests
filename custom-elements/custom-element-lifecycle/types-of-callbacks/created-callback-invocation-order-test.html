@@ -27,7 +27,7 @@ function newPrototypeWithCallbackLog() {
     };
     proto.detachedCallback = function() {
         proto.callbackLog.push('detached');
-    }
+    };
     return proto;
 }
 
@@ -36,7 +36,7 @@ testInIFrame('../../resources/blank.html', function(doc) {
     doc.registerElement('x-a', {prototype: proto});
     doc.body.innerHTML = '<x-a></x-a>';
 
-    assert_equals('created', proto.callbackLog[0], 'The callback ' +
+    assert_equals(proto.callbackLog[0], 'created', 'The callback ' +
         proto.callbackLog[0] + ' should be enqueued after created callback');
     assert_in_array('attached', proto.callbackLog, 'The callback ' +
         'attached should be called');
@@ -50,7 +50,7 @@ testInIFrame('../../resources/blank.html', function(doc) {
     var customElement = doc.querySelector('#x-b');
     customElement.setAttribute('key', 'value');
 
-    assert_equals('created', proto.callbackLog[0], 'The callback ' +
+    assert_equals(proto.callbackLog[0], 'created', 'The callback ' +
         proto.callbackLog[0] + ' should not be enqueued before created callback');
     assert_in_array('attributeChanged', proto.callbackLog,
         'The callback attributeChanged should be called');
@@ -79,7 +79,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     var customElement = doc.querySelector('#x-element');
     doc.body.removeChild(customElement);
 
-    assert_equals('created', proto.callbackLog[0], 'The callback ' +
+    assert_equals(proto.callbackLog[0], 'created', 'The callback ' +
         proto.callbackLog[0] + ' should not be enqueued before created callback');
     assert_in_array('detached', proto.callbackLog,
         'The callback detached should be called');
