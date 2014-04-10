@@ -18,23 +18,23 @@ test(function() {
     var name = 'x-a';
     doc.registerElement(name);
     var customElement = doc.createElement(name);
-    assert_equals(customElement.namespaceURI, HTML_NAMESPACE, 
+    assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
         'Custom element namespace should be HTML Namespace');
 }, 'Namespace for createElement is HTML Namespace');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    HTML5_ELEMENTS.forEach(function(value) {        
-        var obj = doc.createElement(value);        
-        var name = 'x-2-' + value;        
-        var proto = Object.create(obj.constructor.prototype);        
+    HTML5_ELEMENTS.forEach(function(value) {
+        var obj = doc.createElement(value);
+        var name = 'x-b-' + value;
+        var proto = Object.create(obj.constructor.prototype);
         doc.registerElement(name, {
             prototype: Object.create(proto),
             extends: value
-        });        
+        });
         var customElement = doc.createElement(value, name);
-        assert_equals(customElement.namespaceURI, HTML_NAMESPACE, 
+        assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
             'Custom element namespace for the element extending ' + value +
             ' should be HTML Namespace');
     });

@@ -17,7 +17,7 @@ test (function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(value) {
         var obj = doc.createElement(value);        
-        var name = 'x-1-' + value;
+        var name = 'x-a-' + value;
         var proto = Object.create(obj.constructor.prototype);
         var customElement = doc.createElement(value, name);
         assert_equals(customElement.constructor.prototype.constructor.name, 
@@ -34,7 +34,7 @@ test (function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(value) {
         var obj = doc.createElement(value);
-        var name = 'x-2-' + value;
+        var name = 'x-b-' + value;
         var proto = Object.create(obj.constructor.prototype);
         var customElement = doc.createElementNS(HTML_NAMESPACE, value, name);
         assert_equals(customElement.constructor.prototype.constructor.name, 
