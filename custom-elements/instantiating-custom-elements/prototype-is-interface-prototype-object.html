@@ -17,7 +17,7 @@ test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(element) {
         var obj = doc.createElement(element);        
-        var name = 'xa-' + element;
+        var name = 'x-a-' + element;
         assert_throws('NotSupportedError', function() {
             doc.registerElement(name, {prototype: obj.constructor.prototype});
         }, 'Exception should be thrown in case of attempt to register element ' +

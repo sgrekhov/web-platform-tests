@@ -27,8 +27,8 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     doc.registerElement('x-b');
-    doc.body.innerHTML = '<x-b id="xb"></x-b>';
-    var customElement = doc.querySelector('#xb');
+    doc.body.innerHTML = '<x-b id="x-b"></x-b>';
+    var customElement = doc.querySelector('#x-b');
     assert_equals(customElement.constructor.prototype.constructor.name, customElement.localName, 
         'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element.' + 
