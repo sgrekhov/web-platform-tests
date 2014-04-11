@@ -217,6 +217,17 @@ testInIFrame('../../resources/blank.html', function(doc) {
     assert_array_equals(proto.callbackLog, ['created', 'attached', 'detached'],
         'detached callback should be enqueued after created callback had started');
 }, 'Test detached callback is enqueued after created callback had started');
+
+
+// Unregistered element is created and inserted into document with browsing context.
+// No created and attached enqueued. Then element is registerd and created and
+// (because document has browsing context) attached should be enqueued
+testInIFrame('../../resources/x-element.html', function(doc) {
+    var proto = newPrototypeWithCallbackLog();
+    doc.registerElement('x-element', {prototype: proto});
+    assert_array_equals(proto.callbackLog, ['created', 'attached'],
+        'attached callback should be enqueued when custom element prototype is set');
+}, 'Test attached callback is enqueued when custom element prototype is set');
 </script>
 </body>
 </html>
