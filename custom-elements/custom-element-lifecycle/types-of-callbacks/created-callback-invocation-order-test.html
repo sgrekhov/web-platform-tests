@@ -159,7 +159,12 @@ testInIFrame('../../resources/blank.html', function(docWithBrowsingContext) {
     docNoBrowsingContext.registerElement('x-k', {prototype: proto2});
     docNoBrowsingContext.body.innerHTML = '<x-i><x-k id="x-k"></x-k></x-i>';
 
-    assert_array_equals(proto2.callbackLog, ['created'],
+    // Though in this test at the moment of inserting <x-k> to docWithBrowsingContext
+    // created callback is not called for <x-k> yet attached calback should be called
+    // anyway because setting custom element prototype algorithm reads:
+    // If ELEMENT is in a document and this document has a browsing context:
+    // Enqueue attached callback for ELEMENT
+    assert_array_equals(proto2.callbackLog, ['created', 'attached'],
         'attached callback should not be enqueued before created callback had started');
 }, 'Test attached callback is not enqueued before created callback had started');
 
@@ -212,14 +217,6 @@ testInIFrame('../../resources/blank.html', function(doc) {
     assert_array_equals(proto.callbackLog, ['created', 'attached', 'detached'],
         'detached callback should be enqueued after created callback had started');
 }, 'Test detached callback is enqueued after created callback had started');
-
-
-testInIFrame('../../resources/x-element.html', function(doc) {
-    var proto = newPrototypeWithCallbackLog();
-    doc.registerElement('x-element', {prototype: proto});
-    assert_array_equals(proto.callbackLog, ['created'],
-        'attached callback should not be enqueued before created callback had started');
-}, 'Test attached callback is not enqueued before element is registered');
 </script>
 </body>
 </html>
