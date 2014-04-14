@@ -21,21 +21,19 @@ test1.step(function() {
     iframe.onload = test1.step_func(function() {
         var doc = iframe.contentDocument;
         var link = doc.querySelector('link[rel=import]');
-        link.onload = test1.step_func(function() {
-            try {
-                var doc2 = link.import;
-                var name = 'x-frame';
-                doc.registerElement(name);
-                assert_throws(
-                    'NotSupportedError',
-                    function() { doc2.registerElement(name); },
-                    'Registering a custom element type name that is already registered in a shared ' +
-                        'registry should throw an exception');
-                test1.done();
-            } finally {
-                iframe.remove();
-            }
-        });
+        try {
+            var doc2 = link.import;
+            var name = 'x-frame';
+            doc.registerElement(name);
+            assert_throws(
+                'NotSupportedError',
+                function() { doc2.registerElement(name); },
+                'Registering a custom element type name that is already registered in a shared ' +
+                    'registry should throw an exception');
+            test1.done();
+        } finally {
+            iframe.remove();
+        }
     });
 });
 
@@ -48,21 +46,19 @@ test2.step(function() {
     iframe.onload = test2.step_func(function() {
         var doc = iframe.contentDocument;
         var link = doc.querySelector('link[rel=import]');
-        link.onload = test2.step_func(function() {
-            try {
-                var doc2 = link.import;
-                var name = 'x-frame';
-                doc2.registerElement(name);
-                assert_throws(
-                    'NotSupportedError',
-                    function() { doc.registerElement(name); },
-                    'Registering a custom element type name that is already registered in a shared ' +
-                        'registry should throw an exception');
-                test2.done();
-            } finally {
-                iframe.remove();
-            }
-        });
+        try {
+            var doc2 = link.import;
+            var name = 'x-frame';
+            doc2.registerElement(name);
+            assert_throws(
+                'NotSupportedError',
+                function() { doc.registerElement(name); },
+                'Registering a custom element type name that is already registered in a shared ' +
+                    'registry should throw an exception');
+            test2.done();
+        } finally {
+            iframe.remove();
+        }
     });
 });
 </script>
