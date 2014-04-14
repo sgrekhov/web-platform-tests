@@ -33,7 +33,7 @@ test1.step(function() {
                         'registry should throw an exception');
                 test1.done();
             } finally {
-                iframe.parentNode.removeChild(iframe);
+                iframe.remove();
             }
         });
     });
@@ -60,7 +60,7 @@ test2.step(function() {
                         'registry should throw an exception');
                 test2.done();
             } finally {
-                iframe.parentNode.removeChild(iframe);
+                iframe.remove();
             }
         });
     });

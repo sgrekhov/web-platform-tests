@@ -211,7 +211,7 @@ testInIFrame('../../resources/blank.html', function(doc) {
     var proto = newPrototypeWithCallbackLog();
     proto.createdCallback = function() {
         proto.callbackLog.push('created');
-        this.parentNode.removeChild(this);
+        this.remove();
     };
 
     doc.registerElement('x-o', {prototype: proto});
