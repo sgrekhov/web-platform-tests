@@ -25,13 +25,13 @@ test(function() {
             if (HTML5_TABLE_ELEMENTS.indexOf(element) !== -1) {
                 doc.body.innerHTML = 
                     '<table>' +
-                    '<' + element + ' id="customElement" is="' + name + '"></' + element + '>' +
+                    '<' + element + ' id="custom-element" is="' + name + '"></' + element + '>' +
                     '</table>';
             } else {
                 doc.body.innerHTML = 
-                    '<' + element + ' id="customElement" is="' + name + '"></' + element + '>';        
+                    '<' + element + ' id="custom-element" is="' + name + '"></' + element + '>';
             }
-            var customElement = doc.querySelector('#customElement');
+            var customElement = doc.querySelector('#custom-element');
             assert_equals(customElement.constructor.prototype.constructor.name, name, 
                 'Custom element type should be value of the IS attribute');
         }        
@@ -48,15 +48,15 @@ test(function() {
             if (HTML5_TABLE_ELEMENTS.indexOf(element) !== -1) {
                 doc.body.innerHTML = 
                     '<table>' +
-                    '<' + element + ' id="customElement" is="' + name + '"></' + element + '>' +
+                    '<' + element + ' id="custom-element" is="' + name + '"></' + element + '>' +
                     '</table>';
             } else {
                 doc.body.innerHTML = 
-                    '<' + element + ' id="customElement" is="' + name + '"></' + element + '>';        
+                    '<' + element + ' id="custom-element" is="' + name + '"></' + element + '>';
             }
             var proto = Object.create(obj.constructor.prototype);
             doc.registerElement(name, {prototype: proto, extends: element});
-            var customElement = doc.querySelector('#customElement');
+            var customElement = doc.querySelector('#custom-element');
             
             assert_equals(customElement.constructor.prototype.constructor.name, name, 
                 'Custom element type should be value of the IS attribute');
