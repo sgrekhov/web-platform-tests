@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>PROTOTYPE has a non-configurable property named constructor</title>
+<title>if prototype has a non-configurable property named constructor, Document.registerElement() throws NotSupportedError</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="assert" content="If  PROTOTYPE has a non-configurable property named constructor, throw a NotSupportedError and stop">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#instantiating-custom-elements">
@@ -21,7 +21,8 @@ test(function() {
         doc.registerElement('x-a', {prototype: proto});
     }, 'Exception should be thrown in case of attempt to register element ' +
         'with a non-configurable property named constructor');
-}, 'Prototype has a non-configurable property named constructor');
+}, 'Test Document.registerElement() throws NotSupportedError ' +
+    'if prototype has a non-configurable property named constructor');
 
 
 test(function() {
@@ -34,7 +35,8 @@ test(function() {
         assert_unreached('Exception should not be thrown in case of attempt to register ' +
             'element with a configurable property named constructor');
     }
-}, 'Prototype has a configurable property named constructor');
+}, 'Test Document.registerElement() accepts prototype with a configurable ' +
+    'property named constructor without throwing errors');
 </script>
 </body>
 </html>

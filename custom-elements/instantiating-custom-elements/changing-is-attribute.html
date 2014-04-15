@@ -20,12 +20,12 @@ test(function() {
             var name = 'x-' + element;
             doc.registerElement(name);
             if (HTML5_TABLE_ELEMENTS.indexOf(element) !== -1) {
-                doc.body.innerHTML = 
+                doc.body.innerHTML =
                     '<table>' +
                     '<' + element + ' id="custom-element" is="' + name + '"></' + element + '>' +
                     '</table>';
             } else {
-                doc.body.innerHTML = 
+                doc.body.innerHTML =
                     '<' + element + ' id="custom-element" is="' + name + '"></' + element + '>';
             }
             var customElement = doc.querySelector('#custom-element');
@@ -33,7 +33,7 @@ test(function() {
             assert_class_string(customElement, obj.constructor.name,
                 'Custom element must be a ' + obj.constructor.name);
             HTML5_ELEMENTS.forEach(function(value) {
-                var name2 = 'x-' + element + '-' + value;        
+                var name2 = 'x-' + element + '-' + value;
                 doc.registerElement(name2);
                 customElement.setAttribute('is', name2);
                 assert_class_string(customElement, obj.constructor.name,

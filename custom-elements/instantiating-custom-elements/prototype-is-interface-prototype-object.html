@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Prototype is already an interface prototype object</title>
+<title>If prototype is already an interface prototype object, Document.registerElement() throws a NotSupportedError</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="assert" content="If PROTOTYPE is already an interface prototype object for any interface object, throw a NotSupportedError and stop">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#instantiating-custom-elements">
@@ -16,15 +16,16 @@
 test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(element) {
-        var obj = doc.createElement(element);        
+        var obj = doc.createElement(element);
         var name = 'x-a-' + element;
         assert_throws('NotSupportedError', function() {
             doc.registerElement(name, {prototype: obj.constructor.prototype});
         }, 'Exception should be thrown in case of attempt to register element ' +
-            'if prototype is already an interface prototype object (' + 
-            obj.constructor.prototype.name + ')');        
+            'if prototype is already an interface prototype object (' +
+            obj.constructor.prototype.name + ')');
     });
-}, 'Prototype is already an interface prototype object');
+}, 'Test Document.registerElement() throws NotSupportedError ' +
+    'if prototype is already an interface prototype object');
 
 
 test(function() {
@@ -36,10 +37,10 @@ test(function() {
     assert_throws('NotSupportedError', function() {
         doc.registerElement('x-b', {
             prototype: proto
-        });                
-    }, 'Exception should be thrown if custom element with already used prototype is registered');
-    
-}, 'Prototype is already an registered');
+        });
+    }, 'Exception should be thrown if registring custom element type with already used prototype');
+}, 'Test Document.registerElement() throws NotSupportedError ' +
+    'if prototype is already used for another custom element type');
 </script>
 </body>
 </html>
