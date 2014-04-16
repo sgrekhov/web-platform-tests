@@ -20,7 +20,7 @@ test(function() {
     var xsvg = doc.createElementNS(SVG_NAMESPACE, 'x-svg');
 
     assert_class_string(xsvg, 'SVGElement', 'Unresolved custom element must be a SVG element');
-}, 'Unresolved element interface with valid name for SVG namespace');
+}, 'Test interface of unresolved element with valid name, created by Document.createElementNS()');
 
 
 test(function() {
@@ -31,7 +31,7 @@ test(function() {
     var xsvg = doc.querySelector('#x-svg');
 
     assert_class_string(xsvg, 'SVGElement', 'Unresolved custom element must be a SVG element');
-}, 'Unresolved element interface with valid name is instantiating in HTML for SVG namespace');
+}, 'Test interface of unresolved element with valid name, created via innerHTML property');
 
 
 testInIFrame('../resources/x-svg-element.html', function(doc) {
@@ -41,7 +41,7 @@ testInIFrame('../resources/x-svg-element.html', function(doc) {
 
     assert_class_string(xsvg, 'SVGElement',
         'Unresolved custom element must be a SVG element');
-}, 'Test unresolved element interface in loaded HTML document with embedded SVG elements');
+}, 'Test interface of unresolved element in loaded HTML document with embedded SVG elements');
 </script>
 </body>
 </html>

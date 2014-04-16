@@ -13,7 +13,7 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
-var test1 = async_test('Registry of the import should share master document registry. ' +
+var test1 = async_test('Registry of the imported document should be shared with master document. ' +
     'Import is asynchronous');
 test1.step(function() {
     var iframe = newIFrame('../resources/import-master-async.html');
@@ -21,7 +21,6 @@ test1.step(function() {
     iframe.onload = test1.step_func(function() {
         var doc = iframe.contentDocument;
         var link = doc.querySelector('link[rel=import]');
-        var doc2 = link.import;
         link.onload = test1.step_func(function() {
             try {
                 var doc2 = link.import;
@@ -41,7 +40,7 @@ test1.step(function() {
 });
 
 
-var test2 = async_test('Registry of the master document should be shared with imported document\'s registry. ' +
+var test2 = async_test('Registry of the master document should be shared with imported document. ' +
     'Import is asynchronous');
 test2.step(function() {
     var iframe = newIFrame('../resources/import-master-async.html');
@@ -78,7 +77,7 @@ testInIFrame('../resources/import-master.html', function(doc) {
         function() { doc2.registerElement(name); },
         'Registering a custom element type name that is already registered in a shared ' +
             'registry should throw an exception');
-}, 'Registry of the import should share master document registry. Import is syncronous');
+}, 'Registry of the imported document should be shared with master document. Import is syncronous');
 
 
 testInIFrame('../resources/import-master.html', function(doc) {
@@ -91,7 +90,7 @@ testInIFrame('../resources/import-master.html', function(doc) {
         function() { doc.registerElement(name); },
         'Registering a custom element type name that is already registered in a shared ' +
             'registry should throw an exception');
-}, 'Registry of the master document should be shared with imported document\'s registry. Import is syncronous');
+}, 'Registry of the master document should be shared with imported document. Import is syncronous');
 </script>
 </body>
 </html>

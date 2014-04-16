@@ -23,7 +23,7 @@ test(function() {
 
     assert_class_string(customElement, 'HTMLElement',
         'Unresolved custom element must be a HTML element');
-}, 'Unresolved element interface with valid name for HTML namespace');
+}, 'Test interface of unresolved element, created via innerHTML property');
 
 
 test(function() {
@@ -32,8 +32,7 @@ test(function() {
 
     assert_class_string(customElement, 'HTMLElement',
         'Unresolved custom element must be a HTML element');
-}, 'Unresolved element interface with valid name for HTML namespace. ' +
-    'Element created by createElement');
+}, 'Test interface of unresolved element, created by Document.createElement');
 
 
 test(function() {
@@ -42,8 +41,7 @@ test(function() {
 
     assert_class_string(customElement, 'HTMLElement',
         'Unresolved custom element must be a HTML element');
-}, 'Unresolved element interface with valid name for HTML namespace. ' +
-    'Element created by createElementNS');
+}, 'Test interface of unresolved element, created by Document.createElementNS');
 
 
 testInIFrame('../resources/x-element.html', function(doc) {

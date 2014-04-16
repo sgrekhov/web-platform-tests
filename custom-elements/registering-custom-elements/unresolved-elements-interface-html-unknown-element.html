@@ -29,7 +29,7 @@ test(function() {
     // expected class string is Element
     assert_class_string(xa, 'Element',
         'Unresolved custom element must be a Element');
-}, 'Test unresolved element interface with MathML namespace');
+}, 'Test interface of unresolved element with MathML namespace, created via innerHTML property');
 
 
 test(function() {
@@ -38,7 +38,7 @@ test(function() {
 
     assert_class_string(xa, 'Element',
         'Unresolved custom element must be a HTMLUnknownElement');
-}, 'Tesst unresolved element interface with MathML namespace, ' +
+}, 'Tesst interface of unresolved element with MathML namespace, ' +
     'created by Document.createElementNS');
 
 
@@ -49,7 +49,7 @@ testInIFrame('../resources/x-mathml-element.html', function(doc) {
 
     assert_class_string(customElement, 'Element',
         'Unresolved custom element must be a Element');
-}, 'Test unresolved element interface in loaded HTML document with embedded MathML elements');
+}, 'Test interface of unresolved element in loaded HTML document with embedded MathML elements');
 </script>
 </body>
 </html>
