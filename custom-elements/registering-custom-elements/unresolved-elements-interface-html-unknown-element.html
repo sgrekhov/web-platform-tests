@@ -13,10 +13,12 @@
 <body>
 <div id="log"></div>
 <script type="text/javascript">
+var MATHML_NAMESPACE = 'http://www.w3.org/1998/Math/MathML';
+
 test(function() {
     var doc = newHTMLDocument();
     doc.body.innerHTML =
-        '<math xmlns="http://www.w3.org/1998/Math/MathML">' +
+        '<math xmlns="' + MATHML_NAMESPACE + '">' +
             '<x-a id="x-a"></x-a>' +
         '</math>';
     var xa = doc.querySelector('#x-a');
@@ -30,7 +32,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var xa = doc.createElementNS('http://www.w3.org/1998/Math/MathML', 'x-b');
+    var xa = doc.createElementNS(MATHML_NAMESPACE, 'x-b');
 
     assert_class_string(xa, 'HTMLUnknownElement',
         'Unresolved custom element must be a HTMLUnknownElement');
