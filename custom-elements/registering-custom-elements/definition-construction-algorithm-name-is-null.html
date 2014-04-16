@@ -17,7 +17,7 @@
 test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(value) {
-        var name = 'x-1-' + value;
+        var name = 'x-a-' + value;
         var element = doc.createElement(value);
         element.removeAttribute('localName');
         var proto = Object.create(element.constructor.prototype);
@@ -32,7 +32,7 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(value) {
-        var name = 'x-2-' + value;
+        var name = 'x-b-' + value;
         var element = doc.createElement(value);
         element.removeAttribute('localName');
         var proto = Object.create(element.constructor.prototype);

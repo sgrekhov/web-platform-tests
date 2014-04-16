@@ -16,8 +16,7 @@
 var test1 = async_test('Registry of the import should share master document registry. ' +
     'Import is asynchronous');
 test1.step(function() {
-    var iframe = document.createElement('iframe');
-    iframe.src = '../resources/import-master-async.html';
+    var iframe = newIFrame('../resources/import-master-async.html');
     document.body.appendChild(iframe);
     iframe.onload = test1.step_func(function() {
         var doc = iframe.contentDocument;
@@ -45,8 +44,7 @@ test1.step(function() {
 var test2 = async_test('Registry of the master document should be shared with imported document\'s registry. ' +
     'Import is asynchronous');
 test2.step(function() {
-    var iframe = document.createElement('iframe');
-    iframe.src = '../resources/import-master-async.html';
+    var iframe = newIFrame('../resources/import-master-async.html');
     document.body.appendChild(iframe);
     iframe.onload = test2.step_func(function() {
         var doc = iframe.contentDocument;

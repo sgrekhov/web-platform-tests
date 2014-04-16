@@ -17,9 +17,9 @@ test(function() {
     var doc = newHTMLDocument();
     doc.body.innerHTML =
         '<math xmlns="http://www.w3.org/1998/Math/MathML">' +
-            '<x-a id="xa"></x-a>' +
+            '<x-a id="x-a"></x-a>' +
         '</math>';
-    var xa = doc.querySelector('#xa');
+    var xa = doc.querySelector('#x-a');
 
     assert_not_equals(xa, null, 'Unregistered custom element should not be null');
 
@@ -39,7 +39,7 @@ test(function() {
 
 
 testInIFrame('../resources/x-mathml-element.html', function(doc) {
-    var customElement = doc.getElementById('xmathelement');
+    var customElement = doc.getElementById('x-math-element');
 
     assert_not_equals(customElement, null, 'Unregistered custom element should not be null');
 

@@ -19,7 +19,7 @@ test(function() {
     var svg = doc.createElementNS(SVG_NAMESPACE, 'xsvg');
     var proto = Object.create(svg.constructor.prototype);
     assert_throws('NotSupportedError', function() {
-        doc.registerElement('x-svg-1', {prototype: proto});
+        doc.registerElement('x-svg-a', {prototype: proto});
     }, 'Exception should be thrown in case of attempt to register ' +
         'a custom element with SVG namespace and name is not specified');
 }, 'Error should be thrown if namespace is SVG and local name is not specified');
@@ -30,7 +30,7 @@ test(function() {
     var svg = doc.createElementNS(SVG_NAMESPACE, 'xsvg');
     var proto = Object.create(svg.constructor.prototype);
     assert_throws('NotSupportedError', function() {
-        doc.registerElement('x-svg-2', {prototype: proto, extends: null});
+        doc.registerElement('x-svg-b', {prototype: proto, extends: null});
     }, 'Exception should be thrown in case of attempt to register ' +
         'a custom element with SVG namespace and name is null');
 }, 'Error should be thrown if namespace is SVG and local name is null');

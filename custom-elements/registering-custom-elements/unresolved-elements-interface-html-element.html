@@ -16,8 +16,8 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-    doc.body.innerHTML = '<x-a id="xa"></x-a>';
-    var customElement = doc.querySelector('#xa');
+    doc.body.innerHTML = '<x-a id="x-a"></x-a>';
+    var customElement = doc.querySelector('#x-a');
 
     assert_not_equals(customElement, null, 'Unregistered custom element should not be null');
 

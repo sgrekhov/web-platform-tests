@@ -26,7 +26,7 @@ test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(element) {
         var obj = doc.createElement(element);
-        var name = 'xx-' + element;
+        var name = 'x-a-' + element;
         var proto = Object.create(obj.constructor.prototype);
         var GeneratedConstructor = doc.registerElement(name, {
             prototype: proto,
