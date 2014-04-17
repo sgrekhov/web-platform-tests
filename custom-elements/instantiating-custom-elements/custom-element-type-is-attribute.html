@@ -14,8 +14,8 @@
 <div id="log"></div>
 <script type="text/javascript">
 test(function() {
+    var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(tagName) {
-        var doc = newHTMLDocument();
         if (HTML5_DOCUMENT_ELEMENTS.indexOf(tagName) !== -1) {
             return;
         }
