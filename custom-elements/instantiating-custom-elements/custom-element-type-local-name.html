@@ -33,15 +33,6 @@ test(function() {
         'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element.' +
     'Custom element created via innerHTML property');
-
-
-testInIFrame('../resources/x-element.html', function(doc) {
-    doc.registerElement('x-element');
-    var xelement = doc.querySelector('#x-element');
-    assert_equals(xelement.constructor.prototype.constructor.name, xelement.localName,
-        'Custom element type should be the local name of the custom element');
-}, 'Custom element type is the local name of the custom element. ' +
-    'Custom element created via innerHTML property and the document has browsing context');
 </script>
 </body>
 </html>

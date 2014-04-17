@@ -48,12 +48,12 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     doc.registerElement('x-element');
-    HTML5_ELEMENTS.forEach(function(value) {
-        var obj = doc.createElement(value);
-        var name = 'x-d-' + value;
+    HTML5_ELEMENTS.forEach(function(tagName) {
+        var obj = doc.createElement(tagName);
+        var name = 'x-d-' + tagName;
         doc.registerElement(name, {
             prototype: Object.create(obj.constructor.prototype),
-            extends: value
+            extends: tagName
         });
         doc.body.innerHTML = '<x-element id="x-element" is="' + name + '"></x-element>';
         var customElement = doc.querySelector('#x-element');
@@ -71,13 +71,13 @@ test(function() {
     var doc = newHTMLDocument();
     doc.registerElement('x-element-2');
 
-    HTML5_ELEMENTS.forEach(function(value) {
-        var obj = doc.createElement(value);
-        var name = 'x-e-' + value;
-        var id = 'x-e-' + value;
+    HTML5_ELEMENTS.forEach(function(tagName) {
+        var obj = doc.createElement(tagName);
+        var name = 'x-e-' + tagName;
+        var id = 'x-e-' + tagName;
         doc.registerElement(name, {
             prototype: Object.create(obj.constructor.prototype),
-            extends: value
+            extends: tagName
         });
         doc.body.innerHTML = '<' + name + ' id="' + id + '" is="x-element-2"></' + name + '>';
         var customElement = doc.querySelector('#' + id);
