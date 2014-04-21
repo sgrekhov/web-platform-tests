@@ -34,7 +34,7 @@ test(function() {
                 '<' + tagName + ' id="custom-element" is="' + name + '"></' + tagName + '>';
         }
         var customElement = doc.querySelector('#custom-element');
-        assert_equals(customElement.localName, name,
+        assert_equals(customElement.constructor.prototype.constructor.name, name,
             'Custom element type should be value of the IS attribute');
     });
 }, 'Custom element type is the value of the IS attribute of the custom element');
@@ -61,7 +61,7 @@ test(function() {
         doc.registerElement(name, {prototype: proto, extends: tagName});
         var customElement = doc.querySelector('#custom-element');
 
-        assert_equals(customElement.constructor.name, name,
+        assert_equals(customElement.constructor.prototype.constructor.name, name,
             'Custom element type should be value of the IS attribute');
     });
 }, 'Custom element type is the value of the IS attribute of the custom element. ' +

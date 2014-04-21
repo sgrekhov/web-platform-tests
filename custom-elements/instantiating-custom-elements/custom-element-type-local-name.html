@@ -17,7 +17,7 @@ test(function() {
     var doc = newHTMLDocument();
     var GeneratedConstructor = doc.registerElement('x-a');
     var customElement = new GeneratedConstructor();
-    assert_equals(customElement.constructor.name,
+    assert_equals(customElement.constructor.prototype.constructor.name,
         customElement.localName,
         'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element. ' +
@@ -29,7 +29,7 @@ test(function() {
     doc.registerElement('x-b');
     doc.body.innerHTML = '<x-b id="x-b"></x-b>';
     var customElement = doc.querySelector('#x-b');
-    assert_equals(customElement.constructor.name, customElement.localName,
+    assert_equals(customElement.constructor.prototype.constructor.name, customElement.localName,
         'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element.' +
     'Custom element created via innerHTML property');
@@ -38,7 +38,7 @@ test(function() {
 testInIFrame('../resources/x-element.html', function(doc) {
     doc.registerElement('x-element');
     var xelement = doc.querySelector('#x-element');
-    assert_equals(xelement.constructor.name, xelement.localName,
+    assert_equals(xelement.constructor.prototype.constructor.name, xelement.localName,
         'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element. ' +
     'Custom element is defined in loaded HTML document');
