@@ -47,20 +47,20 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    doc.registerElement('x-e');
+    doc.registerElement('x-f');
     doc.body.innerHTML = '<x-f id="x-f" is="x-e"></x-f>';
     var customElement = doc.querySelector('#x-f');
-    assert_equals(customElement.constructor.prototype.constructor.name, 'HTMLElement',
-        'Custom element type should be HTMLElement');
+    assert_equals(customElement.constructor.prototype.constructor.name, 'x-f',
+        'Custom element type should be local name of the custom element');
 
-    doc.registerElement('x-f');
+    doc.registerElement('x-e');
     assert_equals(customElement.constructor.prototype.constructor.name,
         customElement.localName,
         'Custom element type should be the local name of the custom element');
     assert_equals(customElement.constructor.prototype.constructor.name, 'x-f',
         'Custom element type should be correct local name of the custom element');
 }, 'Custom element type is the local name of the custom element even if IS attribute provided. ' +
-    'Custom element is unresolved at but definition for IS attribute specified');
+    'There\'s no definition for the value of IS attribute at first');
 
 
 test(function() {
