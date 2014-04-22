@@ -370,11 +370,11 @@ function h2d(h) {
     return parseInt(h, 16);
 }
 
-function newHTMLElementPrototype() {
-    return newCustomElementPrototype(HTMLElement.prototype);
+function newHTMLElementPrototype(typeName) {
+    return newCustomElementPrototype(HTMLElement.prototype, typeName);
 }
 
-function newCustomElementPrototype(parent) {
+function newCustomElementPrototype(parent, typeName) {
     var proto = Object.create(parent);
     proto.createdCallbackThis = null;
     proto.createdCallbackCalledCounter = 0;
@@ -406,5 +406,8 @@ function newCustomElementPrototype(parent) {
         proto.attributeChangedCallbackCalledCounter++;
         proto.attributeChangedCallbackArgs = [arg1, arg2, arg3];
     };
+    if (typeName != null) {
+        proto.typeName = typeName;
+    }
     return proto;
 }

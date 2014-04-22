@@ -15,10 +15,11 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-    var GeneratedConstructor = doc.registerElement('x-a');
+    var GeneratedConstructor = doc.registerElement('x-a', {prototype: newHTMLElementPrototype('x-a')});
     var customElement = new GeneratedConstructor();
-    assert_equals(customElement.constructor.prototype.constructor.name,
-        customElement.localName,
+    assert_equals(customElement.localName, 'x-a',
+        'Custom element type should be the local name of the custom element');
+    assert_equals(customElement.constructor.prototype.typeName, 'x-a',
         'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element. ' +
     'Custom element created via constructor');
@@ -26,19 +27,19 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    doc.registerElement('x-b');
+    doc.registerElement('x-b', {prototype: newHTMLElementPrototype('x-b')});
     doc.body.innerHTML = '<x-b id="x-b"></x-b>';
     var customElement = doc.querySelector('#x-b');
-    assert_equals(customElement.constructor.prototype.constructor.name, customElement.localName,
+    assert_equals(customElement.constructor.prototype.typeName, 'x-b',
         'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element.' +
     'Custom element created via innerHTML property');
 
 
 testInIFrame('../resources/x-element.html', function(doc) {
-    doc.registerElement('x-element');
+    doc.registerElement('x-element', {prototype: newHTMLElementPrototype('x-element')});
     var xelement = doc.querySelector('#x-element');
-    assert_equals(xelement.constructor.prototype.constructor.name, xelement.localName,
+    assert_equals(xelement.constructor.prototype.typeName, 'x-element',
         'Custom element type should be the local name of the custom element');
 }, 'Custom element type is the local name of the custom element. ' +
     'Custom element is defined in loaded HTML document');

@@ -15,15 +15,13 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-    doc.registerElement('x-a');
+    doc.registerElement('x-a', {prototype: newHTMLElementPrototype('x-a')});
     doc.registerElement('x-b');
     doc.body.innerHTML = '<x-a id="x-a" is="x-b"></x-a>';
     var customElement = doc.querySelector('#x-a');
-    assert_equals(customElement.constructor.prototype.constructor.name,
-        customElement.localName,
-        'Custom element type should be the local name of the custom element');
-    assert_equals(customElement.constructor.prototype.constructor.name, 'x-a',
-        'Custom element type should be correct local name of the custom element');
+
+    assert_equals(customElement.constructor.prototype.typeName, 'x-a',
+        'Custom element type should be the local name of the element');
 }, 'Custom element type is the local name of the custom element even if IS attribute provided.');
 
 
@@ -32,32 +30,24 @@ test(function() {
     doc.registerElement('x-d');
     doc.body.innerHTML = '<x-c id="x-c" is="x-d"></x-c>';
     var customElement = doc.querySelector('#x-c');
-    assert_equals(customElement.constructor.prototype.constructor.name, 'HTMLElement',
-        'Custom element type should be HTMLElement');
 
-    doc.registerElement('x-c');
-    assert_equals(customElement.constructor.prototype.constructor.name,
-        customElement.localName,
-        'Custom element type should be the local name of the custom element');
-    assert_equals(customElement.constructor.prototype.constructor.name, 'x-c',
-        'Custom element type should be correct local name of the custom element');
+    doc.registerElement('x-c', {prototype: newHTMLElementPrototype('x-c')});
+    assert_equals(customElement.constructor.prototype.typeName, 'x-c',
+        'Custom element type should be the local name of the element');
 }, 'Custom element type is the local name of the custom element even if IS attribute provided. ' +
     'Custom element is unresolved at first');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    doc.registerElement('x-f');
+    doc.registerElement('x-f', {prototype: newHTMLElementPrototype('x-f')});
     doc.body.innerHTML = '<x-f id="x-f" is="x-e"></x-f>';
     var customElement = doc.querySelector('#x-f');
-    assert_equals(customElement.constructor.prototype.constructor.name, 'x-f',
+    assert_equals(customElement.constructor.prototype.typeName, 'x-f',
         'Custom element type should be local name of the custom element');
 
     doc.registerElement('x-e');
-    assert_equals(customElement.constructor.prototype.constructor.name,
-        customElement.localName,
-        'Custom element type should be the local name of the custom element');
-    assert_equals(customElement.constructor.prototype.constructor.name, 'x-f',
+    assert_equals(customElement.constructor.prototype.typeName, 'x-f',
         'Custom element type should be correct local name of the custom element');
 }, 'Custom element type is the local name of the custom element even if IS attribute provided. ' +
     'There\'s no definition for the value of IS attribute at first');
@@ -65,7 +55,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    doc.registerElement('x-element');
+    doc.registerElement('x-element', {prototype: newHTMLElementPrototype('x-element')});
     HTML5_ELEMENTS.forEach(function(tagName) {
         var obj = doc.createElement(tagName);
         var name = 'x-d-' + tagName;
@@ -75,11 +65,8 @@ test(function() {
         });
         doc.body.innerHTML = '<x-element id="x-element" is="' + name + '"></x-element>';
         var customElement = doc.querySelector('#x-element');
-        assert_equals(customElement.constructor.prototype.constructor.name,
-            customElement.localName,
+        assert_equals(customElement.constructor.prototype.typeName, 'x-element',
             'Custom element type should be the local name of the custom element');
-        assert_equals(customElement.constructor.prototype.constructor.name, 'x-element',
-            'Custom element type should be correct local name of the custom element');
     });
 }, 'Custom element type is the local name of the custom element even if IS attribute provided. ' +
     'Test extension of all HTML5 elements');
@@ -87,22 +74,25 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    doc.registerElement('y-element');
+    doc.registerElement('y-element', {prototype: newHTMLElementPrototype('y-element')});
 
     HTML5_ELEMENTS.forEach(function(tagName) {
         var obj = doc.createElement(tagName);
         var name = 'x-e-' + tagName;
         var id = 'x-e-' + tagName;
         doc.registerElement(name, {
-            prototype: Object.create(obj.constructor.prototype),
+            prototype: newCustomElementPrototype(obj.constructor.prototype, name),
             extends: tagName
         });
         doc.body.innerHTML = '<' + name + ' id="' + id + '" is="y-element"></' + name + '>';
         var customElement = doc.querySelector('#' + id);
         // We have <x-e-a is='y-element'>. Custom element type for this will be
         // HTMLElement, not x-e-a (for x-e-a there should be <a is='x-e-a'>...)
-        assert_equals(customElement.constructor.prototype.constructor.name, 'HTMLElement',
-            'Custom element type should be HTMLElement');
+        assert_class_string(customElement, 'HTMLElement', 'Custom element type should be HTMLElement');
+        assert_not_equals(customElement.constructor.prototype.typeName, 'y-element',
+            'Custom element type should not be y-element');
+        assert_not_equals(customElement.constructor.prototype.typeName, name,
+            'Custom element type should not be ' + name);
     });
 }, 'Custom element type is the local name of the custom element even if IS attribute provided. ' +
     'Test that prototype is HTMLElement even if there\'s a custom element definition for the tag name ' +
