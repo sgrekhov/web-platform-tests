@@ -59,7 +59,7 @@ testInIFrame('../resources/x-element.html', function(doc) {
     customElement.setAttribute('is', 'y-element');
     assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
         'Custom element type should be x-element');
-}, 'Test custom element type, after assigning IS attribute value.' +
+}, 'Test custom element type, after assigning IS attribute value. ' +
     'Element is defined in loaded HTML document');
 
 
@@ -70,7 +70,7 @@ testInIFrame('../resources/x-element.html', function(doc) {
     doc.registerElement('y-element');
     assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
         'Custom element type should be x-element');
-}, 'Test custom element type, after assigning IS attribute value to unresolved element.' +
+}, 'Test custom element type, after assigning IS attribute value to unresolved element. ' +
     'Element is defined in loaded HTML document');
 
 
@@ -119,8 +119,8 @@ test(function() {
     HTML5_ELEMENTS.forEach(function(tagName) {
         var name = 'z-a-' + tagName;
         var htmlElement = doc.createElement(tagName);
-        var proto = Object.create(htmlElement.constructor.prototype);
-        doc.registerElement(name, {prototype: proto, extends: tagName});
+        var htmlElementProto = Object.create(htmlElement.constructor.prototype);
+        doc.registerElement(name, {prototype: htmlElementProto, extends: tagName});
         customElement.setAttribute('is', name);
         assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
             'Custom element type should be ' + localName);

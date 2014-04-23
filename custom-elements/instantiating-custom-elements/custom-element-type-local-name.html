@@ -20,7 +20,8 @@ test(function() {
     doc.body.innerHTML = '<x-a id="x-a"></x-a>';
     var customElement = doc.querySelector('#x-a');
     assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
-        'Custom element type should be the type, specified by the local name of the custom element');
+        'Custom element type should be the type, specified by the local name of ' +
+        'the custom element');
 }, 'Test custom element type, which is given via the local name of the custom element. ' +
     'Custom element created via innerHTML property');
 
@@ -29,7 +30,8 @@ testInIFrame('../resources/x-element.html', function(doc) {
     var GeneratedConstructor = doc.registerElement('x-element');
     var xelement = doc.querySelector('#x-element');
     assert_equals(Object.getPrototypeOf(xelement), GeneratedConstructor.prototype,
-        'Custom element type should be the type, specified by the local name of the custom element');
+        'Custom element type should be the type, specified by the local name of ' +
+        'the custom element');
 }, 'Test custom element type, which is given via the local name of the custom element. ' +
     'Custom element is defined in loaded HTML document');
 </script>

@@ -38,7 +38,8 @@ test(function() {
         assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
             'Custom element type should be the type, specified as value of IS attribute');
     });
-}, 'Instantiation of custom element: custom element type is given as the value of the is attribute');
+}, 'Instantiation of custom element: custom element type is given as the value of ' +
+    'the is attribute');
 
 
 test(function() {
@@ -66,8 +67,8 @@ test(function() {
         assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
             'Custom element type should be the type, specified as value of IS attribute');
     });
-}, 'Instantiation of custom element: custom element type is given as the value of the is attribute.' +
-    'Custom element is unresolved at first');
+}, 'Instantiation of custom element: custom element type is given as the value ' +
+    'of the is attribute. Custom element is unresolved at first');
 </script>
 </body>
 </html>
