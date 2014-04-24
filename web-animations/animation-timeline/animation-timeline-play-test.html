@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Animation timeline test</title>
-<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="assert" content="Returns the time value for this timeline or null if this timeline is not started">
+<title>Animation timeline play() method test</title>
+<meta name="assert" content="Animation timeline play() method creates a new AnimationPlayer object associated with this timeline that is scheduled to start at currentTime">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-animationtimeline-interface">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -16,26 +16,35 @@
 test(function() {
     var doc = newHTMLDocument();
     var animationTarget = doc.createElement('div');
-    
     var animation = newAnimation(animationTarget);
     var player = document.timeline.play(animation);
 
     assert_not_equals(player, null, 'Player created by play() method cannot be null');
 }, 'Player created by play() method cannot be null');
 
+
 test(function() {
     var doc = newHTMLDocument();
     var animationTarget = doc.createElement('div');
-    
     var animation = newAnimation(animationTarget);
-    var player = document.timeline.play(animation);
+    var player = doc.timeline.play(animation);
 
-    assert_equals(player.timeline, document.timeline,
+    assert_equals(player.timeline, doc.timeline,
         'The timeline attribute of the newly-created AnimationPlayer object ' +
         'should be set to this timeline object');
 }, 'The timeline attribute of the newly-created AnimationPlayer object ' +
     'should be set to this timeline object');
 
+
+test(function() {
+    var doc = newHTMLDocument();
+    var animationTarget = doc.createElement('div');
+    var animation = newAnimation(animationTarget);
+    var player = doc.timeline.play(animation);
+
+    assert_equals(player.startTime, doc.timeline.currentTime,
+        'Start time of the newly-created AnimationPlayer object should be set to currentTime');
+}, 'The newly-created AnimationPlayer start time test ');
 </script>
 </body>
 </html>

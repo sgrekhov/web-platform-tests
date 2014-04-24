@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Animation timeline test</title>
-<meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="assert" content="Returns the time value for this timeline or null if this timeline is not started">
+<title>Animation timeline currentTime attribute test</title>
+<meta name="assert" content="Animation timeline currentTime attribute returns the time value for this timeline or null if this timeline is not started">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-animationtimeline-interface">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -16,18 +16,42 @@
 test(function() {
     var doc = newHTMLDocument();
     var timeline = doc.timeline;
-    assert_equals(timeline.currentTime, null, 'Time value for the timeline should be null');
-}, 'If timeline is not started time value for this timeline is null');
+    assert_not_equals(timeline.currentTime, null,
+        'Time value for the timeline should not be null');
+}, 'If timeline is started time value for this timeline is not null');
+
 
 testInBlankDocumentWithBrowsingContext(function(doc) {
     var timeline = doc.timeline;
-    assert_equals(timeline.currentTime, null, 'Time value for the timeline should be null');    
-}, 'If timeline is not started time value for this timeline is null. ' +
+    assert_not_equals(timeline.currentTime, null,
+        'Time value for the timeline should not be null');
+}, 'If timeline is started time value for this timeline is not null. ' +
     'Test for document with browsing context');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var timeline = doc.timeline;
+    assert_readonly(timeline.currentTime, 'Timeline attribute should be readonly');
+}, 'Timeline attribute readonly test');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var timeline = doc.timeline;
+    assert_greater_than(timeline.currentTime, 0,
+        'Time value for the timeline should be greater than zero');
+}, 'Timeline value is greater than zero test');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var timeline = doc.timeline;
     
-// TODO: add tests for the case when timeline is started.
-// The time values of the document timeline are calculated as a fixed offset from the global 
-// clock such that the zero time corresponds to the navigationStart moment
+    assert_equals(window.performance.timing.navigationStart + timeline.currentTime,
+            (new Date()).getTime(), 'Time value for the timeline should be relative to ' +
+            'navigationStart moment');
+}, 'Time value for the timeline is relative to navigationStart moment');
 </script>
 </body>
 </html>
