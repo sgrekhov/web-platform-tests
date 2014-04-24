@@ -91,8 +91,8 @@ test(function() {
         var customElement = doc.querySelector('#' + id);
         // We have <x-e-a is='y-element'>. Custom element type for this will be
         // HTMLElement, not x-e-a (for x-e-a there should be <a is='x-e-a'>...)
-        assert_class_string(customElement, 'HTMLElement', 'Custom element type should be ' +
-            'HTMLElement');
+        assert_class_string(customElement, 'HTMLElement',
+            'Custom element type should be HTMLElement');
     });
 }, 'Custom element type must be taken from the local name of the custom element even ' +
     'if IS attribute provided. The element extends HTML5 elements, IS attribute refers ' +

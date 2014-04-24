@@ -20,16 +20,15 @@ test(function() {
             return;
         }
         var obj = doc.createElement(tagName);
-        var name = 'x-c-' + tagName;
-        var GeneratedConstructor = doc.registerElement(name, {
-            prototype: newHTMLElementPrototype(name),
-            extends: tagName});
+        var name = 'x-a-' + tagName;
+        var proto = Object.create(obj.constructor.prototype);
+        var GeneratedConstructor = doc.registerElement(name, {prototype: proto, extends: tagName});
         var customElement = new GeneratedConstructor();
 
         assert_equals(customElement.getAttribute('is'), name,
             'Value of the IS attribute should be set to type');
     });
-}, 'Value of the IS attribute should be set to type if local name is not the same as type');
+}, 'Test constructor sets IS attribute value to type, if local name is not the same as type');
 
 
 test(function() {
@@ -38,16 +37,14 @@ test(function() {
         if (HTML5_DOCUMENT_ELEMENTS.indexOf(tagName) !== -1) {
             return;
         }
-        var obj = doc.createElement(tagName);
-        var name = 'x-d-' + tagName;
-        var GeneratedConstructor = doc.registerElement(name, {
-            prototype: newHTMLElementPrototype(name)});
+        var name = 'x-b-' + tagName;
+        var GeneratedConstructor = doc.registerElement(name);
         var customElement = new GeneratedConstructor();
 
         assert_equals(customElement.getAttribute('is'), null,
             'Value of the IS attribute should not be set');
     });
-}, 'Value of the IS attribute should not be set to type if local name is the same as type');
+}, 'Test constructor sets IS attribute value to null, if local name is the same as type');
 </script>
 </body>
 </html>
