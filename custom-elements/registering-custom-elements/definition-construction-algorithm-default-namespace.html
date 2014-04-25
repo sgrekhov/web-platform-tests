@@ -17,7 +17,7 @@ test(function() {
     var doc = newHTMLDocument();
     var GeneratedConstructor = doc.registerElement('x-a');
     var customElement = new GeneratedConstructor();
-    
+
     assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
         'Custom element namespace should be HTML namespace');
 }, 'Default namespace is HTML namespace');
@@ -26,17 +26,17 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(element) {
-        var obj = doc.createElement(element);        
+        var obj = doc.createElement(element);
         var name = 'x-b-' + element;
         var proto = Object.create(obj.constructor.prototype);
         var GeneratedConstructor = doc.registerElement(name, {
-            prototype: proto, 
+            prototype: proto,
             extends: element
         });
         var customElement = new GeneratedConstructor();
 
         assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
-            'Custom element namespace should be HTML namespace');    
+            'Custom element namespace should be HTML namespace');
     });
 }, 'Default namespace is HTML namespace. Test constructor of extended HTML element');
 </script>
