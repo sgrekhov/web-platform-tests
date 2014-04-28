@@ -3,7 +3,7 @@
 <head>
 <title>createElement should set IS attribute to type</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="assert" content="If TYPE is not the same as localName, set the value of ELEMENT's is attribute to TYPE">
+<meta name="assert" content="If TYPE is not the same as localName, set the value of ELEMENT's IS attribute to TYPE">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#extensions-to-document-interface-to-instantiate">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -24,7 +24,7 @@ test(function() {
         assert_equals(customElement.getAttribute('is'), name,
             'Value of the IS attribute should be set to type by createElement');
     });
-}, 'If type is not the same as localName, the value of ELEMENT\'s is attribute ' +
+}, 'If type is not the same as localName, the value of ELEMENT\'s IS attribute ' +
     'must be set to type by createElement');
 
 
@@ -39,7 +39,7 @@ test(function() {
         assert_equals(customElement.getAttribute('is'), name,
             'Value of the IS attribute should be set to type by createElementNS');
     });
-}, 'If type is not the same as localName, the value of ELEMENT\'s is attribute ' +
+}, 'If type is not the same as localName, the value of ELEMENT\'s IS attribute ' +
     'must be set to type by createElementNS');
 
 </script>
