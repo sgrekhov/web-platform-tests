@@ -19,7 +19,6 @@ test(function() {
     HTML5_ELEMENTS.forEach(function(value) {
         var name = 'x-a-' + value;
         var element = doc.createElement(value);
-        element.removeAttribute('localName');
         var proto = Object.create(element.constructor.prototype);
         var GeneratedConstructor = doc.registerElement(name, {prototype: proto});
         var customElement = new GeneratedConstructor();
@@ -34,7 +33,6 @@ test(function() {
     HTML5_ELEMENTS.forEach(function(value) {
         var name = 'x-b-' + value;
         var element = doc.createElement(value);
-        element.removeAttribute('localName');
         var proto = Object.create(element.constructor.prototype);
         var GeneratedConstructor = doc.registerElement(name, {prototype: proto, extends: null});
         var customElement = new GeneratedConstructor();
