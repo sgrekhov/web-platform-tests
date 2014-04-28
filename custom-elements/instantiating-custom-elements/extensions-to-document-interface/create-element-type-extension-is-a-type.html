@@ -15,13 +15,13 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-    HTML5_ELEMENTS.forEach(function(value) {
-        var obj = doc.createElement(value);
-        var name = 'x-a-' + value;
+    HTML5_ELEMENTS.forEach(function(tagName) {
+        var obj = doc.createElement(tagName);
+        var name = 'x-a-' + tagName;
         var proto = Object.create(obj.constructor.prototype);
-        doc.registerElement(name, {prototype: proto, extends: value});
-        var customElement = doc.createElement(value, name);
-        assert_equals(customElement.constructor.prototype.constructor.name, name, 
+        doc.registerElement(name, {prototype: proto, extends: tagName});
+        var customElement = doc.createElement(tagName, name);
+        assert_equals(customElement.constructor.prototype.constructor.name, name,
             'Custom element type should be the type extension');
     });
 }, 'If typeExtension presents in createElement call then type is a type extension');
@@ -29,13 +29,13 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    HTML5_ELEMENTS.forEach(function(value) {
-        var obj = doc.createElement(value);
-        var name = 'x-b-' + value;
+    HTML5_ELEMENTS.forEach(function(tagName) {
+        var obj = doc.createElement(tagName);
+        var name = 'x-b-' + tagName;
         var proto = Object.create(obj.constructor.prototype);
-        doc.registerElement(name, {prototype: proto, extends: value});
-        var customElement = doc.createElementNS(HTML_NAMESPACE, value, name);
-        assert_equals(customElement.constructor.prototype.constructor.name, name, 
+        doc.registerElement(name, {prototype: proto, extends: tagName});
+        var customElement = doc.createElementNS(HTML_NAMESPACE, tagName, name);
+        assert_equals(customElement.constructor.prototype.constructor.name, name,
             'Custom element type should be the type extension');
     });
 }, 'If typeExtension presents in createElementNS call then type is a type extension');

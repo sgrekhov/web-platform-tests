@@ -25,17 +25,17 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    HTML5_ELEMENTS.forEach(function(value) {
-        var obj = doc.createElement(value);
-        var name = 'x-b-' + value;
+    HTML5_ELEMENTS.forEach(function(tagName) {
+        var obj = doc.createElement(tagName);
+        var name = 'x-b-' + tagName;
         var proto = Object.create(obj.constructor.prototype);
         doc.registerElement(name, {
             prototype: Object.create(proto),
-            extends: value
+            extends: tagName
         });
-        var customElement = doc.createElement(value, name);
+        var customElement = doc.createElement(tagName, name);
         assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
-            'Custom element namespace for the element extending ' + value +
+            'Custom element namespace for the element extending ' + tagName +
             ' should be HTML Namespace');
     });
 }, 'Namespace for createElement is HTML Namespace. Type extension specified');

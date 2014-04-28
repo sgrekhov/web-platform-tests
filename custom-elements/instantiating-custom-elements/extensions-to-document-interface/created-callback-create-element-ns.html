@@ -29,7 +29,7 @@ test(function() {
 
 
 test(function() {
-    var doc = newHTMLDocument();    
+    var doc = newHTMLDocument();
     var callbackCalled = false;
     var proto = Object.create(HTMLElement.prototype);
     proto.createdCallback = function() {
@@ -43,7 +43,7 @@ test(function() {
 
 
 test(function() {
-    var doc = newHTMLDocument();    
+    var doc = newHTMLDocument();
     var callbackCalled = false;
     var proto = Object.create(HTMLElement.prototype);
     proto.createdCallback = function() {
@@ -60,15 +60,15 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    HTML5_ELEMENTS.forEach(function(value) {
-        var obj = doc.createElement(value);        
-        var name = 'x-d-' + value;
+    HTML5_ELEMENTS.forEach(function(tagName) {
+        var obj = doc.createElement(tagName);
+        var name = 'x-d-' + tagName;
         var proto = Object.create(obj.constructor.prototype);
         proto.createdCallback = function() {
             callbackCalled = true;
-        }    
-        doc.registerElement(name, {prototype: proto, extends: value});
-        var customElement = doc.createElementNS(HTML_NAMESPACE, value, name);
+        }
+        doc.registerElement(name, {prototype: proto, extends: tagName});
+        var customElement = doc.createElementNS(HTML_NAMESPACE, tagName, name);
         assert_true(callbackCalled, 'Callback created should be called');
     });
 }, 'Created callback should be called if createElementNS is called. Test different types');

@@ -16,19 +16,19 @@
 test(function() {
     var doc = newHTMLDocument();
 
-    HTML5_ELEMENTS.forEach(function(element) {
-        if (HTML5_DOCUMENT_ELEMENTS.indexOf(element) == -1) {
-            var obj = doc.createElement(element);
-            var name = 'x-' + element;
-            var id = 'x-' + element + '-id';
-            if (HTML5_TABLE_ELEMENTS.indexOf(element) != -1) {
+    HTML5_ELEMENTS.forEach(function(tagName) {
+        if (HTML5_DOCUMENT_ELEMENTS.indexOf(tagName) === -1) {
+            var obj = doc.createElement(tagName);
+            var name = 'x-' + tagName;
+            var id = 'x-' + tagName + '-id';
+            if (HTML5_TABLE_ELEMENTS.indexOf(tagName) !== -1) {
                 doc.body.innerHTML =
                     '<table>' +
-                    '<' + element + ' id="' + id + '" is="' + name + '"></' + element + '>' +
+                    '<' + tagName + ' id="' + id + '" is="' + name + '"></' + tagName + '>' +
                     '</table>';
             } else {
                 doc.body.innerHTML =
-                    '<' + element + ' id="' + id + '" is="' + name + '"></' + element + '>';
+                    '<' + tagName + ' id="' + id + '" is="' + name + '"></' + tagName + '>';
             }
             var customElement = doc.querySelector(':unresolved');
 
@@ -37,7 +37,7 @@ test(function() {
             assert_equals(customElement.id, id, 'Wrong custom element');
 
             var proto = Object.create(obj.constructor.prototype);
-            doc.registerElement(name, {prototype: proto, extends: element});
+            doc.registerElement(name, {prototype: proto, extends: tagName});
             var customElement2 = doc.querySelector(':unresolved');
 
             assert_equals(customElement2, null,

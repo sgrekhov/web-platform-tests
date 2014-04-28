@@ -16,17 +16,17 @@
 test(function() {
     var doc = newHTMLDocument();
 
-    HTML5_ELEMENTS.forEach(function(element) {
-        var name = 'x-' + element;
-        var obj = doc.createElement(element);
+    HTML5_ELEMENTS.forEach(function(tagName) {
+        var name = 'x-' + tagName;
+        var obj = doc.createElement(tagName);
         var proto = Object.create(obj.constructor.prototype);
         var GeneratedConstructor = doc.registerElement(name, {
             prototype: proto,
-            extends: element
+            extends: tagName
         });
         var customElement = new GeneratedConstructor();
 
-        assert_equals(customElement.localName, element,
+        assert_equals(customElement.localName, tagName,
             'Custom element local name must be an EXTENDS value');
     });
 }, 'Custom element local name is the value of the EXTENDS property');
