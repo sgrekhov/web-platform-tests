@@ -19,12 +19,13 @@ test(function() {
         var obj = doc.createElement(tagName);
         var name = 'x-a-' + tagName;
         var proto = Object.create(obj.constructor.prototype);
-        doc.registerElement(name, {prototype: proto, extends: tagName});
+        var GeneratedConstructor = doc.registerElement(name, {prototype: proto, extends: tagName});
         var customElement = doc.createElement(tagName, name);
-        assert_equals(customElement.constructor.prototype.constructor.name, name,
-            'Custom element type should be the type extension');
+
+        assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
+            'Custom element type should be the type extension in createElement call');
     });
-}, 'If typeExtension presents in createElement call then type is a type extension');
+}, 'If typeExtension presents in createElement call then type is a type extension in createElement call');
 
 
 test(function() {
@@ -33,12 +34,13 @@ test(function() {
         var obj = doc.createElement(tagName);
         var name = 'x-b-' + tagName;
         var proto = Object.create(obj.constructor.prototype);
-        doc.registerElement(name, {prototype: proto, extends: tagName});
+        var GeneratedConstructor = doc.registerElement(name, {prototype: proto, extends: tagName});
         var customElement = doc.createElementNS(HTML_NAMESPACE, tagName, name);
-        assert_equals(customElement.constructor.prototype.constructor.name, name,
-            'Custom element type should be the type extension');
+
+        assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
+            'Custom element type should be the type extension in createElement call');
     });
-}, 'If typeExtension presents in createElementNS call then type is a type extension');
+}, 'If typeExtension presents in createElementNS call then type is a type extension in createElement call');
 </script>
 </body>
 </html>

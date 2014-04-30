@@ -16,46 +16,43 @@
 <script type="text/javascript">
 test(function() {
     var doc = newHTMLDocument();
-    var callbackCalled = false;
-    var proto = Object.create(HTMLElement.prototype);
-    proto.createdCallback = function() {
-        callbackCalled = true;
-    };
+    var proto = newHTMLElementPrototype();
     var name = 'x-a';
+
     doc.registerElement(name, {prototype: proto});
     var customElement = doc.createElementNS(HTML_NAMESPACE, name);
-    assert_true(callbackCalled, 'Callback created should be called');
-}, 'Created callback should be called if createElementNS is called. Type is not specified');
+    assert_equals(proto.createdCallbackCalledCounter, 1,
+        'Callback created should be called if createElementNS is called');
+}, 'Test that created callback is called if createElementNS is called. Type extension is not specified in ' +
+    'createElementNS call');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    var callbackCalled = false;
-    var proto = Object.create(HTMLElement.prototype);
-    proto.createdCallback = function() {
-        callbackCalled = true;
-    };
+    var proto = newHTMLElementPrototype();
     var name = 'x-b';
+
     doc.registerElement(name, {prototype: proto});
     var customElement = doc.createElementNS(HTML_NAMESPACE, name, name);
-    assert_true(callbackCalled, 'Callback created should be called');
-}, 'Created callback should be called if createElementNS is called. Type is specified');
+    assert_equals(proto.createdCallbackCalledCounter, 1,
+        'Callback created should be called if createElementNS is called');
+}, 'Test that created callback is called if createElementNS is called. Type extension is specified in ' +
+  'createElementNS call');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    var callbackCalled = false;
-    var proto = Object.create(HTMLElement.prototype);
-    proto.createdCallback = function() {
-        callbackCalled = true;
-    };
+    var proto = newHTMLElementPrototype();
     var name = 'x-c';
     var customElement = doc.createElementNS(HTML_NAMESPACE, name);
-    assert_false(callbackCalled, 'Callback created should not be called');
+    assert_equals(proto.createdCallbackCalledCounter, 0,
+        'Callback created should not be called if custom element is unresolved');
+
     doc.registerElement(name, {prototype: proto});
-    assert_true(callbackCalled, 'Callback created should be called');
-}, 'Created callback should be called if createElementNS is called. ' +
-    'Element is unresolved at first');
+    assert_equals(proto.createdCallbackCalledCounter, 1,
+        'Callback created should be called after custom element is registered');
+}, 'Test that created callback is called if createElementNS is called. ' +
+    'Custom element is unresolved at first');
 
 
 test(function() {
@@ -63,15 +60,14 @@ test(function() {
     HTML5_ELEMENTS.forEach(function(tagName) {
         var obj = doc.createElement(tagName);
         var name = 'x-d-' + tagName;
-        var proto = Object.create(obj.constructor.prototype);
-        proto.createdCallback = function() {
-            callbackCalled = true;
-        }
+        var proto = newHTMLElementPrototype();
         doc.registerElement(name, {prototype: proto, extends: tagName});
         var customElement = doc.createElementNS(HTML_NAMESPACE, tagName, name);
-        assert_true(callbackCalled, 'Callback created should be called');
+
+        assert_equals(proto.createdCallbackCalledCounter, 1,
+            'Callback created should be called if createElementNS is called');
     });
-}, 'Created callback should be called if createElementNS is called. Test different types');
+}, 'Test that created callback is called if createElementNS is called. Test extensions of all HTML5 elements');
 </script>
 </body>
 </html>

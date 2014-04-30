@@ -20,12 +20,12 @@ test (function() {
         var name = 'x-a-' + tagName;
         var proto = Object.create(obj.constructor.prototype);
         var customElement = doc.createElement(tagName, name);
-        assert_equals(customElement.constructor.prototype.constructor.name,
-            obj.constructor.name,
-            'Custom element type should be a local name');
-        doc.registerElement(name, {prototype: proto, extends: tagName});
-        assert_equals(customElement.constructor.prototype.constructor.name, name,
-            'Custom element type should be the type extension');
+        assert_equals(Object.getPrototypeOf(customElement), Object.getPrototypeOf(obj),
+            'Unregistered custom element type should be a local name');
+
+        var GeneratedConstructor = doc.registerElement(name, {prototype: proto, extends: tagName});
+        assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
+            'Registered custom element type should be the type extension');
     });
 }, 'If typeExtension is unresolved when createElement called then local name is a type');
 
@@ -37,10 +37,11 @@ test (function() {
         var name = 'x-b-' + tagName;
         var proto = Object.create(obj.constructor.prototype);
         var customElement = doc.createElementNS(HTML_NAMESPACE, tagName, name);
-        assert_equals(customElement.constructor.prototype.constructor.name,
-            obj.constructor.name, 'Custom element type should be a local name');
-        doc.registerElement(name, {prototype: proto, extends: tagName});
-        assert_equals(customElement.constructor.prototype.constructor.name, name,
+        assert_equals(Object.getPrototypeOf(customElement), Object.getPrototypeOf(obj),
+            'Custom element type should be a local name');
+
+        var GeneratedConstructor = doc.registerElement(name, {prototype: proto, extends: tagName});
+        assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
             'Custom element type should be the type extension');
     });
 }, 'If typeExtension is unresolved when createElementNS called then local name is a type');
