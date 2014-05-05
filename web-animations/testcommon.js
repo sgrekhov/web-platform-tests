@@ -55,3 +55,60 @@ function newAnimation(animationTarget) {
              5);
     return animation;
 }
+
+
+// Creates new AnimationPlayer object
+function newAnimationPlayer(doc) {
+    var animationTarget = doc.createElement('div');
+    var animation = newAnimation(animationTarget);
+    return doc.timeline.play(animation);
+}
+
+// Calculates Current time as described at
+// http://dev.w3.org/fxtf/web-animations/#the-current-time-of-a-player
+function calculateCurrentTime(timelineTime, adjustedStartTime, playbackRate, holdTime) {
+    if (holdTime == null) {
+        return (timelineTime - adjustedStartTime) * playbackRate;
+    } else {
+        return holdTime;
+    }
+}
+
+// Returns animation player adjusted start time as described at
+// http://dev.w3.org/fxtf/web-animations/#calculating-the-adjusted-start-time
+function getAdjustedTime(player) {
+    if (player.paused) {
+        return player.timeline.currentTime - getHoldTime(player) / player.playbackRate;
+    } else {
+        // FIXME How to get stored value for the adjusted start time?
+        return player.startTime;
+    }
+}
+
+// Returns Effective Timeline Time as described at
+// http://dev.w3.org/fxtf/web-animations/#dfn-effective-timeline-time
+function getEffectiveTimelineTime(player) {
+    if (player.timeline.currentTime != null) {
+        return player.timeline.currentTime;
+    }
+    return 0;
+}
+
+// Retuns Effective Current Time as described at
+// http://dev.w3.org/fxtf/web-animations/#dfn-effective-current-time
+function getEffectiveCurrentTime(player) {
+    return calculateCurrentTime(getEffectiveTimelineTime(player), getAdjustedTime(player),
+        player.playbackRate, getHoldTime(player));
+}
+
+// Returns player hold time as described at
+// http://dev.w3.org/fxtf/web-animations/#dfn-hold-time
+function getHoldTime(player) {
+    var holdTime = null;
+    if (player.paused) {
+        holdTime = getEffectiveCurrentTime(player);
+    }
+    // FIXME Shouldn't the conditions for limited behaviour and automaticaly updationg
+    // of the hold time be applied here?
+    return holdTime;
+}
