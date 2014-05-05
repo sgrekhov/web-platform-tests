@@ -19,8 +19,8 @@ test(function() {
     var customElement = new GeneratedConstructor();
 
     assert_class_string(customElement, 'HTMLElement',
-        'Custom element without specified prototype must be a HTMLelement');
-}, 'Custom element without specified prototype');
+        'Custom element without specified prototype must be a HTMLElement');
+}, 'Custom element without specified prototype should has HTMLElement prototype');
 
 
 test(function() {
@@ -32,8 +32,8 @@ test(function() {
     var customElement = new GeneratedConstructor();
 
     assert_class_string(customElement, 'HTMLParagraphElement',
-        'Custom element  must be a HTMLParagraphElement');
-}, 'Custom element with specified prototype');
+        'Custom element must be a HTMLParagraphElement');
+}, 'Custom element with specified prototype should has the prototype specified');
 </script>
 </body>
 </html>
