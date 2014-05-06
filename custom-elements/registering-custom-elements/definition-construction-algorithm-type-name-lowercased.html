@@ -19,24 +19,17 @@ test(function() {
     var customElement = new GeneratedConstructor();
 
     assert_equals(customElement.localName, 'x-a', 'Custom element type should be lowercased');
-}, 'Custom element type should be lowercased. Test constructor');
+}, 'Custom element type should be lowercased. Test element created via constructor');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    HTML5_ELEMENTS.forEach(function(tagName) {
-        var obj = doc.createElement(tagName);
-        var name = 'x-a-' + tagName;
-        var proto = Object.create(obj.constructor.prototype);
-        var GeneratedConstructor = doc.registerElement(name, {
-            prototype: proto,
-            extends: tagName.toUpperCase()
-        });
-        var customElement = new GeneratedConstructor();
+    var GeneratedConstructor = doc.registerElement('X-B');
+    doc.body.innerHTML = '<X-B id="custom-element"></X-B>';
+    var customElement = doc.querySelector('#custom-element');
 
-        assert_equals(customElement.localName, tagName, 'Local name should be lowercased');
-    });
-}, 'Custom element type should be lowercased. Test constructor of extended HTML element');
+    assert_equals(customElement.localName, 'x-b', 'Custom element type should be lowercased');
+}, 'Custom element type should be lowercased. Test element created via innerHTML property');
 </script>
 </body>
 </html>
