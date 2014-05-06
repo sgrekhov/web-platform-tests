@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>If typeExtension is not present then type is a local name</title>
+<title>Document.createElement() and Document.createElement() create custom element of type, specified by single localName argument</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="assert" content="If typeExtension is not present then type is a local name">
+<meta name="assert" content="Let TYPE be typeExtension, or localName if typeExtension is not present">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#extensions-to-document-interface-to-instantiate">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -21,7 +21,8 @@ test(function() {
 
     assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
         'Custom element type should be the local name of the custom element');
-}, 'If typeExtension is not present in createElement call then type is a local name');
+}, 'Test Document.createElement() create custom element of type, ' +
+    'specified by single localName argument');
 
 
 test(function() {
@@ -31,7 +32,8 @@ test(function() {
     var customElement = doc.createElementNS(HTML_NAMESPACE, name);
     assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
         'Custom element type should be the local name of the custom element');
-}, 'If typeExtension is not present in createElementNS call then type is a local name');
+}, 'Test Document.createElementNS() create custom element of type, ' +
+    'specified by localName argument. Argument typeExtension is not pased.');
 </script>
 </body>
 </html>

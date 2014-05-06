@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>createElement should set IS attribute to type</title>
+<title>Document.createElement() and Document.createElementNS() set IS attribute to type</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="assert" content="If TYPE is not the same as localName, set the value of ELEMENT's IS attribute to TYPE">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#extensions-to-document-interface-to-instantiate">
@@ -22,10 +22,10 @@ test(function() {
         doc.registerElement(name, {prototype: proto, extends: tagName});
         var customElement = doc.createElement(tagName, name);
         assert_equals(customElement.getAttribute('is'), name,
-            'Value of the IS attribute should be set to type by createElement');
+            'Value of the IS attribute should be set to type by createElement()');
     });
-}, 'If type is not the same as localName, the value of ELEMENT\'s IS attribute ' +
-    'must be set to type by createElement');
+}, 'Test Document.createElement() sets the element\'s IS attribute value to type, ' +
+    'if type is not the same as localName');
 
 
 test(function() {
@@ -37,11 +37,10 @@ test(function() {
         doc.registerElement(name, {prototype: proto, extends: tagName});
         var customElement = doc.createElementNS(HTML_NAMESPACE, tagName, name);
         assert_equals(customElement.getAttribute('is'), name,
-            'Value of the IS attribute should be set to type by createElementNS');
+            'Value of the IS attribute should be set to type by createElementNS()');
     });
-}, 'If type is not the same as localName, the value of ELEMENT\'s IS attribute ' +
-    'must be set to type by createElementNS');
-
+}, 'Test Document.createElementNS() sets the element\'s IS attribute value to type, ' +
+    'if type is not the same as localName');
 </script>
 </body>
 </html>

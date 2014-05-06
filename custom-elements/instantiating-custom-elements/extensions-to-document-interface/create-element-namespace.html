@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Namespace for createElement is HTML Namespace</title>
+<title>Document.createElement() sets custom element namespace to HTML Namespace</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <meta name="assert" content="Namespace for createElement is HTML Namespace">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#extensions-to-document-interface-to-instantiate">
@@ -20,7 +20,7 @@ test(function() {
     var customElement = doc.createElement(name);
     assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
         'Custom element namespace should be HTML Namespace');
-}, 'Namespace for createElement is HTML Namespace');
+}, 'Test Document.createElement() sets custom element namespace to HTML Namespace');
 
 
 test(function() {
@@ -38,7 +38,8 @@ test(function() {
             'Custom element namespace for the element extending ' + tagName +
             ' should be HTML Namespace');
     });
-}, 'Namespace for createElement is HTML Namespace. Type extension specified');
+}, 'Document.createElement() sets custom element namespace to HTML Namespace. '+
+    'Custom element is extending standard HTML tag');
 </script>
 </body>
 </html>
