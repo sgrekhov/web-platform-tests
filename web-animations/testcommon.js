@@ -56,13 +56,16 @@ function newAnimation(animationTarget) {
     return animation;
 }
 
-
 // Creates new AnimationPlayer object
 function newAnimationPlayer(doc) {
     var animationTarget = doc.createElement('div');
     var animation = newAnimation(animationTarget);
     return doc.timeline.play(animation);
 }
+
+
+
+// TODO Revisit all of the methods below. If they won't be used then remove them
 
 // Calculates Current time as described at
 // http://dev.w3.org/fxtf/web-animations/#the-current-time-of-a-player
