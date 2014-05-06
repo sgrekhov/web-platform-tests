@@ -21,7 +21,7 @@ test(function() {
 
     assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
         'Custom element type should be the local name of the custom element');
-}, 'Test Document.createElement() create custom element of type, ' +
+}, 'Test Document.createElement() creates custom element of type, ' +
     'specified by single localName argument');
 
 
@@ -32,8 +32,8 @@ test(function() {
     var customElement = doc.createElementNS(HTML_NAMESPACE, name);
     assert_equals(Object.getPrototypeOf(customElement), GeneratedConstructor.prototype,
         'Custom element type should be the local name of the custom element');
-}, 'Test Document.createElementNS() create custom element of type, ' +
-    'specified by localName argument. Argument typeExtension is not pased.');
+}, 'Test Document.createElementNS() creates custom element of type, ' +
+    'specified by localName argument. Argument typeExtension is not passed');
 </script>
 </body>
 </html>
