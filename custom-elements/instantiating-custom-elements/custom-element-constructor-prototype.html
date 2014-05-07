@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Custom element prototype is the prototype object specified in registerElement()</title>
+<title>Custom element constructor prototype is the prototype object specified in element definition</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="assert" content="CONSTRUCTOR is the interface object whose interface prototype object is PROTOTYPE specified in registerElement()">
-<link rel="help" href="http://www.w3.org/TR/custom-elements/#instantiating-custom-elements">
+<meta name="assert" content="Custom element constructor prototype is the prototype object specified in element definition">
+<link rel="help" href="http://www.w3.org/TR/custom-elements/#registering-custom-elements">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -20,12 +20,10 @@ test(function() {
         prototype: proto,
         extends: 'p'
     });
-    var customElement = new GeneratedConstructor();
-
-    assert_true(Object.getPrototypeOf(customElement) === proto,
-        'Custom element instance must have the prototype specified in registerElement()');
+    assert_true(GeneratedConstructor.prototype === proto,
+        'Custom element constructor must have the prototype specified in registerElement()');
 }, 'If custom element type is registered with prototype, the custom element ' +
-    'instance should have the prototype specified in registerElement() call');
+   'constructor should have the prototype specified in registerElement() call');
 </script>
 </body>
 </html>
