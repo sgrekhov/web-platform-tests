@@ -23,6 +23,7 @@ test(function() {
 }, 'Test set of objects returned by getAnimationPlayers() method when there\'s no ' +
     'players associated');
 
+
 test(function() {
     var doc = newHTMLDocument();
     var player = newAnimationPlayer(doc);
@@ -33,6 +34,17 @@ test(function() {
         'Set of objects returned by getAnimationPlayers() method should contain one element');
 }, 'Test set of objects returned by getAnimationPlayers() method when there is one ' +
     'associated player');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var player1 = newAnimationPlayer(doc);
+    var player2 = newAnimationPlayer(doc);
+
+    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2],
+        'Set of objects returned by getAnimationPlayers() method should contain two elements');
+}, 'Test set of objects returned by getAnimationPlayers() method when there are more ' +
+    'than one associated players');
 </script>
 </body>
 </html>
