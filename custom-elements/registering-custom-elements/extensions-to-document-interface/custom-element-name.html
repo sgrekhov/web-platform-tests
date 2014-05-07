@@ -26,11 +26,11 @@ test(function() {
         });
         var customElement = new GeneratedConstructor();
 
-        assert_equals(customElement.localName, tagName,
-            'Custom element local name should be a value of the EXTENDS property, ' +
+        assert_equals(customElement.localName, tagName.toLowerCase(),
+            'Custom element local name should be a lowercased value of the EXTENDS property, ' +
             'supplied to Document.registerElement()');
     });
-}, 'Custom element local name is the value of the EXTENDS property, ' +
+}, 'Custom element local name is the lowercased value of the EXTENDS property, ' +
     'supplied to Document.registerElement()');
 </script>
 </body>
