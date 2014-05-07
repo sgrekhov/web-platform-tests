@@ -23,21 +23,6 @@ test(function() {
         'if its type is registered without prototype');
 }, 'Custom element should have HTMLElement prototype, ' +
     'if its type is registered without prototype');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-    var proto = Object.create(SVGElement.prototype);
-    var GeneratedConstructor = doc.registerElement('x-b', {
-        prototype: proto,
-        extends: 'p'
-    });
-    var customElement = new GeneratedConstructor();
-
-    assert_true(Object.getPrototypeOf(customElement) === proto,
-        'Custom element must have the prototype specified in registerElement()');
-}, 'If custom element type is registered with prototype, ' +
-   'the custom element should have the specified prototype');
 </script>
 </body>
 </html>
