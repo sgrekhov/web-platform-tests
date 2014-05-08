@@ -22,8 +22,8 @@ test(function() {
     assert_not_equals(customElement, null,
         'Unresolved custom element should be accessible by :unresolved');
     assert_equals(customElement.localName, 'x-a',
-         'Custom element returned by Document.querySelector(":unresolved") should be x-a');
-}, 'Test that unresolved custom element is accessible by Document.querySelector(":unresolved")');
+         'Custom element returned by Document.querySelector(\':unresolved\') should be x-a');
+}, 'Test that unresolved custom element is accessible by Document.querySelector(\':unresolved\')');
 
 
 test(function() {
@@ -33,13 +33,13 @@ test(function() {
     assert_not_equals(customElement, null,
         'Unresolved custom element should be accessible by :unresolved');
     assert_equals(customElement.localName, 'x-b',
-        'Custom element returned by Document.querySelector(":unresolved") should be x-b');
+        'Custom element returned by Document.querySelector(\':unresolved\') should be x-b');
 
     doc.registerElement('x-b');
     customElement = doc.querySelector(':unresolved');
     assert_equals(customElement, null,
-        'Resolved custom element should not be accessible by :unresolved pseudoclass');
-}, 'Test that resolved custom element are not accessible by :unresolved');
+        'Registered custom element should not be accessible by :unresolved pseudoclass');
+}, 'Test that registered custom element are not accessible by :unresolved');
 
 
 test(function() {
@@ -49,14 +49,14 @@ test(function() {
     assert_not_equals(customElement, null,
         'Unresolved custom element should be accessible by :unresolved pseudoclass');
     assert_equals(customElement.localName, 'x-c',
-        'Custom element returned by Document.querySelector(":unresolved") should be x-c');
+        'Custom element returned by Document.querySelector(\':unresolved\') should be x-c');
 
     doc.registerElement('x-c');
     customElement = doc.querySelector(':unresolved');
     assert_not_equals(customElement, null,
         'Unresolved custom elements should be accessible by :unresolved pseudoclass');
     assert_equals(customElement.localName, 'x-d',
-        'Custom element returned by Document.querySelector(":unresolved") should be x-d');
+        'Custom element returned by Document.querySelector(\':unresolved\') should be x-d');
 }, 'If there are more than one unresolved custom element, all of them should be ' +
     'accessible by :unresolved pseudoclass');
 
@@ -70,9 +70,9 @@ test(function() {
     assert_not_equals(queryResult, null,
         'Unresolved custom element should be accessible by :unresolved');
     assert_equals(queryResult.localName, 'x-e',
-        'Custom element returned by Document.querySelector(":unresolved") should be x-e');
+        'Custom element returned by Document.querySelector(\':unresolved\') should be x-e');
 }, 'Unresolved custom element, created via Document.createElement(), should be ' +
-    'accessible by Document.querySelector(":unresolved")');
+    'accessible by Document.querySelector(\':unresolved\')');
 
 
 test(function() {
@@ -83,7 +83,7 @@ test(function() {
     assert_not_equals(customElement, null,
         'Unresolved custom element should be accessible by :unresolved');
     assert_equals(customElement.localName, 'x-f',
-        'Custom element returned by Document.querySelector(":unresolved") should be x-f');
+        'Custom element returned by Document.querySelector(\':unresolved\') should be x-f');
 }, 'Unresolved custom element inside div element should be accessible by ' +
     ':unresolved pseudoclass');
 
@@ -96,7 +96,7 @@ test(function() {
     assert_not_equals(customElement, null,
         'Unresolved custom element should be accessible by :unresolved pseudoclass');
     assert_equals(customElement.localName, 'x-h',
-        'Custom element returned by Document.querySelector(":unresolved") ' +
+        'Custom element returned by Document.querySelector(\':unresolved\') ' +
         'should be x-h');
 
     doc.registerElement('x-h');
@@ -105,10 +105,10 @@ test(function() {
     assert_not_equals(customElement, null,
         'Unresolved custom element should be accessible by :unresolved pseudoclass');
 	assert_equals(customElement.localName, 'x-g',
-        'Custom element returned by Document.querySelector(":unresolved") ' +
+        'Custom element returned by Document.querySelector(\':unresolved\') ' +
         'should be x-g');
-}, 'All unresolved custom element including nested ones are accessible ' +
-    'by Document.querySelector(":unresolved")');
+}, 'All unresolved custom element including nested ones should be accessible ' +
+    'by Document.querySelector(\':unresolved\')');
 
 
 testInIFrame('../../resources/x-element.html', function(doc) {
@@ -117,7 +117,7 @@ testInIFrame('../../resources/x-element.html', function(doc) {
     assert_not_equals(customElement, null,
         'Unresolved custom element should be accessible by :unresolved');
     assert_equals(customElement.localName, 'x-element',
-        'Custom element returned by Document.querySelector(":unresolved") should be x-element');
+        'Custom element returned by Document.querySelector(\':unresolved\') should be x-element');
 }, 'Document.querySelector(): Unresolved custom element should be accessible by :unresolved '+
     'in loaded document');
 
@@ -144,7 +144,7 @@ test(function() {
             assert_not_equals(customElement, null,
                 'Unresolved custom element should be accessible by :unresolved pseudoclass');
             assert_equals(customElement.id, id,
-                'ID of element returned by Document.querySelector(":unresolved") ' +
+                'ID of element returned by Document.querySelector(\':unresolved\') ' +
                 'should be ' + id);
 
             var proto = Object.create(obj.constructor.prototype);
@@ -155,8 +155,8 @@ test(function() {
                 'Registered custom element should not be accessible by :unresolved pseudoclass');
         }
     });
-}, 'Test that Document.querySelector(\':unresolved\') returns custom elements created ' +
-    'by IS attribute');
+}, 'Test that Document.querySelector(\':unresolved\') returns custom element, ' +
+    'extending HTML elements by IS attribute');
 </script>
 </body>
 </html>
