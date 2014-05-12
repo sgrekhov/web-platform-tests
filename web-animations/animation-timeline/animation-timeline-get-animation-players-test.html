@@ -44,7 +44,22 @@ test(function() {
     assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2],
         'Set of objects returned by getAnimationPlayers() method should contain two elements');
 }, 'Test set of objects returned by getAnimationPlayers() method when there are more ' +
-    'than one associated players');
+    'than one associated player');
+
+test(function() {
+    var doc = newHTMLDocument();
+    var player1 = newAnimationPlayer(doc);
+    var player2 = newAnimationPlayer(doc);
+    var players = doc.timeline.getAnimationPlayers();
+
+    players.forEach(function (player) {
+        assert_true(isActivePhase(player.source),
+            'Source content of the AnimationPlayer returned by getAnimationPlayers() ' +
+            'should be current');
+    });
+}, 'Test that source content of the AnimationPlayer returned by getAnimationPlayers() ' +
+    'is current');
+
 </script>
 </body>
 </html>

@@ -63,6 +63,36 @@ function newAnimationPlayer(doc) {
     return doc.timeline.play(animation);
 }
 
+// Returns true if timed item is in current phase as defined at
+// http://dev.w3.org/fxtf/web-animations/#dfn-current
+function isCurrentPhase(timedItem) {
+    // FIXME Add the third condition:
+    // it has a parent animation group and the parent animation group is current.
+    return isBeforePhase(timedItem) || isPlayPhase(timedItem);
+}
+
+// Returns true if timed item is in before phase as defined at
+// http://dev.w3.org/fxtf/web-animations/#dfn-before-phase
+function isBeforePhase(timedItem) {
+    return timedItem.localTime != null && timedItem.startTime < timedItem.timing.delay;
+}
+
+// Returns true if timed item is in play phase as defined at
+// http://dev.w3.org/fxtf/web-animations/#dfn-in-play
+function isPlayPhase(timedItem) {
+    // FIXME Add the second condition:
+    // 2. the timed item has a parent animation group
+    // that is in play or else is directly associated with a player that is not limited.
+    return isActivePhase(timedItem);
+}
+
+// Returns true if timed item is in active phase as defined at
+// http://dev.w3.org/fxtf/web-animations/#dfn-active-phase
+function isActivePhase(timedItem) {
+    return timedItem.localTime != null &&
+        timedItem.startTime >= timedItem.timing.delay &&
+        timedItem.startTime <= timedItem.timing.delay + timedItem.activeDuration;
+}
 
 
 // TODO Revisit all of the methods below. If they won't be used then remove them
