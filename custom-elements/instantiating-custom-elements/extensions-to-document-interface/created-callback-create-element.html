@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Created callback should be called if createElement is called</title>
+<title>Document.createElement() must enqueue created callback for registered custom element type</title>
 <meta name="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
-<meta name="assert" content="Created callback should be called if createElement is called">
+<meta name="assert" content="Document.createElement() must enqueue created callback for registered custom element type">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#extensions-to-document-interface-to-instantiate">
 <link rel="help" href="http://www.w3.org/TR/custom-elements/#types-of-callbacks">
 <script src="/resources/testharness.js"></script>
@@ -22,9 +22,8 @@ test(function() {
     doc.registerElement(name, {prototype: proto});
     var customElement = doc.createElement(name);
     assert_equals(proto.createdCallbackCalledCounter, 1,
-        'Callback created should be called if createElement is called');
-}, 'Test that created callback is called if createElement is called. Type extension is not specified in ' +
-    'createElement call');
+       'Callback created should be enqueued by Document.createElement()');
+}, 'Test Document.createElement() without typeExtension argument enqueues created callback');
 
 
 test(function() {
@@ -35,9 +34,8 @@ test(function() {
     doc.registerElement(name, {prototype: proto});
     var customElement = doc.createElement(name, name);
     assert_equals(proto.createdCallbackCalledCounter, 1,
-        'Callback created should be called if createElement is called');
-}, 'Test that created callback is called if createElement is called. Type extension is specified in ' +
-  'createElement call');
+        'Callback created should be enqueued by Document.createElement()');
+}, 'Test Document.createElement() with typeExtension argument enqueues created callback');
 
 
 test(function() {
@@ -46,13 +44,14 @@ test(function() {
     var name = 'x-c';
     var customElement = doc.createElement(name);
     assert_equals(proto.createdCallbackCalledCounter, 0,
-        'Callback created should not be called if custom element is unresolved');
+        'Document.createElement() should not enqueue created callback ' +
+        'for unresolved custom element');
 
     doc.registerElement(name, {prototype: proto});
     assert_equals(proto.createdCallbackCalledCounter, 1,
         'Callback created should be called after custom element is registered');
-}, 'Test that created callback is called if createElement is called. ' +
-    'Custom element is unresolved at first');
+}, 'Document.createElement() should not enqueue created callback ' +
+    'for unresolved custom element');
 
 
 test(function() {
@@ -60,14 +59,15 @@ test(function() {
     HTML5_ELEMENTS.forEach(function(tagName) {
         var obj = doc.createElement(tagName);
         var name = 'x-d-' + tagName;
-        var proto = newHTMLElementPrototype();
+        var proto = newCustomElementPrototype(Object.create(obj.constructor.prototype));
         doc.registerElement(name, {prototype: proto, extends: tagName});
         var customElement = doc.createElement(tagName, name);
 
         assert_equals(proto.createdCallbackCalledCounter, 1,
-            'Callback created should be called if createElement is called');
+            'Callback created should be enqueued by Document.createElement()');
     });
-}, 'Test that created callback is called if createElement is called. Test extensions of all HTML5 elements');
+}, 'Test Document.createElement() enqueues created callback for custom elements ' +
+    'that are extensions of HTML5 elements');
 </script>
 </body>
 </html>
