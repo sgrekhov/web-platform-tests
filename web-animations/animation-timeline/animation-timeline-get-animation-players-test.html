@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<html>
-<head>
 <title>Animation timeline getAnimationPlayers() method test</title>
 <meta name="assert" content="Animation timeline getAnimationPlayers() method returns the set of AnimationPlayer objects associated with this timeline that have associated source content which is current">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-animationtimeline-interface">
@@ -9,7 +7,6 @@
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
 <link rel="stylesheet" href="/resources/testharness.css">
-</head>
 <body>
 <div id="log"></div>
 <script>
@@ -46,6 +43,7 @@ test(function() {
 }, 'Test set of objects returned by getAnimationPlayers() method when there are more ' +
     'than one associated player');
 
+
 test(function() {
     var doc = newHTMLDocument();
     var player1 = newAnimationPlayer(doc);
@@ -59,7 +57,5 @@ test(function() {
     });
 }, 'Test that source content of the AnimationPlayer returned by getAnimationPlayers() ' +
     'is current');
-
 </script>
 </body>
-</html>
