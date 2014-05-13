@@ -63,9 +63,9 @@ function newAnimationPlayer(doc) {
     return doc.timeline.play(animation);
 }
 
-// Returns true if timed item is in current phase as defined at
+// Returns true if timed item is in current as defined at
 // http://dev.w3.org/fxtf/web-animations/#dfn-current
-function isCurrentPhase(timedItem) {
+function isCurrent(timedItem) {
     // FIXME Add the third condition:
     // it has a parent animation group and the parent animation group is current.
     return isBeforePhase(timedItem) || isPlayPhase(timedItem);

@@ -23,7 +23,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var player = newAnimationPlayer(doc);
+    newAnimationPlayer(doc);
 
     assert_not_equals(doc.timeline.getAnimationPlayers(), null,
         'getAnimationPlayers() method shouldn\'t return null');
@@ -51,7 +51,7 @@ test(function() {
     var players = doc.timeline.getAnimationPlayers();
 
     players.forEach(function (player) {
-        assert_true(isActivePhase(player.source),
+        assert_true(isCurrent(player.source),
             'Source content of the AnimationPlayer returned by getAnimationPlayers() ' +
             'should be current');
     });
