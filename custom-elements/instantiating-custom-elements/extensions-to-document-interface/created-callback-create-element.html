@@ -22,7 +22,7 @@ test(function() {
     doc.registerElement(name, {prototype: proto});
     var customElement = doc.createElement(name);
     assert_equals(proto.createdCallbackCalledCounter, 1,
-       'Callback created should be enqueued by Document.createElement()');
+        'Callback created should be enqueued by Document.createElement()');
 }, 'Test Document.createElement() without typeExtension argument enqueues created callback');
 
 
