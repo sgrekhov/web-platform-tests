@@ -48,19 +48,18 @@ test(function() {
             'Custom element namespace for the element extending ' + tagName +
             ' should be HTML Namespace');
     });
-}, 'Document.createElement() sets custom element namespace to HTML Namespace. '+
+}, 'Document.createElement() sets custom element namespace to HTML Namespace. ' +
     'Custom element is extending standard HTML tag');
 
 
 test(function() {
     var doc = newHTMLDocument();
     HTML5_ELEMENTS.forEach(function(tagName) {
-        var obj = doc.createElement(tagName);
         var name = 'x-d-' + tagName;
         var customElement = doc.createElement(tagName, name);
         assert_equals(customElement.namespaceURI, HTML_NAMESPACE,
             'Custom element namespace for the element with tag name ' + tagName +
-            ' and type name should be HTML Namespace');
+            ' and type name ' + name + ' should be HTML Namespace');
     });
 }, 'Document.createElement() sets custom element namespace to HTML Namespace. ' +
     'Document.createElement() is called with standard HTML tag name and ' +
