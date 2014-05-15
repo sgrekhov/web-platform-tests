@@ -18,7 +18,7 @@ test(function() {
 }, 'If timeline is started time value for this timeline is not null');
 
 
-testInBlankDocumentWithBrowsingContext(function(doc) {
+testInIFrame('../resources/blank.html', function(doc) {
     var timeline = doc.timeline;
     assert_not_equals(timeline.currentTime, null,
         'Time value for the timeline should not be null');
