@@ -12,19 +12,25 @@
 <script>
 test(function() {
     var doc = newHTMLDocument();
-    var player = newAnimationPlayer(doc);
+    var animationTarget = doc.createElement('div');
+    doc.body.appendChild(animationTarget);
+    var player = doc.timeline.play(animationTarget.animate(null));
 
-    assert_not_equals(player, null, 'Player created by play() method cannot be null');
-}, 'Player created by play() method cannot be null');
+    assert_not_equals(player, null, 'Player created by AnimationTimeline.play() method ' +
+        'cannot be null');
+}, 'Player created by AnimationTimeline.play() method cannot be null');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    var player = newAnimationPlayer(doc);
+    var animationTarget = doc.createElement('div');
+    doc.body.appendChild(animationTarget);
+    var player = doc.timeline.play(animationTarget.animate(null));
 
-    assert_class_string(player, 'AnimationPlayer',
-        'Player created by play() method should be AnimationPlayer object instance');
-}, 'Player created by play() method should be AnimationPlayer object instance');
+    assert_class_string(player, 'AnimationPlayer', 'Player created by ' +
+        'AnimationTimeline.play() method should be AnimationPlayer object instance');
+}, 'Player created by AnimationTimeline.play() method should be AnimationPlayer ' +
+    'object instance');
 
 </script>
 </body>

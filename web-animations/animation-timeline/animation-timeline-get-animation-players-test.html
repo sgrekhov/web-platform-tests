@@ -14,48 +14,57 @@ test(function() {
     var doc = newHTMLDocument();
 
     assert_not_equals(doc.timeline.getAnimationPlayers(), null,
-        'getAnimationPlayers() method shouldn\'t return null');
+        'AnimationTimeline.getAnimationPlayers() method shouldn\'t return null');
     assert_equals(doc.timeline.getAnimationPlayers().length, 0,
-        'Set of objects returned by getAnimationPlayers() method should be empty');
-}, 'Test set of objects returned by getAnimationPlayers() method when there\'s no ' +
-    'players associated');
+        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+        'should be empty');
+}, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+    'when there is no players associated');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    newAnimationPlayer(doc);
+    var animationTarget = doc.createElement('div');
+    doc.body.appendChild(animationTarget);
+    doc.timeline.play(animationTarget.animate(null));
 
     assert_not_equals(doc.timeline.getAnimationPlayers(), null,
-        'getAnimationPlayers() method shouldn\'t return null');
+        'AnimationTimeline.getAnimationPlayers() method should not return null');
     assert_equals(doc.timeline.getAnimationPlayers().length, 1,
-        'Set of objects returned by getAnimationPlayers() method should contain one element');
-}, 'Test set of objects returned by getAnimationPlayers() method when there is one ' +
-    'associated player');
+        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+        'should contain one element');
+}, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+    'when there is one associated player');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    var player1 = newAnimationPlayer(doc);
-    var player2 = newAnimationPlayer(doc);
+    var animationTarget = doc.createElement('div');
+    doc.body.appendChild(animationTarget);
+    var player1 = doc.timeline.play(animationTarget.animate(null));
+    var player2 = doc.timeline.play(animationTarget.animate(null));;
 
     assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2],
-        'Set of objects returned by getAnimationPlayers() method should contain two elements');
-}, 'Test set of objects returned by getAnimationPlayers() method when there are more ' +
-    'than one associated player');
+        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+        'should contain two elements');
+}, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+    'when there are more than one associated player');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    var player1 = newAnimationPlayer(doc);
-    var player2 = newAnimationPlayer(doc);
+    var animationTarget = doc.createElement('div');
+    doc.body.appendChild(animationTarget);
+    var player1 = doc.timeline.play(animationTarget.animate(null));
+    var player2 = doc.timeline.play(animationTarget.animate(null));;
     var players = doc.timeline.getAnimationPlayers();
 
     players.forEach(function (player) {
         assert_true(isCurrent(player.source),
-            'Source content of the AnimationPlayer returned by getAnimationPlayers() ' +
-            'should be current');
+            'Source content of the AnimationPlayer returned by ' +
+            'AnimationTimeline.getAnimationPlayers() should be current');
     });
-}, 'Test that source content of the AnimationPlayer returned by getAnimationPlayers() ' +
-    'is current');
+}, 'Test that source content of the AnimationPlayer returned by ' +
+    'AnimationTimeline.getAnimationPlayers() is current');
 </script>
 </body>

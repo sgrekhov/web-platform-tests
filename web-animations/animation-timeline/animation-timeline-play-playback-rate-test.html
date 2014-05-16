@@ -12,7 +12,9 @@
 <script>
 test(function() {
     var doc = newHTMLDocument();
-    var player = newAnimationPlayer(doc);
+    var animationTarget = doc.createElement('div');
+    doc.body.appendChild(animationTarget);
+    var player = doc.timeline.play(animationTarget.animate(null));
 
     assert_equals(player.playbackRate, 1,
         'Initial value of the playbackRate attribute of the newly-created AnimationPlayer ' +
