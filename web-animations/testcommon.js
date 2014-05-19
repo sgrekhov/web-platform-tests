@@ -18,34 +18,57 @@ function newHTMLDocument() {
 // Returns true if timed item is in current as defined at
 // http://dev.w3.org/fxtf/web-animations/#dfn-current
 function isCurrent(timedItem) {
-    // FIXME Add the third condition:
-    // it has a parent animation group and the parent animation group is
-    // current.
-    return isInBeforePhase(timedItem) || isInPlay(timedItem);
+    return isInBeforePhase(timedItem) || isInPlay(timedItem)
+        || (timedItem.parent !== null && isCurrent(timedItem.parent));
 }
 
 // Returns true if timed item is in before phase as defined at
 // http://dev.w3.org/fxtf/web-animations/#dfn-before-phase
 function isInBeforePhase(timedItem) {
-    return timedItem.localTime != null
+    return timedItem.localTime !== null
             && timedItem.startTime < timedItem.timing.delay;
 }
 
 // Returns true if timed item is in play as defined at
 // http://dev.w3.org/fxtf/web-animations/#dfn-in-play
 function isInPlay(timedItem) {
-    // FIXME Add the second condition:
-    // 2. the timed item has a parent animation group
-    // that is in play or else is directly associated with a player that is not
-    // limited.
-    return isInActivePhase(timedItem);
+    var condition1 = isInActivePhase(timedItem);
+    var condition2 = false;
+    if (timedItem.parent !== null && isInPlay(timedItem.parent)) {
+        condition2 = true;
+    } else if (timedItem.player !== null && !isLimited(timedItem.player)) {
+        condition2 = true;
+    }
+    return  condition1 && condition2;
 }
 
 // Returns true if timed item is in active phase as defined at
 // http://dev.w3.org/fxtf/web-animations/#dfn-active-phase
 function isInActivePhase(timedItem) {
-    return timedItem.localTime != null
+    return timedItem.localTime !== null
             && timedItem.startTime >= timedItem.timing.delay
             && timedItem.startTime <= timedItem.timing.delay
                     + timedItem.activeDuration;
+}
+
+// Returns true if player is limited as defined at
+// http://dev.w3.org/fxtf/web-animations/#dfn-limited
+function isLimited(player) {
+    return (player.playbackRate > 0 && player.currentTime >= getPlayerSourceContentEnd(player))
+        || (player.playbackRate < 0 && player.currentTime <= 0);
+}
+
+// Returns player source content end as defined at
+// http://dev.w3.org/fxtf/web-animations/#dfn-source-content-end
+function getPlayerSourceContentEnd(player) {
+    if (player.source === null) {
+        return 0;
+    }
+    return getEndTime(player.source);
+}
+
+// Returns end time of a timed item as defined at
+// http://dev.w3.org/fxtf/web-animations/#dfn-end-time
+function getEndTime(timedItem) {
+    return timedItem.startTime + timedItem.timing.delay + timedItem.activeDuration + timedItem.timing.endDelay;
 }
