@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<title>Animation player source test. Test that attribute is of type TimedItem and nullable</title>
+<meta name="assert" content="Source attribute is of type TimedItem and nullable">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-source">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var doc = newHTMLDocument();
+    var player = doc.timeline.play(null);
+
+    assert_equals(player.source, null, 'Value of source attribute should be null');
+}, 'Test that value of the source attribute is null if player is created by ' +
+    'AnimationTimeline.play(null) call');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var animationTarget = doc.createElement('div');
+    doc.body.appendChild(animationTarget);
+    var animation = new Animation(animationTarget, [], 5);
+    var player = doc.timeline.play(animation);
+
+    assert_not_equals(player.source, null, 'Value of source attribute should not be null');
+}, 'Test that value of the source attribute is not null if player is created by ' +
+    'AnimationTimeline.play(animation) call');
+</script>
+</body>
