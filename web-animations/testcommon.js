@@ -15,6 +15,18 @@ function newHTMLDocument() {
     return document.implementation.createHTMLDocument('Test Document');
 }
 
+// Returns true if there is className in object prototype chain
+function hasAncestorClassString(object, classString) {
+    var proto = Object.getPrototypeOf(object);
+    if (proto == null) {
+        return false;
+    }
+    if (proto.constructor.name === classString) {
+        return true;
+    }
+    return hasAncestorClassString(proto, classString);
+}
+
 // Returns true if timed item is in current as defined at
 // http://dev.w3.org/fxtf/web-animations/#dfn-current
 function isCurrent(timedItem) {

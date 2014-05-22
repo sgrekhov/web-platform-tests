@@ -10,24 +10,40 @@
 <body>
 <div id="log"></div>
 <script>
+function newAnimationPlayer(doc) {
+    var animationTarget = doc.createElement('div');
+    doc.body.appendChild(animationTarget);
+    var animation = new Animation(animationTarget, [], 5);
+    return doc.timeline.play(animation);
+}
+
+
 test(function() {
     var doc = newHTMLDocument();
     var player = doc.timeline.play(null);
 
-    assert_equals(player.source, null, 'Value of source attribute should be null');
-}, 'Test that value of the source attribute is null if player is created by ' +
-    'AnimationTimeline.play(null) call');
+    assert_equals(player.source, null, 'Value of AnimationPlayer.source attribute ' +
+        'should be null');
+}, 'Test that value of the AnimationPlayer.source attribute is null if player ' +
+    'is created by AnimationTimeline.play(null) call');
 
 
 test(function() {
     var doc = newHTMLDocument();
-    var animationTarget = doc.createElement('div');
-    doc.body.appendChild(animationTarget);
-    var animation = new Animation(animationTarget, [], 5);
-    var player = doc.timeline.play(animation);
+    var player = newAnimationPlayer(doc);
 
-    assert_not_equals(player.source, null, 'Value of source attribute should not be null');
-}, 'Test that value of the source attribute is not null if player is created by ' +
-    'AnimationTimeline.play(animation) call');
+    assert_not_equals(player.source, null, 'Value of AnimationPlayer.source attribute ' +
+        'should not be null');
+}, 'Test that value of the AnimationPlayer.source attribute is not null if player ' +
+    'is created by AnimationTimeline.play(animation) call');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var player = newAnimationPlayer(doc);
+
+    assert_true(hasAncestorClassString(player.source, 'TimedItem'), 'Value of ' +
+        'AnimationPlayer.source attribute should be of type TimedItem');
+}, 'Test that value of the AnimationPlayer.source attribute is of type TimedItem');
 </script>
 </body>
