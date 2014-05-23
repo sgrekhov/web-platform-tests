@@ -21,7 +21,7 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var timeline = doc.timeline;
-    assert_readonly(timeline.currentTime, 'Timeline attribute should be readonly');
+    assert_readonly(timeline, 'currentTime', 'Timeline attribute should be readonly');
 }, 'Timeline attribute readonly test');
 
 
