@@ -82,5 +82,6 @@ function getPlayerSourceContentEnd(player) {
 // Returns end time of a timed item as defined at
 // http://dev.w3.org/fxtf/web-animations/#dfn-end-time
 function getEndTime(timedItem) {
-    return timedItem.startTime + timedItem.timing.delay + timedItem.activeDuration + timedItem.timing.endDelay;
+    return timedItem.startTime + timedItem.timing.delay + timedItem.activeDuration
+        + timedItem.timing.endDelay;
 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<title>Animation player currentTime attribute test</title>
+<meta name="assert" content="The effective current time of this player. Setting this attribute follows the procedure defined in section 3.5.2.9 Performing a seek">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-currentTime">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+function newAnimationPlayer(doc) {
+    var animationTarget = doc.createElement('div');
+    doc.body.appendChild(animationTarget);
+    var animation = new Animation(animationTarget, [], 5);
+    return doc.timeline.play(animation);
+}
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var player = newAnimationPlayer(doc);
+
+    assert_not_equals(player.currentTime, null,
+        'The value of AnimationPlayer.currentTime attribute should not be of type null');
+}, 'Test value of AnimationPlayer.currentTime attribute should not be null');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var player = newAnimationPlayer(doc);
+
+    assert_throws('TypeError',function () {
+        player.currentTime = [];
+    }, 'TypeError should be thrown if AnimationPlayer.currentTime attribute ' +
+        'is set to not double value');
+}, 'Test that TypeError is thrown if AnimationPlayer.currentTime attribute ' +
+    'is set to not double value');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var player = newAnimationPlayer(doc);
+
+    var newCurrentTime = player.currentTime + 100;
+    player.currentTime = newCurrentTime;
+
+    assert_equals(player.currentTime, newCurrentTime,
+        'The value of AnimationPlayer.currentTime attribute should be set to the new value');
+}, 'Test setting value of AnimationPlayer.currentTime attribute');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var player = newAnimationPlayer(doc);
+    player.pause();
+
+    var newCurrentTime = player.currentTime + 100;
+    player.currentTime = newCurrentTime;
+
+    assert_equals(player.currentTime, newCurrentTime,
+        'The value of AnimationPlayer.currentTime attribute should be set to the new value');
+}, 'Test setting value of AnimationPlayer.currentTime attribute. Player is paused');
+
+
+test(function() {
+    var doc = newHTMLDocument();
+    var player = newAnimationPlayer(doc);
+    player.playbackRate = 0;
+
+    var newCurrentTime = player.currentTime + 100;
+    player.currentTime = newCurrentTime;
+
+    assert_equals(player.currentTime, newCurrentTime,
+        'The value of AnimationPlayer.currentTime attribute should be set to the new value');
+}, 'Test setting value of AnimationPlayer.currentTime attribute. ' +
+    'Player playback rate is zero');
+
+// TODO add tests for the following statements:
+// http://dev.w3.org/fxtf/web-animations/#performing-a-seek
+// - the player playback rate > 0 and seek time ≥ source content end (as defined in section 3.5.2.7 Automatically updating the hold time), or
+// - the player playback rate < 0 and seek time ≤ zero
+
+test(function() {
+    var doc = newHTMLDocument();
+    var player = newAnimationPlayer(doc);
+
+    var seekTime = player.currentTime + 100;
+    var expectedTime = player.currentTime - seekTime / player.playbackRate;
+    player.currentTime = seekTime;
+
+    assert_equals(player.currentTime, expectedTime,
+        'The value of AnimationPlayer.currentTime attribute should be set to the new value');
+    assert_false(player.finished, 'Player\s finished flag should be set to false');
+}, 'Test setting value of AnimationPlayer.currentTime attribute. ' +
+    'Player is not paused and playback rate is not zero');
+</script>
+</body>
