@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <title>Animation player paused attribute test</title>
 <meta name="assert" content="A boolean value that is true if the player is currently paused. The paused state is initially false.">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-startTime">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-paused">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -30,9 +30,15 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var player = newAnimationPlayer(doc);
-    player.pause();
 
+    player.pause();
     assert_true(player.paused, 'AnimationPlayer should be paused');
+
+    player.play();
+    assert_false(player.paused, 'AnimationPlayer should not be paused');
+
+    player.pause();
+    assert_true(player.paused, 'AnimationPlayer should be paused again');
 }, 'Test true value of AnimationPlayer.paused attribute');
 
 
