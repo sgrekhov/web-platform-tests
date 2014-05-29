@@ -11,15 +11,13 @@
 <div id="log"></div>
 <iframe id="iframe" src="../resources/blank.html"></iframe>
 <script>
-var div = null;
 function newAnimation(doc) {
     var animationTarget = doc.createElement('div');
     animationTarget.style.width = '25px';
-    div = animationTarget;
     doc.body.appendChild(animationTarget);
     return new Animation(animationTarget, [
-	    {width: "10px", offset: 0}, 
-	    {width: "100px", offset: 1/2}, 
+	    {width: "10px", offset: 0},
+	    {width: "100px", offset: 1/2},
 	    {width: "200px", offset: 1}], 1000);
 }
 
@@ -42,10 +40,10 @@ test(function() {
     var player = doc.timeline.play(animation);
 
     player.currentTime = 500;
-    assert_equals(div.clientWidth, 100, 'Animation effect should take place');
+    assert_equals(animation.target.clientWidth, 100, 'Animation effect should take place');
     
     player.cancel();
-    assert_equals(div.clientWidth, 25, 'Animation effect should be cleared');
+    assert_equals(animation.target.clientWidth, 25, 'Animation effect should be cleared');
 }, 'Test that animation effect is cleared by AnimationPlayer.cancel() call');
 
 document.querySelector('#iframe').remove();
