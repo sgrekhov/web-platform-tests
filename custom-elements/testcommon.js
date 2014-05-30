@@ -25,6 +25,11 @@ var HTML5_ELEMENTS = [ 'a', 'abbr', 'address', 'area', 'article', 'aside',
         'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'u', 'ul',
         'var', 'video', 'wbr' ];
 
+var HTML5_DOCUMENT_ELEMENTS = [ 'html', 'head', 'body' ];
+
+var HTML5_TABLE_ELEMENTS = [ 'caption', 'col', 'colgroup', 'tbody', 'td',
+        'tfoot', 'th', 'thead', 'tr' ];
+
 var EXTENDER_CHARS = [ 0x00B7, 0x02D0, 0x02D1, 0x0387, 0x0640, 0x0E46, 0x0EC6,
         0x3005, 0x3031, 0x3032, 0x3033, 0x3034, 0x3035, 0x309D, 0x309E, 0x30FC,
         0x30FD, 0x30FE ];
@@ -172,10 +177,6 @@ var ideographicCharsSingle = new CharsArray(IDEOGRAPHIC_CHARS_SINGLE);
 var ideographicCharsRanges = new CharRangesArray(IDEOGRAPHIC_CHARS_RANGES);
 var digitCharsRanges = new CharRangesArray(DIGIT_CHARS_RANGES);
 
-function newHTMLDocument() {
-    return document.implementation.createHTMLDocument('Test Document');
-}
-
 // Helper function, which verifies that given custom element name is valid
 function checkValidName(name) {
     var doc = newHTMLDocument();
@@ -204,4 +205,83 @@ function getCharCode(c) {
     }
     assert_equals('number', typeof(c), 'Error in test: unexpected type for charater code');
     return c;
+}
+
+var HTML_NAMESPACE = 'http://www.w3.org/1999/xhtml';
+var SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
+
+function newHTMLDocument() {
+    return document.implementation.createHTMLDocument('Test Document');
+}
+
+// Creates new iframe and loads given url into it.
+// Returns reference to created iframe.
+function newIFrame(url) {
+    assert_not_equals(url, null, 'argument url should not be null');
+    var iframe = document.createElement('iframe');
+    iframe.src = url;
+    document.body.appendChild(iframe);
+    return iframe;
+}
+
+// Creates new iframe and loads given url into it.
+// Function f is bound to the iframe's onload event.
+// Function f receives iframe's contentDocument as argument.
+// The iframe is disposed after function f is executed.
+function testInIFrame(url, f, testName, testProps) {
+    var t = async_test(testName, testProps);
+    t.step(function() {
+        var iframe = newIFrame(url);
+        iframe.onload = t.step_func(function() {
+            try {
+                f(iframe.contentDocument);
+                t.done();
+            } finally {
+                iframe.remove();
+            }
+        });
+    });
+}
+
+// Helper function to create a prototype for custom element
+// with predefined callbacks
+function newHTMLElementPrototype() {
+    return newCustomElementPrototype(HTMLElement.prototype);
+}
+
+// Helper function to create a prototype for custom element
+// with predefined callbacks
+function newCustomElementPrototype(parent) {
+    var proto = Object.create(parent);
+    proto.createdCallbackThis = null;
+    proto.createdCallbackCalledCounter = 0;
+
+    proto.attachedCallbackThis = null;
+    proto.attachedCallbackCalledCounter = 0;
+
+    proto.detachedCallbackThis = null;
+    proto.detachedCallbackCalledCounter = 0;
+
+    proto.attributeChangedCallbackThis = null;
+    proto.attributeChangedCallbackCalledCounter = 0;
+    proto.attributeChangedCallbackArgs = null;
+
+    proto.createdCallback = function() {
+        proto.createdCallbackThis = this;
+        proto.createdCallbackCalledCounter++;
+    };
+    proto.attachedCallback = function() {
+        proto.attachedCallbackThis = this;
+        proto.attachedCallbackCalledCounter++;
+    };
+    proto.detachedCallback = function() {
+        proto.detachedCallbackThis = this;
+        proto.detachedCallbackCalledCounter++;
+    };
+    proto.attributeChangedCallback = function(arg1, arg2, arg3) {
+        proto.attributeChangedCallbackThis = this;
+        proto.attributeChangedCallbackCalledCounter++;
+        proto.attributeChangedCallbackArgs = [arg1, arg2, arg3];
+    };
+    return proto;
 }

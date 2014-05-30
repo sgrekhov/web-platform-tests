@@ -1,17 +1,20 @@
+/*jshint nonew: false */
 (function() {
 "use strict";
 var runner;
+var testharness_properties = {output:false,
+                              timeout_multiplier:1};
 
 function Manifest(path) {
     this.data = null;
-    this.path = path
+    this.path = path;
     this.num_tests = null;
 }
 
 Manifest.prototype = {
     load: function(loaded_callback) {
         var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = (function() {
+        xhr.onreadystatechange = function() {
             if (xhr.readyState !== 4) {
                 return;
             }
@@ -20,7 +23,7 @@ Manifest.prototype = {
             }
             this.data = JSON.parse(xhr.responseText);
             loaded_callback();
-        }).bind(this);
+        }.bind(this);
         xhr.open("GET", this.path);
         xhr.send(null);
     },
@@ -32,7 +35,7 @@ Manifest.prototype = {
             return [];
         }
     }
-}
+};
 
 function ManifestIterator(manifest, path, test_types) {
     this.manifest = manifest;
@@ -45,30 +48,34 @@ function ManifestIterator(manifest, path, test_types) {
 
 ManifestIterator.prototype = {
     next: function() {
+        var manifest_item = null;
+
         if (this.test_types.length === 0) {
             return null;
         }
 
-        while (this.test_list === null || this.test_index === this.test_list.length) {
-            this.test_types_index++;
-            if (this.test_types_index >= this.test_types.length) {
-                return null;
+        while (!manifest_item) {
+            while (this.test_list === null || this.test_index >= this.test_list.length) {
+                this.test_types_index++;
+                if (this.test_types_index >= this.test_types.length) {
+                    return null;
+                }
+                this.test_index = 0;
+                this.test_list = this.manifest.by_type(this.test_types[this.test_types_index]);
             }
-            this.test_index = 0;
-            this.test_list = this.manifest.by_type(this.test_types[this.test_types_index]);
-        }
-        var manifest_item = this.test_list[this.test_index++];
-        while (manifest_item && !this.matches(manifest_item)) {
+
             manifest_item = this.test_list[this.test_index++];
+            while (manifest_item && !this.matches(manifest_item)) {
+                manifest_item = this.test_list[this.test_index++];
+            }
+            if (manifest_item) {
+                return this.to_test(manifest_item);
+            }
         }
-        if (!manifest_item) {
-            return null;
-        }
-        return this.to_test(manifest_item)
     },
 
     matches: function(manifest_item) {
-        return manifest_item.url.indexOf(this.path) == 0;
+        return manifest_item.url.indexOf(this.path) === 0;
     },
 
     to_test: function(manifest_item) {
@@ -84,25 +91,26 @@ ManifestIterator.prototype = {
     },
 
     count: function() {
-        return this.test_types.reduce((function(prev, current) {
-            var matches = this.manifest.by_type(current).filter((function(x) {
+        return this.test_types.reduce(function(prev, current) {
+            var matches = this.manifest.by_type(current).filter(function(x) {
                 return this.matches(x);
-            }).bind(this));
+            }.bind(this));
             return prev + matches.length;
-        }).bind(this), 0);
+        }.bind(this), 0);
     }
-}
+};
 
 function VisualOutput(elem, runner) {
     this.elem = elem;
     this.runner = runner;
-    this.meter = null;
     this.results_table = null;
     this.section_wrapper = null;
     this.results_table = this.elem.querySelector(".results > table");
     this.section = null;
     this.progress = this.elem.querySelector(".summary .progress");
+    this.meter = this.progress.querySelector(".progress-bar");
     this.result_count = null;
+    this.json_results_area = this.elem.querySelector("textarea");
 
     this.elem.style.display = "none";
     this.runner.start_callbacks.push(this.on_start.bind(this));
@@ -115,25 +123,27 @@ VisualOutput.prototype = {
         this.result_count = {"PASS":0,
                              "FAIL":0,
                              "ERROR":0,
-                             "TIMEOUT":0}
-        while (this.progress.childNodes.length) {
-            this.progress.removeChild(this.progress.childNodes[0]);
-        }
+                             "TIMEOUT":0};
         for (var p in this.result_count) {
             if (this.result_count.hasOwnProperty(p)) {
-                this.elem.querySelector("dd." + p).textContent = 0;
+                this.elem.querySelector("td." + p).textContent = 0;
             }
         }
-        this.elem.querySelector(".jsonResults").textContent = "";
+        if (this.json_results_area) {
+            this.json_results_area.parentNode.removeChild(this.json_results_area);
+        }
+        this.meter.style.width = '0px';
+        this.meter.textContent = '0%';
+        this.elem.querySelector(".jsonResults").style.display = "none";
         this.results_table.removeChild(this.results_table.tBodies[0]);
         this.results_table.appendChild(document.createElement("tbody"));
     },
 
     on_start: function() {
         this.clear();
-        this.meter = document.createElement("meter");
-        this.progress.appendChild(this.meter);
         this.elem.style.display = "block";
+        this.meter.classList.remove("stopped");
+        this.meter.classList.add("progress-striped", "active");
     },
 
     on_result: function(test, status, message, subtests) {
@@ -147,18 +157,18 @@ VisualOutput.prototype = {
         var test_status;
         if (subtest_pass_count === subtests_count &&
             (status == "OK" || status == "PASS")) {
-            test_status = "PASS"
+            test_status = "PASS";
         } else if (subtests_count > 0 && status === "OK") {
             test_status = "FAIL";
         } else {
             test_status = status;
         }
 
-        subtests.forEach((function(subtest) {
+        subtests.forEach(function(subtest) {
             if (this.result_count.hasOwnProperty(subtest.status)) {
                 this.result_count[subtest.status] += 1;
             }
-        }).bind(this));
+        }.bind(this));
         if (this.result_count.hasOwnProperty(status)) {
             this.result_count[status] += 1;
         }
@@ -177,26 +187,50 @@ VisualOutput.prototype = {
         if (subtests_count) {
             subtests_node.textContent = subtest_pass_count + "/" + subtests_count;
         } else {
-            subtests_node.textContent = "1/1"
+            if (status == "PASS") {
+                subtests_node.textContent = "1/1";
+            } else {
+                subtests_node.textContent = "0/1";
+            }
         }
 
-        this.elem.querySelector("dd." + test_status).textContent = this.result_count[test_status];
+        var status_arr = ["PASS", "FAIL", "ERROR", "TIMEOUT"];
+        for (var i = 0; i < status_arr.length; i++) {
+            this.elem.querySelector("td." + status_arr[i]).textContent = this.result_count[status_arr[i]];
+        }
 
         this.results_table.tBodies[0].appendChild(row);
-        this.update_meter(this.runner.progress());
+        this.update_meter(this.runner.progress(), this.runner.results.count(), this.runner.test_count());
     },
 
     on_done: function() {
-        this.meter.parentNode.removeChild(this.meter);
-        this.meter = null;
-        this.progress.textContent = "Done";
+        this.meter.setAttribute("aria-valuenow", this.meter.getAttribute("aria-valuemax"));
+        this.meter.style.width = "100%";
+        if (this.runner.stop_flag) {
+            this.meter.textContent = "Stopped";
+            this.meter.classList.add("stopped");
+        } else {
+            this.meter.textContent = "Done!";
+        }
+        this.meter.classList.remove("progress-striped", "active");
+        this.runner.test_div.textContent = "";
         //add the json serialization of the results
         var a = this.elem.querySelector(".jsonResults");
-        var blob = new Blob([this.runner.results.to_json()], { type: "application/json" });
+        var json = this.runner.results.to_json();
+
+        if (document.getElementById("dumpit").checked) {
+            this.json_results_area = document.createElement("textarea");
+            this.json_results_area.style.width = "100%";
+            this.json_results_area.setAttribute("rows", "50");
+            this.elem.appendChild(this.json_results_area);
+            this.json_results_area.textContent = json;
+        }
+        var blob = new Blob([json], { type: "application/json" });
         a.href = window.URL.createObjectURL(blob);
         a.download = "runner-results.json";
         a.textContent = "Download JSON results";
         if (!a.getAttribute("download")) a.textContent += " (right-click and save as to download)";
+        a.style.display = "inline";
     },
 
     test_name_node: function(test) {
@@ -218,12 +252,13 @@ VisualOutput.prototype = {
         return link;
     },
 
-    update_meter: function(progress) {
-        this.meter.value = progress;
-        this.meter.title = (progress * 100).toFixed(1) + "%";
+    update_meter: function(progress, count, total) {
+        this.meter.setAttribute("aria-valuenow", count);
+        this.meter.setAttribute("aria-valuemax", total);
+        this.meter.textContent = this.meter.style.width = (progress * 100).toFixed(1) + "%";
     }
 
-}
+};
 
 function ManualUI(elem, runner) {
     this.elem = elem;
@@ -238,22 +273,24 @@ function ManualUI(elem, runner) {
     this.hide();
 
     this.runner.test_start_callbacks.push(this.on_test_start.bind(this));
+    this.runner.test_pause_callbacks.push(this.hide.bind(this));
     this.runner.done_callbacks.push(this.on_done.bind(this));
 
-    this.pass_button.onclick = (function() {
-        this.runner.on_result("PASS", "", []);
+    this.pass_button.onclick = function() {
         this.disable_buttons();
-        setTimeout(this.enable_buttons.bind(this), 200);
-    }).bind(this);
+        this.runner.on_result("PASS", "", []);
+    }.bind(this);
 
-    this.fail_button.onclick = (function() {
+    this.fail_button.onclick = function() {
+        this.disable_buttons();
         this.runner.on_result("FAIL", "", []);
-    }).bind(this);
+    }.bind(this);
 }
 
 ManualUI.prototype = {
     show: function() {
         this.elem.style.display = "block";
+        setTimeout(this.enable_buttons.bind(this), 200);
     },
 
     hide: function() {
@@ -262,12 +299,12 @@ ManualUI.prototype = {
 
     show_ref: function() {
         this.ref_buttons.style.display = "block";
-        this.test_button.onclick = (function() {
+        this.test_button.onclick = function() {
             this.runner.load(this.runner.current_test.url);
-        }).bind(this);
-        this.ref_button.onclick = (function() {
+        }.bind(this);
+        this.ref_button.onclick = function() {
             this.runner.load(this.runner.current_test.ref_url);
-        }).bind(this);
+        }.bind(this);
     },
 
     hide_ref: function() {
@@ -301,7 +338,7 @@ ManualUI.prototype = {
     on_done: function() {
         this.hide();
     }
-}
+};
 
 function TestControl(elem, runner) {
     this.elem = elem;
@@ -309,7 +346,9 @@ function TestControl(elem, runner) {
     this.pause_button = this.elem.querySelector("button.togglePause");
     this.start_button = this.elem.querySelector("button.toggleStart");
     this.type_checkboxes = Array.prototype.slice.call(
-        this.elem.querySelectorAll("input[type=checkbox]"));
+        this.elem.querySelectorAll("input[type=checkbox].test-type"));
+    this.timeout_input = this.elem.querySelector(".timeout_multiplier");
+    this.render_checkbox = this.elem.querySelector(".render");
     this.runner = runner;
     this.runner.done_callbacks.push(this.on_done.bind(this));
     this.set_start();
@@ -317,47 +356,53 @@ function TestControl(elem, runner) {
 
 TestControl.prototype = {
     set_start: function() {
+        this.start_button.disabled = false;
         this.pause_button.disabled = true;
         this.start_button.textContent = "Start";
         this.path_input.disabled = false;
         this.type_checkboxes.forEach(function(elem) {
             elem.disabled = false;
         });
-        this.start_button.onclick = (function() {
+        this.start_button.onclick = function() {
             var path = this.get_path();
             var test_types = this.get_test_types();
-            this.runner.start(path, test_types);
-            this.set_stop();
-            this.set_pause();
-        }).bind(this);
+            var settings = this.get_testharness_settings();
+            this.runner.start(path, test_types, settings);
+            if (this.runner.manifest_iterator.count() > 0) {
+                this.set_stop();
+                this.set_pause();
+            }
+        }.bind(this);
     },
 
     set_stop: function() {
+        clearTimeout(this.runner.timeout);
         this.pause_button.disabled = false;
         this.start_button.textContent = "Stop";
         this.path_input.disabled = true;
         this.type_checkboxes.forEach(function(elem) {
             elem.disabled = true;
         });
-        this.start_button.onclick = (function() {
+        this.start_button.onclick = function() {
+            this.runner.stop_flag = true;
             this.runner.done();
-        }).bind(this);
+        }.bind(this);
     },
 
     set_pause: function() {
         this.pause_button.textContent = "Pause";
-        this.pause_button.onclick = (function() {
+        this.pause_button.onclick = function() {
             this.runner.pause();
             this.set_resume();
-        }).bind(this);
+        }.bind(this);
     },
 
     set_resume: function() {
         this.pause_button.textContent = "Resume";
-        this.pause_button.onclick = (function() {
+        this.pause_button.onclick = function() {
             this.runner.unpause();
             this.set_pause();
-        }).bind(this);
+        }.bind(this);
 
     },
 
@@ -371,6 +416,11 @@ TestControl.prototype = {
         }).map(function(elem) {
             return elem.value;
         });
+    },
+
+    get_testharness_settings: function() {
+        return {timeout_multiplier: parseFloat(this.timeout_input.value),
+                output: this.render_checkbox.checked};
     },
 
     on_done: function() {
@@ -410,30 +460,33 @@ Results.prototype = {
                                   result.test.url),
                           "subtests":result.subtests,
                           "status":result.status,
-                          "message":result.message}
+                          "message":result.message};
                 return rv;
             })
-        }
+        };
         return JSON.stringify(data, null, 2);
     }
-}
+};
 
-function Runner(manifest_path, options) {
+function Runner(manifest_path) {
     this.server = location.protocol + "//" + location.host;
     this.manifest = new Manifest(manifest_path);
     this.path = null;
     this.test_types = null;
     this.manifest_iterator = null;
 
-    this.test_window = null
-
+    this.test_window = null;
+    this.test_div = document.getElementById('test_url');
     this.current_test = null;
     this.timeout = null;
     this.num_tests = null;
     this.pause_flag = false;
+    this.stop_flag = false;
+    this.done_flag = false;
 
     this.start_callbacks = [];
     this.test_start_callbacks = [];
+    this.test_pause_callbacks = [];
     this.result_callbacks = [];
     this.done_callbacks = [];
 
@@ -441,7 +494,7 @@ function Runner(manifest_path, options) {
 
     this.start_after_manifest_load = false;
     this.manifest.load(this.manifest_loaded.bind(this));
-};
+}
 
 Runner.prototype = {
     test_timeout: 20000, //ms
@@ -452,7 +505,6 @@ Runner.prototype = {
 
     open_test_window: function() {
         this.test_window = window.open("about:blank", 800, 600);
-        window.focus();
     },
 
     manifest_loaded: function() {
@@ -461,10 +513,13 @@ Runner.prototype = {
         }
     },
 
-    start: function(path, test_types) {
+    start: function(path, test_types, testharness_settings) {
         this.pause_flag = false;
+        this.stop_flag = false;
+        this.done_flag = false;
         this.path = path;
         this.test_types = test_types;
+        window.testharness_properties = testharness_settings;
         this.manifest_iterator = new ManifestIterator(this.manifest, this.path, this.test_types);
         this.num_tests = null;
 
@@ -476,15 +531,22 @@ Runner.prototype = {
     },
 
     do_start: function() {
-        this.open_test_window();
-        this.start_callbacks.forEach(function(callback) {
-            callback();
-        });
-        this.run_next_test();
+        if (this.manifest_iterator.count() > 0) {
+            this.open_test_window();
+            this.start_callbacks.forEach(function(callback) {
+                callback();
+            });
+            this.run_next_test();
+        } else {
+            alert('No tests found.');
+        }
     },
 
     pause: function() {
         this.pause_flag = true;
+        this.test_pause_callbacks.forEach(function(callback) {
+            callback(this.current_test);
+        }.bind(this));
     },
 
     unpause: function() {
@@ -495,9 +557,9 @@ Runner.prototype = {
     on_result: function(status, message, subtests) {
         clearTimeout(this.timeout);
         this.results.set(this.current_test, status, message, subtests);
-        this.result_callbacks.forEach((function(callback) {
+        this.result_callbacks.forEach(function(callback) {
             callback(this.current_test, status, message, subtests);
-        }).bind(this));
+        }.bind(this));
         this.run_next_test();
     },
 
@@ -506,7 +568,10 @@ Runner.prototype = {
     },
 
     done: function() {
-        this.test_window.close();
+        this.done_flag = true;
+        if (this.test_window) {
+            this.test_window.close();
+        }
         this.done_callbacks.forEach(function(callback) {
             callback();
         });
@@ -517,7 +582,7 @@ Runner.prototype = {
             return;
         }
         var next_test = this.manifest_iterator.next();
-        if (next_test === null) {
+        if (next_test === null||this.done_flag) {
             this.done();
             return;
         }
@@ -526,13 +591,14 @@ Runner.prototype = {
 
         if (next_test.type === "testharness") {
             this.timeout = setTimeout(this.on_timeout.bind(this),
-                                      this.test_timeout);
+                                      this.test_timeout * window.testharness_properties.timeout_multiplier);
         }
+        this.test_div.textContent = this.current_test.url;
         this.load(this.current_test.url);
 
-        this.test_start_callbacks.forEach((function(callback) {
+        this.test_start_callbacks.forEach(function(callback) {
             callback(this.current_test);
-        }).bind(this));
+        }.bind(this));
     },
 
     load: function(path) {
@@ -558,7 +624,7 @@ Runner.prototype = {
 
 function parseOptions() {
     var options = {
-        test_types: ["testharness", "reftest", "manual"],
+        test_types: ["testharness", "reftest", "manual"]
     };
 
     var optionstrings = location.search.substring(1).split("&");
@@ -580,18 +646,20 @@ function setup() {
 
     runner = new Runner("/MANIFEST.json", options);
     var test_control = new TestControl(document.getElementById("testControl"), runner);
-    var manual_ui = new ManualUI(document.getElementById("manualUI"), runner);
-    var visual_output = new VisualOutput(document.getElementById("output"), runner);
+    new ManualUI(document.getElementById("manualUI"), runner);
+    new VisualOutput(document.getElementById("output"), runner);
 
-    if (options["autorun"] === "1") {
-        runner.start(test_control.get_path(), test_control.get_test_types());
+    if (options.autorun === "1") {
+        runner.start(test_control.get_path(),
+                     test_control.get_test_types(),
+                     test_control.get_testharness_settings());
         return;
     }
 }
 
 window.completion_callback = function(tests, status) {
-    var harness_status_map = {0:"OK", 1:"ERROR", 2:"TIMEOUT"}
-    var subtest_status_map = {0:"PASS", 1:"FAIL", 2:"TIMEOUT", 3:"NOTRUN"}
+    var harness_status_map = {0:"OK", 1:"ERROR", 2:"TIMEOUT"};
+    var subtest_status_map = {0:"PASS", 1:"FAIL", 2:"TIMEOUT", 3:"NOTRUN"};
 
     // this ugly hack is because IE really insists on holding on to the objects it creates in
     // other windows, and on losing track of them when the window gets closed
@@ -599,14 +667,14 @@ window.completion_callback = function(tests, status) {
         tests.map(function (test) {
             return {name: test.name,
                     status: subtest_status_map[test.status],
-                    message: test.message}
+                    message: test.message};
         })
     ));
 
     runner.on_result(harness_status_map[status.status],
                      status.message,
-                     subtest_results)
-}
+                     subtest_results);
+};
 
 window.addEventListener("DOMContentLoaded", setup, false);
 })();
