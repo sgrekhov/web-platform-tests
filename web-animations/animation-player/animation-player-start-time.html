@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="/resources/testharness.css">
 <body>
 <div id="log"></div>
-<iframe id="iframe" src="../resources/blank.html"></iframe>
+<iframe src="data:text/html;charset=utf-8," id="iframe"></iframe>
 <script>
 function newAnimation(doc) {
     var animationTarget = doc.createElement('div');
@@ -129,6 +129,7 @@ test(function() {
         'correspond player start time');
 }, 'The AnimationPlayer start time animation effect test. Start time is set to end time');
 
-document.querySelector('#iframe').remove();
+var iframe = document.querySelector('#iframe');
+iframe.parentNode.removeChild(iframe);
 </script>
 </body>
