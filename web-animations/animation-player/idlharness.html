@@ -6,45 +6,35 @@
 <script src="/resources/WebIDLParser.js"></script>
 <script src="/resources/idlharness.js"></script>
 <div id="log"></div>
+<div id="animation-target" style="width: 300px"></div>
 <script type="text/plain" id="AnimationPlayer-IDL">
 interface AnimationPlayer {
              attribute AnimationNode?    source;
-    readonly attribute AnimationTimeline timeline;
+   // readonly attribute AnimationTimeline timeline;
              attribute double            startTime;
              attribute double            currentTime;
              attribute double            playbackRate;
     readonly attribute boolean           paused;
     readonly attribute boolean           finished;
-    void cancel ();
-    void finish ();
-    void play ();
-    void pause ();
-    void reverse ();
-
-    // Event callbacks
-             attribute EventHandler      onfinish;
+    //         attribute EventHandler      onfinish;
 };
 </script>
 <script>
 'use strict';
 
-function newAnimation(doc) {
-    var animationTarget = doc.createElement('div');
-    animationTarget.style.width = '300px';
-    doc.body.appendChild(animationTarget);
-    return new Animation(animationTarget, [
-        {width: "10px", offset: 0},
-        {width: "100px", offset: 1/2},
-        {width: "200px", offset: 1}], 1000);
-}
-
+var animationTarget = document.querySelector('#animation-target');
+var animation = new Animation(animationTarget, [
+    {width: '10px', offset: 0},
+    {width: '100px', offset: 1/2},
+    {width: '200px', offset: 1}], 1000);
+var player = document.timeline.play(animation);
 
 var idlArray;
 test(function() {
   idlArray = new IdlArray();
   idlArray.add_idls(
     document.getElementById('AnimationPlayer-IDL').textContent);
-  idlArray.add_objects( { AnimationPlayer: ['document.timeline.play(newAnimation(document))'] } );
+  idlArray.add_objects( { AnimationPlayer: ['player'] } );
 });
 idlArray.test();
 

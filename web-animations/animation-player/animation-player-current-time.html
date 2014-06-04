@@ -10,38 +10,28 @@
 <link rel="stylesheet" href="/resources/testharness.css">
 <body>
 <div id="log"></div>
-<iframe src="data:text/html;charset=utf-8," id="iframe"></iframe>
+<iframe src="data:text/html;charset=utf-8," id="target"></iframe>
 <script>
 function newAnimation(doc) {
     var animationTarget = doc.createElement('div');
     animationTarget.style.width = '300px';
     doc.body.appendChild(animationTarget);
     return new Animation(animationTarget, [
-	    {width: "10px", offset: 0},
-	    {width: "100px", offset: 1/2},
-	    {width: "200px", offset: 1}], 1000);
+	    {width: '10px', offset: 0},
+	    {width: '100px', offset: 1/2},
+	    {width: '200px', offset: 1}], 1000);
 }
 
 
 test(function() {
     var doc = newHTMLDocument();
     var player = doc.timeline.play(newAnimation(doc));
-
+	
+    // FIXME Now (2014, June) it's according the spec but may be changed in future.
+    // Please check the specification if this test is still valid
     assert_not_equals(player.currentTime, null,
         'The value of AnimationPlayer.currentTime attribute should not be null');
 }, 'Test value of AnimationPlayer.currentTime attribute should not be null');
-
-
-test(function() {
-    var doc = newHTMLDocument();
-    var player = doc.timeline.play(newAnimation(doc));
-
-    assert_throws('TypeError',function () {
-        player.currentTime = [];
-    }, 'TypeError should be thrown if AnimationPlayer.currentTime attribute ' +
-        'is set to not double value');
-}, 'Test that TypeError is thrown if AnimationPlayer.currentTime attribute ' +
-    'is set to not double value');
 
 
 test(function() {
@@ -128,7 +118,7 @@ test(function() {
     var player = doc.timeline.play(newAnimation(doc));
 
     var seekTime = player.currentTime + 100;
-    var expectedTime = player.timeline.currentTime - seekTime / player.playbackRate;
+    var expectedTime = player.timeline.currentTime - seekTime;
     player.currentTime = seekTime;
 
     assert_equals(player.currentTime, expectedTime,

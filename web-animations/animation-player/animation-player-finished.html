@@ -15,9 +15,9 @@ function newAnimationPlayer(doc) {
     var animationTarget = doc.createElement('div');
     doc.body.appendChild(animationTarget);
     var animation = new Animation(animationTarget, [
-        {top: "0px", offset: 0}, 
-        {top: "100px", offset: 1/2}, 
-        {top: "200px", offset: 1}], 1000);
+        {top: '0px', offset: 0},
+        {top: '100px', offset: 1/2},
+        {top: '200px', offset: 1}], 1000);
     return doc.timeline.play(animation);
 }
 
