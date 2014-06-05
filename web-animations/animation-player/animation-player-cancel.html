@@ -10,14 +10,9 @@
 <link rel="stylesheet" href="/resources/testharness.css">
 <body>
 <div id="log"></div>
-<iframe src="data:text/html;charset=utf-8," id="target"></iframe>
 <script>
-var doc = document.querySelector('#target').contentWindow.document;
-
-function newAnimation() {
-    var animationTarget = doc.createElement('div');
+function newAnimation(animationTarget) {
     animationTarget.style.width = '300px';
-    doc.body.appendChild(animationTarget);
     return new Animation(animationTarget, [
 	    {width: '10px', offset: 0},
 	    {width: '100px', offset: 1/2},
@@ -26,7 +21,7 @@ function newAnimation() {
 
 
 test(function() {
-    var player = doc.timeline.play(newAnimation());
+    var player = document.timeline.play(newAnimation(createDiv(this)));
     player.cancel();
 
     assert_equals(player.source, null, 'Value of AnimationPlayer.source attribute ' +
@@ -36,8 +31,8 @@ test(function() {
 
 
 test(function() {
-    var animation = newAnimation();
-    var player = doc.timeline.play(animation);
+    var animation = newAnimation(createDiv(this));
+    var player = document.timeline.play(animation);
 
     player.currentTime = 500;
     assert_equals(window.getComputedStyle(animation.target).width, 100,
@@ -47,9 +42,5 @@ test(function() {
     assert_equals(window.getComputedStyle(animation.target).width, 300,
         'Animation effect should be cleared');
 }, 'Test that animation effect is cleared by AnimationPlayer.cancel() call');
-
-
-var target = document.querySelector('#target');
-target.parentNode.removeChild(target);
 </script>
 </body>

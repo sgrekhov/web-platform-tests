@@ -10,12 +10,9 @@
 <link rel="stylesheet" href="/resources/testharness.css">
 <body>
 <div id="log"></div>
-<iframe src="data:text/html;charset=utf-8," id="target"></iframe>
 <script>
-function newAnimation(doc) {
-    var animationTarget = doc.createElement('div');
+function newAnimation(animationTarget) {
     animationTarget.style.width = '300px';
-    doc.body.appendChild(animationTarget);
     return new Animation(animationTarget, [
 	    {width: '10px', offset: 0},
 	    {width: '100px', offset: 1/2},
@@ -24,8 +21,7 @@ function newAnimation(doc) {
 
 
 test(function() {
-    var doc = newHTMLDocument();
-    var player = doc.timeline.play(newAnimation(doc));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
 	
     // FIXME Now (2014, June) it's according the spec but may be changed in future.
     // Please check the specification if this test is still valid
@@ -35,8 +31,7 @@ test(function() {
 
 
 test(function() {
-    var doc = newHTMLDocument();
-    var player = doc.timeline.play(newAnimation(doc));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
 
     var newCurrentTime = player.currentTime + 100;
     player.currentTime = newCurrentTime;
@@ -47,8 +42,7 @@ test(function() {
 
 
 test(function() {
-    var doc = newHTMLDocument();
-    var player = doc.timeline.play(newAnimation(doc));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
     player.pause();
 
     var newCurrentTime = player.currentTime + 100;
@@ -60,8 +54,7 @@ test(function() {
 
 
 test(function() {
-    var doc = newHTMLDocument();
-    var player = doc.timeline.play(newAnimation(doc));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
     player.playbackRate = 0;
 
     var newCurrentTime = player.currentTime + 100;
@@ -74,8 +67,7 @@ test(function() {
 
 
 test(function() {
-    var doc = newHTMLDocument();
-    var player = doc.timeline.play(newAnimation(doc));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
     player.playbackRate = -1;
 
     var newCurrentTime = -100;
@@ -88,8 +80,7 @@ test(function() {
 
 
 test(function() {
-    var doc = newHTMLDocument();
-    var player = doc.timeline.play(newAnimation(doc));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
 
     var newCurrentTime = player.source.endTime;
     player.currentTime = newCurrentTime;
@@ -101,8 +92,7 @@ test(function() {
 
 
 test(function() {
-    var doc = newHTMLDocument();
-    var player = doc.timeline.play(newAnimation(doc));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
 
     var newCurrentTime = player.source.endTime + 100;
     player.currentTime = newCurrentTime;
@@ -114,8 +104,7 @@ test(function() {
 
 
 test(function() {
-    var doc = newHTMLDocument();
-    var player = doc.timeline.play(newAnimation(doc));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
 
     var seekTime = player.currentTime + 100;
     var expectedTime = player.timeline.currentTime - seekTime;
@@ -129,8 +118,7 @@ test(function() {
 
 
 test(function() {
-    var doc = newHTMLDocument();
-    var player = doc.timeline.play(newAnimation(doc));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
     player.playbackRate = 0.4;
 
     var seekTime = player.currentTime + 100;
@@ -145,10 +133,8 @@ test(function() {
 
 
 test(function() {
-    var iframe = document.querySelector('#iframe');
-    var doc = iframe.contentWindow.document;
-    var animation = newAnimation(doc);
-    var player = doc.timeline.play(animation);
+    var animation = newAnimation(createDiv(this));
+    var player = document.timeline.play(animation);
     player.currentTime = 0;
 
     assert_equals(window.getComputedStyle(animation.target).width, 10,
@@ -158,10 +144,8 @@ test(function() {
 
 
 test(function() {
-    var iframe = document.querySelector('#iframe');
-    var doc = iframe.contentWindow.document;
-    var animation = newAnimation(doc);
-    var player = doc.timeline.play(animation);
+    var animation = newAnimation(createDiv(this));
+    var player = document.timeline.play(animation);
     player.currentTime = 500;
 
     assert_equals(window.getComputedStyle(animation.target).width, 100,
@@ -171,18 +155,13 @@ test(function() {
 
 
 test(function() {
-    var iframe = document.querySelector('#iframe');
-    var doc = iframe.contentWindow.document;
-    var animation = newAnimation(doc);
-    var player = doc.timeline.play(animation);
+    var animation = newAnimation(createDiv(this));
+    var player = document.timeline.play(animation);
     player.currentTime = player.source.endTime;
 
     assert_equals(window.getComputedStyle(animation.target).width, 200,
         'Animation effect should take place');
 }, 'Test that animation effect is changed accordingly by setting ' +
     'AnimationPlayer.currentTime attribute when current time equals end time');
-
-var iframe = document.querySelector('#iframe');
-iframe.parentNode.removeChild(iframe);
 </script>
 </body>
