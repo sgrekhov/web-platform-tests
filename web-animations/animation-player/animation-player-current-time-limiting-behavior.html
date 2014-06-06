@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Test animation player limiting behavior of currentTime attribute</title>
+<meta name="assert" content="Test current time limiting behavior">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-currentTime">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+function newAnimation(animationTarget) {
+    animationTarget.style.width = '300px';
+    return new Animation(animationTarget, [
+	    {width: '10px', offset: 0},
+	    {width: '100px', offset: 1/2},
+	    {width: '200px', offset: 1}], 1000);
+}
+
+test(function() {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var timesToTest = [-100, -1, 0, 1, 500, player.source.endTime - 1, player.source.endTime,
+                       player.source.endTime + 1, player.source.endTime + 100];
+    
+
+    var expectedFinished = [true, true, true, false, false, false, true, true, true];
+    
+    timesToTest.forEach(function (timeToTest, index) {
+        player.currentTime = timeToTest;
+
+        assert_equals(player.currentTime, timeToTest,
+            'The value of AnimationPlayer.currentTime attribute should be set to the new value');        
+        assert_equals(player.finished, expectedFinished[index],
+            'The value of AnimationPlayer.finished attribute should match time ' + timeToTest);        
+    });
+}, 'Test limiting behavior of AnimationPlayer.currentTime attribute ' +
+    'when player playback rate is 1');
+</script>
+</body>
