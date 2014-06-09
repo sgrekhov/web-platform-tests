@@ -33,7 +33,7 @@ function calculateStartTime(timelineTime, seekTime, playbackRate) {
 
 test(function() {
     var player = document.timeline.play(newAnimation(createDiv(this)));
-	
+
     // FIXME Now (2014, June) it's according the spec but may be changed in future.
     // Please check the specification if this test is still valid
     assert_not_equals(player.currentTime, null,
@@ -43,7 +43,7 @@ test(function() {
 
 test(function() {
     var player = document.timeline.play(newAnimation(createDiv(this)));
-	
+
     assert_equals(player.currentTime, calculateEffectiveCurrentTime(
         player.timeline.currentTime, player.startTime, player.playbackRate),
         'The value of AnimationPlayer.currentTime attribute should be ' +
@@ -81,7 +81,7 @@ test(function() {
 test(function() {
     var player = document.timeline.play(newAnimation(createDiv(this)));
     player.playbackRate = 0.4;
-	
+
     assert_equals(player.currentTime, calculateEffectiveCurrentTime(
         player.timeline.currentTime, player.startTime, player.playbackRate),
         'The value of AnimationPlayer.currentTime attribute should be ' +
@@ -93,7 +93,7 @@ test(function() {
 test(function() {
     var player = document.timeline.play(newAnimation(createDiv(this)));
     player.playbackRate = -1.6;
-	
+
     assert_equals(player.currentTime, calculateEffectiveCurrentTime(
         player.timeline.currentTime, player.startTime, player.playbackRate),
         'The value of AnimationPlayer.currentTime attribute should be ' +
@@ -185,7 +185,7 @@ test(function() {
             'The value of AnimationPlayer.startTime attribute should be set when seek ' +
             'is performed');
         assert_false(player.finished, 'Player\'s finished flag should be set to false');
-    });    
+    });
 }, 'Test setting value of AnimationPlayer.currentTime attribute ' +
     'when player is not paused and playback rate is not zero');
 
@@ -203,7 +203,7 @@ test(function() {
             'The value of AnimationPlayer.startTime attribute should be set when seek ' +
             'is performed');
         assert_false(player.finished, 'Player\'s finished flag should be set to false');
-    });    
+    });
 }, 'Test setting value of AnimationPlayer.currentTime attribute ' +
     'when player is not paused and playback rate is not zero and not 1');
 
@@ -221,7 +221,7 @@ test(function() {
             'The value of AnimationPlayer.startTime attribute should be set when sek ' +
             'is performed');
         assert_false(player.finished, 'Player\'s finished flag should be set to false');
-    });    
+    });
 }, 'Test setting value of AnimationPlayer.currentTime attribute ' +
     'when player is not paused and playback rate is negative and not 1');
 
