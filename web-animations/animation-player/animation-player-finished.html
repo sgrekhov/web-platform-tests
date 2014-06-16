@@ -117,52 +117,6 @@ test(function() {
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
-
-    player.currentTime = 100;
-    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
-        'false if player is not finished');
-
-    player.currentTime = -100;
-    assert_true(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
-        'true if player is finished');
-
-    player.currentTime = 100;
-    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
-        'false again if player is not finished');
-
-    player.currentTime = -100;
-    assert_true(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
-        'true again if player is finished');
-}, 'The value of AnimationPlayer.finished attribute should be true if player zero time ' +
-    'is reached several times');
-
-
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.playbackRate = -1;
-
-    player.currentTime = 900;
-    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
-        'false if player is not finished');
-
-    player.currentTime = 1100;
-    assert_true(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
-        'true if player is finished');
-
-    player.currentTime = 900;
-    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
-        'false again if player is not finished');
-
-    player.currentTime = 1100;
-    assert_true(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
-        'true again if player is finished');
-}, 'The value of AnimationPlayer.finished attribute should be true if player end time ' +
-    'is reached several times. Player playback rate is -1');
-
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
     player.playbackRate = -1;
 
     player.currentTime = 100;
@@ -184,14 +138,41 @@ test(function() {
     'is reached several times. Playback rate is -1');
 
 
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+
+    player.currentTime = 100;
+    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
+        'false if player is not finished');
+
+    player.currentTime = -100;
+    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
+        'false if player time is before start time');
+}, 'The value of AnimationPlayer.finished attribute should be false if player time ' +
+    'is set before start time');
+
+
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = -1;
+
+    player.currentTime = 900;
+    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
+        'false if player is not finished');
+
+    player.currentTime = 1100;
+    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
+        'false if player is finished');
+}, 'The value of AnimationPlayer.finished attribute should be false if player time ' +
+    'is set after end time but player playback rate is -1');
+
+
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     player.currentTime = 900;
     setTimeout(function() {
         t.step(function () {
-            assert_equals(player.currentTime, player.source.endTime,
-                'The value of AnimationPlayer.currentTime attribute should be ' +
-                'hold on content end time');
             assert_true(player.finished, 'The value of AnimationPlayer.finished attribute ' +
                 'should be true');
             t.done();
@@ -253,6 +234,37 @@ test(function() {
 
 
 test(function() {
+    var player = document.timeline.play(null);
+    player.currentTime = 1100;
+    player.source = newAnimation(createDiv(this));
+
+    assert_true(player.finished, 'The value of AnimationPlayer.finished attribute should be true');
+}, 'Test AnimationPlayer.finished attribute when source contentis added but ' +
+    'current time is after the end');
+
+
+test(function() {
+    var player = document.timeline.play(null);
+    player.currentTime = -100;
+    player.source = newAnimation(createDiv(this));
+
+    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be false');
+}, 'Test AnimationPlayer.finished attribute when source contentis added but ' +
+    'current time is before start time');
+
+
+test(function() {
+    var player = document.timeline.play(null);
+    player.currentTime = -100;
+    player.playbackRate = -1;
+    player.source = newAnimation(createDiv(this));
+
+    assert_true(player.finished, 'The value of AnimationPlayer.finished attribute should be false');
+}, 'Test AnimationPlayer.finished attribute when source contentis added but ' +
+    'current time < 0 and playbackRate is -1');
+
+
+test(function() {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
     player.currentTime = 700;
@@ -263,6 +275,5 @@ test(function() {
     assert_true(player.finished, 'The value of AnimationPlayer.finished attribute should be true');
 }, 'Test AnimationPlayer.finished attribute. Source length is shortened by animation ' +
     'timeline playbackRate change');
-
 </script>
 </body>
