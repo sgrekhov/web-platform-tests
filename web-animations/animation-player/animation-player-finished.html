@@ -111,8 +111,8 @@ test(function() {
     player.currentTime = 1100;
     assert_true(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
         'true again if player is finished');
-}, 'The value of AnimationPlayer.finished attribute should be true if player end time ' +
-    'is reached several times');
+}, 'The value of AnimationPlayer.finished attribute should be set to true each time  when ' +
+    'player\'s end time is reached');
 
 
 test(function() {
@@ -134,8 +134,8 @@ test(function() {
     player.currentTime = -100;
     assert_true(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
         'true again if player is finished');
-}, 'The value of AnimationPlayer.finished attribute should be true if player zero time ' +
-    'is reached several times. Playback rate is -1');
+}, 'The value of AnimationPlayer.finished attribute should be set to true each time  when ' +
+    'player\'s 0 time is reached. Playback rate is -1');
 
 
 test(function() {

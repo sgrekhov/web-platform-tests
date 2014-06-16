@@ -95,8 +95,7 @@ test(function() {
     player.currentTime = 1100;
     assert_equals(player.onFinishCounter, 2, 'AnimationPlayer.onfinish callback should be ' +
         'called if player is finished');
-}, 'AnimationPlayer.onfinish callback is called if player end time ' +
-    'is reached several times');
+}, 'AnimationPlayer.onfinish callback is called each time, when the player end time is reached');
 
 
 test(function() {
@@ -138,8 +137,8 @@ test(function() {
     player.currentTime = -100;
     assert_equals(player.onFinishCounter, 2, 'AnimationPlayer.onfinish callback should be ' +
         'called if player is finished');
-}, 'AnimationPlayer.onfinish callback is called if player zero time ' +
-    'is reached several times and playback rate < 0');
+}, 'AnimationPlayer.onfinish callback is called each time, the player end time is reached ' +
+    'and playback rate < 0');
 
 
 test(function() {
