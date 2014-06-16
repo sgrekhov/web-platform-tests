@@ -46,17 +46,21 @@ test(function() {
 
 test(function() {
     var player = document.timeline.play(newAnimation(createDiv(this)));
-    var timesToTest = [-100, -1, 0, 1, 500, player.source.endTime - 1, player.source.endTime,
-                       player.source.endTime + 1, player.source.endTime + 100];
-    var expectedFinished = [true, true, true, false, false, false, true, true, true];
+    var pointsToTest = [{time: -100, finished: true}, {time: -1, finished: true},
+        {time: 0, finished: true}, {time: 1, finished: false}, {time: 500, finished: false},
+        {time: player.source.endTime - 1, finished: false},
+        {time: player.source.endTime, finished: true},
+        {time: player.source.endTime + 1, finished: true},
+        {time: player.source.endTime + 100, finished: true}];
 
-    timesToTest.forEach(function (timeToTest, index) {
-        player.currentTime = timeToTest;
+	pointsToTest.forEach(function (pointToTest) {
+        player.currentTime = pointToTest.time;
 
-        assert_equals(player.currentTime, timeToTest,
-            'The value of AnimationPlayer.currentTime attribute should be set to the new value');        
-        assert_equals(player.finished, expectedFinished[index],
-            'The value of AnimationPlayer.finished attribute should match time ' + timeToTest);        
+        assert_equals(player.currentTime, pointToTest.time,
+            'The value of AnimationPlayer.currentTime attribute should be set to the new value');
+        assert_equals(player.finished, pointToTest.finished,
+            'The value of AnimationPlayer.finished attribute should match time ' +
+            pointToTest.time);
     });
 }, 'Test limiting behavior of AnimationPlayer.currentTime attribute ' +
     'when player playback rate is 1');
@@ -64,7 +68,7 @@ test(function() {
 
 async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(this)));
-    player.currentTime = 900;
+    player.currentTime = 990;
     setTimeout(function() {
         t.step(function () {
             assert_equals(player.currentTime, player.source.endTime,
@@ -74,14 +78,14 @@ async_test(function(t) {
                 'should be true');
             t.done();
         });
-    }, 150);
+    }, 50);
 }, 'Test limiting behavior of AnimationPlayer.currentTime attribute. ' +
     'Wait for some time before checking the value when playback rate is 1');
 
 
 async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(this)));
-    player.currentTime = 100;
+    player.currentTime = 10;
     player.playbackRate = -1;
     setTimeout(function() {
         t.step(function () {
@@ -92,8 +96,37 @@ async_test(function(t) {
                 'should be true');
             t.done();
         });
-    }, 150);
+    }, 50);
 }, 'Test limiting behavior of AnimationPlayer.currentTime attribute. ' +
     'Wait for some time before checking the value when playback rate is -1');
+
+
+async_test(function(t) {
+    var animation = newAnimation(createDiv(this));
+    var player = document.timeline.play(animation);
+    player.currentTime = 990;
+    setTimeout(function() {
+        t.step(function () {
+            var curTime =  player.currentTime;
+            assert_equals(curTime, player.source.endTime,
+                'The value of AnimationPlayer.currentTime attribute should be ' +
+                'hold on content end time');
+            assert_true(player.finished, 'The value of AnimationPlayer.finished attribute ' +
+                'should be true');
+            animation.timing.playbackRate = 0.8;
+            setTimeout(function() {
+                t.step(function() {
+                    assert_greater_than(player.currentTime, curTime,
+                        'The value of AnimationPlayer.currentTime attribute should go on ' +
+                        'increasing');
+                    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute ' +
+                        'should be false');
+                    t.done();
+                });
+            }, 50);
+        });
+    }, 50);
+}, 'Test that AnimationPlayer.currentTime attribute goes on increasing if animation ' +
+    'length is increased by changing animation.timing.playbackRate');
 </script>
 </body>
