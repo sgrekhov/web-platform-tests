@@ -221,7 +221,7 @@ test(function() {
     player.currentTime = 1100;
     player.source = newLongAnimation(createDiv(this));
 
-    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be true');
+    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be false');
 }, 'Test AnimationPlayer.finished attribute. Extending source length');
 
 
@@ -248,7 +248,21 @@ test(function() {
     player.currentTime = 100;
     player.source = newAnimation(createDiv(this));
 
-    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be true');
+    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be false');
 }, 'Test AnimationPlayer.finished attribute. Add source content');
+
+
+test(function() {
+    var animation = newAnimation(createDiv(this));
+    var player = document.timeline.play(animation);
+    player.currentTime = 700;
+
+    // Changing animation playback rate to 2 makes animation length 2 times shorter 
+    animation.timing.playbackRate = 2;
+
+    assert_true(player.finished, 'The value of AnimationPlayer.finished attribute should be true');
+}, 'Test AnimationPlayer.finished attribute. Source length is shortened by animation ' +
+    'timeline playbackRate change');
+
 </script>
 </body>

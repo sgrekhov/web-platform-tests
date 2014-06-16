@@ -6,7 +6,6 @@
 <script src="/resources/WebIDLParser.js"></script>
 <script src="/resources/idlharness.js"></script>
 <div id="log"></div>
-<div id="animation-target" style="width: 300px"></div>
 <script type="text/plain" id="untested-IDL">
 interface EventTarget {
 };
@@ -33,16 +32,15 @@ interface AnimationPlayer : EventTarget {
     void reverse();
              attribute EventHandler      onfinish;
 };
+
+[TreatNonCallableAsNull]
+callback EventHandlerNonNull = any (Event event);
+typedef EventHandlerNonNull? EventHandler;
 </script>
 <script>
 'use strict';
 
-var animationTarget = document.querySelector('#animation-target');
-var animation = new Animation(animationTarget, [
-    {width: '0px', offset: 0},
-    {width: '100px', offset: 1/2},
-    {width: '200px', offset: 1}], 1000);
-var player = document.timeline.play(animation);
+var player = document.timeline.play(null);
 
 var idlArray;
 test(function() {

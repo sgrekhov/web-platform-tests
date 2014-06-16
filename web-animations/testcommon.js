@@ -23,11 +23,9 @@ function createDiv(test, doc) {
     }
     var div = doc.createElement('div');
     doc.body.appendChild(div);
-    if (test != null) {
-        test.add_cleanup(function() {
-            removeElement(div);
-        });
-    }
+    test.add_cleanup(function() {
+        removeElement(div);
+    });
     return div;
 }
 

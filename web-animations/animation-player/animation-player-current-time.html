@@ -216,7 +216,7 @@ test(function() {
         player.currentTime = seekTime;
 
         assert_equals(player.startTime, expectedTime,
-            'The value of AnimationPlayer.startTime attribute should be set when sek ' +
+            'The value of AnimationPlayer.startTime attribute should be set when seek ' +
             'is performed');
         assert_false(player.finished, 'Player\'s finished flag should be set to false');
     });
