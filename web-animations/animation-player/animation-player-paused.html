@@ -11,8 +11,16 @@
 <body>
 <div id="log"></div>
 <script>
+function newAnimation(animationTarget) {
+    animationTarget.style.width = '300px';
+    return new Animation(animationTarget, [
+        {width: '10px', offset: 0},
+        {width: '100px', offset: 1/2},
+        {width: '200px', offset: 1}], 1000);
+}
+
 function newAnimationPlayer(animationTarget) {
-    var animation = new Animation(animationTarget, [], 100);
+    var animation = newAnimation(animationTarget);
     return document.timeline.play(animation);
 }
 
@@ -28,11 +36,11 @@ test(function() {
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
-    player.currentTime = 99;
+    player.currentTime = 999;
     assert_false(player.paused, 'The value of AnimationPlayer.paused attribute should be ' +
         'false if player is not paused');
 
-    player.currentTime = 101;
+    player.currentTime = 1001;
     assert_false(player.paused, 'The value of AnimationPlayer.paused attribute should be ' +
         'false if player is not paused but seek time is greater than content end');
 }, 'The value of AnimationPlayer.paused attribute should be false if player is not paused');
@@ -52,10 +60,58 @@ test(function() {
 }, 'Test true value of AnimationPlayer.paused attribute');
 
 
-test(function() {
+async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
+    player.currentTime = 990;
+    setTimeout(function() {
+        t.step(function () {
+            assert_false(player.paused, 'The value of AnimationPlayer.paused attribute ' +
+                'should be false');
+            player.pause();
+            assert_true(player.paused, 'The value of AnimationPlayer.paused attribute ' +
+                'should be true');
+            t.done();
+        });
+    }, 50);
+}, 'Test AnimationPlayer.paused attribute when player is finished');
 
-    assert_readonly(player, 'paused', 'AnimationPlayer.paused attribute should be readonly');
-}, 'AnimationPlayer.paused attribute readonly test');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.currentTime = 10;
+    player.playbackrate = -1;
+    setTimeout(function() {
+        t.step(function () {
+            assert_false(player.paused, 'The value of AnimationPlayer.paused attribute ' +
+                'should be false');
+            player.pause();
+            assert_true(player.paused, 'The value of AnimationPlayer.paused attribute ' +
+                'should be true');
+            t.done();
+        });
+    }, 30);
+}, 'Test AnimationPlayer.paused attribute when player is finished and playback rate < 0');
+
+
+test(function() {
+    var animation = newAnimation(createDiv(this))
+    var player = document.timeline.play(animation);
+    player.currentTime = 900;
+    player.pause();
+    animation.timing.playbackRate = 2;
+    assert_true(player.paused, 'The value of AnimationPlayer.paused attribute ' +
+        'should be true');
+}, 'Test AnimationPlayer.paused attribute when animation length is changed (shortened)');
+
+
+test(function() {
+    var animation = newAnimation(createDiv(this))
+    var player = document.timeline.play(animation);
+    player.currentTime = 1100;
+    player.pause();
+    animation.timing.playbackRate = 0.5;
+    assert_true(player.paused, 'The value of AnimationPlayer.paused attribute ' +
+        'should be true');
+}, 'Test AnimationPlayer.paused attribute when animation length is changed (extended)');
 </script>
 </body>
