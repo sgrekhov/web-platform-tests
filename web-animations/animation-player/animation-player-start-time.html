@@ -11,26 +11,27 @@
 <body>
 <div id="log"></div>
 <script>
-function newAnimation(animationTarget) {
-    animationTarget.style.width = '1200px';
-    return new Animation(animationTarget, [
-	    {width: '0px', offset: 0},
-	    {width: '500px', offset: 1/2},
-	    {width: '1000px', offset: 1}], 1000);
-}
-
-
 function newAnimationPlayer(animationTarget) {
-    return document.timeline.play(newAnimation(animationTarget));
+    return document.timeline.play(new Animation(animationTarget, [], 1000));
 }
 
+var EPSILON = 10;
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
     assert_not_equals(player.startTime, null,
         'The value of AnimationPlayer.startTime attribute should not be of type null');
-}, 'The value of AnimationPlayer.startTime attribute should not be null');
+}, 'The value of AnimationPlayer.startTime attribute is not null');
+
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    assert_approx_equals(player.startTime, player.timeline.currentTime, EPSILON,
+        'Default value of AnimationPlayer.startTime attribute should be the current time of ' +
+        'the player timeline');
+}, 'Default value of AnimationPlayer.startTime attribute is the current time of ' +
+    'the player timeline');
 
 
 test(function() {
@@ -59,46 +60,63 @@ test(function() {
 }, 'Test setting value of AnimationPlayer.startTime attribute. Player is paused');
 
 
-test(function() {
-    var animation = newAnimation(createDiv(this));
-    var player = document.timeline.play(animation);
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.startTime += 50;
 
-    assert_equals(window.getComputedStyle(animation.target).width, 0,
-        'Animation effect of the AnimationPlayer object should ' +
-        'correspond player start time');
-}, 'The AnimationPlayer start time animation effect test. Start time is default');
-
-
-test(function() {
-    var animation = newAnimation(createDiv(this));
-    var player = document.timeline.play(animation);
-    player.startTime = 0;
-
-    assert_equals(window.getComputedStyle(animation.target).width, 0,
-        'Animation effect of the AnimationPlayer object should ' +
-        'correspond player start time');
-}, 'The AnimationPlayer start time animation effect test. Start time is zero');
+    setTimeout(function() {
+        t.step(function () {
+            assert_approx_equals(player.currentTime, 50, EPSILON, 'The value of ' +
+                'AnimationPlayer.currentTime should correspond startTime');
+            t.done();
+        });
+    }, 100);
+}, 'Test setting AnimationPlayer start time delays beginning of play');
 
 
-test(function() {
-    var animation = newAnimation(createDiv(this));
-    var player = document.timeline.play(animation);
-    player.startTime = 500;
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.startTime -= 100;
 
-    assert_equals(window.getComputedStyle(animation.target).width, 500,
-        'Animation effect of the AnimationPlayer object should ' +
-        'correspond player start time');
-}, 'The AnimationPlayer start time animation effect test. Start time is not default');
+    setTimeout(function() {
+        t.step(function () {
+            assert_approx_equals(player.currentTime, 150, EPSILON, 'The value of ' +
+                'AnimationPlayer.currentTime should correspond startTime');
+            t.done();
+        });
+    }, 50);
+}, 'Test setting AnimationPlayer start time shifts beginning of play (start time ' +
+    'is less than current time)');
 
 
-test(function() {
-    var animation = newAnimation(createDiv(this));
-    var player = document.timeline.play(animation);
-    player.startTime = 1000;
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.pause();
+    player.startTime += 50;
 
-    assert_equals(window.getComputedStyle(animation.target).width, 1000,
-        'Animation effect of the AnimationPlayer object should ' +
-        'correspond player start time');
-}, 'The AnimationPlayer start time animation effect test. Start time is set to end time');
+    setTimeout(function() {
+        t.step(function () {
+            assert_equals(player.currentTime, 0, 'The value of ' +
+                'AnimationPlayer.currentTime should correspond startTime');
+            t.done();
+        });
+    }, 60);
+}, 'Test setting AnimationPlayer start time delays beginning of play (player is paused)');
+
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.pause();
+    player.startTime -= 50;
+
+    setTimeout(function() {
+        t.step(function () {
+            assert_equals(player.currentTime, 0, 'The value of ' +
+                'AnimationPlayer.currentTime should correspond startTime');
+            t.done();
+        });
+    }, 60);
+}, 'Test setting AnimationPlayer start time shifts beginning of play (player is paused, ' +
+    'start tima less than current time)');
 </script>
 </body>

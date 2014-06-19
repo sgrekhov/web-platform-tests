@@ -12,9 +12,25 @@
 <div id="log"></div>
 <script>
 function newAnimationPlayer(animationTarget) {
-    var animation = new Animation(animationTarget, [], 5);
+    var animation = new Animation(animationTarget, [], 100);
     return document.timeline.play(animation);
 }
+
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+
+    assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
+        'not be null');
+}, 'The that AnimationPlayer.timeline attribute is not null');
+
+
+test(function() {
+    var player = document.timeline.play(null);
+
+    assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
+        'not be null');
+}, 'The that AnimationPlayer.timeline attribute is not null (no source content)');
 
 
 test(function() {
@@ -24,13 +40,5 @@ test(function() {
         'The value of AnimationPlayer.timeline attribute should be of type ' +
         'AnimationTimeline');
 }, 'The value of AnimationPlayer.timeline attribute is of type AnimationTimeline');
-
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-
-    assert_readonly(player, 'timeline', 'AnimationPlayer.timeline attribute should ' +
-        'be readonly');
-}, 'The that AnimationPlayer.timeline attribute is readonly');
 </script>
 </body>
