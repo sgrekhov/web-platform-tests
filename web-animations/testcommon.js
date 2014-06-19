@@ -57,7 +57,7 @@ function isCurrent(timedItem) {
 // http://dev.w3.org/fxtf/web-animations/#dfn-before-phase
 function isInBeforePhase(timedItem) {
     return timedItem.localTime !== null
-            && timedItem.startTime < timedItem.timing.delay;
+        && timedItem.startTime < timedItem.timing.delay;
 }
 
 // Returns true if timed item is in play as defined at
