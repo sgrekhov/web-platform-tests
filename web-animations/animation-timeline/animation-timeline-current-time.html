@@ -11,26 +11,22 @@
 <body>
 <div id="log"></div>
 <script>
+var EPSILON = 10;
+
 test(function() {
     assert_not_equals(document.timeline.currentTime, null,
         'Time value for the timeline should not be null');
 }, 'If timeline is started time value for this timeline is not null');
-
-
-test(function() {
-    assert_readonly(document.timeline, 'currentTime', 'Timeline attribute should be readonly');
-}, 'Timeline attribute readonly test');
-
 
 test(function() {
     assert_greater_than(document.timeline.currentTime, 0,
         'Time value for the timeline should be greater than zero');
 }, 'Timeline value is greater than zero test');
 
-
 test(function() {
-    assert_equals(window.performance.timing.navigationStart + document.timeline.currentTime,
-            (new Date()).getTime(), 'Time value for the timeline should be relative to ' +
+    assert_approx_equals(window.performance.timing.navigationStart +
+            document.timeline.currentTime, (new Date()).getTime(),
+            EPSILON, 'Time value for the timeline should be relative to ' +
             'navigationStart moment');
 }, 'Time value for the timeline is relative to navigationStart moment');
 </script>
