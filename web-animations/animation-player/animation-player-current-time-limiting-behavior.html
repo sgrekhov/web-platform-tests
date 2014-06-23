@@ -120,5 +120,32 @@ async_test(function(t) {
     }, 50);
 }, 'Test that AnimationPlayer.currentTime attribute goes on increasing if animation ' +
     'length is increased by changing animation.timing.playbackRate');
+
+async_test(function(t) {
+    var animation = newAnimation(createDiv(this));
+    var player = document.timeline.play(animation);
+    player.currentTime = 500;
+    setTimeout(function() {
+        t.step(function () {
+            assert_greater_than(player.currentTime, 500,
+                'The value of AnimationPlayer.currentTime attribute should be ' +
+                'hold on content end time');
+            assert_false(player.finished, 'The value of AnimationPlayer.finished attribute ' +
+                'should be true');
+            animation.timing.playbackRate = 2;
+            setTimeout(function() {
+                t.step(function() {
+                    assert_equals(player.currentTime, player.source.endTime,
+                        'The value of AnimationPlayer.currentTime attribute should go on ' +
+                        'increasing');
+                    assert_true(player.finished, 'The value of AnimationPlayer.finished ' +
+                        'attribute should be false');
+                    t.done();
+                });
+            }, 50);
+        });
+    }, 50);
+}, 'Test that AnimationPlayer.currentTime attribute stops increasing if animation ' +
+    'length is shortened by changing animation.timing.playbackRate');
 </script>
 </body>
