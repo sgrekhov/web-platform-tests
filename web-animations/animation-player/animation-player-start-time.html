@@ -24,7 +24,6 @@ test(function() {
         'The value of AnimationPlayer.startTime attribute should not be of type null');
 }, 'The value of AnimationPlayer.startTime attribute is not null');
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
     assert_approx_equals(player.startTime, player.timeline.currentTime, EPSILON,
@@ -32,7 +31,6 @@ test(function() {
         'the player timeline');
 }, 'Default value of AnimationPlayer.startTime attribute is the current time of ' +
     'the player timeline');
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
@@ -44,7 +42,6 @@ test(function() {
         'The value of AnimationPlayer.startTime attribute should be set to the new value');
 	// TODO Is there a way to test the following "2. Set the hold time to null."?
 }, 'Test setting value of AnimationPlayer.startTime attribute. Player is not paused');
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
@@ -59,7 +56,6 @@ test(function() {
         'hod time value');
 }, 'Test setting value of AnimationPlayer.startTime attribute. Player is paused');
 
-
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     player.startTime += 50;
@@ -72,7 +68,6 @@ async_test(function(t) {
         });
     }, 100);
 }, 'Test setting AnimationPlayer start time delays beginning of play');
-
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
@@ -88,7 +83,6 @@ async_test(function(t) {
 }, 'Test setting AnimationPlayer start time shifts beginning of play (start time ' +
     'is less than current time)');
 
-
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     player.pause();
@@ -102,7 +96,6 @@ async_test(function(t) {
         });
     }, 60);
 }, 'Test setting AnimationPlayer start time delays beginning of play (player is paused)');
-
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));

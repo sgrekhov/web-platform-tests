@@ -24,14 +24,12 @@ function newAnimationPlayer(animationTarget) {
     return document.timeline.play(animation);
 }
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
     assert_false(player.paused, 'The value of AnimationPlayer.paused attribute should be ' +
         'initially false');
 }, 'The value of AnimationPlayer.paused attribute should be initially false');
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
@@ -45,7 +43,6 @@ test(function() {
         'false if player is not paused but seek time is greater than content end');
 }, 'The value of AnimationPlayer.paused attribute should be false if player is not paused');
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
@@ -58,7 +55,6 @@ test(function() {
     player.pause();
     assert_true(player.paused, 'AnimationPlayer should be paused again');
 }, 'Test true value of AnimationPlayer.paused attribute');
-
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
@@ -74,7 +70,6 @@ async_test(function(t) {
         });
     }, 50);
 }, 'Test AnimationPlayer.paused attribute when player is finished');
-
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
@@ -92,7 +87,6 @@ async_test(function(t) {
     }, 30);
 }, 'Test AnimationPlayer.paused attribute when player is finished and playback rate < 0');
 
-
 test(function() {
     var animation = newAnimation(createDiv(this))
     var player = document.timeline.play(animation);
@@ -102,7 +96,6 @@ test(function() {
     assert_true(player.paused, 'The value of AnimationPlayer.paused attribute ' +
         'should be true');
 }, 'Test AnimationPlayer.paused attribute when animation length is changed (shortened)');
-
 
 test(function() {
     var animation = newAnimation(createDiv(this))

@@ -16,7 +16,6 @@ function newAnimation(animationTarget) {
     return new Animation(animationTarget, [], 5);
 }
 
-
 test(function() {
     var player = document.timeline.play(null);
 
@@ -24,7 +23,6 @@ test(function() {
         'should be null');
 }, 'Test that value of the AnimationPlayer.source attribute is null if player ' +
     'is created by AnimationTimeline.play(null) call');
-
 
 test(function() {
     var player = document.timeline.play(newAnimation(createDiv(this)));
@@ -34,14 +32,12 @@ test(function() {
 }, 'Test that value of the AnimationPlayer.source attribute is not null if player ' +
     'is created by AnimationTimeline.play(animation) call');
 
-
 test(function() {
     var player = document.timeline.play(newAnimation(createDiv(this)));
 
     assert_true(hasAncestorClassString(player.source, 'AnimationNode'), 'Value of ' +
         'AnimationPlayer.source attribute should be of type AnimationNode');
 }, 'Test that value of the AnimationPlayer.source attribute is of type AnimationNode');
-
 
 test(function() {
     var animation = newAnimation(createDiv(this));

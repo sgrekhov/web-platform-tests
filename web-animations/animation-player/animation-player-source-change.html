@@ -16,7 +16,6 @@ function newAnimation(animationTarget) {
     return new Animation(animationTarget, [], 5);
 }
 
-
 test(function() {
     var player = document.timeline.play(null);
     var animation = newAnimation(createDiv(this));
@@ -28,7 +27,6 @@ test(function() {
         'be set to associated player');
 }, 'Test that value of the AnimationPlayer.source attribute is changed. Initial value ' +
     'of the source attribute is null');
-
 
 test(function() {
     var animation1 = newAnimation(createDiv(this));
@@ -46,7 +44,6 @@ test(function() {
 }, 'Test that value of the AnimationPlayer.source attribute is changed. Initial value ' +
     'of the source attribute is not null');
 
-
 test(function() {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
@@ -60,7 +57,6 @@ test(function() {
 }, 'Test that value of the AnimationPlayer.source attribute is changed. Initial value ' +
     'of the source attribute is not null, new value is null');
 
-
 test(function() {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
@@ -73,7 +69,6 @@ test(function() {
         'not be disassociated from the player');
 }, 'Test that value of the AnimationPlayer.source attribute is not changed. Initial value ' +
     'of the source attribute is not null, new value is equal to the old value');
-
 
 test(function() {
     var animation1 = newAnimation(createDiv(this));
@@ -93,7 +88,6 @@ test(function() {
         'should be disassociated from its previous player');
 }, 'Test that  value of AnimationPlayer.source attribute is disassociated from ' +
     'its previous player');
-
 
 test(function() {
     var animation1 = newAnimation(createDiv(this));

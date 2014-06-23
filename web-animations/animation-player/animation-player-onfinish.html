@@ -41,14 +41,12 @@ function newPlayerFromAnimation(animation) {
     return player;
 }
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
     assert_equals(player.onFinishCounter, 0, 'AnimationPlayer.onfinish callback ' +
         'should not be called if player is not finished');
 }, 'AnimationPlayer.onfinish callback is not called if player is not finished');
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
@@ -57,7 +55,6 @@ test(function() {
     assert_equals(player.onFinishCounter, 1, 'AnimationPlayer.onfinish callback should be ' +
         'called if player is finished');
 }, 'AnimationPlayer.onfinish callback is called if player is finished');
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
@@ -75,7 +72,6 @@ test(function() {
         'called if player is finished');
 }, 'AnimationPlayer.onfinish callback is called if player end time ' +
     'is reached');
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
@@ -97,7 +93,6 @@ test(function() {
         'called if player is finished');
 }, 'AnimationPlayer.onfinish callback is called each time, when the player end time is reached');
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
     player.playbackRate = -1;
@@ -116,7 +111,6 @@ test(function() {
 
 }, 'AnimationPlayer.onfinish callback should be true if player ' +
     'playback rate < 0 and effective current time <= zero.');
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
@@ -140,7 +134,6 @@ test(function() {
 }, 'AnimationPlayer.onfinish callback is called each time, the player end time is reached ' +
     'and playback rate < 0');
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
@@ -153,8 +146,6 @@ test(function() {
         'called if player is not finished');
 }, 'AnimationPlayer.onfinish callback is not called if player time ' +
     'is set before start time');
-
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
@@ -170,7 +161,6 @@ test(function() {
 }, 'AnimationPlayer.onfinish callback is not called if player time ' +
     'is set after end time but player playback rate is -1');
 
-
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     player.currentTime = 900;
@@ -183,7 +173,6 @@ async_test(function(t) {
     }, 150);
 }, 'Test AnimationPlayer.onfinish callback. Wait for some time before checking the value ' +
     'when playback rate is 1');
-
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
@@ -199,7 +188,6 @@ async_test(function(t) {
 }, 'Test AnimationPlayer.onfinish callback. Wait for some time before checking the value ' +
     'when playback rate is -1');
 
-
 test(function() {
     var animation = newLongAnimation(createDiv(this));
     var player = newPlayerFromAnimation(animation);
@@ -210,7 +198,6 @@ test(function() {
         'should be called if player is finished');
 }, 'AnimationPlayer.onfinish callback. Shortened source length');
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
     player.currentTime = 500;
@@ -219,7 +206,6 @@ test(function() {
     assert_equals(player.onFinishCounter, 1, 'AnimationPlayer.onfinish callback ' +
         'should be called if player is finished');
 }, 'AnimationPlayer.onfinish callback. Remove source content');
-
 
 test(function() {
     var player = newPlayerFromAnimation(null);
@@ -231,7 +217,6 @@ test(function() {
 }, 'AnimationPlayer.onfinish callback when source contentis added but ' +
     'current time is after the end');
 
-
 test(function() {
     var player = newPlayerFromAnimation(null);
     player.currentTime = -100;
@@ -242,7 +227,6 @@ test(function() {
         'should not be called if player finished flag is not newly true');
 }, 'Test AnimationPlayer.onfinish callback is not called ' +
     'if player finished flag is not newly true');
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));

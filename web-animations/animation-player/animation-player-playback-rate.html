@@ -24,7 +24,6 @@ function newAnimationPlayer(animationTarget) {
     return document.timeline.play(animation);
 }
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
@@ -34,7 +33,6 @@ test(function() {
         'The initial value of AnimationPlayer.playbackRate attribute should not be 1');
 }, 'Test initial value of AnimationPlayer.playbackRate attribute');
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
     player.playbackRate = 2;
@@ -42,7 +40,6 @@ test(function() {
     assert_equals(player.playbackRate, 2, 'The value of AnimationPlayer.playbackRate ' +
         'attribute should be set to the new value');
 }, 'Test setting value of AnimationPlayer.playbackRate attribute');
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
@@ -59,7 +56,6 @@ test(function() {
 }, 'Test setting value of AnimationPlayer.playbackRate attribute. ' +
     'New value for the playback rate differs in sign');
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
     var currentTime = player.currentTime;
@@ -69,7 +65,6 @@ test(function() {
         'attribute should not be affected by changing playbackRate');
 }, 'Test that changing AnimationPlayer.playbackRate does not affect current time ' +
     '(default current time)');
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
@@ -81,7 +76,6 @@ test(function() {
 }, 'Test that changing AnimationPlayer.playbackRate does not affect current time ' +
     '(current time is between animation start and end time)');
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
     player.currentTime = 1100;
@@ -91,7 +85,6 @@ test(function() {
         'attribute should not be affected by changing playbackRate');
 }, 'Test that changing AnimationPlayer.playbackRate does not affect current time ' +
     '(current time is after end time)');
-
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
@@ -107,7 +100,6 @@ async_test(function(t) {
         });
     }, 50);
 }, 'Test that changing AnimationPlayer.playbackRate does not affect current time (async)');
-
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
@@ -126,7 +118,6 @@ async_test(function(t) {
 }, 'Test that changing AnimationPlayer.playbackRate does not affect current time ' +
     '(playbackRate differs in sign)');
 
-
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     player.currentTime = 990;
@@ -142,7 +133,6 @@ async_test(function(t) {
     }, 50);
 }, 'Test that changing AnimationPlayer.playbackRate does not affect current time ' +
     '(playbackRate differs in sign and player is finished)');
-
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
@@ -161,7 +151,6 @@ async_test(function(t) {
 }, 'Test that changing AnimationPlayer.playbackRate does not affect current time ' +
     '(playbackRate differs in sign (from negative to positive) and player is finished)');
 
-
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     player.currentTime = 10;
@@ -173,7 +162,6 @@ async_test(function(t) {
         });
     }, 10);
 }, 'Test that if playbackRate > 0 then time is increased');
-
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
@@ -187,7 +175,6 @@ async_test(function(t) {
         });
     }, 10);
 }, 'Test that if playbackRate < 0 then time is increased');
-
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));

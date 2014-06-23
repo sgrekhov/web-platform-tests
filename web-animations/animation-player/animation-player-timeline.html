@@ -16,7 +16,6 @@ function newAnimationPlayer(animationTarget) {
     return document.timeline.play(animation);
 }
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
@@ -24,14 +23,12 @@ test(function() {
         'not be null');
 }, 'The that AnimationPlayer.timeline attribute is not null');
 
-
 test(function() {
     var player = document.timeline.play(null);
 
     assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
         'not be null');
 }, 'The that AnimationPlayer.timeline attribute is not null (no source content)');
-
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
