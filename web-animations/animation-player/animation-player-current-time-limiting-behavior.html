@@ -11,11 +11,6 @@
 <body>
 <div id="log"></div>
 <script>
-function newZeroAnimation(animationTarget) {
-    animationTarget.style.width = '300px';
-    return new Animation(animationTarget, [], 0);
-}
-
 function newAnimation(animationTarget) {
     animationTarget.style.width = '300px';
     return new Animation(animationTarget, [
@@ -33,7 +28,7 @@ test(function() {
 }, 'Test limiting behavior of animation player without source');
 
 test(function() {
-    var player = document.timeline.play(newZeroAnimation(createDiv(this)));
+    var player = document.timeline.play(new Animation(createDiv(this), [], 0));
 
     assert_equals(player.currentTime, 0, 'The value of AnimationPlayer.currentTime ' +
         'attribute should be 0');
