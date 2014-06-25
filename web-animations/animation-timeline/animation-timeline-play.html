@@ -16,7 +16,6 @@ function newAnimationPlayer(animationTarget) {
     return document.timeline.play(animation);
 }
 
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
@@ -24,6 +23,19 @@ test(function() {
         'cannot be null');
 }, 'Player created by AnimationTimeline.play() method cannot be null');
 
+test(function() {
+    var player = document.timeline.play(null);
+
+    assert_not_equals(player, null, 'Player created by AnimationTimeline.play() method ' +
+        'cannot be null');
+}, 'Player created by AnimationTimeline.play(null) method cannot be null');
+
+test(function() {
+    var player = document.timeline.play();
+
+    assert_not_equals(player, null, 'Player created by AnimationTimeline.play() method ' +
+        'cannot be null');
+}, 'Player created by AnimationTimeline.play() method with no argument cannot be null');
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));

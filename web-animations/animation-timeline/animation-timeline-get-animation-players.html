@@ -18,7 +18,6 @@ function newAnimationPlayer(doc) {
     return doc.timeline.play(animation);
 }
 
-
 test(function() {
     var doc = newHTMLDocument();
 
@@ -29,7 +28,6 @@ test(function() {
         'should be empty');
 }, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
     'when there is no players associated');
-
 
 test(function() {
     var doc = newHTMLDocument();
@@ -43,7 +41,6 @@ test(function() {
 }, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
     'when there is one associated player');
 
-
 test(function() {
     var doc = newHTMLDocument();
     var player1 = newAnimationPlayer(doc);
@@ -54,7 +51,6 @@ test(function() {
         'should contain two elements');
 }, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
     'when there are more than one associated player');
-
 
 test(function() {
     var doc = newHTMLDocument();
