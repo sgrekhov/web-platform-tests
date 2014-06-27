@@ -25,8 +25,7 @@ test(function() {
 
     assert_equals(player.source, null, 'Value of AnimationPlayer.source attribute ' +
         'should be null');
-}, 'Test that value of the AnimationPlayer.source attribute is null after ' +
-    'AnimationPlayer.cancel() call');
+}, 'Test AnimationPlayer.cancel() sets the AnimationPlayer.source attribute to null');
 
 test(function() {
     var animation = newAnimation(createDiv(this));
@@ -39,6 +38,6 @@ test(function() {
     player.cancel();
     assert_equals(window.getComputedStyle(animation.target).width, 300,
         'Animation effect should be cleared');
-}, 'Test that animation effect is cleared by AnimationPlayer.cancel() call');
+}, 'Test AnimationPlayer.cancel() clears animation effects');
 </script>
 </body>
