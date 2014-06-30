@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation player play() method test test</title>
+<meta name="assert" content="Unpauses the player and rewinds if it has finished playing">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-play-void">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+function newAnimation(animationTarget) {
+    animationTarget.style.width = '300px';
+    return new Animation(animationTarget, [
+        {width: '10px', offset: 0},
+        {width: '100px', offset: 1/2},
+        {width: '200px', offset: 1}], 1000);
+}
+
+function newAnimationPlayer(animationTarget) {
+    var animation = newAnimation(animationTarget);
+    return document.timeline.play(animation);
+}
+
+var EPSILON = 20;
+var timesToTest = [-100, -1, 0, 1, 100, 900, 1000, 1001, 1100];
+
+test(function() {
+    var player = document.timeline.play(null);
+    player.pause();
+    player.play();
+
+    assert_false(player.paused, 'The value of AnimationPlayer.paused attribute should be ' +
+        'set to false');
+    assert_false(player.finished, 'AnimationPlayer.finished flag should be ' +
+            'set to false');
+}, 'AnimationPlayer.play() unpauses the player even with no source content');
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    player.pause();
+    player.play();
+
+    assert_false(player.paused, 'AnimationPlayer.paused attribute should be set to false');
+    assert_false(player.finished, 'AnimationPlayer.finished flag should be set to false');
+}, 'AnimationPlayer.play() unpauses the player');
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    timesToTest.forEach(function(time) {
+        player.currentTime = time;
+        player.pause();
+        player.play();
+
+        assert_false(player.paused, 'AnimationPlayer.paused attribute should be set to false');
+        assert_false(player.finished, 'AnimationPlayer.finished flag should be set to false');
+    });
+}, 'AnimationPlayer.play() unpauses the player. Test different times');
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = -1;
+    timesToTest.forEach(function(time) {
+        player.currentTime = time;
+        player.pause();
+        player.play();
+
+        assert_false(player.paused, 'AnimationPlayer.paused attribute should be set to false');
+        assert_false(player.finished, 'AnimationPlayer.finished flag should be set to false');
+    });
+}, 'AnimationPlayer.play() unpauses the player when playback rate < 0');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    // wait for 50 ms
+    setTimeout(function() {
+        t.step(function () {
+            player.pause();
+            // wait for 50 ms
+            setTimeout(function() {
+                t.step(function() {
+                    player.play();
+                    // wait for 50 ms
+                    setTimeout(function() {
+                        t.step(function() {
+                            assert_approx_equals(player.currentTime, 100, EPSILON,
+                                'After player is unpaused by AnimationPlayer.play() ' +
+                                'current time should go on increasing');
+                            t.done();
+                        });
+                    }, 50);
+                });
+            }, 50);
+        });
+    }, 50);
+}, 'Test that after player is unpaused by AnimationPlayer.play() ' +
+    'current time goes on increasing');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = -1;
+    player.currentTime = 500;
+    // wait for 50 ms
+    setTimeout(function() {
+        t.step(function () {
+            player.pause();
+            // wait for 50 ms
+            setTimeout(function() {
+                t.step(function() {
+                    player.play();
+                    // wait for 50 ms
+                    setTimeout(function() {
+                        t.step(function() {
+                            assert_approx_equals(player.currentTime, 400, EPSILON,
+                                'After player is unpaused by AnimationPlayer.play() ' +
+                                'current time should go on decreasing');
+                            t.done();
+                        });
+                    }, 50);
+                });
+            }, 50);
+        });
+    }, 50);
+}, 'Test that after player is unpaused by AnimationPlayer.play() ' +
+    'current time goes on decreasing if playback rate < 0');
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    player.currentTime = -1;
+    player.play();
+
+    assert_equals(player.currentTime, 0, 'AnimationPlayer.play() call should seek ' +
+        'current time to zero');
+}, 'AnimationPlayer.play() seeks current time to zero if current time < 0');
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    player.currentTime = player.source.endTime;
+    player.play();
+
+    assert_equals(player.currentTime, 0, 'AnimationPlayer.play() call should seek ' +
+        'current time to zero');
+}, 'AnimationPlayer.play() seeks current time to zero if current time equals ' +
+    'source content end');
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    player.currentTime = 1001;
+    player.play();
+
+    assert_equals(player.currentTime, 0, 'AnimationPlayer.play() call should seek ' +
+        'current time to zero');
+}, 'AnimationPlayer.play() seeks current time to zero if current time > ' +
+    'source content end');
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = -1;
+    player.currentTime = -1;
+    player.play();
+
+    assert_equals(player.currentTime, player.source.endTime, 'AnimationPlayer.play() ' +
+        'call should seek current time to source content end');
+}, 'AnimationPlayer.play() seeks current time to source content end if current time < 0' +
+    'and playback rate < 0');
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = -1;
+    player.currentTime = 0;
+    player.play();
+
+    assert_equals(player.currentTime, player.source.endTime, 'AnimationPlayer.play() ' +
+        'call should seek current time to source content end');
+}, 'AnimationPlayer.play() seeks current time to source content end if current time is 0' +
+    'and playback rate < 0');
+
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = -1;
+    player.currentTime = 1001;
+    player.play();
+
+    assert_equals(player.currentTime, player.source.endTime, 'AnimationPlayer.play() ' +
+        'call should seek current time to zero');
+}, 'AnimationPlayer.play() seeks current time to source content end if current time > ' +
+    'source content end and playback rate < 0');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.currentTime = 1100;
+    // wait for 50 ms
+    setTimeout(function() {
+        t.step(function () {
+            assert_equals(player.currentTime, 1100, 'currentTime value shoul not be changed');
+            player.play();
+            // wait for 50 ms
+            setTimeout(function() {
+                t.step(function() {
+                    assert_approx_equals(player.currentTime, 50, EPSILON,
+                        'After AnimationPlayer.play() call ' +
+                        'current time should go on increasing');
+                    t.done();
+                });
+            }, 50);
+        });
+    }, 50);
+}, 'Test that if AnimationPlayer.play() is called when current time > source end time ' +
+    'seek time is set to zero and starts increasing');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = -1;
+    player.currentTime = -10;
+    // wait for 50 ms
+    setTimeout(function() {
+        t.step(function () {
+            assert_equals(player.currentTime, -10, 'currentTime value shoul not be changed');
+            player.play();
+            // wait for 50 ms
+            setTimeout(function() {
+                t.step(function() {
+                    assert_approx_equals(player.currentTime, 950, EPSILON,
+                        'After AnimationPlayer.play() call' +
+                        'current time should go on decreasing');
+                    t.done();
+                });
+            }, 50);
+        });
+    }, 50);
+}, 'Test that if AnimationPlayer.play() is called when current time < 0 ' +
+    'seek time is set to source end time and starts decreasing if playback rate < 0');
+</script>
+</body>
