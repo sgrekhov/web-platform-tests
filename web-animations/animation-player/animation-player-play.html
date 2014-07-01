@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation player play() method test test</title>
+<title>Animation player play() method test</title>
 <meta name="assert" content="Unpauses the player and rewinds if it has finished playing">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-play-void">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
@@ -11,16 +11,12 @@
 <body>
 <div id="log"></div>
 <script>
-function newAnimation(animationTarget) {
+function newAnimationPlayer(animationTarget) {
     animationTarget.style.width = '300px';
-    return new Animation(animationTarget, [
+    var animation = new Animation(animationTarget, [
         {width: '10px', offset: 0},
         {width: '100px', offset: 1/2},
         {width: '200px', offset: 1}], 1000);
-}
-
-function newAnimationPlayer(animationTarget) {
-    var animation = newAnimation(animationTarget);
     return document.timeline.play(animation);
 }
 
