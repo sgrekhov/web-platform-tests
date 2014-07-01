@@ -32,6 +32,14 @@ test(function() {
 }, 'The value of AnimationPlayer.paused attribute should be initially false');
 
 test(function() {
+    var player = document.timeline.play(null);
+
+    assert_false(player.paused, 'The value of AnimationPlayer.paused attribute should be ' +
+        'initially false');
+}, 'The value of AnimationPlayer.paused attribute should be initially false even for ' +
+    'player with no source content');
+
+test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
     player.currentTime = 999;
