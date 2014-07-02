@@ -30,6 +30,8 @@ test(function() {
 
     assert_false(player.paused, 'The value of AnimationPlayer.paused attribute should be ' +
         'set to false');
+    // FIXME 'Set finished flag to false' doesn't mean that finished attribute set to false
+    // Fix this and all of the tests below
     assert_false(player.finished, 'AnimationPlayer.finished flag should be ' +
             'set to false');
 }, 'AnimationPlayer.play() unpauses the player even with no source content');
@@ -228,5 +230,8 @@ async_test(function(t) {
     }, 50);
 }, 'Test that if AnimationPlayer.play() is called when current time < 0 ' +
     'seek time is set to source end time and starts decreasing if playback rate < 0');
+
+// TODO add the following test: current time > end time. Call play(). 
+// Check that finished callback is called
 </script>
 </body>

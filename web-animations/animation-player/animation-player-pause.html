@@ -107,8 +107,9 @@ async_test(function(t) {
 
 async_test(function(t) {
     var playbackRatesToTest = [-1.5, -1, -0.4, 0.6, 1, 1.3];
+    var test = this;
     playbackRatesToTest.forEach(function(playbackRate) {
-        var player = newAnimationPlayer(createDiv(this));
+        var player = newAnimationPlayer(createDiv(test));
         player.playbackRate =  playbackRate;
         // wait for 50 ms
         setTimeout(function() {
@@ -119,9 +120,14 @@ async_test(function(t) {
                     calculateStartTime(player.timeline.currentTime, player.currentTime,
                         player.playbackRate), EPSILON, 'AnimationPlayer start time ' +
                             'should be set to the new value');
+            });
+        }, 50);
+        // wait for 100ms before finish the test
+        setTimeout(function() {
+            t.step(function () {
                 t.done();
             });
-        }, 50);        
+        }, 100);
     });
     
 }, 'AnimationPlayer.pause() sets correct value to start time if player is not limited');
