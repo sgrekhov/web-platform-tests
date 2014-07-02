@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation player reverse() method test</title>
+<meta name="assert" content="Inverts the playback rate of this player and seeks to the start of the source media if it has finished playing in the reversed direction">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-reverse-void">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+function testFinishedTrue(t, player) {
+    setTimeout(function() {
+        t.step(function () {
+            assert_true(player.finished, 'AnimationPlayer should be finished');
+            assert_equals(player.onFinishCounter, 1, 'AnimationPlayer.onfinish callback ' +
+                 'shoul be called');
+            t.done();
+        });
+    }, 40);
+}
+
+function testFinishedFalse(t, player) {
+    setTimeout(function() {
+        t.step(function () {
+            assert_false(player.finished, 'AnimationPlayer should not be finished');
+            assert_equals(player.onFinishCounter, 0, 'AnimationPlayer.onfinish callback ' +
+                 'shoul not be called');
+            t.done();
+        });
+    }, 40);
+}
+
+async_test(function(t) {
+    var player = newPlayerFromAnimation(null);
+    player.reverse();
+
+    assert_equals(player.playbackRate, -1, 'Playback rate should be changed in sign');
+
+    testFinishedTrue(t, player);
+}, 'AnimationPlayer.reverse() reverses the player with no source content');
+
+async_test(function(t) {
+    var player = newPlayerFromAnimation(null);
+    player.pause();
+    player.reverse();
+
+    assert_equals(player.playbackRate, -1, 'Playback rate should be changed in sign');
+    assert_false(player.paused, 'AnimationPlayer should not be paused');
+
+    testFinishedTrue(t, player);
+}, 'AnimationPlayer.reverse() reverses paused player with no source content');
+
+async_test(function(t) {
+    var player = newPlayerFromAnimation(null);
+    player.playbackRate = -0.4;
+    player.pause();
+    player.reverse();
+
+    assert_equals(player.playbackRate, 0.4, 'Playback rate should be changed in sign');
+    assert_false(player.paused, 'AnimationPlayer should not be paused');
+
+    testFinishedTrue(t, player);
+}, 'AnimationPlayer.reverse() reverses paused player with no source content and negative ' +
+    'playback rate');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.reverse();
+
+    assert_equals(player.playbackRate, -1, 'Playback rate should be changed in sign');
+
+    testFinishedTrue(t, player);
+}, 'AnimationPlayer.reverse() reverses player with source content');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.pause();
+    player.reverse();
+
+    assert_equals(player.playbackRate, -1, 'Playback rate should be changed in sign');
+    assert_false(player.paused, 'AnimationPlayer should not be paused');
+
+    testFinishedTrue(t, player);
+}, 'AnimationPlayer.reverse() reverses paused player with source content');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = -0.4;
+    player.pause();
+    player.reverse();
+
+    assert_equals(player.playbackRate, 0.4, 'Playback rate should be changed in sign');
+    assert_false(player.paused, 'AnimationPlayer should not be paused');
+
+    testFinishedFalse(t, player);
+}, 'AnimationPlayer.reverse() reverses paused player with source content and negative ' +
+    'playback rate');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    var timesToTest = [1, 100, 500, 900, 999];
+    timesToTest.forEach(function(time) {
+        player.currentTime = time;
+        player.pause();
+        var playbackRate = player.playbackRate; 
+        player.reverse();
+
+        assert_equals(player.playbackRate, -1 * playbackRate, 'Playback rate should be ' +
+            'changed in sign');
+        assert_false(player.paused, 'AnimationPlayer should not be paused');
+    });
+    testFinishedFalse(t, player);
+}, 'AnimationPlayer.reverse() reverses player when player is not limited');
+</script>
+</body>
