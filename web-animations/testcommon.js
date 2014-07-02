@@ -10,9 +10,34 @@ policies and contribution forms [3].
 
 "use strict";
 
+// Epsilon value for assert_approx_equals()
+var EPSILON = 20;
+
 // Creates and returns new HTML document
 function newHTMLDocument() {
     return document.implementation.createHTMLDocument('Test Document');
+}
+
+function newAnimation(animationTarget) {
+    animationTarget.style.width = '300px';
+    return new Animation(animationTarget, [
+        {width: '10px', offset: 0},
+        {width: '100px', offset: 1/2},
+        {width: '200px', offset: 1}], 1000);
+}
+
+function newAnimationPlayer(animationTarget) {
+    var animation = newAnimation(animationTarget);
+    return newPlayerFromAnimation(animation);
+}
+
+function newPlayerFromAnimation(animation) {
+    var player = document.timeline.play(animation);
+    player.onFinishCounter = 0;
+    player.onfinish = function() {
+        this.onFinishCounter++;
+    };
+    return player;
 }
 
 // creates div element, appends it to the document body and
@@ -66,12 +91,8 @@ function isInPlay(timedItem) {
     if (!isInActivePhase(timedItem)) {
         return false;
     }
-    if (timedItem.parent !== null && isInPlay(timedItem.parent)) {
-        return true;
-    } else if (timedItem.player !== null && !isLimited(timedItem.player)) {
-        return true;
-    }
-    return  false;
+    return (timed.parent !== null && isInPlay(timedItem.parent)) ||
+        (timedItem.player !== null && !isLimited(timedItem.parent));
 }
 
 // Returns true if timed item is in active phase as defined at
@@ -79,7 +100,8 @@ function isInPlay(timedItem) {
 function isInActivePhase(timedItem) {
     return timedItem.localTime !== null
         && timedItem.startTime >= timedItem.timing.delay
-        && timedItem.startTime <= timedItem.timing.delay + timedItem.activeDuration;
+        && timedItem.startTime <=
+            timedItem.timing.delay + timedItem.activeDuration;
 }
 
 // Returns true if player is limited as defined at
