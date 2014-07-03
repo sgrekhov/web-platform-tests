@@ -12,6 +12,7 @@ policies and contribution forms [3].
 
 // Epsilon value for assert_approx_equals()
 var EPSILON = 20;
+var ANIMATION_END_TIME = 1000;
 
 // Creates and returns new HTML document
 function newHTMLDocument() {
@@ -23,7 +24,7 @@ function newAnimation(animationTarget) {
     return new Animation(animationTarget, [
         {width: '10px', offset: 0},
         {width: '100px', offset: 1/2},
-        {width: '200px', offset: 1}], 1000);
+        {width: '200px', offset: 1}], ANIMATION_END_TIME);
 }
 
 function newAnimationPlayer(animationTarget) {
