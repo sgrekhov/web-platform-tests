@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation timeline currentTime attribute test</title>
-<meta name="assert" content="Animation timeline currentTime attribute returns the time value for this timeline or null if this timeline is not started">
+<title>AnimationTimeline currentTime attribute tests</title>
+<meta name="assert" content="AnimationTimeline currentTime attribute returns the time value for this timeline or null if this timeline is not started">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-animationtimeline-interface">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -11,12 +11,10 @@
 <body>
 <div id="log"></div>
 <script>
-var EPSILON = 20;
-
 test(function() {
     assert_not_equals(document.timeline.currentTime, null,
-        'Time value for the timeline should not be null');
-}, 'If timeline is started time value for this timeline is not null');
+        'Time value for the started AnimationTimeline should not be null');
+}, 'Test started AnimationTimeline currentTime is not null');
 
 test(function() {
     assert_greater_than(document.timeline.currentTime, 0,
@@ -24,10 +22,16 @@ test(function() {
 }, 'Timeline value is greater than zero test');
 
 test(function() {
-    assert_approx_equals(window.performance.timing.navigationStart +
-            document.timeline.currentTime, (new Date()).getTime(),
-            EPSILON, 'Time value for the timeline should be relative to ' +
-            'navigationStart moment');
+    assert_readonly(document.timeline, 'currentTime',
+        'AnimationTimeline currentTime attribute should be read only');
+}, 'Test AnimationTimeline currentTime attribute is read only');
+
+test(function() {
+    assert_approx_equals(
+        window.performance.timing.navigationStart + document.timeline.currentTime,
+        (new Date()).getTime(),
+        EPSILON,
+        'Time value for the timeline should be relative to navigationStart moment');
 }, 'Time value for the timeline is relative to navigationStart moment');
 
 test(function() {
@@ -45,8 +49,7 @@ async_test(function(t) {
             t.done();
         });
     }, 50);
-}, 'Test that AnimationTimeline.currentTime is increased when time goes by');
-
+}, 'AnimationTimeline.currentTime is increased monotonically');
 
 test(function() {
     var timelineTime1 = document.timeline.currentTime;
@@ -58,6 +61,6 @@ test(function() {
     assert_equals(timelineTime1, timelineTime2, 'The value returned by the currentTime ' +
         'attribute of a document timeline should not change within a script block');
 }, 'The value returned by the currentTime attribute of a document timeline ' +
-    'will not change within a script block');
+    'does not change within a script block');
 </script>
 </body>
