@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation node parent attribute test</title>
+<meta name="assert" content="The parent animation group of this animation node or null if this animation node does not have a parent animation group">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-parent">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var node = newAnimation(createDiv(this));
+
+    assert_equals(node.parent, null, 'AnimationNode.parent should be null');
+}, 'AnimationNode.parent is null if animation node does not have a parent animation group');
+
+test(function() {
+    var node = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node]);
+
+    assert_equals(node.parent, animationGroup, 'AnimationNode.parent should return ' +
+        'parent animation group of this animation node');
+}, 'AnimationNode.parent returns parent animation group of this animation node');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1, node2]);
+
+    assert_equals(node1.parent, animationGroup, 'AnimationNode.parent should return ' +
+        'parent animation group of this animation node (first node in the group)');
+    assert_equals(node2.parent, animationGroup, 'AnimationNode.parent should return ' +
+        'parent animation group of this animation node (second node in the group)');
+}, 'AnimationNode.parent returns parent animation group of this animation node. Test more ' +
+    'than one node in the group');
+</script>
+</body>
