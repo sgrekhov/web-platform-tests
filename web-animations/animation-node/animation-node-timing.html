@@ -43,8 +43,7 @@ test(function() {
         playbackRate: -2,
         playbackDirection: 'reverse',
         direction: 'reverse',
-        // FIXME How to set non default easing value?
-        easing: 'function(input) { return input /2;}'};
+        easing: 'ease'};
     var node = new Animation(createDiv(this), [], timing);
 
     assert_equals(node.timing.delay, timing.delay, 'Value of AnimationNode.timing.delay ' +
