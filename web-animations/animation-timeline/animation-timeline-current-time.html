@@ -40,15 +40,22 @@ test(function() {
 }, 'Document timeline value corresponds Performance.now()');
 
 async_test(function(t) {
-    var timelineTime = document.timeline.currentTime;
+    var previousTime = document.timeline.currentTime;
+    var repetitions = 10;
 
-    setTimeout(function() {
-        t.step(function () {
-            assert_approx_equals(document.timeline.currentTime - timelineTime, 50,
-                EPSILON, 'AnimationTimeline.currentTime should increase its value');
+    t.test_func = t.step_func(function(){
+        assert_approx_equals(document.timeline.currentTime - previousTime, 50, EPSILON,
+            'AnimationTimeline.currentTime should increase its value');
+        previousTime = document.timeline.currentTime;
+        repetitions--;
+        if (repetitions>0){
+            setTimeout(t.test_func, 50);
+        } else {
             t.done();
-        });
-    }, 50);
+        }
+    });
+
+    setTimeout(t.test_func, 50);
 }, 'AnimationTimeline.currentTime is increased monotonically');
 
 test(function() {
