@@ -4,6 +4,7 @@
 <meta name="assert" content="AnimationTimeline currentTime attribute returns the time value for this timeline or null if this timeline is not started">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-animationtimeline-interface">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -43,19 +44,16 @@ async_test(function(t) {
     var previousTime = document.timeline.currentTime;
     var repetitions = 10;
 
-    t.test_func = t.step_func(function(){
-        assert_approx_equals(document.timeline.currentTime - previousTime, 50, EPSILON,
+    var intervalId = setInterval(t.step_func(function(){
+        assert_true(document.timeline.currentTime - previousTime > 50-EPSILON,
             'AnimationTimeline.currentTime should increase its value');
         previousTime = document.timeline.currentTime;
         repetitions--;
-        if (repetitions>0){
-            setTimeout(t.test_func, 50);
-        } else {
+        if (repetitions===0){
+            clearInterval(intervalId);
             t.done();
         }
-    });
-
-    setTimeout(t.test_func, 50);
+    }), 50);
 }, 'AnimationTimeline.currentTime is increased monotonically');
 
 test(function() {
