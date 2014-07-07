@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation node computed timing attribute test</title>
+<meta name="assert" content="Returns the calculated timing properties for this animation node">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-computedTiming">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var node = new Animation(createDiv(this), []);
+
+    assert_equals(node.computedTiming.delay, 0, 'Default value of ' +
+        'AnimationNode.computedTiming.delay should be 0');
+    assert_equals(node.computedTiming.endDelay, 0, 'Default value of ' +
+        'AnimationNode.computedTiming.endDelay should be 0');
+    assert_equals(node.computedTiming.iterationStart, 0, 'Default value of ' +
+        'AnimationNode.computedTiming.iterationStart should be 0.0');
+    assert_equals(node.computedTiming.iterations, 1, 'Default value of ' +
+        'AnimationNode.computedTiming.iterations should be 1.0');
+    assert_equals(node.computedTiming.playbackRate, 1, 'Default value of ' +
+        'AnimationNode.computedTiming.playbackRate should be 1.0');
+    assert_equals(node.computedTiming.direction, 'normal', 'Default value of ' +
+        'AnimationNode.computedTiming.direction should be \'normal\'');
+    assert_equals(node.computedTiming.easing, 'linear', 'Default value of ' +
+        'AnimationNode.computedTiming.easing should be \'linear\'');
+}, 'Test AnimationNode.computedTiming default values');
+
+test(function() {
+    var timing = {delay: 1,
+        endDelay: 1,
+        fill: 'none',
+        iterationStart: 1.1,
+        iterations: 2.0,
+        duration: 3,
+        playbackRate: -2,
+        playbackDirection: 'reverse',
+        direction: 'reverse',
+        easing: 'ease'};
+    var node = new Animation(createDiv(this), [], timing);
+
+    assert_equals(node.computedTiming.delay, timing.delay, 'Value of ' +
+        'AnimationNode.computedTiming.delay should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.endDelay, timing.endDelay, 'Value of ' +
+        'AnimationNode.computedTiming.endDelay should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.fill, timing.fill, 'Value of ' +
+        'AnimationNode.computedTiming.fill should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.iterationStart, timing.iterationStart, 'Value of ' +
+        'AnimationNode.computedTiming.iterationStart should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.iterations, timing.iterations, 'Value of ' +
+        'AnimationNode.computedTiming.iterations should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.duration, timing.duration, 'Value of ' +
+        'AnimationNode.computedTiming.duration should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.playbackRate, timing.playbackRate, 'Value of ' +
+        'AnimationNode.computedTiming.playbackRate should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.direction, timing.direction, 'Value of ' +
+        'AnimationNode.computedTiming.direction should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.easing, timing.easing, 'Value of ' +
+        'AnimationNode.computedTiming.easing should be specified by AnimationTimingInput');
+}, 'AnimationNode.computedTiming returns calculated input timing properties for this ' +
+    'animation node');
+
+test(function() {
+    var node = new Animation(createDiv(this), []);
+
+    assert_equals(node.computedTiming.duration, 0, 'Default value of ' +
+        'AnimationNode.computedTiming.duration should be replaced by ' +
+        'intrinsic iteration duration');
+}, 'Test that default value of AnimationNode.computedTiming.duration is replaced by ' +
+    'intrinsic iteration duration');
+
+test(function() {
+    var timing = {
+            duration: 'auto'
+        };
+    var node = new Animation(createDiv(this), [], timing);
+
+    assert_equals(node.computedTiming.duration, 0, '\'auto\' value of ' +
+        'AnimationNode.computedTiming.duration should be replaced by ' +
+        'intrinsic iteration duration');
+}, 'Test that \'auto\' value of AnimationNode.computedTiming.duration is replaced by ' +
+    'intrinsic iteration duration');
+
+test(function() {
+    var timing = {
+            duration: 'some unsupported value'
+        };
+    var node = new Animation(createDiv(this), [], timing);
+
+    assert_equals(node.computedTiming.duration, 0, 'Unsupported value of ' +
+        'AnimationNode.computedTiming.duration should be replaced by ' +
+        'intrinsic iteration duration');
+}, 'Test that unsupported value of AnimationNode.computedTiming.duration is replaced by ' +
+    'intrinsic iteration duration');
+
+test(function() {
+    var timing = {
+            fill: 'auto'
+        };
+    var node1 = new Animation(createDiv(this), [], timing);
+    var node2 = new AnimationGroup(null, timing);
+
+    assert_equals(node1.computedTiming.fill, 'none', '\'auto\' value of ' +
+        'AnimationNode.computedTiming.fill should be replaced by none for animation');
+    assert_equals(node1.computedTiming.fill, 'both', '\'auto\' value of ' +
+        'AnimationNode.computedTiming.fill should be replaced by \'both\' for animation group');    
+}, 'Test that \'auto\' value of AnimationNode.computedTiming.fill is replaced depending on ' +
+    'animation node type');
+
+// TODO Spec doesn't say anything about unsupported value for fill
+
+// TODO add all the tests above for AnimationGroup which implements AnimationNode interface as well
+
+</script>
+</body>
