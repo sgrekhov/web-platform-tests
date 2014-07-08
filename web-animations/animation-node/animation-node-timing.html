@@ -11,6 +11,12 @@
 <body>
 <div id="log"></div>
 <script>
+var fillValues = ['none', 'forwards', 'backwards', 'both', 'auto'];
+var playbackDirections = ['normal', 'reverse', 'alternate', 'alternate-reverse'];
+var easingValues = ['ease', 'ease-in', 'ease-out', 'ease-in-out',
+    'cubic-bezier(1, 1, 1, 1)', 'step-start', 'step-middle', 'step-end',
+    'steps(1, start)', 'steps(1, middle)', 'steps(1, end)'];
+
 test(function() {
     var node = new Animation(createDiv(this), []);
 
@@ -31,7 +37,29 @@ test(function() {
         'should be \'normal\'');
     assert_equals(node.timing.easing, 'linear', 'Default value of AnimationNode.timing.easing ' +
         'should be \'linear\'');
-}, 'Test AnimationNode.timing default values');
+}, 'Test AnimationNode.timing default values. Test Animation');
+
+test(function() {
+    var node = new AnimationGroup([]);
+
+    assert_equals(node.timing.delay, 0, 'Default value of AnimationNode.timing.delay should be 0');
+    assert_equals(node.timing.endDelay, 0, 'Default value of AnimationNode.timing.endDelay ' +
+        'should be 0');
+    assert_equals(node.timing.fill, 'auto', 'Default value of AnimationNode.timing.fill ' +
+        'should be \'auto\'');
+    assert_equals(node.timing.iterationStart, 0, 'Default value of ' +
+        'AnimationNode.timing.iterationStart should be 0.0');
+    assert_equals(node.timing.iterations, 1, 'Default value of ' +
+        'AnimationNode.timing.iterations should be 1.0');
+    assert_equals(node.timing.duration, 'auto', 'Default value of AnimationNode.timing.duration ' +
+        'should be \'auto\'');
+    assert_equals(node.timing.playbackRate, 1, 'Default value of ' +
+        'AnimationNode.timing.playbackRate should be 1.0');
+    assert_equals(node.timing.direction, 'normal', 'Default value of AnimationNode.timing.direction ' +
+        'should be \'normal\'');
+    assert_equals(node.timing.easing, 'linear', 'Default value of AnimationNode.timing.easing ' +
+        'should be \'linear\'');
+}, 'Test AnimationNode.timing default values. Test AnimationGroup');
 
 test(function() {
     var timing = {delay: 1,
@@ -64,9 +92,119 @@ test(function() {
         'AnimationNode.timing.direction should be specified by AnimationTimingInput');
     assert_equals(node.timing.easing, timing.easing, 'Value of AnimationNode.timing.easing ' +
         'should be specified by AnimationTimingInput');
-}, 'AnimationNode.timing returns the input timing properties specified for this animation node');
+}, 'AnimationNode.timing returns the input timing properties specified for this ' +
+    'animation node. Test Animation');
 
-// TODO test all supported fill and easing values
-// TODO test for AnimationGroup which implements AnimationNode interface as well
+test(function() {
+    var timing = {delay: 1,
+        endDelay: 1,
+        fill: 'none',
+        iterationStart: 1.1,
+        iterations: 2.0,
+        duration: 3,
+        playbackRate: -2,
+        playbackDirection: 'reverse',
+        direction: 'reverse',
+        easing: 'ease'};
+    var node = new AnimationGroup([], timing);
+
+    assert_equals(node.timing.delay, timing.delay, 'Value of AnimationNode.timing.delay ' +
+        'should be specified by AnimationTimingInput');
+    assert_equals(node.timing.endDelay, timing.endDelay, 'Value of AnimationNode.timing.endDelay ' +
+        'should be specified by AnimationTimingInput');
+    assert_equals(node.timing.fill, timing.fill, 'Value of AnimationNode.timing.fill ' +
+        'should be specified by AnimationTimingInput');
+    assert_equals(node.timing.iterationStart, timing.iterationStart, 'Value of ' +
+        'AnimationNode.timing.iterationStart should be specified by AnimationTimingInput');
+    assert_equals(node.timing.iterations, timing.iterations, 'Value of ' +
+        'AnimationNode.timing.iterations should be specified by AnimationTimingInput');
+    assert_equals(node.timing.duration, timing.duration, 'Value of AnimationNode.timing.duration ' +
+        'should be specified by AnimationTimingInput');
+    assert_equals(node.timing.playbackRate, timing.playbackRate, 'Value of ' +
+        'AnimationNode.timing.playbackRate should be specified by AnimationTimingInput');
+    assert_equals(node.timing.direction, timing.direction, 'Value of ' +
+        'AnimationNode.timing.direction should be specified by AnimationTimingInput');
+    assert_equals(node.timing.easing, timing.easing, 'Value of AnimationNode.timing.easing ' +
+        'should be specified by AnimationTimingInput');
+}, 'AnimationNode.timing returns the input timing properties specified for this ' +
+    'animation node. Test AnimationGroup');
+
+test(function() {
+    var animationTarget = createDiv(this);
+    fillValues.forEach(function(fillValue) {
+        var timing = {fill: fillValue};
+        var node = new Animation(animationTarget, [], timing);
+        assert_equals(node.timing.fill, timing.fill, 'Value of AnimationNode.timing.fill ' +
+            'should be specified by AnimationTimingInput');
+    });
+}, 'Test that AnimationNode.timing.fill value is set by AnimationTimingInput. ' +
+    'Test all supported fill values. Test Animation');
+
+test(function() {
+    fillValues.forEach(function(fillValue) {
+        var timing = {fill: fillValue};
+        var node = new AnimationGroup([], timing);
+        assert_equals(node.timing.fill, timing.fill, 'Value of AnimationNode.timing.fill ' +
+            'should be specified by AnimationTimingInput');
+    });
+}, 'Test that AnimationNode.timing.fill value is set by AnimationTimingInput. ' +
+    'Test all supported fill values. Test AnimationGroup');
+
+test(function() {
+    var animationTarget = createDiv(this);
+    playbackDirections.forEach(function(playbackDirection) {
+        var timing = {direction: playbackDirection};
+        var node = new Animation(animationTarget, [], timing);
+        assert_equals(node.timing.direction, timing.direction, 'Value of ' +
+            'AnimationNode.timing.direction should be specified by AnimationTimingInput');
+    });
+}, 'Test that AnimationNode.timing.direction value is set by AnimationTimingInput. ' +
+    'Test all supported direction values. Test Animation');
+
+test(function() {
+    var animationTarget = createDiv(this);
+    playbackDirections.forEach(function(playbackDirection) {
+        var timing = {direction: playbackDirection};
+        var node = new AnimationGroup([], timing);
+        assert_equals(node.timing.direction, timing.direction, 'Value of ' +
+            'AnimationNode.timing.direction should be specified by AnimationTimingInput');
+    });
+}, 'Test that AnimationNode.timing.direction value is set by AnimationTimingInput. ' +
+    'Test all supported direction values. Test AnimationGroup');
+
+test(function() {
+    var animationTarget = createDiv(this);
+    easingValues.forEach(function(easingValue) {
+        var timing = {easing: easingValue};
+        var node = new Animation(animationTarget, [], timing);
+        assert_equals(node.timing.easing, timing.easing, 'Value of AnimationNode.timing.easing ' +
+            'should be specified by AnimationTimingInput');
+    });
+}, 'Test that AnimationNode.timing.easing value is set by AnimationTimingInput. ' +
+    'Test all supported easing values. Test Animation');
+
+test(function() {
+    easingValues.forEach(function(easingValue) {
+        var timing = {easing: easingValue};
+        var node = new AnimationGroup([], timing);
+        assert_equals(node.timing.easing, timing.easing, 'Value of AnimationNode.timing.easing ' +
+            'should be specified by AnimationTimingInput');
+    });
+}, 'Test that AnimationNode.timing.easing value is set by AnimationTimingInput. ' +
+    'Test all supported easing values. Test AnimationGroup');
+
+test(function() {
+    var timing = {easing: 'steps(1)'};
+    var node = new Animation(createDiv(this), [], timing);
+    assert_equals(node.timing.easing, 'steps(1, end)', 'Default value of steps(<number>) ' +
+        'easing should be \'end\'');
+}, 'Default value of steps(<number>) is \'end\'. Test Animation');
+
+test(function() {
+    var timing = {easing: 'steps(1)'};
+    var node = new AnimationGroup([], timing);
+    assert_equals(node.timing.easing, 'steps(1, end)', 'Default value of steps(<number>) ' +
+        'easing should be \'end\'');
+}, 'Default value of steps(<number>) is \'end\'. Test AnimationGroup');
 </script>
 </body>
