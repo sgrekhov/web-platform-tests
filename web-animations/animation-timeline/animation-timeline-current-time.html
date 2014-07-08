@@ -23,11 +23,6 @@ test(function() {
 }, 'Timeline value is greater than zero test');
 
 test(function() {
-    assert_readonly(document.timeline, 'currentTime',
-        'AnimationTimeline currentTime attribute should be read only');
-}, 'Test AnimationTimeline currentTime attribute is read only');
-
-test(function() {
     assert_approx_equals(
         window.performance.timing.navigationStart + document.timeline.currentTime,
         (new Date()).getTime(),
