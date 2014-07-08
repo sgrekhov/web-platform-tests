@@ -28,7 +28,26 @@ test(function() {
         'AnimationNode.computedTiming.direction should be \'normal\'');
     assert_equals(node.computedTiming.easing, 'linear', 'Default value of ' +
         'AnimationNode.computedTiming.easing should be \'linear\'');
-}, 'Test AnimationNode.computedTiming default values');
+}, 'Test AnimationNode.computedTiming default values. Test Animation');
+
+test(function() {
+    var node = new AnimationGroup([]);
+
+    assert_equals(node.computedTiming.delay, 0, 'Default value of ' +
+        'AnimationNode.computedTiming.delay should be 0');
+    assert_equals(node.computedTiming.endDelay, 0, 'Default value of ' +
+        'AnimationNode.computedTiming.endDelay should be 0');
+    assert_equals(node.computedTiming.iterationStart, 0, 'Default value of ' +
+        'AnimationNode.computedTiming.iterationStart should be 0.0');
+    assert_equals(node.computedTiming.iterations, 1, 'Default value of ' +
+        'AnimationNode.computedTiming.iterations should be 1.0');
+    assert_equals(node.computedTiming.playbackRate, 1, 'Default value of ' +
+        'AnimationNode.computedTiming.playbackRate should be 1.0');
+    assert_equals(node.computedTiming.direction, 'normal', 'Default value of ' +
+        'AnimationNode.computedTiming.direction should be \'normal\'');
+    assert_equals(node.computedTiming.easing, 'linear', 'Default value of ' +
+        'AnimationNode.computedTiming.easing should be \'linear\'');
+}, 'Test AnimationNode.computedTiming default values. Test AnimationGroup');
 
 test(function() {
     var timing = {delay: 1,
@@ -62,7 +81,41 @@ test(function() {
     assert_equals(node.computedTiming.easing, timing.easing, 'Value of ' +
         'AnimationNode.computedTiming.easing should be specified by AnimationTimingInput');
 }, 'AnimationNode.computedTiming returns calculated input timing properties for this ' +
-    'animation node');
+    'animation node. Test Animation');
+
+test(function() {
+    var timing = {delay: 1,
+        endDelay: 1,
+        fill: 'none',
+        iterationStart: 1.1,
+        iterations: 2.0,
+        duration: 3,
+        playbackRate: -2,
+        playbackDirection: 'reverse',
+        direction: 'reverse',
+        easing: 'ease'};
+    var node = new AnimationGroup([], timing);
+
+    assert_equals(node.computedTiming.delay, timing.delay, 'Value of ' +
+        'AnimationNode.computedTiming.delay should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.endDelay, timing.endDelay, 'Value of ' +
+        'AnimationNode.computedTiming.endDelay should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.fill, timing.fill, 'Value of ' +
+        'AnimationNode.computedTiming.fill should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.iterationStart, timing.iterationStart, 'Value of ' +
+        'AnimationNode.computedTiming.iterationStart should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.iterations, timing.iterations, 'Value of ' +
+        'AnimationNode.computedTiming.iterations should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.duration, timing.duration, 'Value of ' +
+        'AnimationNode.computedTiming.duration should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.playbackRate, timing.playbackRate, 'Value of ' +
+        'AnimationNode.computedTiming.playbackRate should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.direction, timing.direction, 'Value of ' +
+        'AnimationNode.computedTiming.direction should be specified by AnimationTimingInput');
+    assert_equals(node.computedTiming.easing, timing.easing, 'Value of ' +
+        'AnimationNode.computedTiming.easing should be specified by AnimationTimingInput');
+}, 'AnimationNode.computedTiming returns calculated input timing properties for this ' +
+    'animation node. Test AnimationGroup');
 
 test(function() {
     var node = new Animation(createDiv(this), []);
@@ -71,36 +124,59 @@ test(function() {
         'AnimationNode.computedTiming.duration should be replaced by ' +
         'intrinsic iteration duration');
 }, 'Test that default value of AnimationNode.computedTiming.duration is replaced by ' +
-    'intrinsic iteration duration');
+    'intrinsic iteration duration. Test Animation');
 
 test(function() {
-    var timing = {
-            duration: 'auto'
-        };
+    var node = new AnimationGroup([], timing);
+
+    assert_equals(node.computedTiming.duration, 0, 'Default value of ' +
+        'AnimationNode.computedTiming.duration should be replaced by ' +
+        'intrinsic iteration duration');
+}, 'Test that default value of AnimationNode.computedTiming.duration is replaced by ' +
+    'intrinsic iteration duration. Test AnimationGroup');
+
+test(function() {
+    var timing = {duration: 'auto'};
     var node = new Animation(createDiv(this), [], timing);
 
     assert_equals(node.computedTiming.duration, 0, '\'auto\' value of ' +
         'AnimationNode.computedTiming.duration should be replaced by ' +
         'intrinsic iteration duration');
 }, 'Test that \'auto\' value of AnimationNode.computedTiming.duration is replaced by ' +
-    'intrinsic iteration duration');
+    'intrinsic iteration duration. Test Animation');
 
 test(function() {
-    var timing = {
-            duration: 'some unsupported value'
-        };
+    var timing = {duration: 'auto'};
+    var node = new AnimationGroup([], timing);
+
+    assert_equals(node.computedTiming.duration, 0, '\'auto\' value of ' +
+        'AnimationNode.computedTiming.duration should be replaced by ' +
+        'intrinsic iteration duration');
+}, 'Test that \'auto\' value of AnimationNode.computedTiming.duration is replaced by ' +
+    'intrinsic iteration duration. Test AnimationGroup');
+
+test(function() {
+    var timing = {duration: 'some unsupported value'};
     var node = new Animation(createDiv(this), [], timing);
 
     assert_equals(node.computedTiming.duration, 0, 'Unsupported value of ' +
         'AnimationNode.computedTiming.duration should be replaced by ' +
         'intrinsic iteration duration');
 }, 'Test that unsupported value of AnimationNode.computedTiming.duration is replaced by ' +
-    'intrinsic iteration duration');
+    'intrinsic iteration duration. Test Animation');
 
 test(function() {
-    var timing = {
-            fill: 'auto'
-        };
+    var timing = {duration: 'some unsupported value'};
+    var node = new AnimationGroup([], timing);
+
+    assert_equals(node.computedTiming.duration, 0, 'Unsupported value of ' +
+        'AnimationNode.computedTiming.duration should be replaced by ' +
+        'intrinsic iteration duration');
+}, 'Test that unsupported value of AnimationNode.computedTiming.duration is replaced by ' +
+    'intrinsic iteration duration. Test AnimationGroup');
+
+test(function() {
+    var timing = {fill: 'auto'};
     var node1 = new Animation(createDiv(this), [], timing);
     var node2 = new AnimationGroup(null, timing);
 
@@ -110,10 +186,5 @@ test(function() {
         'AnimationNode.computedTiming.fill should be replaced by \'both\' for animation group');    
 }, 'Test that \'auto\' value of AnimationNode.computedTiming.fill is replaced depending on ' +
     'animation node type');
-
-// TODO Spec doesn't say anything about unsupported value for fill
-
-// TODO add all the tests above for AnimationGroup which implements AnimationNode interface as well
-
 </script>
 </body>
