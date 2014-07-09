@@ -18,12 +18,28 @@ test(function() {
 }, 'AnimationNode.parent is null if animation node does not have a parent animation group');
 
 test(function() {
+    var node = new AnimationGroup([]);
+
+    assert_equals(node.parent, null, 'AnimationNode.parent should be null');
+}, 'AnimationNode.parent is null if animation node does not have a parent animation group.' +
+    'Test AnimationGroup');
+
+test(function() {
     var node = newAnimation(createDiv(this));
     var animationGroup = new AnimationGroup([node]);
 
     assert_equals(node.parent, animationGroup, 'AnimationNode.parent should return ' +
         'parent animation group of this animation node');
 }, 'AnimationNode.parent returns parent animation group of this animation node');
+
+test(function() {
+    var node = new AnimationGroup([]);
+    var animationGroup = new AnimationGroup([node]);
+
+    assert_equals(node.parent, animationGroup, 'AnimationNode.parent should return ' +
+        'parent animation group of this animation node');
+}, 'AnimationNode.parent returns parent animation group of this animation node.' +
+    'Test AnimationGroup');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
@@ -36,5 +52,17 @@ test(function() {
         'parent animation group of this animation node (second node in the group)');
 }, 'AnimationNode.parent returns parent animation group of this animation node. Test more ' +
     'than one node in the group');
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = new AnimationGroup([]);
+    var animationGroup = new AnimationGroup([node1, node2]);
+
+    assert_equals(node1.parent, animationGroup, 'AnimationNode.parent should return ' +
+        'parent animation group of this animation node (first node in the group)');
+    assert_equals(node2.parent, animationGroup, 'AnimationNode.parent should return ' +
+        'parent animation group of this animation node (second node in the group)');
+}, 'AnimationNode.parent returns parent animation group of this animation node. Test more ' +
+    'than one node in the group. Test AnimationGroup');
 </script>
 </body>
