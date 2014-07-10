@@ -28,7 +28,7 @@ test(function() {
     var node = newAnimation(createDiv(this));
     var animationGroup = new AnimationGroup([node]);
 
-    assert_equals(node.previousSibling, animationGroup, 'AnimationNode.previousSibling ' +
+    assert_equals(node.previousSibling, null, 'AnimationNode.previousSibling ' +
         'should be null');
 }, 'AnimationNode.previousSibling should be null if animation group contains only one node');
 
@@ -36,7 +36,7 @@ test(function() {
     var node = new AnimationGroup([]);
     var animationGroup = new AnimationGroup([node]);
 
-    assert_equals(node.previousSibling, animationGroup, 'AnimationNode.previousSibling ' +
+    assert_equals(node.previousSibling, null, 'AnimationNode.previousSibling ' +
         'should be null');
 }, 'AnimationNode.previousSibling should be null if animation group contains only one node. ' +
     'Test AnimationGroup');
