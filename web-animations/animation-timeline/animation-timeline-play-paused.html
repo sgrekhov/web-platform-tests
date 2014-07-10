@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation timeline play() method test. Test paused attribute initial value of newly-created AnimationPlayer</title>
-<meta name="assert" content="Default value of the paused attribute is false">
+<title>AnimationTimeline.play() creates AnimationPlayer object with paused attribute initially set to false</title>
+<meta name="assert" content="AnimationTimeline play() creates AnimationPlayer object with paused attribute initially set to false">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-animationtimeline-interface">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -16,13 +17,23 @@ test(function() {
 
     assert_false(player.paused, 'Initial value of the paused attribute of the ' +
         'newly-created AnimationPlayer object should be false');
-}, 'Test paused attribute initial value of newly-created AnimationPlayer');
+}, 'Test AnimationTimeline.play() creates AnimationPlayer object with paused attribute '+
+    'initially set to false');
 
 test(function() {
     var player = document.timeline.play(null);
 
     assert_false(player.paused, 'Initial value of the paused attribute of the ' +
         'newly-created AnimationPlayer object should be false');
-}, 'Test paused attribute initial value of newly-created AnimationPlayer with no surce');
+}, 'Test AnimationTimeline.play(null) creates AnimationPlayer object with paused attribute '+
+    'initially set to false.');
+
+test(function() {
+    var player = document.timeline.play();
+
+    assert_false(player.paused, 'Initial value of the paused attribute of the ' +
+        'newly-created AnimationPlayer object should be false');
+}, 'Test AnimationTimeline.play() without arguments creates AnimationPlayer ' +
+    'object with paused attribute initially set to false.');
 </script>
 </body>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation timeline play() method test. Test playbackRate attribute initial value of newly-created AnimationPlayer</title>
-<meta name="assert" content="Default value of the playbackRate attribute is 1">
+<title>AnimationTimeline.play() creates AnimationPlayer object with playbackRate attribute initially set to 1</title>
+<meta name="assert" content="AnimationTimeline.play() creates AnimationPlayer object with playbackRate attribute initially set to 1">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-animationtimeline-interface">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -17,7 +18,8 @@ test(function() {
     assert_equals(player.playbackRate, 1,
         'Initial value of the playbackRate attribute of the newly-created AnimationPlayer ' +
         'object should be 1');
-}, 'Test playbackRate attribute initial value of newly-created AnimationPlayer');
+}, 'Test AnimationTimeline.play() creates AnimationPlayer object with playbackRate '+
+    'attribute initially set to 1');
 
 test(function() {
     var player = document.timeline.play(null);
@@ -25,6 +27,16 @@ test(function() {
     assert_equals(player.playbackRate, 1,
         'Initial value of the playbackRate attribute of the newly-created AnimationPlayer ' +
         'object should be 1');
-}, 'Test playbackRate attribute initial value of newly-created AnimationPlayer with no source');
+}, 'Test AnimationTimeline.play(null) creates AnimationPlayer object with playbackRate ' +
+    'attribute initially set to 1');
+
+test(function() {
+    var player = document.timeline.play();
+
+    assert_equals(player.playbackRate, 1,
+        'Initial value of the playbackRate attribute of the newly-created AnimationPlayer ' +
+        'object should be 1');
+}, 'Test AnimationTimeline.play() without arguments creates AnimationPlayer object ' +
+    'with playbackRate attribute initially set to 1');
 </script>
 </body>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation timeline play() method test. Test timeline of newly-created AnimationPlayer</title>
-<meta name="assert" content="AnimationPlayer object created by play() method is associated with this timeline that is scheduled to start at currentTime">
+<title>AnimationTimeline.play() creates AnimationPlayer object associated with this timeline</title>
+<meta name="assert" content="AnimationPlayer object created by AnimationTimeline.play() method is associated with this timeline">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-animationtimeline-interface">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -11,13 +12,9 @@
 <body>
 <div id="log"></div>
 <script>
-function newAnimationPlayer(animationTarget) {
-    var animation = new Animation(animationTarget, [], 50);
-    return document.timeline.play(animation);
-}
-
 test(function() {
-    var player = newAnimationPlayer(createDiv(this));
+    var animation = new Animation(createDiv(this), [], 2000);
+    var player = document.timeline.play(animation);
 
     assert_equals(player.timeline, document.timeline,
         'The timeline attribute of the newly-created AnimationPlayer object ' +
@@ -26,28 +23,21 @@ test(function() {
     'should be set to this timeline object');
 
 test(function() {
-    var player = newAnimationPlayer(null);
+    var player = document.timeline.play(null);
+
+    assert_equals(player.timeline, document.timeline,
+        'The timeline attribute of the newly-created AnimationPlayer object ' +
+        'should be set to this timeline object');
+}, 'The timeline attribute of the newly-created AnimationPlayer object ' +
+    'should be set to this timeline object. Test player with null source content');
+
+test(function() {
+    var player = document.timeline.play();
 
     assert_equals(player.timeline, document.timeline,
         'The timeline attribute of the newly-created AnimationPlayer object ' +
         'should be set to this timeline object');
 }, 'The timeline attribute of the newly-created AnimationPlayer object ' +
     'should be set to this timeline object. Test player with no source content');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-
-    assert_equals(player.startTime, document.timeline.currentTime,
-        'Start time of the newly-created AnimationPlayer object should be set ' +
-        'to the value of this object\'s currentTime attribute');
-}, 'The newly-created AnimationPlayer start time test');
-
-test(function() {
-    var player = newAnimationPlayer(null);
-
-    assert_equals(player.startTime, document.timeline.currentTime,
-        'Start time of the newly-created AnimationPlayer object should be set ' +
-        'to the value of this object\'s currentTime attribute');
-}, 'The newly-created AnimationPlayer start time test. Test player wth no source content');
 </script>
 </body>
