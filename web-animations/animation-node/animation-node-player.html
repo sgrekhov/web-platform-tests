@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation node player attribute test</title>
+<meta name="assert" content="The player with which this animation node is associated, if any">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-player">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var node = newAnimation(createDiv(this));
+
+    assert_equals(node.player, null, 'AnimationNode.player should be null');
+}, 'AnimationNode.player is null if animation node is not associated with a player');
+
+test(function() {
+    var node = new AnimationGroup([]);
+
+    assert_equals(node.player, null, 'AnimationNode.player should be null');
+}, 'AnimationNode.player is null if animation node is not associated with a player. ' +
+    'Test AnimationGroup');
+
+test(function() {
+    var node = newAnimation(createDiv(this));
+    var player = newPlayerFromAnimation(node);
+
+    assert_equals(node.player, player, 'AnimationNode.player ' +
+        'should return player associated with this node');
+}, 'AnimationNode.player should return player associated with this node');
+
+test(function() {
+    var node = new AnimationGroup([]);
+    var player = newPlayerFromAnimation(node);
+
+    assert_equals(node.player, player, 'AnimationNode.player ' +
+        'should return player associated with this node');
+}, 'AnimationNode.player should return player associated with this node. ' +
+    'Test AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = new AnimationGroup([]);
+    var animationGroup = new AnimationGroup([node1, node2, node3]);
+    var player = newPlayerFromAnimation(animationGroup);
+
+    assert_equals(node1.player, null, 'AnimationNode.player should be null');
+    assert_equals(node2.player, null, 'AnimationNode.player should be null');
+    assert_equals(node3.player, null, 'AnimationNode.player should be null for child group');
+    assert_equals(anumationGroup.player, player, 'AnimationNode.player should return player ' +
+        'associated with this node');
+}, 'AnimationNode.previousSibling returns previous sibling of this animation node. ' +
+    'Test not empty AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1, node2]);
+    var player = newPlayerFromAnimation(animationGroup);
+    animationGroup.player.currentTime = ANIMATION_END_TIME/2;
+
+    assert_equals(window.getComputedStyle(node1.target).width, 100,
+        'Nodes in the hierarchy should be controlled by parent group player');
+    assert_equals(window.getComputedStyle(node2.target).width, 100,
+        'Nodes in the hierarchy should be controlled by parent group player');
+}, 'Nodes in the hierarchy are controlled by parent group player');
+</script>
+</body>
