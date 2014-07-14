@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>The document timeline currentTime attribute tests</title>
+<meta name="assert" content="AnimationTimeline currentTime attribute returns the time value for this timeline">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#dfn-document-timeline">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    assert_approx_equals(
+        document.timeline.currentTime,
+        new Date().getTime() - window.performance.timing.navigationStart,
+        EPSILON,
+        'document timeline time value should be relative to navigationStart moment');
+}, 'Document timeline time value is relative to navigationStart moment');
+
+test(function() {
+    assert_approx_equals(document.timeline.currentTime, window.performance.now(), EPSILON,
+        'document.timeline.currentTime should roughly correspond to Performance.now()');
+}, 'Document timeline time value roughly corresponds Performance.now()');
+
+async_test(function(t) {
+    var previousTime = document.timeline.currentTime;
+    var repetitions = 10;
+
+    var intervalId = setInterval(t.step_func(function(){
+        assert_true(document.timeline.currentTime - previousTime > 50-EPSILON,
+            'AnimationTimeline.currentTime should increase its value');
+        previousTime = document.timeline.currentTime;
+        repetitions--;
+        if (repetitions===0){
+            clearInterval(intervalId);
+            t.done();
+        }
+    }), 50);
+}, 'Document timeline time value is increased monotonically');
+
+test(function() {
+    var timelineTime1 = document.timeline.currentTime;
+    var now = window.performance.now();
+    while (window.performance.now() - now < 100) {
+        // wait
+    }
+    var timelineTime2 = document.timeline.currentTime;
+    assert_equals(timelineTime2, timelineTime1, 'The value returned by the currentTime ' +
+        'attribute of a document timeline should not change within a script block');
+}, 'Document.timeline.currentTime attribute value does not change within a script block',
+{
+    help: 'http://dev.w3.org/fxtf/web-animations/#script-execution-and-live-updates-to-the-model'
+});
+</script>
+</body>
