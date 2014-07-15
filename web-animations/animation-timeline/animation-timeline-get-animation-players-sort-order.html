@@ -11,18 +11,11 @@
 <body>
 <div id="log"></div>
 <script>
-function newAnimationPlayer(doc) {
-    var animationTarget = doc.createElement('div');
-    doc.body.appendChild(animationTarget);
-    var animation = new Animation(animationTarget, [], 5);
-    return doc.timeline.play(animation);
-}
-
 test(function() {
     var doc = newHTMLDocument();
-    var player1 = newAnimationPlayer(doc);
-    var player2 = newAnimationPlayer(doc);
-    var player3 = newAnimationPlayer(doc);
+    var player1 = newAnimationPlayer(createDiv(this,doc));
+    var player2 = newAnimationPlayer(createDiv(this,doc));
+    var player3 = newAnimationPlayer(createDiv(this,doc));
 
     assert_array_equals(document.timeline.getAnimationPlayers(), [player1, player2, player3],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
@@ -32,12 +25,12 @@ test(function() {
 
 test(function() {
     var doc1 = newHTMLDocument();
-    var player1 = newAnimationPlayer(doc1);
-    var player2 = newAnimationPlayer(doc1);
+    var player1 = newAnimationPlayer(createDiv(this,doc1));
+    var player2 = newAnimationPlayer(createDiv(this,doc1));
 
     var doc2 = newHTMLDocument();
-    var player3 = newAnimationPlayer(doc2);
-    var player4 = newAnimationPlayer(doc2);
+    var player3 = newAnimationPlayer(createDiv(this,doc2));
+    var player4 = newAnimationPlayer(createDiv(this,doc2));
 
     assert_array_equals(doc1.timeline.getAnimationPlayers(), [player1, player2],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
