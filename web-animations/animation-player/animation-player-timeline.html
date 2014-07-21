@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation player timeline attribute test</title>
-<meta name="assert" content="Timeline attribute is of type AnimationTimeline, readonly">
+<title>AnimationPlayer timeline attribute tests</title>
+<meta name="assert" content="AnimationPlayer.timeline attribute returns the timeline associated with this player">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-source">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -11,13 +12,8 @@
 <body>
 <div id="log"></div>
 <script>
-function newAnimationPlayer(animationTarget) {
-    var animation = new Animation(animationTarget, [], 100);
-    return document.timeline.play(animation);
-}
-
 test(function() {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = document.timeline.play(new Animation(createDiv(this), [], 10));
 
     assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
         'not be null');
@@ -31,11 +27,28 @@ test(function() {
 }, 'The that AnimationPlayer.timeline attribute is not null (no source content)');
 
 test(function() {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = document.timeline.play(new Animation(createDiv(this), [], 10));
 
     assert_class_string(player.timeline, 'AnimationTimeline,',
         'The value of AnimationPlayer.timeline attribute should be of type ' +
         'AnimationTimeline');
 }, 'The value of AnimationPlayer.timeline attribute is of type AnimationTimeline');
+
+test(function() {
+    var player = document.timeline.play(new Animation(createDiv(this), [], 1000));
+
+    assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
+        'not be null');
+    assert_equals(player.timeline, document.timeline, 'AnimationPlayer.timeline ' +
+        'should be equal to document.timeline');
+}, 'The AnimationPlayer.timeline attribute returns the timeline, used to create the player');
+
+test(function() {
+    var player = document.timeline.play(null);
+
+    assert_equals(player.timeline, document.timeline, 'AnimationPlayer.timeline ' +
+        'should be equal to document.timeline');
+}, 'The AnimationPlayer.timeline attribute returns the timeline, used to create the player. ' +
+    'Player has no source content');
 </script>
 </body>

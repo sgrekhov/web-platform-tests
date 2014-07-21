@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation player startTime attribute test</title>
+<title>AnimationPlayer startTime attribute test</title>
 <meta name="assert" content="Returns the start time of this player. Setting this attribute updates the player start time using the procedure defined in section 3.5.2.6 Updating the player start time.">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-startTime">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
@@ -11,31 +11,17 @@
 <body>
 <div id="log"></div>
 <script>
-function newAnimationPlayer(animationTarget) {
-    return document.timeline.play(new Animation(animationTarget, [], 1000));
-}
-
-var EPSILON = 10;
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
     assert_not_equals(player.startTime, null,
-        'The value of AnimationPlayer.startTime attribute should not be of type null');
+        'The value of AnimationPlayer.startTime attribute should not be null');
 }, 'The value of AnimationPlayer.startTime attribute is not null');
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
-    assert_approx_equals(player.startTime, player.timeline.currentTime, EPSILON,
-        'Default value of AnimationPlayer.startTime attribute should be the current time of ' +
-        'the player timeline');
-}, 'Default value of AnimationPlayer.startTime attribute is the current time of ' +
-    'the player timeline');
 
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-
-    var newStartTime = player.startTime + 100;
+    var newStartTime = document.timeline.currentTime + 100;
     player.startTime = newStartTime;
 
     assert_equals(player.startTime, newStartTime,
@@ -44,48 +30,51 @@ test(function() {
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
+    var playerTimeline = document.timeline; // TODO replace with player.timeline, when it is properly defined
 
-    var newStartTime = player.startTime + 100;
+    var newStartTime = playerTimeline.currentTime + 100;
     player.pause();
     player.startTime = newStartTime;
 
-    var expectedTime = player.timeline.currentTime - newStartTime * player.playbackRate;
+    var holdTime = playerTimeline.currentTime - newStartTime * player.playbackRate;
+    var expectedTime = playerTimeline.currentTime - holdTime / player.playbackRate;
+
     assert_equals(player.startTime, expectedTime,
-        'The value of AnimationPlayer.startTime attribute should be set to ' +
-        'hod time value');
+        'The value of AnimationPlayer.startTime attribute should be recalculated');
 }, 'Test setting value of AnimationPlayer.startTime attribute. Player is paused');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
-    player.startTime += 50;
-
+    var newStartTime = document.timeline.currentTime + 50;
+    player.startTime = newStartTime;
     setTimeout(function() {
         t.step(function () {
             assert_approx_equals(player.currentTime, 50, EPSILON, 'The value of ' +
-                'AnimationPlayer.currentTime should correspond startTime');
+                'AnimationPlayer.currentTime should correspond to startTime');
             t.done();
         });
     }, 100);
-}, 'Test setting AnimationPlayer start time delays beginning of play');
+}, 'Test setting AnimationPlayer start time in the future delays beginning of play');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
-    player.startTime -= 100;
+    var newStartTime = document.timeline.currentTime - 100;
+    player.startTime = newStartTime;
 
     setTimeout(function() {
         t.step(function () {
             assert_approx_equals(player.currentTime, 150, EPSILON, 'The value of ' +
-                'AnimationPlayer.currentTime should correspond startTime');
+                'AnimationPlayer.currentTime should correspond to startTime');
             t.done();
         });
     }, 50);
-}, 'Test setting AnimationPlayer start time shifts beginning of play (start time ' +
-    'is less than current time)');
+}, 'Test setting AnimationPlayer start time in the past shifts beginning of play');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     player.pause();
-    player.startTime += 50;
+    var newStartTime = document.timeline.currentTime + 50;
+    player.startTime = newStartTime;
 
     setTimeout(function() {
         t.step(function () {
@@ -99,7 +88,8 @@ async_test(function(t) {
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     player.pause();
-    player.startTime -= 50;
+    var newStartTime = document.timeline.currentTime - 50;
+    player.startTime = newStartTime;
 
     setTimeout(function() {
         t.step(function () {
@@ -109,6 +99,8 @@ async_test(function(t) {
         });
     }, 60);
 }, 'Test setting AnimationPlayer start time shifts beginning of play (player is paused, ' +
-    'start tima less than current time)');
+    'start time less than current time)');
+
+// TODO more complex tests with player.pause();
 </script>
 </body>
