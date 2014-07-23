@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation player paused attribute test</title>
-<meta name="assert" content="A boolean value that is true if the player is currently paused. The paused state is initially false.">
+<title>AnimationPlayer paused attribute tests</title>
+<meta name="assert" content="A boolean value that is true if the player is currently paused.">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-paused">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -11,45 +11,17 @@
 <body>
 <div id="log"></div>
 <script>
-function newAnimation(animationTarget) {
-    animationTarget.style.width = '300px';
-    return new Animation(animationTarget, [
-        {width: '10px', offset: 0},
-        {width: '100px', offset: 1/2},
-        {width: '200px', offset: 1}], 1000);
-}
-
-function newAnimationPlayer(animationTarget) {
-    var animation = newAnimation(animationTarget);
-    return document.timeline.play(animation);
-}
-
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
 
-    assert_false(player.paused, 'The value of AnimationPlayer.paused attribute should be ' +
-        'initially false');
-}, 'The value of AnimationPlayer.paused attribute should be initially false');
-
-test(function() {
-    var player = document.timeline.play(null);
-
-    assert_false(player.paused, 'The value of AnimationPlayer.paused attribute should be ' +
-        'initially false');
-}, 'The value of AnimationPlayer.paused attribute should be initially false even for ' +
-    'player with no source content');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-
-    player.currentTime = 999;
+    player.currentTime = ANIMATION_END_TIME - 1;
     assert_false(player.paused, 'The value of AnimationPlayer.paused attribute should be ' +
         'false if player is not paused');
 
-    player.currentTime = 1001;
+    player.currentTime = ANIMATION_END_TIME + 1;
     assert_false(player.paused, 'The value of AnimationPlayer.paused attribute should be ' +
         'false if player is not paused but seek time is greater than content end');
-}, 'The value of AnimationPlayer.paused attribute should be false if player is not paused');
+}, 'The value of AnimationPlayer.paused attribute is false if player is not paused');
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
@@ -62,11 +34,11 @@ test(function() {
 
     player.pause();
     assert_true(player.paused, 'AnimationPlayer should be paused again');
-}, 'Test true value of AnimationPlayer.paused attribute');
+}, 'The value of AnimationPlayer.paused attribute is true if player is paused');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
-    player.currentTime = 990;
+    player.currentTime = ANIMATION_END_TIME - 10;
     setTimeout(function() {
         t.step(function () {
             assert_false(player.paused, 'The value of AnimationPlayer.paused attribute ' +
@@ -77,7 +49,7 @@ async_test(function(t) {
             t.done();
         });
     }, 50);
-}, 'Test AnimationPlayer.paused attribute when player is finished');
+}, 'Test AnimationPlayer.paused attribute if player is finished playback rate > 0');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
@@ -92,27 +64,27 @@ async_test(function(t) {
                 'should be true');
             t.done();
         });
-    }, 30);
-}, 'Test AnimationPlayer.paused attribute when player is finished and playback rate < 0');
+    }, 50);
+}, 'Test AnimationPlayer.paused attribute if player is finished and playback rate < 0');
 
 test(function() {
-    var animation = newAnimation(createDiv(this))
+    var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
-    player.currentTime = 900;
+    player.currentTime = ANIMATION_END_TIME - 100;
     player.pause();
     animation.timing.playbackRate = 2;
     assert_true(player.paused, 'The value of AnimationPlayer.paused attribute ' +
         'should be true');
-}, 'Test AnimationPlayer.paused attribute when animation length is changed (shortened)');
+}, 'Test AnimationPlayer.paused attribute if animation length is changed (shortened)');
 
 test(function() {
-    var animation = newAnimation(createDiv(this))
+    var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
-    player.currentTime = 1100;
+    player.currentTime = ANIMATION_END_TIME + 100;
     player.pause();
     animation.timing.playbackRate = 0.5;
     assert_true(player.paused, 'The value of AnimationPlayer.paused attribute ' +
         'should be true');
-}, 'Test AnimationPlayer.paused attribute when animation length is changed (extended)');
+}, 'Test AnimationPlayer.paused attribute if animation length is changed (extended)');
 </script>
 </body>
