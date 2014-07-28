@@ -182,9 +182,27 @@ test(function() {
 
     assert_equals(node1.computedTiming.fill, 'none', '\'auto\' value of ' +
         'AnimationNode.computedTiming.fill should be replaced by none for animation');
-    assert_equals(node1.computedTiming.fill, 'both', '\'auto\' value of ' +
+    assert_equals(node2.computedTiming.fill, 'both', '\'auto\' value of ' +
         'AnimationNode.computedTiming.fill should be replaced by \'both\' for animation group');    
 }, 'Test that \'auto\' value of AnimationNode.computedTiming.fill is replaced depending on ' +
     'animation node type');
+
+test(function() {
+    var timing = {easing: 'unsupported value'};
+    var node = new Animation(createDiv(this), [], timing);
+
+    assert_equals(node.computedTiming.easing, 'linear', 'Unsupported value of ' +
+        'AnimationNode.computedTiming.easing should be replaced by \'linear\'');
+}, 'Test that unsupported value of AnimationNode.computedTiming.easing is replaced ' +
+    'by string \'linear\'');
+
+test(function() {
+    var timing = {easing: 'unsupported value'};
+    var node = new AnimationGroup(null, timing);
+
+    assert_equals(node.computedTiming.easing, 'linear', 'Unsupported value of ' +
+        'AnimationNode.computedTiming.easing should be replaced by \'linear\'');
+}, 'Test that unsupported value of AnimationNode.computedTiming.easing is replaced ' +
+    'by string \'linear\'. Test AnimationGroup');
 </script>
 </body>
