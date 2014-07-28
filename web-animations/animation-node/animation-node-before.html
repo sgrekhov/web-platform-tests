@@ -193,7 +193,7 @@ test(function() {
     var node3 = newAnimation(createDiv(this));
     var node4 = newAnimation(createDiv(this));
     var group = new AnimationGroup([node1, node2]);
-
+    // FIXME Is resulting order of nodes specified?
     node2.before(node3, node4);
 
     assert_equals(node1.nextSibling, node3, 'AnimationNode.before() should insert ' +
@@ -319,7 +319,7 @@ test(function() {
     }, 'HierarchyRequestError should be thrown in case of attempt to insert ' +
         'an inclusive ancestor');
 }, 'HierarchyRequestError is called if an inclusive ancestor is inserted before the node. ' +
-    'Test several arguments in before call');
+    'Test several arguments in before() call');
 
 test(function() {
     var node1 = new AnimationGroup([]);
@@ -332,6 +332,6 @@ test(function() {
     }, 'HierarchyRequestError should be thrown in case of attempt to insert ' +
         'an inclusive ancestor');
 }, 'HierarchyRequestError is called if an inclusive ancestor is inserted before the node. ' +
-    'Test several arguments in before call for AnimationGroup');
+    'Test several arguments in before() call for AnimationGroup');
 </script>
 </body>
