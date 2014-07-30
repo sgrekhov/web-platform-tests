@@ -13,25 +13,26 @@
 <script>
 test(function() {
     var node = newAnimation(createDiv(this));
-    node.before(node);
-
-    assert_equals(node.previousSibling, null, 'AnimationNode.before() should do nothing ' +
-        'if there is no parent animation group');
-    assert_equals(node.nextSibling, null, 'AnimationNode.before() should do nothing ' +
-        'if there is no parent animation group');
+    try {
+        node.before(node);
+    } catch(e) {
+        assert_unreached('HierarchyRequestError should not be thrown ' +
+            'if there is no parent group');
+    }
 }, 'AnimationNode.before() does nothing if there is no parent animation group. ' +
-    'No HierarchyRequestError');
+    'No HierarchyRequestError is called in case of node is inserted before itself');
 
 test(function() {
     var node = new AnimationGroup([]);
-    node.before(node);
-
-    assert_equals(node.previousSibling, null, 'AnimationNode.before() should do nothing ' +
-        'if there is no parent animation group');
-    assert_equals(node.nextSibling, null, 'AnimationNode.before() should do nothing ' +
-        'if there is no parent animation group');
+    try {
+        node.before(node);
+    } catch(e) {
+        assert_unreached('HierarchyRequestError should not be thrown ' +
+            'if there is no parent group');
+    }
 }, 'AnimationNode.before() does nothing if there is no parent animation group. ' +
-    'No HierarchyRequestError for AnimationGroup');
+    'No HierarchyRequestError is called in case of node is inserted before itself. ' +
+    'Test AnimationGroup');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
@@ -246,7 +247,7 @@ test(function() {
         node.before(node);
     }, 'HierarchyRequestError should be thrown in case of attempt to insert node ' +
         'before itself');
-}, 'HierarchyRequestError is called if node is inserted before itself');
+}, 'HierarchyRequestError is thrown if node is inserted before itself');
 
 test(function() {
     var node = new AnimationGroup([]);
@@ -256,7 +257,7 @@ test(function() {
         node.before(node);
     }, 'HierarchyRequestError should be thrown in case of attempt to insert node ' +
         'before itself');
-}, 'HierarchyRequestError is called if node is inserted before itself. Test AnimationGroup');
+}, 'HierarchyRequestError is thrown if node is inserted before itself. Test AnimationGroup');
 
 
 test(function() {
@@ -267,7 +268,7 @@ test(function() {
         node1.before(node2);
     }, 'HierarchyRequestError should be thrown in case of attempt to insert ' +
         'an inclusive ancestor');
-}, 'HierarchyRequestError is called if an inclusive ancestor is inserted before the node');
+}, 'HierarchyRequestError is thrown if an inclusive ancestor is inserted before the node');
 
 
 test(function() {
@@ -278,7 +279,7 @@ test(function() {
         node1.before(node2);
     }, 'HierarchyRequestError should be thrown in case of attempt to insert ' +
         'an inclusive ancestor');
-}, 'HierarchyRequestError is called if an inclusive ancestor is inserted before the node. ' +
+}, 'HierarchyRequestError is thrown if an inclusive ancestor is inserted before the node. ' +
     'Test AnimationGroup');
 
 test(function() {
@@ -291,7 +292,7 @@ test(function() {
         node1.before(node3);
     }, 'HierarchyRequestError should be thrown in case of attempt to insert ' +
         'an inclusive ancestor');
-}, 'HierarchyRequestError is called if an inclusive ancestor is inserted before the node. ' +
+}, 'HierarchyRequestError is thrown if an inclusive ancestor is inserted before the node. ' +
     'Test when inclusive ancestor is not direct parent of the node');
 
 
@@ -305,7 +306,7 @@ test(function() {
         node1.before(node3);
     }, 'HierarchyRequestError should be thrown in case of attempt to insert ' +
         'an inclusive ancestor');
-}, 'HierarchyRequestError is called if an inclusive ancestor is inserted before the node. ' +
+}, 'HierarchyRequestError is thrown if an inclusive ancestor is inserted before the node. ' +
     'Test when inclusive ancestor is not direct parent of the node for AnimationGroup');
 
 test(function() {
@@ -318,7 +319,7 @@ test(function() {
         node1.before(node3, node4);
     }, 'HierarchyRequestError should be thrown in case of attempt to insert ' +
         'an inclusive ancestor');
-}, 'HierarchyRequestError is called if an inclusive ancestor is inserted before the node. ' +
+}, 'HierarchyRequestError is thrown if an inclusive ancestor is inserted before the node. ' +
     'Test several arguments in before() call');
 
 test(function() {
@@ -331,7 +332,7 @@ test(function() {
         node1.before(node3, node4);
     }, 'HierarchyRequestError should be thrown in case of attempt to insert ' +
         'an inclusive ancestor');
-}, 'HierarchyRequestError is called if an inclusive ancestor is inserted before the node. ' +
+}, 'HierarchyRequestError is thrown if an inclusive ancestor is inserted before the node. ' +
     'Test several arguments in before() call for AnimationGroup');
 </script>
 </body>

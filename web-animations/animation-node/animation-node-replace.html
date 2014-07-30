@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation node replace() method test</title>
+<meta name="assert" content="Replaces this AnimationNode with the passed in nodes parameter">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-replace-void-AnimationNode...-nodes">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var node = newAnimation(createDiv(this));
+    try {
+        node.replace(node);
+    } catch(e) {
+        assert_unreached('HierarchyRequestError should not be thrown ' +
+            'if there is no parent group');
+    }
+}, 'AnimationNode.replace() does nothing if there is no parent animation group. ' +
+    'No HierarchyRequestError is called in case of node replaces itself');
+
+test(function() {
+    var node = new AnimationGroup([]);
+    try {
+        node.replace(node);
+    } catch(e) {
+        assert_unreached('HierarchyRequestError should not be thrown ' +
+            'if there is no parent group');
+    }
+}, 'AnimationNode.replace() does nothing if there is no parent animation group. ' +
+    'No HierarchyRequestError is called in case of node replaces itself. Test AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1]);
+
+    node1.replace(node2);
+
+    assert_array_equals(animationGroup.children, [node2], 'Node should be replaced');
+}, 'AnimationNode.replace() replaces node in the parent animation group');
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = new AnimationGroup([]);
+    var animationGroup = new AnimationGroup([node1]);
+
+    node1.replace(node2);
+
+    assert_array_equals(animationGroup.children, [node2], 'Node should be replaced');
+}, 'AnimationNode.replace() replaces node in the parent animation group. Test AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1, node2]);
+
+    node1.replace(node2);
+
+    assert_array_equals(animationGroup.children, [node2], 'AnimationNode.replace() ' +
+        'should remove node from the parent animation group');
+    assert_equals(node1.parent, null, 'Node should be removed from parent group');
+    assert_equals(node1.previousSibling, null, 'Node should be removed from parent group');
+    assert_equals(node1.nextSibling, null, 'Node should be removed from parent group');
+}, 'AnimationNode.replace() removes the current node from its parent group');
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = new AnimationGroup([]);
+    var animationGroup = new AnimationGroup([node1, node2]);
+
+    node1.replace(node2);
+
+    assert_array_equals(animationGroup.children, [node2], 'AnimationNode.replace() ' +
+        'should remove node from the parent animation group');
+    assert_equals(node1.parent, null, 'Node should be removed from parent group');
+    assert_equals(node1.previousSibling, null, 'Node should be removed from parent group');
+    assert_equals(node1.nextSibling, null, 'Node should be removed from parent group');
+}, 'AnimationNode.replace() removes the current node from its parent group. ' +
+    'Test AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = newAnimation(createDiv(this));
+    var group1 = new AnimationGroup([node1, node2]);
+    var group2 = new AnimationGroup([node3, group1, node4]);
+
+    node4.replace(node1);
+
+    assert_array_equals(group1.children, [node2], 'Node should be removed from its previous' +
+        'position in the tree');
+    assert_array_equals(group2.children, [node3, group1, node1], 'Node should be inserted ' +
+        'to the new position');
+    assert_equals(node4.parent, null, 'Node should be removed from parent group');
+    assert_equals(node4.previousSibling, null, 'Node should be removed from parent group');
+    assert_equals(node4.nextSibling, null, 'Node should be removed from parent group');
+    assert_equals(node1.parent, group2, 'Inserted node parent group should be changed');
+    assert_equals(node1.previousSibling, group1, 'Inserted node previousSibling attribute ' +
+        'should be updated');
+    assert_equals(node1.nextSibling, null, 'Inserted node nextSibling attribute ' +
+        'should be updated');
+}, 'Test that AnimationNode.replace() replaces this node. The previous position ' +
+    'of the inserted node is lower in the tree than the current node');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = newAnimation(createDiv(this));
+    var group1 = new AnimationGroup([node1, node2]);
+    var group2 = new AnimationGroup([node3, group1, node4]);
+
+    node2.replace(node4);
+
+    assert_array_equals(group1.children, [node1, node4], 'Node should be inserted ' +
+        'to the new position');
+    assert_array_equals(group2.children, [node3, group1], 'Node should be removed from ' +
+        'its previous position in the tree');
+    assert_equals(node2.parent, null, 'Removed node parent group should be changed');
+    assert_equals(node2.previousSibling, null, 'Removed node previousSibling attribute ' +
+        'should be updated');
+    assert_equals(node2.nextSibling, null, 'Removed node nextSibling attribute ' +
+        'should be updated');
+    assert_equals(node4.parent, group1, 'Inserted node parent group should be changed');
+    assert_equals(node4.previousSibling, node1, 'Inserted node previousSibling attribute ' +
+        'should be updated');
+    assert_equals(node2.nextSibling, null, 'Inserted node nextSibling attribute ' +
+        'should be updated');
+}, 'Test that AnimationNode.replace() replaces this node. The previous position ' +
+    'of the inserted node is higher in the tree than current node, but not ancestor');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node1, node2]);
+    // FIXME Is resulting order of nodes specified?
+    node2.replace(node3, node4);
+
+    assert_array_equals(group.children, [node1, node3, node4], 'AnimationNode.replace() ' +
+        'should replace the current node by ones passed in arguments');
+    assert_equals(node1.nextSibling, node3, 'nextSibling attribute should be updated');
+    assert_equals(node3.previousSibling, node1, 'Inserted node previousSibling attribute ' +
+        'should be updated');
+    assert_equals(node3.nextSibling, node4, 'Inserted node nextSibling attribute ' +
+        'should be updated');
+    assert_equals(node3.parent, group, 'Parent group of the inserted node should be changed');
+    assert_equals(node4.previousSibling, node3, 'Inserted node previousSibling attribute ' +
+        'should be updated');
+    assert_equals(node4.nextSibling, node2, 'Inserted node nextSibling attribute ' +
+        'should be updated');
+    assert_equals(node4.parent, group, 'Parent group of the second inserted node ' +
+        'should be changed');
+}, 'Test that AnimationNode.replace() replaces this node. Test several arguments');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = new AnimationGroup([]);
+    var node3 = newAnimation(createDiv(this));
+    var node4 = new AnimationGroup([]);
+    var group = new AnimationGroup([node1, node2]);
+    // FIXME Is resulting order of nodes specified?
+    node2.replace(node3, node4);
+
+    assert_array_equals(group.children, [node1, node3, node4], 'AnimationNode.replace() ' +
+        'should replace the current node by ones passed in arguments');
+    assert_equals(node1.nextSibling, node3, 'nextSibling attribute should be updated');
+    assert_equals(node3.previousSibling, node1, 'Inserted node previousSibling attribute ' +
+        'should be updated');
+    assert_equals(node3.nextSibling, node4, 'Inserted node nextSibling attribute ' +
+        'should be updated');
+    assert_equals(node3.parent, group, 'Parent group of the inserted node should be changed');
+    assert_equals(node4.previousSibling, node3, 'Inserted node previousSibling attribute ' +
+        'should be updated');
+    assert_equals(node4.nextSibling, node2, 'Inserted node nextSibling attribute ' +
+        'should be updated');
+    assert_equals(node4.parent, group, 'Parent group of the second inserted node ' +
+        'should be changed');
+}, 'Test that AnimationNode.replace() replaces this node. Test several arguments ' +
+    'for AnimationGroup');
+
+test(function() {
+    var node = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node]);
+
+    assert_throws('HierarchyRequestError', function() {
+        node.replace(node);
+    }, 'HierarchyRequestError should be thrown in case of attempt to replace itself');
+}, 'HierarchyRequestError is thrown if node replaces itself');
+
+test(function() {
+    var node = new AnimationGroup([]);
+    var group = new AnimationGroup([node]);
+
+    assert_throws('HierarchyRequestError', function() {
+        node.replace(node);
+    }, 'HierarchyRequestError should be thrown in case of attempt to replace node ' +
+        'by itself');
+}, 'HierarchyRequestError is thrown if node replaces itself. Test AnimationGroup');
+
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = new AnimationGroup([node1]);
+
+    assert_throws('HierarchyRequestError', function() {
+        node1.replace(node2);
+    }, 'HierarchyRequestError should be thrown in case of attempt to replace node by its ' +
+        'inclusive ancestor');
+}, 'HierarchyRequestError is thrown if node is replaced by its inclusive ancestor');
+
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = new AnimationGroup([node1]);
+
+    assert_throws('HierarchyRequestError', function() {
+        node1.replace(node2);
+    }, 'HierarchyRequestError should be thrown in case of attempt to replace node by its ' +
+        'inclusive ancestor');
+}, 'HierarchyRequestError is thrown if node is replaced by its inclusive ancestor. ' +
+    'Test AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = new AnimationGroup([node1]);
+    var node3 = new AnimationGroup([node2]);
+    var node4 = new AnimationGroup([node3]);
+
+    assert_throws('HierarchyRequestError', function() {
+        node1.replace(node3);
+    }, 'HierarchyRequestError should be thrown in case of attempt to replace node by its ' +
+        'inclusive ancestor');
+}, 'HierarchyRequestError is thrown if node is replaced by its inclusive ancestor. ' +
+    'Test when inclusive ancestor is not direct parent of the node');
+
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = new AnimationGroup([node1]);
+    var node3 = new AnimationGroup([node2]);
+    var node4 = new AnimationGroup([node3]);
+
+    assert_throws('HierarchyRequestError', function() {
+        node1.replace(node3);
+    }, 'HierarchyRequestError should be thrown in case of attempt to replace node by its ' +
+        'inclusive ancestor');
+}, 'HierarchyRequestError is thrown if node is replaced by its inclusive ancestor. ' +
+    'Test when inclusive ancestor is not direct parent of the node for AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = new AnimationGroup([node1, node2]);
+
+    assert_throws('HierarchyRequestError', function() {
+        node1.replace(node3, node4);
+    }, 'HierarchyRequestError should be thrown in case of attempt to replace node by its ' +
+        'inclusive ancestor');
+}, 'HierarchyRequestError is thrown if node is replaced by its inclusive ancestor. ' +
+    'Test several arguments in replace() call');
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = new AnimationGroup([node1, node2]);
+
+    assert_throws('HierarchyRequestError', function() {
+        node1.replace(node3, node4);
+    }, 'HierarchyRequestError should be thrown in case of attempt to replace node by its ' +
+        'inclusive ancestor');
+}, 'HierarchyRequestError is thrown if node is replaced by its inclusive ancestor. ' +
+    'Test several arguments in replace() call for AnimationGroup');
+</script>
+</body>
