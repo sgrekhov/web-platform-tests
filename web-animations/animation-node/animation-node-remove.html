@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation node remove() method test</title>
+<meta name="assert" content="Removes this animation node from its parent animation group or player">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-remove-void">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var node = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node]);
+
+    node.remove();
+
+    assert_array_equals(animationGroup.children, [], 'Node should be removed from the group');
+    assert_equals(node.parent, null, 'Removed node parent attribute should be updated');
+}, 'AnimationNode.remove() removes node from the parent animation group. ' +
+    'Removed node is the only node in the tree');
+
+test(function() {
+    var node = new AnimationGroup([]);
+    var animationGroup = new AnimationGroup([node]);
+
+    node.remove();
+
+    assert_array_equals(animationGroup.children, [], 'Node should be removed from the group');
+    assert_equals(node.parent, null, 'Removed node parent attribute should be updated');
+}, 'AnimationNode.remove() removes node from the parent animation group. ' +
+    'Removed node is the only node in the tree. Test AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1, node2]);
+
+    node1.remove();
+
+    assert_array_equals(animationGroup.children, [node2], 'Node should be removed from the group');
+    assert_equals(node1.parent, null, 'Removed node parent attribute should be updated');
+    assert_equals(node1.nextSibling, null, 'Removed node nextSibling attribute should be updated');
+    assert_equals(node2.previousSibling, null, 'Node previousSibling attribute should be updated');
+}, 'AnimationNode.remove() removes node from the parent animation group. ' +
+    'Remove the first node in the group');
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = new AnimationGroup([]);
+    var animationGroup = new AnimationGroup([node1, node2]);
+
+    node1.remove();
+
+    assert_array_equals(animationGroup.children, [node2], 'Node should be removed from the group');
+    assert_equals(node1.parent, null, 'Removed node parent attribute should be updated');
+    assert_equals(node1.nextSibling, null, 'Removed node nextSibling attribute should be updated');
+    assert_equals(node2.previousSibling, null, 'Node previousSibling attribute should be updated');
+}, 'AnimationNode.remove() removes node from the parent animation group. ' +
+    'Remove the first node in the group. Test AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1, node2]);
+
+    node2.remove();
+
+    assert_array_equals(animationGroup.children, [node1], 'Node should be removed from the group');
+    assert_equals(node2.parent, null, 'Removed node parent attribute should be updated');
+    assert_equals(node1.nextSibling, null, 'Node nextSibling attribute should be updated');
+    assert_equals(node2.previousSibling, null, 'Removed node previousSibling attribute ' +
+        'should be updated');
+}, 'AnimationNode.remove() removes node from the parent animation group. ' +
+    'Remove the last node in the group');
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = new AnimationGroup([]);
+    var animationGroup = new AnimationGroup([node1, node2]);
+
+    node2.remove();
+
+    assert_array_equals(animationGroup.children, [node1], 'Node should be removed from the group');
+    assert_equals(node2.parent, null, 'Removed node parent attribute should be updated');
+    assert_equals(node1.nextSibling, null, 'Node nextSibling attribute should be updated');
+    assert_equals(node2.previousSibling, null, 'Removed node previousSibling attribute ' +
+        'should be updated');
+}, 'AnimationNode.remove() removes node from the parent animation group. ' +
+    'Remove the last node in the group. Test AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = new AnimationGroup([]);
+    var animationGroup = new AnimationGroup([node1, node2, node3]);
+
+    node2.remove();
+
+    assert_array_equals(animationGroup.children, [node1, node2], 'Node should be removed ' +
+        'from the group');
+    assert_equals(node2.parent, null, 'Removed node parent attribute should be updated');
+    assert_equals(node2.nextSibling, null, 'Removed node nextSibling attribute should be updated');
+    assert_equals(node2.previousSibling, null, 'Removed node previousSibling attribute ' +
+        'should be updated');
+    assert_equals(node1.nextSibling, node3, 'Node nextSibling attribute should be updated');
+    assert_equals(node3.previousSibling, node1, 'Node previousSibling attribute ' +
+        'should be updated');
+}, 'AnimationNode.remove() removes node from the parent animation group. ' +
+    'Remove node from the middle of the group');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = new AnimationGroup([]);
+    var node3 = new AnimationGroup([]);
+    var animationGroup = new AnimationGroup([node1, node2, node3]);
+
+    node2.remove();
+
+    assert_array_equals(animationGroup.children, [node1, node2], 'Node should be removed ' +
+        'from the group');
+    assert_equals(node2.parent, null, 'Removed node parent attribute should be updated');
+    assert_equals(node2.nextSibling, null, 'Removed node nextSibling attribute should be updated');
+    assert_equals(node2.previousSibling, null, 'Removed node previousSibling attribute ' +
+        'should be updated');
+    assert_equals(node1.nextSibling, node3, 'Node nextSibling attribute should be updated');
+    assert_equals(node3.previousSibling, node1, 'Node previousSibling attribute ' +
+        'should be updated');
+}, 'AnimationNode.remove() removes node from the parent animation group. ' +
+    'Remove node from the middle of the group. Test AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = newAnimation(createDiv(this));
+    var group1 = new AnimationGroup([node1, node2]);
+    var group2 = new AnimationGroup([node3, group1, node4]);
+
+    group1.remove();
+
+    assert_array_equals(group1.children, [node1, node2], 'Removed node children should not ' +
+        'be changed');
+    assert_array_equals(group2.children, [node3, node1], 'Node should be removed from the tree');
+    assert_equals(group1.parent, null, 'Node should be removed from parent group');
+    assert_equals(group1.previousSibling, null, 'Removed node previousSibling attribute ' +
+        'should be updated');
+    assert_equals(group1.nextSibling, null, 'Removed node nextSibling attribute ' +
+        'should be updated');
+    assert_equals(node4.previousSibling, node3, 'Node previousSibling attribute ' +
+        'should be updated');
+    assert_equals(node3.nextSibling, node4, 'Node nextSibling attribute ' +
+        'should be updated');
+}, 'Test removing a node with the children');
+
+test(function() {
+    var node = newAnimation(createDiv(this));
+    var player = document.timeline.play(node);
+
+    node.remove();
+
+    assert_equals(player.source, null, 'Node shoul be removed from the player');
+    assert_equals(node.player, null, 'Player should be disassociated from the node');
+}, 'AnimationNode.remove() removes node from player');
+
+
+test(function() {
+    var node = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node]);
+    var player = document.timeline.play(group);
+
+    group.remove();
+
+    assert_equals(player.source, null, 'Node shoul be removed from the player');
+    assert_equals(group.player, null, 'Player should be disassociated from the node');
+    assert_equals(node.player, null, 'Player should be disassociated from the child node');
+}, 'AnimationNode.remove() removes node from player. Test AnimationGroup');
+</script>
+</body>

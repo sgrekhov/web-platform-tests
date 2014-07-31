@@ -97,8 +97,10 @@ test(function() {
     assert_array_equals(group2.children, [node3, group1, node1], 'Node should be inserted ' +
         'to the new position');
     assert_equals(node4.parent, null, 'Node should be removed from parent group');
-    assert_equals(node4.previousSibling, null, 'Node should be removed from parent group');
-    assert_equals(node4.nextSibling, null, 'Node should be removed from parent group');
+    assert_equals(node4.previousSibling, null, 'Replaced node previousSibling attribute ' +
+         'should be updated');
+    assert_equals(node4.nextSibling, null, 'Replaced node nextSibling attribute ' +
+            'should be updated');
     assert_equals(node1.parent, group2, 'Inserted node parent group should be changed');
     assert_equals(node1.previousSibling, group1, 'Inserted node previousSibling attribute ' +
         'should be updated');
@@ -121,10 +123,10 @@ test(function() {
         'to the new position');
     assert_array_equals(group2.children, [node3, group1], 'Node should be removed from ' +
         'its previous position in the tree');
-    assert_equals(node2.parent, null, 'Removed node parent group should be changed');
-    assert_equals(node2.previousSibling, null, 'Removed node previousSibling attribute ' +
+    assert_equals(node2.parent, null, 'Replaced node parent group should be changed');
+    assert_equals(node2.previousSibling, null, 'Replaced node previousSibling attribute ' +
         'should be updated');
-    assert_equals(node2.nextSibling, null, 'Removed node nextSibling attribute ' +
+    assert_equals(node2.nextSibling, null, 'Replaced node nextSibling attribute ' +
         'should be updated');
     assert_equals(node4.parent, group1, 'Inserted node parent group should be changed');
     assert_equals(node4.previousSibling, node1, 'Inserted node previousSibling attribute ' +
