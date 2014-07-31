@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation node parent attribute test</title>
+<title>AnimationNode parent attribute tests</title>
 <meta name="assert" content="The parent animation group of this animation node or null if this animation node does not have a parent animation group">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-parent">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
@@ -64,5 +64,17 @@ test(function() {
         'parent animation group of this animation node (second node in the group)');
 }, 'AnimationNode.parent returns parent animation group of this animation node. Test more ' +
     'than one node in the group. Test AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = new AnimationGroup([]);
+    var animationGroup = new AnimationGroup([node1, node2]);
+
+    assert_equals(node1.parent, animationGroup, 'AnimationNode.parent should return ' +
+        'parent animation group of this animation node (first node in the group)');
+    assert_equals(node2.parent, animationGroup, 'AnimationNode.parent should return ' +
+        'parent animation group of this animation node (second node in the group)');
+}, 'AnimationNode.parent returns parent animation group of this animation node. Test more ' +
+    'than one node in the group. Test mix of Animation and AnimationGroup');
 </script>
 </body>

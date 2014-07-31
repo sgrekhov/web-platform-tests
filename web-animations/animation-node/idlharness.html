@@ -3,7 +3,7 @@
 <title>Web Animations API: AnimationNode tests</title>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
-<script src="/resources/WebIDLParser.js"></script>
+<script src="/resources/webidl2/lib/webidl2.js"></script>
 <script src="/resources/idlharness.js"></script>
 <div id="log"></div>
 <div id="target"></div>
@@ -22,16 +22,21 @@ interface AnimationGroup {
 </script>
 <script type="text/plain" id="AnimationNode-IDL">
 interface AnimationNode {
+    // Timing
     readonly attribute AnimationTiming         timing;
     readonly attribute ComputedAnimationTiming computedTiming;
+
+    // Timing hierarchy
     readonly attribute AnimationGroup?         parent;
     readonly attribute AnimationNode?          previousSibling;
     readonly attribute AnimationNode?          nextSibling;
+    void before (AnimationNode... nodes);
+    void after (AnimationNode... nodes);
+    void replace (AnimationNode... nodes);
+    void remove ();
+
+    // Associated player
     readonly attribute AnimationPlayer?        player;
-    void before(AnimationNode... nodes);
-    void after(AnimationNode... nodes);
-    void replace(AnimationNode... nodes);
-    void remove();
 };
 </script>
 <script>
@@ -40,13 +45,10 @@ interface AnimationNode {
 var target = document.getElementById('target');
 var node = new Animation(target, [], 5);
 
-var idlArray;
-test(function() {
-    idlArray = new IdlArray();
-    idlArray.add_untested_idls(document.getElementById('untested-IDL').textContent);
-    idlArray.add_idls(document.getElementById('AnimationNode-IDL').textContent);
-    idlArray.add_objects( { AnimationNode: ['node'] } );
-});
+var idlArray = new IdlArray();
+idlArray.add_untested_idls(document.getElementById('untested-IDL').textContent);
+idlArray.add_idls(document.getElementById('AnimationNode-IDL').textContent);
+idlArray.add_objects( { AnimationNode: ['node'] } );
 idlArray.test();
 
 </script>

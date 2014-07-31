@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation node timing attribute test</title>
+<title>AnimationNode timing attribute tests</title>
 <meta name="assert" content="Returns the input timing properties specified for this animation node">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-timing">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
@@ -162,7 +162,6 @@ test(function() {
     'Test all supported direction values. Test Animation');
 
 test(function() {
-    var animationTarget = createDiv(this);
     playbackDirections.forEach(function(playbackDirection) {
         var timing = {direction: playbackDirection};
         var node = new AnimationGroup([], timing);
