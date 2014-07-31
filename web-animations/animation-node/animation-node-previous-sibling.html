@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation node previousSibling attribute test</title>
+<title>AnimationNode previousSibling attribute tests</title>
 <meta name="assert" content="The previous sibling of this animation node">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-previousSibling">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
@@ -15,13 +15,13 @@ test(function() {
     var node = newAnimation(createDiv(this));
 
     assert_equals(node.previousSibling, null, 'AnimationNode.previousSibling should be null');
-}, 'AnimationNode.previousSibling is null if animation node does not have a previous sibling');
+}, 'AnimationNode.previousSibling is null if animation node is standalone');
 
 test(function() {
     var node = new AnimationGroup([]);
 
     assert_equals(node.previousSibling, null, 'AnimationNode.previousSibling should be null');
-}, 'AnimationNode.previousSibling is null if animation node does not have a previous sibling. ' +
+}, 'AnimationNode.previousSibling is null if animation node is standalone. ' +
     'Test AnimationGroup');
 
 test(function() {
@@ -30,7 +30,7 @@ test(function() {
 
     assert_equals(node.previousSibling, null, 'AnimationNode.previousSibling ' +
         'should be null');
-}, 'AnimationNode.previousSibling should be null if animation group contains only one node');
+}, 'AnimationNode.previousSibling should be null if the node is the only child of its parent');
 
 test(function() {
     var node = new AnimationGroup([]);
@@ -38,7 +38,7 @@ test(function() {
 
     assert_equals(node.previousSibling, null, 'AnimationNode.previousSibling ' +
         'should be null');
-}, 'AnimationNode.previousSibling should be null if animation group contains only one node. ' +
+}, 'AnimationNode.previousSibling should be null if the node is the only child of its parent. ' +
     'Test AnimationGroup');
 
 test(function() {
@@ -74,6 +74,8 @@ test(function() {
     var node9 = newAnimation(createDiv(this));
     var animationGroup = new AnimationGroup([node1, node2, node7, node8, node9]);
 
+    assert_equals(animationGroup.previousSibling, null, 'AnimationNode.previousSibling should be null ' +
+        'for the root node in the group');
     assert_equals(node1.previousSibling, null, 'AnimationNode.previousSibling should be null ' +
         'for the first node in the group');
     assert_equals(node2.previousSibling, node1, 'AnimationNode.previousSibling should return ' +
@@ -88,9 +90,9 @@ test(function() {
 	    'previous sibling of this animation node (second node in the second nested group)');
     assert_equals(node7.previousSibling, node2, 'AnimationNode.previousSibling should return ' +
         'previous sibling of this animation node (first nested group)');
-    assert_equals(node8.previousSibling, node2, 'AnimationNode.previousSibling should return ' +
+    assert_equals(node8.previousSibling, node7, 'AnimationNode.previousSibling should return ' +
         'previous sibling of this animation node (second nested group)');
-    assert_equals(node9.previousSibling, node2, 'AnimationNode.previousSibling should return ' +
+    assert_equals(node9.previousSibling, node8, 'AnimationNode.previousSibling should return ' +
         'previous sibling of this animation node (the last node)');
 }, 'AnimationNode.previousSibling returns previous sibling of this animation node. Test ' +
     'tree structure');
