@@ -7,31 +7,33 @@
 <script src="/resources/idlharness.js"></script>
 <div id="log"></div>
 <script type="text/plain" id="untested-IDL">
-interface EventTarget {
-};
-
 interface AnimationNode {
 };
 
 interface AnimationTimeline {
 };
+
+interface AnimationPlayState {
+};
+
+interface Promise {
+};
 </script>
 <script type="text/plain" id="AnimationPlayer-IDL">
-interface AnimationPlayer : EventTarget {
-             attribute AnimationNode?    source;
-    readonly attribute AnimationTimeline timeline;
-             attribute double            startTime;
-             attribute double            currentTime;
-             attribute double            playbackRate;
-    readonly attribute boolean           paused;
-    readonly attribute boolean           finished;
-    void cancel ();
-    void finish ();
-    void play ();
-    void pause ();
-    void reverse ();
-
-             attribute EventHandler      onfinish;
+interface AnimationPlayer {
+             attribute AnimationNode?     source;
+    readonly attribute AnimationTimeline  timeline;
+             attribute double?            startTime;
+             attribute double?            currentTime;
+             attribute double             playbackRate;
+    readonly attribute AnimationPlayState playState;
+    readonly attribute Promise            ready;
+    readonly attribute Promise            finished;
+    void cancel();
+    void finish();
+    void play();
+    void pause();
+    void reverse();
 };
 </script>
 <script>
