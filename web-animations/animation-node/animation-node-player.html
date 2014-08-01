@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation node player attribute test</title>
+<title>AnimationNode player attribute tests</title>
 <meta name="assert" content="The player with which this animation node is associated, if any">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-player">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#dfn-associated-with-a-player">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -26,41 +27,43 @@ test(function() {
 
 test(function() {
     var node = newAnimation(createDiv(this));
-    var player = newPlayerFromAnimation(node);
+    var player = document.timeline.play(node);
 
     assert_equals(node.player, player, 'AnimationNode.player ' +
         'should return player associated with this node');
-}, 'AnimationNode.player should return player associated with this node');
+}, 'AnimationNode.player returns player associated with this node');
 
 test(function() {
     var node = new AnimationGroup([]);
-    var player = newPlayerFromAnimation(node);
+    var player = document.timeline.play(node);
 
     assert_equals(node.player, player, 'AnimationNode.player ' +
         'should return player associated with this node');
-}, 'AnimationNode.player should return player associated with this node. ' +
+}, 'AnimationNode.player returns player associated with this node. ' +
     'Test AnimationGroup');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
-    var node3 = new AnimationGroup([]);
-    var animationGroup = new AnimationGroup([node1, node2, node3]);
-    var player = newPlayerFromAnimation(animationGroup);
+    var node3 = newAnimation(createDiv(this));
+    var node4 = new AnimationGroup([node3]);
+    var animationGroup = new AnimationGroup([node1, node2, node4]);
+    var player = document.timeline.play(animationGroup);
 
-    assert_equals(node1.player, null, 'AnimationNode.player should be null');
-    assert_equals(node2.player, null, 'AnimationNode.player should be null');
-    assert_equals(node3.player, null, 'AnimationNode.player should be null for child group');
-    assert_equals(anumationGroup.player, player, 'AnimationNode.player should return player ' +
-        'associated with this node');
-}, 'AnimationNode.previousSibling returns previous sibling of this animation node. ' +
-    'Test not empty AnimationGroup');
+    assert_equals(node1.player, player, 'AnimationNode.player should return the player of its ancestor');
+    assert_equals(node2.player, player, 'AnimationNode.player should return the player of its ancestor');
+    assert_equals(node3.player, player, 'AnimationNode.player should return the player of its ancestor');
+    assert_equals(node4.player, player, 'AnimationNode.player should return the player of its ancestor');
+    assert_equals(animationGroup.player, player, 'AnimationNode.player should return player ' +
+        'directly associated with this node');
+}, 'AnimationNode.player returns the player of its ancestor, ' +
+    'if it is not directly associated wtih the player');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var animationGroup = new AnimationGroup([node1, node2]);
-    var player = newPlayerFromAnimation(animationGroup);
+    var player = document.timeline.play(animationGroup);
     animationGroup.player.currentTime = ANIMATION_END_TIME/2;
 
     assert_equals(window.getComputedStyle(node1.target).width, 100,

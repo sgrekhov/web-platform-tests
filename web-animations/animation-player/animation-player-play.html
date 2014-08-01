@@ -12,7 +12,7 @@
 <div id="log"></div>
 <script>
 async_test(function(t) {
-    var player = newPlayerFromAnimation(null);
+    var player = document.timeline.play(null);
     player.pause();
     player.play();
 

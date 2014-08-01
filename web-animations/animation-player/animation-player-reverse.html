@@ -34,7 +34,7 @@ function testFinishedFalse(t, player) {
 }
 
 async_test(function(t) {
-    var player = newPlayerFromAnimation(null);
+    var player = document.timeline.play(null);
     player.reverse();
 
     assert_equals(player.playbackRate, -1, 'Playback rate should be changed in sign');
@@ -43,7 +43,7 @@ async_test(function(t) {
 }, 'AnimationPlayer.reverse() reverses the player with no source content');
 
 async_test(function(t) {
-    var player = newPlayerFromAnimation(null);
+    var player = document.timeline.play(null);
     player.pause();
     player.reverse();
 
@@ -54,7 +54,7 @@ async_test(function(t) {
 }, 'AnimationPlayer.reverse() reverses paused player with no source content');
 
 async_test(function(t) {
-    var player = newPlayerFromAnimation(null);
+    var player = document.timeline.play(null);
     player.playbackRate = -0.4;
     player.pause();
     player.reverse();
