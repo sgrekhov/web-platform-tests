@@ -13,7 +13,7 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var player = document.timeline.play(new Animation(createDiv(this), [], 10));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
 
     assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
         'not be null');
@@ -24,10 +24,10 @@ test(function() {
 
     assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
         'not be null');
-}, 'The that AnimationPlayer.timeline attribute is not null (no source content)');
+}, 'The that AnimationPlayer.timeline attribute is not null even if there is no source content');
 
 test(function() {
-    var player = document.timeline.play(new Animation(createDiv(this), [], 10));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
 
     assert_class_string(player.timeline, 'AnimationTimeline,',
         'The value of AnimationPlayer.timeline attribute should be of type ' +
@@ -35,7 +35,7 @@ test(function() {
 }, 'The value of AnimationPlayer.timeline attribute is of type AnimationTimeline');
 
 test(function() {
-    var player = document.timeline.play(new Animation(createDiv(this), [], 1000));
+    var player = document.timeline.play(newAnimation(createDiv(this)));
 
     assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
         'not be null');
@@ -50,5 +50,16 @@ test(function() {
         'should be equal to document.timeline');
 }, 'The AnimationPlayer.timeline attribute returns the timeline, used to create the player. ' +
     'Player has no source content');
+
+test(function() {
+    var doc = newHTMLDocument();
+    var player = doc.timeline.play(newAnimation(createDiv(this)));
+
+    assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
+        'not be null');
+    assert_equals(player.timeline, doc.timeline, 'AnimationPlayer.timeline ' +
+        'should be equal to document.timeline');
+}, 'The AnimationPlayer.timeline attribute returns the timeline, used to create the player. ' +
+    'Test not the current document');
 </script>
 </body>
