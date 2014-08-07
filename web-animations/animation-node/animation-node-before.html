@@ -114,7 +114,8 @@ test(function() {
         node1.before(node2);
     }, 'HierarchyRequestError should be thrown if inserting ' +
         'node\'s parent');
-}, 'HierarchyRequestError is thrown if an inclusive ancestor is inserted before the node');
+}, 'HierarchyRequestError is thrown if an inclusive ancestor is inserted before the node. ' +
+    'Test Animation');
 
 test(function() {
     var node1 = new AnimationGroup([]);
@@ -216,9 +217,13 @@ test(function() {
 
     node1.before(node2);
 
-    assert_equals(node1.previousSibling, node2, 'AnimationNode.before() should insert ' +
+    assert_equals(node2.previousSibling, null, 'AnimationNode.before() should insert ' +
         'nodes before this node');
     assert_equals(node2.nextSibling, node1, 'Node should be inserted into the tree ' +
+        'before this node');
+    assert_equals(node1.previousSibling, node2, 'AnimationNode.before() should insert ' +
+        'nodes before this node');
+    assert_equals(node1.nextSibling, null, 'Node should be inserted into the tree ' +
         'before this node');
 }, 'AnimationNode.before() inserts nodes before this node. Inserted node is on the same ' +
     'level in the tree. Test Animation');
@@ -230,9 +235,13 @@ test(function() {
 
     node1.before(node2);
 
-    assert_equals(node1.previousSibling, node2, 'AnimationNode.before() should insert ' +
+    assert_equals(node2.previousSibling, null, 'AnimationNode.before() should insert ' +
         'nodes before this node');
     assert_equals(node2.nextSibling, node1, 'Node should be inserted into the tree ' +
+        'before this node');
+    assert_equals(node1.previousSibling, node2, 'AnimationNode.before() should insert ' +
+        'nodes before this node');
+    assert_equals(node1.nextSibling, null, 'Node should be inserted into the tree ' +
         'before this node');
 }, 'AnimationNode.before() inserts nodes before this node. Inserted node is on the same ' +
     'level in the tree. Test AnimationGroup');
