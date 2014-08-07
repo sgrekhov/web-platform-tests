@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationGroup lastChild attribute test</title>
+<meta name="assert" content="The first child of this animation group">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationGroup-lastChild">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var group = new AnimationGroup([]);
+    
+    assert_array_equals(group.lastChild, null, 'AnimationGroup.lastChild should return ' +
+        'the last child of the animation group');
+}, 'AnimationGroup.lastChild returns null if there is no children in the group');
+
+test(function() {
+    var node = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node]);
+    
+    assert_array_equals(group.lastChild, node, 'AnimationGroup.lastChild should return ' +
+        'the last child of the animation group');
+}, 'AnimationGroup.lastChild returns the last child of the animation group. ' +
+    'Test the only node in the group');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node1, node2]);
+    
+    assert_array_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
+        'the last child of the animation group');
+},  'AnimationGroup.lastChild returns the last child of the animation group. ' +
+    'Test the more than one node in the group');
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = new AnimationGroup([]);
+    var group = new AnimationGroup([node1, node2]);
+    
+    assert_array_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
+        'the last child of the animation group');
+},  'AnimationGroup.lastChild returns the last child of the animation group. ' +
+    'Test AnimationNode as a last child');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = new AnimationGroup([node1, node2]);
+    var node5 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node3, node4, node5]);
+    
+    assert_array_equals(group.lastChild, node5, 'AnimationGroup.lastChild should return ' +
+        'the last child of the animation group');
+    assert_array_equals(node4.lastChildren, node2, 'AnimationGroup.lastChild should return ' +
+        'the last child of low-level animation group');
+}, 'AnimationGroup.lastChild returns the last child of the animation group. ' +
+    'Test low-level node in the tree');
+</script>
+</body>
