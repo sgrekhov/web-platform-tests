@@ -14,7 +14,7 @@
 test(function() {
     var group = new AnimationGroup([]);
     
-    assert_array_equals(group.lastChild, null, 'AnimationGroup.lastChild should return ' +
+    assert_equals(group.lastChild, null, 'AnimationGroup.lastChild should return ' +
         'the last child of the animation group');
 }, 'AnimationGroup.lastChild returns null if there is no children in the group');
 
@@ -22,7 +22,7 @@ test(function() {
     var node = newAnimation(createDiv(this));
     var group = new AnimationGroup([node]);
     
-    assert_array_equals(group.lastChild, node, 'AnimationGroup.lastChild should return ' +
+    assert_equals(group.lastChild, node, 'AnimationGroup.lastChild should return ' +
         'the last child of the animation group');
 }, 'AnimationGroup.lastChild returns the last child of the animation group. ' +
     'Test the only node in the group');
@@ -32,7 +32,7 @@ test(function() {
     var node2 = newAnimation(createDiv(this));
     var group = new AnimationGroup([node1, node2]);
     
-    assert_array_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
+    assert_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
         'the last child of the animation group');
 },  'AnimationGroup.lastChild returns the last child of the animation group. ' +
     'Test the more than one node in the group');
@@ -42,7 +42,7 @@ test(function() {
     var node2 = new AnimationGroup([]);
     var group = new AnimationGroup([node1, node2]);
     
-    assert_array_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
+    assert_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
         'the last child of the animation group');
 },  'AnimationGroup.lastChild returns the last child of the animation group. ' +
     'Test AnimationNode as a last child');
@@ -55,9 +55,9 @@ test(function() {
     var node5 = newAnimation(createDiv(this));
     var group = new AnimationGroup([node3, node4, node5]);
     
-    assert_array_equals(group.lastChild, node5, 'AnimationGroup.lastChild should return ' +
+    assert_equals(group.lastChild, node5, 'AnimationGroup.lastChild should return ' +
         'the last child of the animation group');
-    assert_array_equals(node4.lastChildren, node2, 'AnimationGroup.lastChild should return ' +
+    assert_equals(node4.lastChildren, node2, 'AnimationGroup.lastChild should return ' +
         'the last child of low-level animation group');
 }, 'AnimationGroup.lastChild returns the last child of the animation group. ' +
     'Test low-level node in the tree');
