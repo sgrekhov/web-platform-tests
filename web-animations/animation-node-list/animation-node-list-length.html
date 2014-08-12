@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationNodeList length attribute test</title>
+<meta name="assert" content="The number of animation nodes in the list">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNodeList-length">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var group = new AnimationGroup([]);
+
+    assert_equals(group.children.length, 0, 'AnimationNodeList.length should return ' +
+        'the number of animation nodes in the list');
+}, 'Test AnimationNodeList.length for empty AnimationNodeList');
+
+test(function() {
+    var node = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node]);
+
+    assert_equals(group.children.length, 1, 'AnimationNodeList.length should return ' +
+        'the number of animation nodes in the list');
+}, 'Test AnimationNodeList.length for one node length AnimationNodeList');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = new AnimationGroup([]);
+    var node3 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node1, node2, node3]);
+
+    assert_equals(group.children.length, 3, 'AnimationNodeList.length should return ' +
+         'the number of animation nodes in the list');
+}, 'Test AnimationNodeList.length for more than one node length AnimationNodeList');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = new AnimationGroup([node1, node2]);
+    var node5 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node3, node4, node5]);
+
+    assert_equals(group.children.length, 3, 'AnimationNodeList.length should return ' +
+        'the number of animation nodes in the list');
+    assert_equals(node4.children.length, 2, 'AnimationNodeList.length should return ' +
+        'the number of animation nodes in the list');
+}, 'Test AnimationNodeList.length on different levels in the tree');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = new AnimationGroup([]);
+    var node3 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([]);
+
+    assert_equals(group.children.length, 0, 'AnimationNodeList.length should return ' +
+         'the number of animation nodes in the list');
+
+    group.append(node1);
+    assert_equals(group.children.length, 1, 'AnimationNodeList.length should be updated ' +
+        'if the number of animation nodes in the list is changed (node appended)');
+
+    group.prepend(node2, node3);
+    assert_equals(group.children.length, 3, 'AnimationNodeList.length should be updated ' +
+        'if the number of animation nodes in the list is changed (nodes prepended)');
+
+    node3.remove();
+    assert_equals(group.children.length, 2, 'AnimationNodeList.length should be updated ' +
+        'if the number of animation nodes in the list is changed (node removed)');
+
+    node2.remove();
+    assert_equals(group.children.length, 1, 'AnimationNodeList.length should be updated ' +
+        'if the number of animation nodes in the list is changed (node removed)');
+    node1.remove();
+    assert_equals(group.children.length, 0, 'AnimationNodeList.length should be updated ' +
+        'if the number of animation nodes in the list is changed (node removed)');
+}, 'Test that AnimationNodeList.length is updated according the number of nodes in the list');
+</script>
+</body>

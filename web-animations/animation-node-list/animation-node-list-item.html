@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationNodeList item[index] test</title>
+<meta name="assert" content="Returns the animation node at index">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNodeList-item-AnimationNode-unsigned-long-index">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var group = new AnimationGroup([]);
+
+    assert_equals(group.children[0], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index equals the number of animation nodes in the list');
+    assert_equals(group.children[1], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index is greater than the number of animation nodes in the list');
+}, 'AnimationNodeList.item[index] returns null if index greater or equals the number of ' +
+    'animation nodes in the list. Test empty AnimationNodeList');
+
+test(function() {
+    var node = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node]);
+
+    assert_equals(group.children[0], node, 'AnimationNodeList.item[index] should return ' +
+        'node at index in the list');
+    assert_equals(group.children[1], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index equals the number of animation nodes in the list');
+    assert_equals(group.children[2], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index is greater than the number of animation nodes in the list');
+}, 'AnimationNodeList.item[index] returns null if index greater or equals the number of ' +
+    'animation nodes in the list. Test non empty AnimationNodeList');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = new AnimationGroup([]);
+    var node3 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node1, node2, node3]);
+
+    assert_equals(group.children[0], node1, 'AnimationNodeList.item[0] should return ' +
+        'node at 0 in the list');
+    assert_equals(group.children[1], node2, 'AnimationNodeList.item[1] should return ' +
+        'node at 1 in the list');
+    assert_equals(group.children[2], node3, 'AnimationNodeList.item[2] should return ' +
+        'node at 2 in the list');
+}, 'Test AnimationNodeList.item[index] returns node at index in the list');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = new AnimationGroup([node1, node2]);
+    var node5 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node3, node4, node5]);
+
+    assert_equals(group.children[0], node3, 'AnimationNodeList.item[0] should return ' +
+        'node at 0 in the list');
+    assert_equals(group.children[1], node4, 'AnimationNodeList.item[1] should return ' +
+        'node at 1 in the list');
+    assert_equals(group.children[2], node5, 'AnimationNodeList.item[2] should return ' +
+        'node at 2 in the list');
+    assert_equals(group.children[3], null, 'AnimationNodeList.item[3] should return null');
+    assert_equals(group.children[4], null, 'AnimationNodeList.item[4] should return null');
+
+    assert_equals(node4.children[0], node1, 'AnimationNodeList.item[0] should return ' +
+        'node at 0 in the list');
+    assert_equals(node4.children[1], node2, 'AnimationNodeList.item[1] should return ' +
+        'node at 1 in the list');
+    assert_equals(node4.children[2], null, 'AnimationNodeList.item[3] should return null');
+    assert_equals(node4.children[3], node1, 'AnimationNodeList.item[0] should return null');
+}, 'Test AnimationNodeList.item[index] on different levels in the tree');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = new AnimationGroup([]);
+    var node3 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([]);
+
+    group.append(node1);
+    assert_equals(group.children[0], node1, 'AnimationNodeList.item[index] should ' +
+        'be updated according the actual order of animation nodes in the list after ' +
+        'appending node');
+    assert_equals(group.children[1], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index equals the number of animation nodes in the list');
+    assert_equals(group.children[2], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index is greater than the number of animation nodes in the list');
+
+    group.prepend(node2, node3);
+    assert_equals(group.children[0], node2, 'AnimationNodeList.item[index] should ' +
+        'be updated according the actual order of animation nodes in the list after ' +
+        'prepending node');
+    assert_equals(group.children[1], node3, 'AnimationNodeList.item[index] should ' +
+        'be updated according the actual order of animation nodes in the list after ' +
+        'prepending node');
+    assert_equals(group.children[2], node1, 'AnimationNodeList.item[index] should ' +
+        'be updated according the actual order of animation nodes in the list after ' +
+        'prepending node');
+    assert_equals(group.children[3], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index equals the number of animation nodes in the list');
+    assert_equals(group.children[4], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index is greater than the number of animation nodes in the list');
+
+    node3.remove();
+    assert_equals(group.children[0], node2, 'AnimationNodeList.item[index] should ' +
+        'be updated according the actual order of animation nodes in the list after ' +
+        'prepending node');
+    assert_equals(group.children[1], node1, 'AnimationNodeList.item[index] should ' +
+        'be updated according the actual order of animation nodes in the list after ' +
+        'prepending node');
+    assert_equals(group.children[2], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index equals the number of animation nodes in the list');
+    assert_equals(group.children[3], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index is greater than the number of animation nodes in the list');
+
+    group.append(node3);
+    assert_equals(group.children[0], node2, 'AnimationNodeList.item[index] should ' +
+        'be updated according the actual order of animation nodes in the list after ' +
+        'prepending node');
+    assert_equals(group.children[1], node1, 'AnimationNodeList.item[index] should ' +
+        'be updated according the actual order of animation nodes in the list after ' +
+        'prepending node');
+    assert_equals(group.children[2], node3, 'AnimationNodeList.item[index] should ' +
+        'be updated according the actual order of animation nodes in the list after ' +
+        'prepending node');
+    assert_equals(group.children[3], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index equals the number of animation nodes in the list');
+    assert_equals(group.children[4], null, 'AnimationNodeList.item[index] should return ' +
+        'null if index is greater than the number of animation nodes in the list');
+}, 'Test that AnimationNodeList.item[index] is updated according ' +
+    'the actual order of nodes in the list');
+</script>
+</body>
