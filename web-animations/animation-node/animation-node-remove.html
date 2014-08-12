@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation node remove() method test</title>
+<title>AnimationNode remove() method tests</title>
 <meta name="assert" content="Removes this animation node from its parent animation group or player">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-remove-void">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#dfn-remove-an-animation-node">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -11,6 +13,22 @@
 <body>
 <div id="log"></div>
 <script>
+test(function() {
+    var node = newAnimation(createDiv(this));
+
+    node.remove();
+
+    assert_equals(node.parent, null, 'Removed node parent attribute should be null');
+}, 'AnimationNode.remove() does nothing for standalone node. Test Animation');
+
+test(function() {
+    var node = new AnimationGroup([]);
+
+    node.remove();
+
+    assert_equals(node.parent, null, 'Removed node parent attribute should be null');
+}, 'AnimationNode.remove() does nothing for standalone node. Test AnimationGroup');
+
 test(function() {
     var node = newAnimation(createDiv(this));
     var animationGroup = new AnimationGroup([node]);
@@ -161,7 +179,7 @@ test(function() {
 
     node.remove();
 
-    assert_equals(player.source, null, 'Node shoul be removed from the player');
+    assert_equals(player.source, null, 'Node should be removed from the player');
     assert_equals(node.player, null, 'Player should be disassociated from the node');
 }, 'AnimationNode.remove() removes node from player');
 
@@ -173,9 +191,32 @@ test(function() {
 
     group.remove();
 
-    assert_equals(player.source, null, 'Node shoul be removed from the player');
+    assert_equals(player.source, null, 'Node should be removed from the player');
     assert_equals(group.player, null, 'Player should be disassociated from the node');
     assert_equals(node.player, null, 'Player should be disassociated from the child node');
 }, 'AnimationNode.remove() removes node from player. Test AnimationGroup');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = newAnimation(createDiv(this));
+    var group1 = new AnimationGroup([node1, node2]);
+    var group2 = new AnimationGroup([node3, group1, node4]);
+    var player = document.timeline.play(group2);
+
+    group1.remove();
+
+    assert_equlas(group1.player, null, 'Player should be disassociated from the node');
+    assert_equlas(node1.player, null, 'Player should be disassociated from the node children');
+    assert_equlas(node2.player, null, 'Player should be disassociated from the node children');
+
+    assert_equals(node3.player, player,
+        'Remaining nodes in the tree should be associated with the player');
+    assert_equals(node4.player, player,
+        'Remaining nodes in the tree should be associated with the player');
+    assert_equals(group2.player, player,
+        'Remaining nodes in the tree should be associated with the player');
+}, 'Test removing a node with the children disassociates it from the player');
 </script>
 </body>
