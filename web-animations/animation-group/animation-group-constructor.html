@@ -2,7 +2,7 @@
 <meta charset=utf-8>
 <title>AnimationGroup constructor test</title>
 <meta name="assert" content="Creates a new AnimationGroup object">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#idl-def-AnimationGroup">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-ctor-AnimationGroup-sequence-AnimationNode--children--unrestricted-double-or-AnimationTimingInput--timing">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -11,81 +11,65 @@
 <body>
 <div id="log"></div>
 <script>
+
+var DEFAULT_TIMING = {
+    delay: 0,
+    endDelay: 0,
+    fill: 'auto',
+    iterationStart: 0.0,
+    iterations: 1.0,
+    duration: 'auto',
+    playbackRate: 1.0,
+    direction: 'normal',
+    easing: 'linear'
+};
+
+function assert_timing_equlas(actual, expected){
+    assert_equals(actual.delay, expected.delay, 'Value of AnimationNode.timing.delay ' +
+        'is unexpected');
+    assert_equals(actual.endDelay, expected.endDelay, 'Value of AnimationNode.timing.endDelay ' +
+        'is unexpected');
+    assert_equals(actual.fill, expected.fill, 'Value of AnimationNode.timing.fill ' +
+        'is unexpected');
+    assert_equals(actual.iterationStart, expected.iterationStart, 'Value of ' +
+        'AnimationNode.timing.iterationStart is unexpected');
+    assert_equals(actual.iterations, expected.iterations, 'Value of ' +
+        'AnimationNode.timing.iterations is unexpected');
+    assert_equals(actual.duration, expected.duration, 'Value of AnimationNode.timing.duration ' +
+        'is unexpected');
+    assert_equals(actual.playbackRate, expected.playbackRate, 'Value of ' +
+        'AnimationNode.timing.playbackRate is unexpected');
+    assert_equals(actual.direction, expected.direction, 'Value of ' +
+        'AnimationNode.timing.direction is unexpected');
+    assert_equals(actual.easing, expected.easing, 'Value of AnimationNode.timing.easing ' +
+        'is unexpected');
+}
+
 test(function() {
     var group = new AnimationGroup(null);
 
-    assert_array_equals(group.children, [], 'AnimationGroup.children should correspond ' +
-        'the first constructor argument');
-    assert_equals(group.timing.delay, 0, 'Default value of AnimationGroup.timing.delay ' +
-        'should be 0');
-    assert_equals(group.timing.endDelay, 0, 'Default value of AnimationGroup.timing.endDelay ' +
-        'should be 0');
-    assert_equals(group.timing.fill, 'auto', 'Default value of AnimationGroup.timing.fill ' +
-        'should be \'auto\'');
-    assert_equals(group.timing.iterationStart, 0, 'Default value of ' +
-        'AnimationGroup.timing.iterationStart should be 0.0');
-    assert_equals(group.timing.iterations, 1, 'Default value of ' +
-        'AnimationGroup.timing.iterations should be 1.0');
-    assert_equals(group.timing.duration, 'auto', 'Default value of ' +
-        'AnimationGroup.timing.duration should be \'auto\'');
-    assert_equals(group.timing.playbackRate, 1, 'Default value of ' +
-        'AnimationGroup.timing.playbackRate should be 1.0');
-    assert_equals(group.timing.direction, 'normal', 'Default value of ' +
-        'AnimationGroup.timing.direction should be \'normal\'');
-    assert_equals(group.timing.easing, 'linear', 'Default value of ' +
-        'AnimationGroup.timing.easing should be \'linear\'');
-}, 'Test AnimationGroup constructor with null first argument and no second argument');
+    assert_array_equals(group.children, [], 'AnimationGroup should have no children');
+    assert_timing_equals(group.timing, DEFAULT_TIMING);
+}, 'Test constructor AnimationGroup(null) creates AnimationGroup instance ' +
+    'without children and with default timings');
 
 test(function() {
     var group = new AnimationGroup([]);
 
-    assert_array_equals(group.children, [], 'AnimationGroup.children should correspond ' +
-        'the first constructor argument');
-    assert_equals(group.timing.delay, 0, 'Default value of AnimationGroup.timing.delay ' +
-        'should be 0');
-    assert_equals(group.timing.endDelay, 0, 'Default value of AnimationGroup.timing.endDelay ' +
-        'should be 0');
-    assert_equals(group.timing.fill, 'auto', 'Default value of AnimationGroup.timing.fill ' +
-        'should be \'auto\'');
-    assert_equals(group.timing.iterationStart, 0, 'Default value of ' +
-        'AnimationGroup.timing.iterationStart should be 0.0');
-    assert_equals(group.timing.iterations, 1, 'Default value of ' +
-        'AnimationGroup.timing.iterations should be 1.0');
-    assert_equals(group.timing.duration, 'auto', 'Default value of ' +
-        'AnimationGroup.timing.duration should be \'auto\'');
-    assert_equals(group.timing.playbackRate, 1, 'Default value of ' +
-        'AnimationGroup.timing.playbackRate should be 1.0');
-    assert_equals(group.timing.direction, 'normal', 'Default value of ' +
-        'AnimationGroup.timing.direction should be \'normal\'');
-    assert_equals(group.timing.easing, 'linear', 'Default value of ' +
-        'AnimationGroup.timing.easing should be \'linear\'');
-}, 'Test AnimationGroup constructor with emplty child list and with no second argument');
+    assert_array_equals(group.children, [], 'AnimationGroup should have no children');
+    assert_timing_equals(group.timing, DEFAULT_TIMING);
+}, 'Test AnimationGroup constructor with emplty child list and with no second argument ' +
+    'creates AnimationGroup instance without children and with default timings');
 
 test(function() {
     var group = new AnimationGroup([], 5);
 
-    assert_equals(group.timing.duration, 5, 'Value of ' +
-        'AnimationGroup.timing.duration should correspond the second constructor argument');
-
-    assert_array_equals(group.children, [], 'AnimationGroup.children should correspond ' +
-        'the first constructor argument');
-    assert_equals(group.timing.delay, 0, 'Default value of AnimationGroup.timing.delay ' +
-        'should be 0');
-    assert_equals(group.timing.endDelay, 0, 'Default value of AnimationGroup.timing.endDelay ' +
-        'should be 0');
-    assert_equals(group.timing.fill, 'auto', 'Default value of AnimationGroup.timing.fill ' +
-        'should be \'auto\'');
-    assert_equals(group.timing.iterationStart, 0, 'Default value of ' +
-        'AnimationGroup.timing.iterationStart should be 0.0');
-    assert_equals(group.timing.iterations, 1, 'Default value of ' +
-        'AnimationGroup.timing.iterations should be 1.0');
-    assert_equals(group.timing.playbackRate, 1, 'Default value of ' +
-        'AnimationGroup.timing.playbackRate should be 1.0');
-    assert_equals(group.timing.direction, 'normal', 'Default value of ' +
-        'AnimationGroup.timing.direction should be \'normal\'');
-    assert_equals(group.timing.easing, 'linear', 'Default value of ' +
-        'AnimationGroup.timing.easing should be \'linear\'');
-}, 'Test AnimationGroup constructor with emplty child list and with double second argument');
+    assert_array_equals(group.children, [], 'AnimationGroup should have no children');
+    var timing = Object.create(DEFAULT_TIMING);
+    timing.duration = 5;
+    assert_timing_equals(group.timing, timing);
+}, 'Test AnimationGroup constructor with emplty child list and with double second argument ' +
+    'creates AnimationGroup instance without children and with default timings, except duration');
 
 test(function() {
     var timing = {
@@ -101,37 +85,18 @@ test(function() {
         easing: 'ease'};
     var node = new AnimationGroup([], timing);
 
-    assert_array_equals(group.children, [], 'AnimationGroup.children should correspond ' +
-        'the first constructor argument');
-    assert_equals(node.timing.delay, timing.delay, 'Value of AnimationNode.timing.delay ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(node.timing.endDelay, timing.endDelay, 'Value of AnimationNode.timing.endDelay ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(node.timing.fill, timing.fill, 'Value of AnimationNode.timing.fill ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(node.timing.iterationStart, timing.iterationStart, 'Value of ' +
-        'AnimationNode.timing.iterationStart should be specified by AnimationTimingInput');
-    assert_equals(node.timing.iterations, timing.iterations, 'Value of ' +
-        'AnimationNode.timing.iterations should be specified by AnimationTimingInput');
-    assert_equals(node.timing.duration, timing.duration, 'Value of AnimationNode.timing.duration ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(node.timing.playbackRate, timing.playbackRate, 'Value of ' +
-        'AnimationNode.timing.playbackRate should be specified by AnimationTimingInput');
-    assert_equals(node.timing.direction, timing.direction, 'Value of ' +
-        'AnimationNode.timing.direction should be specified by AnimationTimingInput');
-    assert_equals(node.timing.easing, timing.easing, 'Value of AnimationNode.timing.easing ' +
-        'should be specified by AnimationTimingInput');
+    assert_array_equals(node.children, [], 'AnimationGroup should have no children');
+    assert_timing_equals(node.timing, timing);
 }, 'Test AnimationGroup constructor with emplty child list and with AnimationTimingInput ' +
-    'second argument');
+    'second argument creates AnimationGroup instance without children and with given timings');
 
 test(function() {
     var node = newAnimation(createDiv(this));
     var children = [node];
     var group = new AnimationGroup(children);
-    
-    assert_array_equals(group.children, children, 'AnimationGroup.children should correspond ' +
-        'the first constructor argument');
-}, 'Test not empty first argument of AnimationGroup constructor');
+
+    assert_array_equals(group.children, children, 'AnimationGroup should have single child');
+}, 'Test AnimationGroup constructor creates AnimationGroup instance with single child');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
@@ -139,15 +104,14 @@ test(function() {
     var node3 = newAnimation(createDiv(this));
     var children = [node1, node2, node3];
     var group = new AnimationGroup(children);
-    
+
     assert_array_equals(group.children, children, 'AnimationGroup.children should correspond ' +
         'the first constructor argument');
-}, 'Test not empty first argument of AnimationGroup constructor with the mix of Animations ' +
-    'and AnimationGroups as children');
+}, 'Test AnimationGroup constructor creates AnimationGroup instance with children');
 
 test(function() {
     var node = newAnimation(createDiv(this));
-    
+
     assert_throws('HierarchyRequestError', function() {
         var group = new AnimationGroup([node, node]);
     }, 'HierarchyRequestError should be thrown in case of attempt to create ' +
@@ -156,7 +120,7 @@ test(function() {
 
 test(function() {
     var node = new AnimationGroup([]);
-    
+
     assert_throws('HierarchyRequestError', function() {
         var group = new AnimationGroup([node, node]);
     }, 'HierarchyRequestError should be thrown in case of attempt to create ' +
