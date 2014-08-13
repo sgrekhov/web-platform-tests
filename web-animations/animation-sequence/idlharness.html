@@ -1,0 +1,71 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>Web Animations API: AnimationSequence tests</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="/resources/webidl2/lib/webidl2.js"></script>
+<script src="/resources/idlharness.js"></script>
+<div id="log"></div>
+<script type="text/plain" id="untested-IDL">
+interface AnimationPlayer {
+};
+
+interface AnimationTiming {
+};
+
+interface ComputedAnimationTiming {
+};
+
+interface AnimationNodeList {
+};
+
+interface AnimationTimingInput {
+};
+</script>
+<script type="text/plain" id="AnimationSequence-IDL">
+interface AnimationNode {
+    // Timing
+    readonly attribute AnimationTiming         timing;
+    readonly attribute ComputedAnimationTiming computedTiming;
+
+    // Timing hierarchy
+    readonly attribute AnimationGroup?         parent;
+    readonly attribute AnimationNode?          previousSibling;
+    readonly attribute AnimationNode?          nextSibling;
+    void before (AnimationNode... nodes);
+    void after (AnimationNode... nodes);
+    void replace (AnimationNode... nodes);
+    void remove ();
+
+    // Associated player
+    readonly attribute AnimationPlayer?        player;
+};
+
+[Constructor (sequence<AnimationNode>? children, 
+              optional (unrestricted double or AnimationTimingInput) timing)]
+interface AnimationGroup : AnimationNode {
+    readonly attribute AnimationNodeList children;
+    readonly attribute AnimationNode?    firstChild;
+    readonly attribute AnimationNode?    lastChild;
+    void           prepend (AnimationNode... nodes);
+    void           append (AnimationNode... nodes);
+    AnimationGroup clone ();
+};
+
+[Constructor (sequence<AnimationNode>? children, 
+              optional (unrestricted double or AnimationTimingInput) timing)]
+interface AnimationSequence : AnimationGroup {
+    AnimationSequence clone ();
+};
+</script>
+<script>
+'use strict';
+
+var sequence = new AnimationSequence([]);
+
+var idlArray = new IdlArray();
+idlArray.add_untested_idls(document.getElementById('untested-IDL').textContent);
+idlArray.add_idls(document.getElementById('AnimationSequence-IDL').textContent);
+idlArray.add_objects( { AnimationSequence: ['sequence'] } );
+idlArray.test();
+</script>

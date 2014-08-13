@@ -12,8 +12,33 @@
 <div id="log"></div>
 <script>
 test(function() {
+    var group = new AnimationGroup(null);
+
+    assert_array_equals(group.children, [], 'AnimationGroup.children should correspond ' +
+        'the first constructor argument');
+    assert_equals(group.timing.delay, 0, 'Default value of AnimationGroup.timing.delay ' +
+        'should be 0');
+    assert_equals(group.timing.endDelay, 0, 'Default value of AnimationGroup.timing.endDelay ' +
+        'should be 0');
+    assert_equals(group.timing.fill, 'auto', 'Default value of AnimationGroup.timing.fill ' +
+        'should be \'auto\'');
+    assert_equals(group.timing.iterationStart, 0, 'Default value of ' +
+        'AnimationGroup.timing.iterationStart should be 0.0');
+    assert_equals(group.timing.iterations, 1, 'Default value of ' +
+        'AnimationGroup.timing.iterations should be 1.0');
+    assert_equals(group.timing.duration, 'auto', 'Default value of ' +
+        'AnimationGroup.timing.duration should be \'auto\'');
+    assert_equals(group.timing.playbackRate, 1, 'Default value of ' +
+        'AnimationGroup.timing.playbackRate should be 1.0');
+    assert_equals(group.timing.direction, 'normal', 'Default value of ' +
+        'AnimationGroup.timing.direction should be \'normal\'');
+    assert_equals(group.timing.easing, 'linear', 'Default value of ' +
+        'AnimationGroup.timing.easing should be \'linear\'');
+}, 'Test AnimationGroup constructor with null first argument and no second argument');
+
+test(function() {
     var group = new AnimationGroup([]);
-    
+
     assert_array_equals(group.children, [], 'AnimationGroup.children should correspond ' +
         'the first constructor argument');
     assert_equals(group.timing.delay, 0, 'Default value of AnimationGroup.timing.delay ' +
@@ -38,7 +63,7 @@ test(function() {
 
 test(function() {
     var group = new AnimationGroup([], 5);
-    
+
     assert_equals(group.timing.duration, 5, 'Value of ' +
         'AnimationGroup.timing.duration should correspond the second constructor argument');
 
