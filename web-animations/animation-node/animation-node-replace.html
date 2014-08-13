@@ -371,7 +371,7 @@ test(function() {
     var node3 = newAnimation(createDiv(this));
     var node4 = newAnimation(createDiv(this));
     var group = new AnimationGroup([node1, node2]);
-    // FIXME Is resulting order of nodes specified?
+
     node2.replace(node3, node4);
 
     assert_array_equals(group.children, [node1, node3, node4], 'AnimationNode.replace() ' +
