@@ -14,78 +14,29 @@
 test(function() {
     var sequence = new AnimationSequence(null);
     
-    assert_array_equals(sequence.children, [], 'AnimationSequence.children should correspond ' +
-        'the first constructor argument');
-    assert_equals(sequence.timing.delay, 0, 'Default value of AnimationSequence.timing.delay ' +
-        'should be 0');
-    assert_equals(sequence.timing.endDelay, 0, 'Default value of AnimationSequence.timing.endDelay ' +
-        'should be 0');
-    assert_equals(sequence.timing.fill, 'auto', 'Default value of AnimationSequence.timing.fill ' +
-        'should be \'auto\'');
-    assert_equals(sequence.timing.iterationStart, 0, 'Default value of ' +
-        'AnimationSequence.timing.iterationStart should be 0.0');
-    assert_equals(sequence.timing.iterations, 1, 'Default value of ' +
-        'AnimationSequence.timing.iterations should be 1.0');
-    assert_equals(sequence.timing.duration, 'auto', 'Default value of ' +
-        'AnimationSequence.timing.duration should be \'auto\'');
-    assert_equals(sequence.timing.playbackRate, 1, 'Default value of ' +
-        'AnimationSequence.timing.playbackRate should be 1.0');
-    assert_equals(sequence.timing.direction, 'normal', 'Default value of ' +
-        'AnimationSequence.timing.direction should be \'normal\'');
-    assert_equals(sequence.timing.easing, 'linear', 'Default value of ' +
-        'AnimationSequence.timing.easing should be \'linear\'');
-}, 'Test AnimationSequence constructor with null first argument and no second argument');
+    assert_array_equals(sequence.children, [], 'AnimationSequence should have no children');
+    assert_timing_equals(sequence.timing, DEFAULT_TIMING);
+}, 'Test that AnimationSequence(null) constructor creates AnimationSequence instance ' +
+    'without children and with default timing');
 
 test(function() {
     var sequence = new AnimationSequence([]);
     
-    assert_array_equals(sequence.children, [], 'AnimationSequence.children should correspond ' +
-        'the first constructor argument');
-    assert_equals(sequence.timing.delay, 0, 'Default value of AnimationSequence.timing.delay ' +
-        'should be 0');
-    assert_equals(sequence.timing.endDelay, 0, 'Default value of AnimationSequence.timing.endDelay ' +
-        'should be 0');
-    assert_equals(sequence.timing.fill, 'auto', 'Default value of AnimationSequence.timing.fill ' +
-        'should be \'auto\'');
-    assert_equals(sequence.timing.iterationStart, 0, 'Default value of ' +
-        'AnimationSequence.timing.iterationStart should be 0.0');
-    assert_equals(sequence.timing.iterations, 1, 'Default value of ' +
-        'AnimationSequence.timing.iterations should be 1.0');
-    assert_equals(sequence.timing.duration, 'auto', 'Default value of ' +
-        'AnimationSequence.timing.duration should be \'auto\'');
-    assert_equals(sequence.timing.playbackRate, 1, 'Default value of ' +
-        'AnimationSequence.timing.playbackRate should be 1.0');
-    assert_equals(sequence.timing.direction, 'normal', 'Default value of ' +
-        'AnimationSequence.timing.direction should be \'normal\'');
-    assert_equals(sequence.timing.easing, 'linear', 'Default value of ' +
-        'AnimationSequence.timing.easing should be \'linear\'');
-}, 'Test AnimationSequence constructor with emplty child list and with no second argument');
+    assert_array_equals(sequence.children, [], 'AnimationSequence should have no children');
+    assert_timing_equals(sequence.timing, DEFAULT_TIMING);
+}, 'Test AnimationSequence constructor with emplty child list and with no second argument' +
+    'creates AnimationSequence instance without children and with default timing');
 
 test(function() {
     var sequence = new AnimationSequence([], 5);
     
-    assert_equals(sequence.timing.duration, 5, 'Value of ' +
-        'AnimationSequence.timing.duration should correspond the second constructor argument');
-
-    assert_array_equals(sequence.children, [], 'AnimationSequence.children should correspond ' +
-        'the first constructor argument');
-    assert_equals(sequence.timing.delay, 0, 'Default value of AnimationSequence.timing.delay ' +
-        'should be 0');
-    assert_equals(sequence.timing.endDelay, 0, 'Default value of AnimationSequence.timing.endDelay ' +
-        'should be 0');
-    assert_equals(sequence.timing.fill, 'auto', 'Default value of AnimationSequence.timing.fill ' +
-        'should be \'auto\'');
-    assert_equals(sequence.timing.iterationStart, 0, 'Default value of ' +
-        'AnimationSequence.timing.iterationStart should be 0.0');
-    assert_equals(sequence.timing.iterations, 1, 'Default value of ' +
-        'AnimationSequence.timing.iterations should be 1.0');
-    assert_equals(sequence.timing.playbackRate, 1, 'Default value of ' +
-        'AnimationSequence.timing.playbackRate should be 1.0');
-    assert_equals(sequence.timing.direction, 'normal', 'Default value of ' +
-        'AnimationSequence.timing.direction should be \'normal\'');
-    assert_equals(sequence.timing.easing, 'linear', 'Default value of ' +
-        'AnimationSequence.timing.easing should be \'linear\'');
-}, 'Test AnimationSequence constructor with emplty child list and with double second argument');
+    assert_array_equals(sequence.children, [], 'AnimationSequence should have no children');
+    var timing = Object.create(DEFAULT_TIMING);
+    timing.duration = 5;
+    assert_timing_equals(sequence.timing, timing);
+}, 'Test AnimationSequence constructor with emplty child list and with double second ' +
+    'argument creates AnimationSequence instance without children and with default timing, ' +
+    'except duration');
 
 test(function() {
     var timing = {
@@ -101,37 +52,19 @@ test(function() {
         easing: 'ease'};
     var node = new AnimationSequence([], timing);
 
-    assert_array_equals(sequence.children, [], 'AnimationSequence.children should correspond ' +
-        'the first constructor argument');
-    assert_equals(node.timing.delay, timing.delay, 'Value of AnimationNode.timing.delay ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(node.timing.endDelay, timing.endDelay, 'Value of AnimationNode.timing.endDelay ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(node.timing.fill, timing.fill, 'Value of AnimationNode.timing.fill ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(node.timing.iterationStart, timing.iterationStart, 'Value of ' +
-        'AnimationNode.timing.iterationStart should be specified by AnimationTimingInput');
-    assert_equals(node.timing.iterations, timing.iterations, 'Value of ' +
-        'AnimationNode.timing.iterations should be specified by AnimationTimingInput');
-    assert_equals(node.timing.duration, timing.duration, 'Value of AnimationNode.timing.duration ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(node.timing.playbackRate, timing.playbackRate, 'Value of ' +
-        'AnimationNode.timing.playbackRate should be specified by AnimationTimingInput');
-    assert_equals(node.timing.direction, timing.direction, 'Value of ' +
-        'AnimationNode.timing.direction should be specified by AnimationTimingInput');
-    assert_equals(node.timing.easing, timing.easing, 'Value of AnimationNode.timing.easing ' +
-        'should be specified by AnimationTimingInput');
-}, 'Test AnimationSequence constructor with emplty child list and with AnimationTimingInput ' +
-    'second argument');
+    assert_array_equals(node.children, [], 'AnimationGroup should have no children');
+    assert_timing_equals(node.timing, timing);
+}, 'Test that AnimationSequence constructor with emplty child list and with AnimationTimingInput ' +
+    'second argument creates AnimationGroup instance without children and with given timing');
 
 test(function() {
     var node = newAnimation(createDiv(this));
     var children = [node];
     var sequence = new AnimationSequence(children);
-    
-    assert_array_equals(sequence.children, children, 'AnimationSequence.children should correspond ' +
-        'the first constructor argument');
-}, 'Test not empty first argument of AnimationSequence constructor');
+
+    assert_array_equals(sequence.children, children,
+        'AnimationSequence should have a single child');
+}, 'Test that AnimationGroup constructor creates AnimationGroup instance with a single child');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
@@ -139,28 +72,73 @@ test(function() {
     var node3 = newAnimation(createDiv(this));
     var children = [node1, node2, node3];
     var sequence = new AnimationSequence(children);
-    
-    assert_array_equals(sequence.children, children, 'AnimationSequence.children should correspond ' +
-        'the first constructor argument');
+
+    assert_array_equals(sequence.children, children, 'AnimationSequence.children should ' +
+        'correspond the first constructor argument');
 }, 'Test not empty first argument of AnimationSequence constructor with the mix of Animations ' +
     'and AnimationSequences as children');
 
 test(function() {
     var node = newAnimation(createDiv(this));
-    
-    assert_throws('HierarchyRequestError', function() {
-        var sequence = new AnimationSequence([node, node]);
-    }, 'HierarchyRequestError should be thrown in case of attempt to create ' +
-        'AnimationSequence with the same nodes');
-}, 'HierarchyRequestError is thrown if child list contains the same nodes');
+    var sequence = new AnimationSequence([node, node]);
+
+    assert_array_equals(sequence.children, [node], 'AnimationSequence constructor should ' +
+        'remove node from its parent group before inserting to child list');
+}, 'Test that AnimationSequence constructor removes Animation node from its parent group ' +
+    'before inserting to child list even this is the same group');
+
+test(function() {
+    var node = new AnimationGroup([]);
+    var sequence = new AnimationSequence([node, node]);
+
+    assert_array_equals(sequence.children, [node], 'AnimationSequence constructor should ' +
+        'remove node from its parent group before inserting to child list');
+}, 'Test that AnimationSequence constructor removes AnimationGroup node from its parent ' +
+    'group before inserting to child list even this is the same group');
 
 test(function() {
     var node = new AnimationSequence([]);
-    
-    assert_throws('HierarchyRequestError', function() {
-        var sequence = new AnimationSequence([node, node]);
-    }, 'HierarchyRequestError should be thrown in case of attempt to create ' +
-        'AnimationSequence with the same nodes');
-}, 'HierarchyRequestError is thrown if child list contains the same AnimationSequence nodes');
+    var sequence = new AnimationSequence([node, node]);
+
+    assert_array_equals(sequence.children, [node], 'AnimationSequence constructor should ' +
+        'remove node from its parent group before inserting to child list');
+}, 'Test that AnimationSequence constructor removes AnimationSequence node from its parent ' +
+    'group before inserting to child list even this is the same group');
+
+test(function() {
+    var node = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node]);
+    var sequence = new AnimationSequence([node]);
+
+    assert_array_equals(group.children, [], 'AnimationSequence constructor should ' +
+        'remove node from its parent group before inserting to child list');
+    assert_array_equals(sequence.children, [node], 'AnimationSequence constructor should ' +
+        'insert node to the child list after removing it from its previous group');
+}, 'Test that AnimationSequence constructor removes Animation node from its parent ' +
+    'group before inserting to child list');
+
+test(function() {
+    var node = new AnimationGroup([]);
+    var group = new AnimationGroup([node]);
+    var sequence = new AnimationSequence([node]);
+
+    assert_array_equals(group.children, [], 'AnimationSequence constructor should ' +
+        'remove node from its parent group before inserting to child list');
+    assert_array_equals(sequence.children, [node], 'AnimationSequence constructor should ' +
+        'insert node to the child list after removing it from its previous group');
+}, 'Test that AnimationSequence constructor removes AnimationGroup node from its parent ' +
+    'group before inserting to child list');
+
+test(function() {
+    var node = new AnimationSequence([]);
+    var group = new AnimationGroup([node]);
+    var sequence = new AnimationSequence([node]);
+
+    assert_array_equals(group.children, [], 'AnimationSequence constructor should ' +
+        'remove node from its parent group before inserting to child list');
+    assert_array_equals(sequence.children, [node], 'AnimationSequence constructor should ' +
+        'insert node to the child list after removing it from its previous group');
+}, 'Test that AnimationSequence constructor removes AnimationSequence node from its parent ' +
+    'group before inserting to child list');
 </script>
 </body>

@@ -14,6 +14,20 @@ policies and contribution forms [3].
 var EPSILON = 20;
 var ANIMATION_END_TIME = 1000;
 
+// Default timing values as specified at
+// http://dev.w3.org/fxtf/web-animations/#the-animationtiminginput-dictionary
+var DEFAULT_TIMING = {
+        delay: 0,
+        endDelay: 0,
+        fill: 'auto',
+        iterationStart: 0.0,
+        iterations: 1.0,
+        duration: 'auto',
+        playbackRate: 1.0,
+        direction: 'normal',
+        easing: 'linear'
+};
+
 // Creates and returns new HTML document
 function newHTMLDocument() {
     return document.implementation.createHTMLDocument('Test Document');
@@ -61,6 +75,27 @@ function hasAncestorClassString(object, classString) {
         return true;
     }
     return hasAncestorClassString(proto, classString);
+}
+
+function assert_timing_equlas(actual, expected){
+    assert_equals(actual.delay, expected.delay, 'Value of AnimationNode.timing.delay ' +
+        'is unexpected');
+    assert_equals(actual.endDelay, expected.endDelay, 'Value of AnimationNode.timing.endDelay ' +
+        'is unexpected');
+    assert_equals(actual.fill, expected.fill, 'Value of AnimationNode.timing.fill ' +
+        'is unexpected');
+    assert_equals(actual.iterationStart, expected.iterationStart, 'Value of ' +
+        'AnimationNode.timing.iterationStart is unexpected');
+    assert_equals(actual.iterations, expected.iterations, 'Value of ' +
+        'AnimationNode.timing.iterations is unexpected');
+    assert_equals(actual.duration, expected.duration, 'Value of AnimationNode.timing.duration ' +
+        'is unexpected');
+    assert_equals(actual.playbackRate, expected.playbackRate, 'Value of ' +
+        'AnimationNode.timing.playbackRate is unexpected');
+    assert_equals(actual.direction, expected.direction, 'Value of ' +
+        'AnimationNode.timing.direction is unexpected');
+    assert_equals(actual.easing, expected.easing, 'Value of AnimationNode.timing.easing ' +
+        'is unexpected');
 }
 
 // Returns true if timed item is current as defined at
