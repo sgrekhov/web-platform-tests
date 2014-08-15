@@ -16,7 +16,7 @@ test(function() {
 
     assert_array_equals(group.children, [], 'AnimationGroup should have no children');
     assert_timing_equals(group.timing, DEFAULT_TIMING);
-}, 'Test that AnimationGroup(null) constructor creates AnimationGroup instance ' +
+}, 'Test AnimationGroup(null) constructor creates AnimationGroup instance ' +
     'without children and with default timing');
 
 test(function() {
@@ -53,7 +53,7 @@ test(function() {
 
     assert_array_equals(node.children, [], 'AnimationGroup should have no children');
     assert_timing_equals(node.timing, timing);
-}, 'Test that AnimationGroup constructor with emplty child list and with AnimationTimingInput ' +
+}, 'Test AnimationGroup constructor with emplty child list and with AnimationTimingInput ' +
     'second argument creates AnimationGroup instance without children and with given timing');
 
 test(function() {
@@ -62,7 +62,7 @@ test(function() {
     var group = new AnimationGroup(children);
 
     assert_array_equals(group.children, children, 'AnimationGroup should have a single child');
-}, 'Test that AnimationGroup constructor creates AnimationGroup instance with a single child');
+}, 'Test AnimationGroup constructor creates AnimationGroup instance with a single child');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
@@ -81,7 +81,7 @@ test(function() {
 
     assert_array_equals(group.children, [node], 'AnimationGroup constructor should ' +
         'remove node from its parent group before inserting to child list');
-}, 'Test that AnimationGroup constructor removes Animation node from its parent group ' +
+}, 'Test AnimationGroup constructor removes Animation node from its parent group ' +
     'before inserting to child list even this is the same group');
 
 test(function() {
@@ -90,7 +90,7 @@ test(function() {
 
     assert_array_equals(group.children, [node], 'AnimationGroup constructor should ' +
         'remove node from its parent group before inserting to child list');
-}, 'Test that AnimationGroup constructor removes AnimationGroup node from its parent ' +
+}, 'Test AnimationGroup constructor removes AnimationGroup node from its parent ' +
     'group before inserting to child list even this is the same group');
 
 test(function() {
@@ -99,7 +99,7 @@ test(function() {
 
     assert_array_equals(group.children, [node], 'AnimationGroup constructor should ' +
         'remove node from its parent group before inserting to child list');
-}, 'Test that AnimationGroup constructor removes AnimationSequence node from its parent ' +
+}, 'Test AnimationGroup constructor removes AnimationSequence node from its parent ' +
     'group before inserting to child list even this is the same group');
 
 test(function() {
@@ -111,7 +111,7 @@ test(function() {
         'remove node from its parent group before inserting to child list');
     assert_array_equals(group2.children, [node], 'AnimationGroup constructor should ' +
         'insert node to the child list after removing it from its previous group');
-}, 'Test that AnimationGroup constructor removes Animation node from its parent ' +
+}, 'Test AnimationGroup constructor removes Animation node from its parent ' +
     'group before inserting to child list');
 
 test(function() {
@@ -123,7 +123,7 @@ test(function() {
         'remove node from its parent group before inserting to child list');
     assert_array_equals(group2.children, [node], 'AnimationGroup constructor should ' +
         'insert node to the child list after removing it from its previous group');
-}, 'Test that AnimationGroup constructor removes AnimationGroup node from its parent ' +
+}, 'Test AnimationGroup constructor removes AnimationGroup node from its parent ' +
     'group before inserting to child list');
 
 test(function() {
@@ -133,9 +133,9 @@ test(function() {
 
     assert_array_equals(group1.children, [], 'AnimationGroup constructor should ' +
         'remove node from its parent group before inserting to child list');
-    assert_array_equals(sequence.children, [node], 'AnimationGroup constructor should ' +
+    assert_array_equals(group2.children, [node], 'AnimationGroup constructor should ' +
         'insert node to the child list after removing it from its previous group');
-}, 'Test that AnimationGroup constructor removes AnimationSequence node from its parent ' +
+}, 'Test AnimationGroup constructor removes AnimationSequence node from its parent ' +
     'group before inserting to child list');
 </script>
 </body>
