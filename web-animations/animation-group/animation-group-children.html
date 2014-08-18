@@ -3,6 +3,7 @@
 <title>AnimationGroup children attribute test</title>
 <meta name="assert" content="The list of child animation nodes in the group">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationGroup-children">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#dfn-child-animation-node">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -13,21 +14,19 @@
 <script>
 test(function() {
     var group = new AnimationGroup([]);
-    
-    assert_array_equals(group.children, [], 'AnimationGroup.children should correspond ' +
-        'the first constructor argument');
-}, 'Test AnimationGroup.children returns the list of child animation nodes in the group. ' +
-    'Test empty child list');
+
+    assert_array_equals(group.children, [], 'AnimationGroup.children should be empty');
+}, 'Test AnimationGroup.children returns empty list for animation group without children');
 
 test(function() {
     var node = newAnimation(createDiv(this));
     var children = [node];
     var group = new AnimationGroup(children);
-    
+
     assert_array_equals(group.children, children, 'AnimationGroup.children should correspond ' +
         'the first constructor argument');
 }, 'Test AnimationGroup.children returns the list of child animation nodes in the group. ' +
-    'Test empty one node length child list');
+    'Test group with single child');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
@@ -35,11 +34,11 @@ test(function() {
     var node3 = newAnimation(createDiv(this));
     var children = [node1, node2, node3];
     var group = new AnimationGroup(children);
-    
+
     assert_array_equals(group.children, children, 'AnimationGroup.children should correspond ' +
         'the first constructor argument');
 }, 'Test AnimationGroup.children returns the list of child animation nodes in the group. ' +
-    'Test the mix of Animations and AnimationGroups as children');
+    'Test group with different children: Animations and AnimationGroups');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
@@ -49,7 +48,7 @@ test(function() {
     var node5 = newAnimation(createDiv(this));
     var children = [node3, node4, node5];
     var group = new AnimationGroup(children);
-    
+
     assert_array_equals(group.children, children, 'AnimationGroup.children should correspond ' +
         'the first constructor argument');
     assert_array_equals(node4.children, [node1, node2], 'AnimationGroup.children should ' +
