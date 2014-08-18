@@ -13,6 +13,10 @@ policies and contribution forms [3].
 // Epsilon value for assert_approx_equals()
 var EPSILON = 20;
 var ANIMATION_END_TIME = 1000;
+var ANIMATION_WIDTH_DEFAULT = 300;
+var ANIMATION_WIDTH_0 = 10;
+var ANIMATION_WIDTH_0_5 = 100;
+var ANIMATION_WIDTH_1 = 200;
 
 // Default timing values as specified at
 // http://dev.w3.org/fxtf/web-animations/#the-animationtiminginput-dictionary
@@ -34,11 +38,11 @@ function newHTMLDocument() {
 }
 
 function newAnimation(animationTarget) {
-    animationTarget.style.width = '300px';
+    animationTarget.style.width = ANIMATION_WIDTH_DEFAULT + 'px';
     return new Animation(animationTarget, [
-        {width: '10px', offset: 0},
-        {width: '100px', offset: 1/2},
-        {width: '200px', offset: 1}], ANIMATION_END_TIME);
+        {width: ANIMATION_WIDTH_0 + 'px', offset: 0},
+        {width: ANIMATION_WIDTH_0_5 + 'px', offset: 1/2},
+        {width: ANIMATION_WIDTH_1 + 'px', offset: 1}], ANIMATION_END_TIME);
 }
 
 function newAnimationPlayer(animationTarget) {

@@ -11,17 +11,189 @@
 <body>
 <div id="log"></div>
 <script>
-test(function() {
+async_test(function(t) {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([node1, node2]);
     var player = document.timeline.play(animationSequence);
-    animationSequence.player.currentTime = ANIMATION_END_TIME/2;
 
-    assert_equals(window.getComputedStyle(node1.target).width, 100,
-        'Animation should take place for the first node in the sequence');
-    assert_equals(window.getComputedStyle(node2.target).width, 10,
+    player.ready.then(t.step_func(function() {
+        animationSequence.player.currentTime = 0;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_DEFAULT,
             'Animation should not take place for the second node in the sequence');
-}, 'Nodes in the hierarchy are controlled by parent group player');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME/2;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should not take place for the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME * 1.5;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should be finished for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME * 2;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should be finished for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the second node in the sequence');
+
+        t.done();
+    }));
+}, 'Test that animation takes place in series in AnimationSequence');
+
+async_test(function(t) {
+    var node1 = new AnimationGroup([]);
+    var node2 = newAnimation(createDiv(this));
+    var animationSequence = new AnimationSequence([node1, node2]);
+    var player = document.timeline.play(animationSequence);
+
+    player.ready.then(t.step_func(function() {
+        animationSequence.player.currentTime = 0;
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME * 0.5;
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the second node in the sequence');
+
+        t.done();
+    }));
+}, 'Test that animation takes place in series in AnimationSequence. Test the case when ' +
+    'the first node in the sequence is empty group');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = new AnimationGroup([node1, node2]);
+    var node4 = newAnimation(createDiv(this));
+    var animationSequence = new AnimationSequence([node3, node4]);
+    var player = document.timeline.play(animationSequence);
+
+    player.ready.then(t.step_func(function() {
+        animationSequence.player.currentTime = 0;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the first node in ' +
+            'the first group in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the second node in ' +
+            'the first group in the sequence');
+        assert_equals(window.getComputedStyle(node4.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should not take place for the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME/2;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the first node in ' +
+            'the first group in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the second node in ' +
+            'the first group in the sequence');
+        assert_equals(window.getComputedStyle(node4.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should not take place for the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the first node in ' +
+            'the first group in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the second node in ' +
+            'the first group in the sequence');
+        assert_equals(window.getComputedStyle(node4.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME * 1.5;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should be finished for the first node in the first group ' +
+            'in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_DEFAULT,
+                'Animation should be finished for the second node in the first group ' +
+                'in the sequence');
+        assert_equals(window.getComputedStyle(node4.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME * 2;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should be finished for the first node in the first group ' +
+            'in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should be finished for the second node in the first group ' +
+            'in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the second node in the sequence');
+
+        t.done();
+    }));
+}, 'Test that animation takes place in series in AnimationSequence. ' +
+    'Test the case when the first node in the sequence is AnimationGroup');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = new AnimationGroup([node1, node2]);
+    var animationSequence = new AnimationSequence([node3, node4]);
+    var player = document.timeline.play(animationSequence);
+
+    player.ready.then(t.step_func(function() {
+        animationSequence.player.currentTime = 0;
+        assert_equals(window.getComputedStyle(node3.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should not take place for nodes in the second node in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should not take place for nodes in the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME/2;
+        assert_equals(window.getComputedStyle(node3.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should not take place for nodes in the second node in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should not take place for nodes in the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(node3.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for nodes in the second node ' +
+            'in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for nodes in the second node ' +
+            'in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME * 1.5;
+        assert_equals(window.getComputedStyle(node3.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should be finished for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the nodes in the second node in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the nodes in the second node in the sequence');
+
+        animationSequence.player.currentTime = ANIMATION_END_TIME * 2;
+        assert_equals(window.getComputedStyle(node3.target).width, ANIMATION_WIDTH_DEFAULT,
+            'Animation should be finished for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the second node in the sequence');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the second node in the sequence');
+
+        t.done();
+    }));
+}, 'Test that animation takes place in series in AnimationSequence. ' +
+    'Test the case when the second node in the sequence is AnimationGroup');
 </script>
 </body>

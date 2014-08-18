@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationGroup child nodes synchronization test</title>
+<meta name="assert" content="The start time of a child animation node of an animation group is zero">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-start-time-of-children-of-an-animation-group">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1, node2]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        animationGroup.player.currentTime = 0;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the first node in the group');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the second node in the group');
+
+        animationGroup.player.currentTime = ANIMATION_END_TIME/2;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the first node in the group');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the second node in the group');
+
+        animationGroup.player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the first node in the group');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the secong node in the group');
+
+        t.done();
+    }));
+}, 'Test that animation takes place at the same time in AnimationGroup');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = new AnimationGroup([node1, node2]);
+    var node4 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node3, node4]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        animationGroup.player.currentTime = 0;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the first node in ' +
+            'the nested animation group');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the second node in ' +
+            'the nested animation group);
+        assert_equals(window.getComputedStyle(node4.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the second node in the group');
+
+        animationGroup.player.currentTime = ANIMATION_END_TIME/2;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the first node in ' +
+            'the first group in the group');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the second node in ' +
+            'the first group in the group');
+        assert_equals(window.getComputedStyle(node4.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the second node in the sequence');
+
+        animationGroup.player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the first node in ' +
+            'the first group in the group');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the second node in ' +
+            'the first group in the group');
+        assert_equals(window.getComputedStyle(node4.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the second node in the sequence');
+
+        t.done();
+    }));
+}, 'Test that animation takes place at the same time in AnimationGroup. ' +
+    'Test the case when the first node in the group is AnimationGroup');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = new AnimationGroup([node1, node2]);
+    var animationGroup = new AnimationGroup([node3, node4]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        animationGroup.player.currentTime = 0;
+        assert_equals(window.getComputedStyle(node3.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for nodes in the nested group');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0,
+            'Animation should be at the start point for nodes in the nested group');
+
+        animationGroup.player.currentTime = ANIMATION_END_TIME/2;
+        assert_equals(window.getComputedStyle(node3.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for nodes in the nested group');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_0_5,
+            'Animation should take place for nodes in the nested group');
+
+        animationGroup.player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(node3.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for the first node in the sequence');
+        assert_equals(window.getComputedStyle(node1.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for nodes in the nested group');
+        assert_equals(window.getComputedStyle(node2.target).width, ANIMATION_WIDTH_1,
+            'Animation should be at the end point for nodes in the nested group');
+
+        t.done();
+    }));
+}, 'Test that animation takes place at the same time in AnimationGroup. ' +
+    'Test the case when the second node in the group is AnimationGroup');
+</script>
+</body>
