@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
 <title>AnimationGroup lastChild attribute test</title>
-<meta name="assert" content="The first child of this animation group">
+<meta name="assert" content="The last child of this animation group">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationGroup-lastChild">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -13,7 +14,7 @@
 <script>
 test(function() {
     var group = new AnimationGroup([]);
-    
+
     assert_equals(group.lastChild, null, 'AnimationGroup.lastChild should return ' +
         'the last child of the animation group');
 }, 'AnimationGroup.lastChild returns null if there is no children in the group');
@@ -21,27 +22,27 @@ test(function() {
 test(function() {
     var node = newAnimation(createDiv(this));
     var group = new AnimationGroup([node]);
-    
+
     assert_equals(group.lastChild, node, 'AnimationGroup.lastChild should return ' +
         'the last child of the animation group');
 }, 'AnimationGroup.lastChild returns the last child of the animation group. ' +
-    'Test the only node in the group');
+    'Test the group with single child');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var group = new AnimationGroup([node1, node2]);
-    
+
     assert_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
         'the last child of the animation group');
 },  'AnimationGroup.lastChild returns the last child of the animation group. ' +
-    'Test the more than one node in the group');
+    'Test the group with several children nodes');
 
 test(function() {
     var node1 = new AnimationGroup([]);
     var node2 = new AnimationGroup([]);
     var group = new AnimationGroup([node1, node2]);
-    
+
     assert_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
         'the last child of the animation group');
 },  'AnimationGroup.lastChild returns the last child of the animation group. ' +
@@ -54,12 +55,79 @@ test(function() {
     var node4 = new AnimationGroup([node1, node2]);
     var node5 = newAnimation(createDiv(this));
     var group = new AnimationGroup([node3, node4, node5]);
-    
+
     assert_equals(group.lastChild, node5, 'AnimationGroup.lastChild should return ' +
         'the last child of the animation group');
-    assert_equals(node4.lastChildren, node2, 'AnimationGroup.lastChild should return ' +
+    assert_equals(node4.lastChild, node2, 'AnimationGroup.lastChild should return ' +
         'the last child of low-level animation group');
 }, 'AnimationGroup.lastChild returns the last child of the animation group. ' +
-    'Test low-level node in the tree');
+    'Test tree structure');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node1, node2]);
+
+    node1.before(node2);
+    assert_equals(group.lastChild, node1, 'AnimationGroup.lastChild should return ' +
+        'the last child of the animation group');
+},  'AnimationGroup.lastChild returns the last child of the animation group, ' +
+    'the last child is changed by method before()');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node1, node2]);
+
+    node2.after(node1);
+    assert_equals(group.lastChild, node1, 'AnimationGroup.lastChild should return ' +
+        'the last child of the animation group');
+},  'AnimationGroup.lastChild returns the last child of the animation group, ' +
+    'the last child is changed by method after()');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node1, node2]);
+
+    node2.replace(node3);
+    assert_equals(group.lastChild, node3, 'AnimationGroup.lastChild should return ' +
+        'the last child of the animation group');
+},  'AnimationGroup.lastChild returns the last child of the animation group, ' +
+    'the last child is changed by method replace()');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node1, node2]);
+
+    node2.remove();
+    assert_equals(group.lastChild, node1, 'AnimationGroup.lastChild should return ' +
+        'the last child of the animation group');
+},  'AnimationGroup.lastChild returns the last child of the animation group, ' +
+    'the last child is changed by method remove()');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node1, node2]);
+
+    group.prepend(node2);
+    assert_equals(group.lastChild, node1, 'AnimationGroup.lastChild should return ' +
+        'the last child of the animation group');
+},  'AnimationGroup.lastChild returns the last child of the animation group, ' +
+    'the last child is changed by method prepend()');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node1]);
+
+    group.append(node1);
+    assert_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
+        'the last child of the animation group');
+},  'AnimationGroup.lastChild returns the last child of the animation group, ' +
+    'the last child is changed by method append()');
 </script>
 </body>
