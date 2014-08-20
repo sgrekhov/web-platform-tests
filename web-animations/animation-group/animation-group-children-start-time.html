@@ -72,5 +72,195 @@ async_test(function(t) {
    }));
 }, 'The start time of a child animation node of an animation group is zero. ' +
     'Test different types of not empty child nodes');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        animationGroup.prepend(node2);
+        assert_equals(node1.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        t.done();
+    }));
+}, 'Test that start time of prepended child node of AnimationGroup is zero');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = new AnimationGroup([]);
+    var node4 = new AnimationSequence([]);
+    var animationGroup = new AnimationGroup([node1]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        animationGroup.prepend(node2, node3, node4);
+        assert_equals(node1.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node3.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node4.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        t.done();
+    }));
+}, 'Test that start time of different prepended child nodes of AnimationGroup is zero');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        animationGroup.append(node2);
+        assert_equals(node1.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        t.done();
+    }));
+}, 'Test that start time of appended child node of AnimationGroup is zero');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = new AnimationGroup([]);
+    var node4 = new AnimationSequence([]);
+    var animationGroup = new AnimationGroup([node1]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        animationGroup.append(node2, node3, node4);
+        assert_equals(node1.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node3.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node4.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        t.done();
+    }));
+}, 'Test that start time of different appended child nodes of AnimationGroup is zero');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        node1.before(node2);
+        assert_equals(node1.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        t.done();
+    }));
+}, 'Test that start time of a child node of AnimationGroup inserted by before() call is zero');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = new AnimationGroup([]);
+    var node4 = new AnimationSequence([]);
+    var animationGroup = new AnimationGroup([node1]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        node1.before(node2, node3, node4);
+        assert_equals(node1.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node3.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node4.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        t.done();
+    }));
+}, 'Test that start time of different nodes of AnimationGroup inserted by before() ' +
+    'call is zero');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        node1.after(node2);
+        assert_equals(node1.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        t.done();
+    }));
+}, 'Test that start time of a child node of AnimationGroup inserted by after() call is zero');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = new AnimationGroup([]);
+    var node4 = new AnimationSequence([]);
+    var animationGroup = new AnimationGroup([node1]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        node1.after(node2, node3, node4);
+        assert_equals(node1.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node3.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node4.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        t.done();
+    }));
+}, 'Test that start time of different nodes of AnimationGroup inserted by after() ' +
+    'call is zero');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([node1]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        node1.replace(node2);
+        assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        t.done();
+    }));
+}, 'Test that start time of a child node of AnimationGroup inserted by replace() ' +
+    'call is zero');
+
+async_test(function(t) {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = new AnimationGroup([]);
+    var node4 = new AnimationSequence([]);
+    var animationGroup = new AnimationGroup([node1]);
+    var player = document.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        node1.replace(node2, node3, node4);
+        assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node3.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        assert_equals(node4.computedTiming.startTime, 0, 'The start time of a ' +
+            'child animation node of an animation group should be zero');
+        t.done();
+    }));
+}, 'Test that start time of different nodes of AnimationGroup inserted by replace() ' +
+    'call is zero');
 </script>
 </body>
