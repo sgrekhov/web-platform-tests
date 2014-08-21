@@ -1,0 +1,74 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>Web Animations API: Animation tests</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="/resources/webidl2/lib/webidl2.js"></script>
+<script src="/resources/idlharness.js"></script>
+<div id="log"></div>
+<div id="target"></div>
+<script type="text/plain" id="untested-IDL">
+interface AnimationPlayer {
+};
+
+interface AnimationTiming {
+};
+
+interface ComputedAnimationTiming {
+};
+
+interface AnimationNodeList {
+};
+
+interface AnimationTimingInput {
+};
+
+interface Animatable {
+};
+
+interface AnimationEffect {
+};
+
+interface EffectCallback {
+};
+</script>
+<script type="text/plain" id="Animation-IDL">
+interface AnimationNode {
+    // Timing
+    readonly attribute AnimationTiming         timing;
+    readonly attribute ComputedAnimationTiming computedTiming;
+
+    // Timing hierarchy
+    readonly attribute AnimationGroup?         parent;
+    readonly attribute AnimationNode?          previousSibling;
+    readonly attribute AnimationNode?          nextSibling;
+    void before (AnimationNode... nodes);
+    void after (AnimationNode... nodes);
+    void replace (AnimationNode... nodes);
+    void remove ();
+
+    // Associated player
+    readonly attribute AnimationPlayer?        player;
+};
+
+[Constructor (Animatable? target, object? effect, 
+              optional (unrestricted double or AnimationTimingInput)
+                timing)]
+interface Animation : AnimationNode {
+    attribute (AnimationEffect or EffectCallback)? effect;
+    attribute Animatable?                          target;
+    Animation clone ();
+};
+</script>
+<script>
+'use strict';
+
+var target = document.getElementById('target');
+var animation = new Animation(target, [], 5);
+
+var idlArray = new IdlArray();
+idlArray.add_untested_idls(document.getElementById('untested-IDL').textContent);
+idlArray.add_idls(document.getElementById('Animation-IDL').textContent);
+idlArray.add_objects( { Animation: ['animation'] } );
+idlArray.test();
+</script>

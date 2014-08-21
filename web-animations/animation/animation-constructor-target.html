@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation constructor target argument test</title>
+<meta name="assert" content="The animation target or target pseudo-element. This may be null for animations that do not target a specific element">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-animation-interface">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var animation = new Animation(null, null);
+
+    assert_equals(animation.target, null, 'Animation.target should be null');
+}, 'Test null value of target argument of Animation constructor');
+
+test(function() {
+    var target = createDiv(this);
+    var animation = new Animation(target, null);
+
+    assert_equals(animation.target, target, 'Animation.target should be set by the constructor');
+}, 'Test not null value of target argument of Animation constructor');
+
+// TODO add pseudo-element as a target test
+
+</script>
+</body>
