@@ -14,6 +14,15 @@
 <script>
 test(function() {
     var group = new AnimationGroup([]);
+    try {
+        group.prepend();
+    } catch (e) {
+        assert_unreached('Unexpected error ' + e);
+    }
+}, 'AnimationGroup.prepend() with empty arguments does nothing');
+
+test(function() {
+    var group = new AnimationGroup([]);
 
     assert_throws('HierarchyRequestError', function() {
         group.prepend(group);
@@ -28,8 +37,8 @@ test(function() {
         group1.prepend(group2);
     }, 'HierarchyRequestError should be thrown if prepending ' +
         'an inclusive ancestor');
-}, 'AnimationGroup.prepend() throws HierarchyRequestError if an ' +
-    'direct parent is prepended');
+}, 'AnimationGroup.prepend() throws HierarchyRequestError ' +
+    'if direct parent is prepended');
 
 test(function() {
     var group1 = new AnimationGroup([]);
@@ -127,24 +136,37 @@ test(function() {
     var node2 = newAnimation(createDiv(this));
     var node3 = newAnimation(createDiv(this));
     var node4 = new AnimationGroup([node1, node2]);
-    var node5 = newAnimation(createDiv(this));
-    var group = new AnimationGroup([node5]);
+    var node5 = new AnimationSequence([]);
+    var node6 = newAnimation(createDiv(this));
+    var group = new AnimationGroup([node6]);
 
-    group.prepend(node3, node4);
+    group.prepend(node3, node4, node5);
 
-    assert_array_equals(group.children, [node3, node4, node5], 'AnimationGroup.prepend() ' +
+    assert_array_equals(group.children, [node3, node4, node5, node6], 'AnimationGroup.prepend() ' +
         'should insert the node before the first child');
+
+    assert_equals(node3.previousSibling, null, 'previousSibling of the newly prepended node ' +
+        'should be updated');
     assert_equals(node3.parent, group, 'Parent of the newly prepended node should point ' +
         'to the group');
     assert_equals(node3.nextSibling, node4, 'nextSibling of the newly prepended node ' +
         'should be set');
-    assert_equals(node4.previousSibling, node3, 'previousSibling of the old first child ' +
-        'should point to newly prepended node');
+
+    assert_equals(node4.previousSibling, node3, 'previousSibling of the newly prepended node ' +
+        'should be updated');
     assert_equals(node4.parent, group, 'Parent of the newly prepended node should point ' +
         'to the group');
     assert_equals(node4.nextSibling, node5, 'nextSibling of the newly prepended node ' +
         'should be set');
-    assert_equals(node5.previousSibling, node4, 'previousSibling of the old first child ' +
+
+    assert_equals(node5.previousSibling, node4, 'previousSibling of the newly prepended node ' +
+        'should be updated');
+    assert_equals(node5.parent, group, 'Parent of the newly prepended node should point ' +
+        'to the group');
+    assert_equals(node5.nextSibling, node6, 'nextSibling of the newly prepended node ' +
+        'should be set');
+
+    assert_equals(node6.previousSibling, node5, 'previousSibling of the old first child ' +
         'should point to newly prepended node');
 }, 'Test AnimationGroup.prepend() with several nodes inserts given nodes before ' +
     'first child in the specified order');
