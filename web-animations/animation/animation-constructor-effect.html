@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation constructor effect argument test</title>
+<meta name="assert" content="The animation effect used to set the effect attribute of the newly-created Animation object">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#processing-the-effect-parameter">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var animation = new Animation(null, null);
+
+    assert_equals(animation.effect, null, 'Animation.effect should be null');
+}, 'Test null value of effect argument of Animation constructor');
+
+test(function() {
+    var target = createDiv(this);
+    var animation = new Animation(target, null);
+
+    assert_equals(animation.effect, null, 'Animation.effect should be set by the constructor');
+}, 'Test not null value of target argument and null value of effect argument of ' +
+    'Animation constructor');
+
+test(function() {
+    var effect = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var animation = new Animation(null, effect);
+
+    assert_equals(animation.effect, effect, 'Animation.effect should be set by the constructor');
+}, 'Test AnimationEffect as a value of effect argument of Animation constructor');
+
+test(function() {
+    var effect = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var animation1 = new Animation(null, effect);
+    var animation2 = new Animation(null, animation1.effect);
+
+    assert_equals(animation2.effect, effect, 'Animation.effect should be set by the constructor');
+}, 'Test AnimationEffect from different Animation object instance as a value ' +
+    'of effect argument of Animation constructor');
+
+test(function() {
+    var effect =  function(time) {
+            document.documentElement.currentScale = 1.0 + time * 2.0;
+        };
+    var animation = new Animation(null, effect);
+
+    // FIXME Is this checking correct?
+    assert_equals(animation.effect, effect, 'Animation.effect should be set by the constructor');
+}, 'Test EffectCallback function as a value of effect argument of Animation constructor');
+
+test(function() {
+    var effect =  function(time) {
+            document.documentElement.currentScale = 1.0 + time * 2.0;
+        };
+    var animation1 = new Animation(null, effect);
+    var animation2 = new Animation(null, animation1.effect);
+
+    assert_equals(animation2.effect, effect, 'Animation.effect should be set by the constructor');
+}, 'Test EffectCallback function from different Animation object instance as a value ' +
+    'of effect argument of Animation constructor');
+
+test(function() {
+    var effect =  {top: '100px', width: '300px'};
+    var animation = new Animation(null, effect);
+
+    assert_equals(animation.effect.getFrames()[0].top, effect.top,
+        'Animation.effect should be set by the constructor');
+    assert_equals(animation.effect.getFrames()[0].width, effect.width,
+        'Animation.effect should be set by the constructor');
+    assert_equals(animation.effect.getFrames()[0].offset, null,
+        'Keyframe parameters not set by the constructor should have their default values');
+    assert_equals(animation.effect.getFrames()[0].easing, 'linear',
+        'Keyframe parameters not set by the constructor should have their default values');
+    assert_equals(animation.effect.getFrames()[0].composite, null,
+        'Keyframe parameters not set by the constructor should have their default values');
+}, 'Test single Keyframe object as a value of effect argument of Animation constructor');
+
+test(function() {
+    var effect =  {top: '100px', width: '300px', offset: 0.5, easing: 'ease', composite: 'add'};
+    var animation = new Animation(null, effect);
+
+    assert_equals(animation.effect.getFrames()[0].top, effect.top,
+        'Animation.effect should be set by the constructor');
+    assert_equals(animation.effect.getFrames()[0].width, effect.width,
+        'Animation.effect should be set by the constructor');
+    assert_equals(animation.effect.getFrames()[0].offset, effect.offset,
+        'Keyframe parameters set by the constructor should not have their default values');
+    assert_equals(animation.effect.getFrames()[0].easing, effect.easing,
+        'Keyframe parameters set by the constructor should not have their default values');
+    assert_equals(animation.effect.getFrames()[0].composite, effect.composite,
+        'Keyframe parameters set by the constructor should not have their default values');
+}, 'Test single Keyframe object with not default properties as a value of effect ' +
+    'argument of Animation constructor');
+
+test(function() {
+    var effect =  [];
+    var animation = new Animation(null, effect);
+
+    assert_array_equals(animation.effect.getFrames(), effect,
+        'Animation.effect should be set by the constructor');
+}, 'Test empty sequence of Keyframe objects as a value of effect argument ' +
+    'of Animation constructor');
+
+test(function() {
+    var effect = [{top: '0px', width: '10px', offset: 0},
+                  {top: '20px', width: '30px', offset: 1}];
+    var animation = new Animation(null, effect);
+
+    assert_equals(animation.effect.getFrames().length, 2,
+        'Animation.effect should have 2 frames set by the constructor');
+
+    animation.effect.getFrames().forEach(function(value, index) {
+        assert_equals(value.top, effect[index].top,
+            'Animation.effect should be set by the constructor');
+        assert_equals(value.width, effect[index].width,
+            'Animation.effect should be set by the constructor');
+        assert_equals(value.offset, effect[index].offset,
+            'Offset of the animation effect should be set by the constructor');
+        assert_equals(value.easing, 'linear',
+            'Animation effect easing should have default value');
+        assert_equals(value.composite, null,
+            'Animation effect composite should have default value');
+    });
+}, 'Test sequence of Keyframe objects as a value of effect argument ' +
+    'of Animation constructor');
+
+test(function() {
+    var effect = [{top: '0px', width: '10px', offset: 0, easing: 'ease', composite: 'add'},
+                  {top: '20px', width: '30px', offset: 1, easing: 'ease-in', composite: 'replace'}];
+    var animation = new Animation(null, effect);
+
+    assert_equals(animation.effect.getFrames().length, 2,
+        'Animation.effect should have 2 frames set by the constructor');
+
+    animation.effect.getFrames().forEach(function(value, index) {
+        assert_equals(value.top, effect[index].top,
+            'Animation.effect should be set by the constructor');
+        assert_equals(value.width, effect[index].width,
+            'Animation.effect should be set by the constructor');
+        assert_equals(value.offset, effect[index].offset,
+            'Offset of the animation effect should be set by the constructor');
+        assert_equals(value.easing, effect[index].easing,
+            'Animation effect easing should have default value');
+        assert_equals(value.composite, effect[index].composite,
+            'Animation effect composite should have default value');
+    });
+}, 'Test sequence of Keyframe objects as a value of effect argument ' +
+    'of Animation constructor. Set all Keyframe properties');
+</script>
+</body>
