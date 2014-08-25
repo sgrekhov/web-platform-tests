@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation constructor timing argument test</title>
+<meta name="assert" content="The timing properties or iteration duration of the new animation">
+<link rel="help" href="https://web-animations.github.io/web-animations-spec/bikeshed/Overview.html#the-animation-interface">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var animation = new Animation(null, null);
+
+    assert_timing_equals(animation.timing, DEFAULT_TIMING);
+}, 'Test default value of timing argument of Animation constructor');
+
+test(function() {
+    var timing = {
+        delay: 1,
+        endDelay: 1,
+        fill: 'none',
+        iterationStart: 1.1,
+        iterations: 2.0,
+        duration: 3,
+        playbackRate: -2,
+        playbackDirection: 'reverse',
+        direction: 'reverse',
+        easing: 'ease'};
+    var animation = new Animation(null, null, timing);
+
+    assert_timing_equals(animation.timing, timing);
+}, 'Test not default value of timing argument of Animation constructor');
+
+test(function() {
+    var animation = new Animation(null, null, 5);
+
+    var timing = Object.create(DEFAULT_TIMING);
+    timing.duration = 5;
+    assert_timing_equals(animation.timing, timing);
+}, 'Test that Animation constructor with double timing argument ' +
+    'creates Animation instance with default timing, except duration');
+</script>
+</body>

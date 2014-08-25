@@ -81,7 +81,7 @@ function hasAncestorClassString(object, classString) {
     return hasAncestorClassString(proto, classString);
 }
 
-function assert_timing_equlas(actual, expected){
+function assert_timing_equals(actual, expected){
     assert_equals(actual.delay, expected.delay, 'Value of AnimationNode.timing.delay ' +
         'is unexpected');
     assert_equals(actual.endDelay, expected.endDelay, 'Value of AnimationNode.timing.endDelay ' +
