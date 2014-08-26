@@ -101,3 +101,56 @@ function assert_timing_equals(actual, expected){
     assert_equals(actual.easing, expected.easing, 'Value of AnimationNode.timing.easing ' +
         'is unexpected');
 }
+
+// FIXME The code below is stubs for Web Animations objects that don't implemented yet
+// Remove all of the code below before merge it with w3c branch
+
+// AnimationNode stub
+function AnimationNode() {
+    this.timing = null;
+    this.computedTiming = null;
+    this.parent = null;
+    this.previousSibling = null;
+    this.nextSibling = null;
+    this.player = null;
+}
+
+AnimationNode.prototype.before = function(nodes) {
+};
+
+AnimationNode.prototype.after = function(nodes) {
+};
+
+AnimationNode.prototype.replace = function(nodes) {
+};
+
+AnimationNode.prototype.remove = function() {
+};
+
+// AnimationGroup stub
+function AnimationGroup(children, timing) {
+    this.children = children;
+    this.timing = timing;
+    this.firstChild = null;
+    this.lastChild = null;
+}
+
+AnimationGroup.prototype = new AnimationNode();
+
+AnimationGroup.prototype.prepend = function(nodes) {
+};
+
+AnimationGroup.prototype.append = function(nodes) {
+};
+
+AnimationGroup.prototype.clone = function() {
+    return this;
+};
+
+// AnimationSequence stub
+function AnimationSequence(children, timing) {
+    this.children = children;
+    this.timing = timing;
+}
+
+AnimationSequence.prototype = AnimationGroup.prototype;
