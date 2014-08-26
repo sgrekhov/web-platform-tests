@@ -131,9 +131,9 @@ test(function() {
     ];
     for (var i = 0; i < expected.length; i++){
         assert_false(actual[i] === expected[i], 'Descendant of cloned AnimationGroup ' +
-        'object should be a copy of corresponding descendant of source object');
+            'object should be a copy of corresponding descendant of source object');
         assert_object_equals(actual[i], expected[i], 'Descendant of cloned AnimationGroup ' +
-        'object should be identical to corresponding descendant of source object');
+            'object should be identical to corresponding descendant of source object');
     }
     assert_false(cloned.timing === source.timing, 'Cloned AnimationGroup.timing ' +
         'should not be the same object as source.timing');
