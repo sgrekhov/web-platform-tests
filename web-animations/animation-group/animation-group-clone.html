@@ -4,6 +4,7 @@
 <meta name="assert" content="Creates a deep copy of this AnimationGroup object">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationGroup-clone-AnimationGroup">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -14,56 +15,42 @@
 test(function() {
     var source = new AnimationGroup([]);
     var cloned = source.clone();
-    
-    assert_array_equals(cloned.children, [], 'AnimationGroup.children should correspond ' +
-        'the first constructor argument of the source group');
-    assert_equals(cloned.timing.delay, 0, 'Default value of AnimationGroup.timing.delay ' +
-        'should be 0');
-    assert_equals(cloned.timing.endDelay, 0, 'Default value of AnimationGroup.timing.endDelay ' +
-        'should be 0');
-    assert_equals(cloned.timing.fill, 'auto', 'Default value of AnimationGroup.timing.fill ' +
-        'should be \'auto\'');
-    assert_equals(cloned.timing.iterationStart, 0, 'Default value of ' +
-        'AnimationGroup.timing.iterationStart should be 0.0');
-    assert_equals(cloned.timing.iterations, 1, 'Default value of ' +
-        'AnimationGroup.timing.iterations should be 1.0');
-    assert_equals(cloned.timing.duration, 'auto', 'Default value of ' +
-        'AnimationGroup.timing.duration should be \'auto\'');
-    assert_equals(cloned.timing.playbackRate, 1, 'Default value of ' +
-        'AnimationGroup.timing.playbackRate should be 1.0');
-    assert_equals(cloned.timing.direction, 'normal', 'Default value of ' +
-        'AnimationGroup.timing.direction should be \'normal\'');
-    assert_equals(cloned.timing.easing, 'linear', 'Default value of ' +
-        'AnimationGroup.timing.easing should be \'linear\'');
-}, 'Test AnimationGroup.clone() method called for source with emplty child list and ' +
-    'default timing');
+
+    assert_false(cloned === source,
+        'Cloned AnimationGroup object should be a copy of source object');
+    assert_object_equals(cloned, source, 'Cloned AnimationGroup object should be ' +
+        'identical to source object');
+
+    assert_false(cloned.children === source.children, 'Cloned AnimationGroup.children ' +
+        'should not be the same object as source.children');
+    assert_array_equals(cloned.children, [], 'Cloned AnimationGroup.children should be empty');
+
+    assert_false(cloned.timing === source.timing, 'Cloned AnimationGroup.timing ' +
+        'should not be the same object as source.timing');
+    assert_object_equals(cloned.timing, source.timing, 'Cloned AnimationGroup.timing ' +
+        'should be identical to source.timing');
+}, 'Test AnimationGroup.clone() creates a copy of AnimationGroup object without children ' +
+    'and with default timing');
 
 test(function() {
     var source = new AnimationGroup([], 5);
     var cloned = source.clone();
 
-    assert_array_equals(cloned.children, [], 'AnimationGroup.children should correspond ' +
-        'the first constructor argument of the source group');
-    assert_equals(cloned.timing.delay, 0, 'Default value of AnimationGroup.timing.delay ' +
-        'should be 0');
-    assert_equals(cloned.timing.endDelay, 0, 'Default value of AnimationGroup.timing.endDelay ' +
-        'should be 0');
-    assert_equals(cloned.timing.fill, 'auto', 'Default value of AnimationGroup.timing.fill ' +
-        'should be \'auto\'');
-    assert_equals(cloned.timing.iterationStart, 0, 'Default value of ' +
-        'AnimationGroup.timing.iterationStart should be 0.0');
-    assert_equals(cloned.timing.iterations, 1, 'Default value of ' +
-        'AnimationGroup.timing.iterations should be 1.0');
-    assert_equals(cloned.timing.duration, 5, 'Value of ' +
-        'AnimationGroup.timing.duration should correspond the second constructor argument');
-    assert_equals(cloned.timing.playbackRate, 1, 'Default value of ' +
-        'AnimationGroup.timing.playbackRate should be 1.0');
-    assert_equals(cloned.timing.direction, 'normal', 'Default value of ' +
-        'AnimationGroup.timing.direction should be \'normal\'');
-    assert_equals(cloned.timing.easing, 'linear', 'Default value of ' +
-        'AnimationGroup.timing.easing should be \'linear\'');
-}, 'Test AnimationGroup.clone() method called for source with emplty child list and ' +
-    'not default duration');
+    assert_false(cloned === source,
+        'Cloned AnimationGroup object should be a copy of source object');
+    assert_object_equals(cloned, source, 'Cloned AnimationGroup object should be ' +
+        'identical to source object');
+
+    assert_false(cloned.children === source.children, 'Cloned AnimationGroup.children ' +
+        'should not be the same object as source.children');
+    assert_array_equals(cloned.children, [], 'Cloned AnimationGroup.children should be empty');
+
+    assert_false(cloned.timing === source.timing, 'Cloned AnimationGroup.timing ' +
+        'should not be the same object as source.timing');
+    assert_object_equals(cloned.timing, source.timing, 'Cloned AnimationGroup.timing ' +
+        'should be identical to source.timing');
+}, 'Test AnimationGroup.clone() creates a copy of AnimationGroup object without children ' +
+    'and with non-default timing duration');
 
 test(function() {
     var timing = {
@@ -80,49 +67,78 @@ test(function() {
     var source = new AnimationGroup([], timing);
     var cloned = source.clone();
 
-    assert_array_equals(cloned.children, [], 'AnimationGroup.children should correspond ' +
-        'the first constructor argument of the source group');
-    assert_equals(cloned.timing.delay, timing.delay, 'Value of AnimationNode.timing.delay ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(cloned.timing.endDelay, timing.endDelay, 'Value of AnimationNode.timing.endDelay ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(cloned.timing.fill, timing.fill, 'Value of AnimationNode.timing.fill ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(cloned.timing.iterationStart, timing.iterationStart, 'Value of ' +
-        'AnimationNode.timing.iterationStart should be specified by AnimationTimingInput');
-    assert_equals(cloned.timing.iterations, timing.iterations, 'Value of ' +
-        'AnimationNode.timing.iterations should be specified by AnimationTimingInput');
-    assert_equals(cloned.timing.duration, timing.duration, 'Value of AnimationNode.timing.duration ' +
-        'should be specified by AnimationTimingInput');
-    assert_equals(cloned.timing.playbackRate, timing.playbackRate, 'Value of ' +
-        'AnimationNode.timing.playbackRate should be specified by AnimationTimingInput');
-    assert_equals(cloned.timing.direction, timing.direction, 'Value of ' +
-        'AnimationNode.timing.direction should be specified by AnimationTimingInput');
-    assert_equals(cloned.timing.easing, timing.easing, 'Value of AnimationNode.timing.easing ' +
-        'should be specified by AnimationTimingInput');
-}, 'Test AnimationGroup clone() method called for source with emplty child list ' +
-    'and with AnimationTimingInput second argument');
+    assert_false(cloned === source,
+        'Cloned AnimationGroup object should be a copy of source object');
+    assert_object_equals(cloned, source, 'Cloned AnimationGroup object should be ' +
+        'identical to source object');
+
+    assert_false(cloned.children === source.children, 'Cloned AnimationGroup.children ' +
+        'should not be the same object as source.children');
+    assert_array_equals(cloned.children, [], 'Cloned AnimationGroup.children should be empty');
+
+    assert_false(cloned.timing === source.timing, 'Cloned AnimationGroup.timing ' +
+        'should not be the same object as source.timing');
+    assert_object_equals(cloned.timing, source.timing, 'Cloned AnimationGroup.timing ' +
+        'should be identical to source.timing');
+}, 'Test AnimationGroup.clone() creates a copy of AnimationGroup object without children ' +
+    'and with non-default timing');
 
 test(function() {
     var node = newAnimation(createDiv(this));
     var children = [node];
     var source = new AnimationGroup(children);
     var cloned = source.clone();
-    
-    assert_array_equals(cloned.children, children, 'AnimationGroup.children should be cloned');
-}, 'Test AnimationGroup clone() called for source with not empty first argument ' +
-    'of AnimationGroup constructor');
+
+    assert_false(cloned === source,
+        'Cloned AnimationGroup object should be a copy of source object');
+    assert_object_equals(cloned, source, 'Cloned AnimationGroup object should be ' +
+        'identical to source object');
+
+    assert_false(cloned.children === source.children, 'Cloned AnimationGroup.children ' +
+        'should not be the same object as source.children');
+    assert_equals(cloned.children.length, source.children.length, 'Cloned AnimationGroup ' +
+        'object should contain the same number of children');
+    assert_false(cloned.clidren[0] === source.children[0], 'First child of cloned ' +
+        'AnimationGroup object should not be the same as first child of source');
+    assert_object_equals(cloned.clidren[0], source.children[0], 'First child of cloned ' +
+        'AnimationGroup object should be identical to first child of source');
+}, 'Test AnimationGroup.clone() creates a copy of AnimationGroup object including children');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
-    var node2 = new AnimationGroup([]);
-    var node3 = newAnimation(createDiv(this));
-    var children = [node1, node2, node3];
-    var source = new AnimationGroup(children);
+    var node2 = newAnimation(createDiv(this));
+    var node3 = new AnimationGroup([node1,node2]);
+    var node4 = newAnimation(createDiv(this));
+    var node5 = newAnimation(createDiv(this));
+    var node6 = new AnimationSequence(node4, node5);
+
+    var source = new AnimationGroup([node3, node6]);
     var cloned = source.clone();
-    
-    assert_array_equals(cloned.children, children, 'AnimationGroup.children should be cloned');
-}, 'Test AnimationGroup clone() method called for source with not empty first argument ' +
-    'of AnimationGroup constructor with the mix of Animations and AnimationGroups as children');
+
+    assert_false(cloned === source,
+        'Cloned AnimationGroup object should be a copy of source object');
+    assert_object_equals(cloned, source, 'Cloned AnimationGroup object should be ' +
+        'identical to source object');
+
+    var expected = [node1, node2, node3, node4, node5, node6];
+    var actual = [
+        cloned.children[0].children[0],
+        cloned.children[0].children[1],
+        cloned.children[0],
+        cloned.children[1].children[0],
+        cloned.children[1].children[1],
+        cloned.children[1]
+    ];
+    for (var i=0; i<expected.length; i++){
+        assert_false(actual[i] === expected[i], 'Descendant of cloned AnimationGroup ' +
+        'object should be a copy of corresponding descendant of source object');
+        assert_object_equals(actual[i], expected[i], 'Descendant of cloned AnimationGroup ' +
+        'object should be identical to corresponding descendant of source object');
+    }
+    assert_false(cloned.timing === source.timing, 'Cloned AnimationGroup.timing ' +
+        'should not be the same object as source.timing');
+    assert_object_equals(cloned.timing, source.timing, 'Cloned AnimationGroup.timing ' +
+        'should be identical to source.timing');
+}, 'Test AnimationGroup.clone() creates a deep copy of AnimationGroup object');
 </script>
 </body>
