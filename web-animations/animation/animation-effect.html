@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation effect attribute test</title>
+<meta name="assert" content="The animation effect or custom effect to apply. May be null in which case the animation will produce no observable effect">
+<link rel="help" href="https://web-animations.github.io/web-animations-spec/bikeshed/Overview.html#dom-animation-effect">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var effect = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var animation = new Animation(null, effect);
+    animation.effect = null;
+
+    assert_equals(animation.effect, null, 'Animation.effect attribute should be null');
+}, 'Test setting Animation.effect value to null');
+
+test(function() {
+    var effect = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var animation = new Animation(null, null);
+    animation.effect = effect;
+
+    assert_equals(animation.effect, effect, 'Animation.effect attribute should be set');
+}, 'Test setting initially null value of Animation.effect to AnimationEffect object');
+
+test(function() {
+    var effect = new KeyframeEffect({width: '10px', offset: 0});
+    var animation = new Animation(null, null);
+    animation.effect = effect;
+
+    assert_equals(animation.effect, effect, 'Animation.effect attribute should be set');
+}, 'Test setting initially null value of Animation.effect to KeyframeEffect object with ' +
+    'single keyframe object');
+
+test(function() {
+    var effect = new KeyframeEffect([]);
+    var animation = new Animation(null, null);
+    animation.effect = effect;
+
+    assert_equals(animation.effect, effect, 'Animation.effect attribute should be set');
+}, 'Test setting initially null value of Animation.effect to empty KeyframeEffect object');
+
+test(function() {
+    var effect = new KeyframeEffect([{width: '10px', offset: 0}, {width: '20px', offset: 1}]);
+    var animation = new Animation(null, null);
+    animation.effect = effect;
+
+    assert_equals(animation.effect, effect, 'Animation.effect attribute should be set');
+}, 'Test setting initially null value of Animation.effect to KeyframeEffect object with ' +
+    'sequence of keyframe objects');
+
+test(function() {
+    var nullTimeCounter = 0;
+    var effect1 = function(time) {
+        if (time === null) {
+            nullTimeCounter++;
+        }
+    };
+    var effect2 =  function(time) {
+    };
+    var animation = new Animation(null, effect1);
+    animation.effect = effect2;
+
+    assert_equals(nullTimeCounter, 1, 'AnimationCallback should be called with null time value');
+}, 'Test that on setting, if the previous value is an EffectCallback, then old callback is ' +
+    'called with a null time fraction');
+
+test(function() {
+    var nullTimeCounter = 0;
+    var effect = function(time) {
+        if (time === null) {
+            nullTimeCounter++;
+        }
+    };
+    var animation = new Animation(null, effect);
+    animation.effect = null;
+
+    assert_equals(nullTimeCounter, 1, 'AnimationCallback should be called with null time value');
+}, 'On setting, if the previous value is an EffectCallback, then old callback is ' +
+    'called with a null time fraction. Test null as a new value');
+
+test(function() {
+    var nullTimeCounter = 0;
+    var effect1 = function(time) {
+        if (time === null) {
+            nullTimeCounter++;
+        }
+    };
+    var effect2 = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var animation = new Animation(null, effect1);
+    animation.effect = effect2;
+
+    assert_equals(nullTimeCounter, 1, 'AnimationCallback should be called with null time value');
+}, 'On setting, if the previous value is an EffectCallback, then old callback is ' +
+    'called with a null time fraction. Test AnimationEffect as a new value');
+
+test(function() {
+    var nullTimeCounter = 0;
+    var effect1 = function(time) {
+        if (time === null) {
+            nullTimeCounter++;
+        }
+    };
+    var effect2 = new KeyframeEffect({width: '10px', offset: 0});
+    var animation = new Animation(null, effect1);
+    animation.effect = effect2;
+
+    assert_equals(nullTimeCounter, 1, 'AnimationCallback should be called with null time value');
+}, 'On setting, if the previous value is an EffectCallback, then old callback is ' +
+    'called with a null time fraction. Test KeyframeEffect as a new value');
+</script>
+</body>
