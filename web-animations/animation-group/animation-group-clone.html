@@ -140,5 +140,59 @@ test(function() {
     assert_object_equals(cloned.timing, source.timing, 'Cloned AnimationGroup.timing ' +
         'should be identical to source.timing');
 }, 'Test AnimationGroup.clone() creates a deep copy of AnimationGroup object');
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = new AnimationGroup([node1]);
+
+    var cloned = node1.clone();
+    assert_equals(cloned.parent, null, 'Cloned AnimationGroup.parent should be null');
+    assert_equals(node1.parent, node2, 'Source AnimationGroup.parent should not be affected');
+}, 'Test AnimationGroup.clone() set parent attribute to null on cloned object');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = new AnimationGroup([]);
+    var node3 = new AnimationGroup([node1, node2]);
+
+    var cloned = node2.clone();
+    assert_equals(cloned.previousSibling, null,
+        'Cloned AnimationGroup.previousSibling should be null');
+    assert_equals(node2.previousSibling, node1,
+        'Source AnimationGroup.previousSibling should not be affected');
+}, 'Test AnimationGroup.clone() set previousSibling attribute to null on cloned object');
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = newAnimation(createDiv(this));
+    var node3 = new AnimationGroup([node1, node2]);
+
+    var cloned = node1.clone();
+    assert_equals(cloned.nextSibling, null,
+        'Cloned AnimationGroup.nextSibling should be null');
+    assert_equals(node1.nextSibling, node2,
+        'Source AnimationGroup.nextSibling should not be affected');
+}, 'Test AnimationGroup.clone() set nextSibling attribute to null on cloned object');
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var player = document.timeline.play(node1);
+
+    var cloned = node1.clone();
+    assert_equals(cloned.player, null, 'Cloned AnimationGroup.player should be null');
+    assert_equals(node1.player, player, 'Source AnimationGroup.player should not be affected');
+}, 'Test AnimationGroup.clone() set player attribute to null on cloned object, ' +
+    'source is directly associated with player');
+
+test(function() {
+    var node1 = new AnimationGroup([]);
+    var node2 = new AnimationGroup([node1]);
+    var player = document.timeline.play(node2);
+
+    var cloned = node1.clone();
+    assert_equals(cloned.player, null, 'Cloned AnimationGroup.player should be null');
+    assert_equals(node1.player, player, 'Source AnimationGroup.player should not be affected');
+}, 'Test AnimationGroup.clone() set player attribute to null on cloned object, ' +
+    'source is indirectly associated with player');
 </script>
 </body>
