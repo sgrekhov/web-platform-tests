@@ -110,7 +110,7 @@ test(function() {
     var node3 = new AnimationGroup([node1,node2]);
     var node4 = newAnimation(createDiv(this));
     var node5 = newAnimation(createDiv(this));
-    var node6 = new AnimationSequence(node4, node5);
+    var node6 = new AnimationSequence([node4, node5]);
 
     var source = new AnimationGroup([node3, node6]);
     var cloned = source.clone();
