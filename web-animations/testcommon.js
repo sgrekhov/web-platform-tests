@@ -154,3 +154,37 @@ function AnimationSequence(children, timing) {
 }
 
 AnimationSequence.prototype = AnimationGroup.prototype;
+
+//AnimationEffect stub
+function AnimationEffect() {
+    this.iterationComposite = null;
+    this.composite = null;
+}
+
+AnimationEffect.prototype.clone = function() {
+    return this;
+};
+
+// MotionPathEffect stub
+function MotionPathEffect(path, options) {
+    this.segments = null;
+    this.autoRotate = null;
+    this.angle = null;
+    this.spacing = null;
+}
+
+MotionPathEffect.prototype = new AnimationEffect();
+
+// KeyframeEffect stub
+function KeyframeEffect(frames, options) {
+    this.spacing = null;
+}
+
+KeyframeEffect.prototype = new AnimationEffect();
+
+KeyframeEffect.prototype.getFrames = function() {
+    return [];
+};
+
+KeyframeEffect.prototype.setFrames = function(frames) {
+};
