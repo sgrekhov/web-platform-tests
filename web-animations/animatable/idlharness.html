@@ -1,0 +1,39 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>Web Animations API: Animatable interface tests</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="/resources/webidl2/lib/webidl2.js"></script>
+<script src="/resources/idlharness.js"></script>
+<div id="log"></div>
+<div id="target"></div>
+<script type="text/plain" id="untested-IDL">
+interface AnimationPlayer {
+};
+
+interface Animation {
+};
+
+interface AnimationTimingInput {
+};
+</script>
+<script type="text/plain" id="Animatable-IDL">
+[NoInterfaceObject]
+interface Animatable {
+    AnimationPlayer           animate (object? effect,
+                                       optional (double or AnimationTimingInput) timing);
+    sequence<Animation>       getCurrentAnimations ();
+    sequence<AnimationPlayer> getAnimationPlayers ();
+};
+</script>
+<script>
+'use strict';
+
+var animatable = document.getElementById('target');
+
+var idlArray = new IdlArray();
+idlArray.add_untested_idls(document.getElementById('untested-IDL').textContent);
+idlArray.add_idls(document.getElementById('Animatable-IDL').textContent);
+idlArray.add_objects( { Animatable: ['animatable'] } );
+idlArray.test();
+</script>

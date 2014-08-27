@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animatable.animate() method tests</title>
+<meta name="assert" content="Creates a new Animation object whose animation target is the object on which the method is called, and calls the play method of the AnimationTimeline object of the document timeline of the node document of the element passing the newly created Animation as the argument to the method">
+<link rel="help" href="https://web-animations.github.io/web-animations-spec/bikeshed/Overview.html#the-animatable-interface">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var animatable = createDiv(this);
+    var player = animatable.animate(null);
+
+    assert_not_equals(player, null, 'Player created by Animatable.animate() ' +
+        'method should be not null');
+}, 'Player created by Animatable.animate() method is not null');
+
+test(function() {
+    var animatable = createDiv(this);
+    var player = animatable.animate(null);
+
+    assert_class_string(player, 'AnimationPlayer', 'Object returned by ' +
+        'Animatable.animate() should be AnimationPlayer object instance');
+}, 'Object returned by Animatable.animate() is AnimationPlayer object instance');
+
+test(function() {
+    var animatable = createDiv(this);
+    var player = animatable.animate(null);
+
+    assert_class_string(player.source, 'Animation', 'Source of newly created ' +
+        'player should be Animation object instance');
+    assert_equals(player.source.target, animatable, 'Animation target of newly ' +
+        'created Animation should be object on which the method is called');
+}, 'Source of newly created animation player is Animation object instance ' +
+    'with its animation target the object on which the method is called');
+
+test(function() {
+    var doc = newHTMLDocument();
+    var animatable = createDiv(this, doc);
+    var player = animatable.animate(null);
+
+    assert_equals(player.timeline, doc.timeline, 'Timeline of newly created animation ' +
+        'player should be object, on which the method is called, owner document timeline');
+}, 'Timeline of newly created animation player should be object, on which the method ' +
+    'is called, owner document timeline');
+</script>
+</body>
