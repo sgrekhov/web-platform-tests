@@ -8,6 +8,15 @@
 <div id="log"></div>
 <div id="target"></div>
 <script type="text/plain" id="untested-IDL">
+interface Element {
+};
+
+interface HTMLElement {
+};
+
+interface HTMLDivElement {
+};
+
 interface AnimationPlayer {
 };
 
@@ -25,6 +34,8 @@ interface Animatable {
     sequence<Animation>       getCurrentAnimations ();
     sequence<AnimationPlayer> getAnimationPlayers ();
 };
+
+Element implements Animatable;
 </script>
 <script>
 'use strict';
@@ -34,6 +45,6 @@ var animatable = document.getElementById('target');
 var idlArray = new IdlArray();
 idlArray.add_untested_idls(document.getElementById('untested-IDL').textContent);
 idlArray.add_idls(document.getElementById('Animatable-IDL').textContent);
-idlArray.add_objects( { Animatable: ['animatable'] } );
+idlArray.add_objects( { HTMLDivElement: ['animatable'] } );
 idlArray.test();
 </script>
