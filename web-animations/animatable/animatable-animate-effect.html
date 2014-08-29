@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animatable.animate() method effect argument test</title>
+<meta name="assert" content="The effect to apply. This value is passed to the Animation constructor as the effect parameter and has the same interpretation as defined for that constructor">
+<link rel="help" href="https://web-animations.github.io/web-animations-spec/bikeshed/Overview.html#the-animatable-interface">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var animatable = createDiv(this);
+    var player = animatable.animate(null);
+
+    assert_equals(player.source.effect, null, 'Animation.effect should be null');
+}, 'Null value of effect argument of Animatable.animate() method produces ' +
+    'Animation with null effect');
+
+test(function() {
+    var effect = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var animatable = createDiv(this);
+    var player = animatable.animate(effect);
+
+    assert_equals(player.source.effect, effect,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+}, 'AnimationEffect as a value of effect argument of Animatable.animate() method ' +
+    'produces Animation with specified AnimationEffect');
+
+test(function() {
+    var effect = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var animation = new Animation(null, effect);
+    var animatable = createDiv(this);
+    var player = animatable.animate(animation.effect);
+
+    assert_true(player.source.effect === effect,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+    assert_true(player.source.effect === animation.effect,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+}, 'AnimationEffect from different Animation object instance as a value ' +
+    'of effect argument of Animatable.animate() produces Animation with the same effect instance');
+
+test(function() {
+    var effect = function(time) {
+        document.documentElement.currentScale = 1.0 + time * 2.0;
+    };
+    var animatable = createDiv(this);
+    var player = animatable.animate(effect);
+
+    assert_equals(player.source.effect, effect,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+}, 'EffectCallback function as a value of effect argument of Animatable.animate() method ' +
+    'produces Animation with specified EffectCallback');
+
+test(function() {
+    var effect = function(time) {
+        document.documentElement.currentScale = 1.0 + time * 2.0;
+    };
+    var animation = new Animation(null, effect);
+    var animatable = createDiv(this);
+    var player = animatable.animate(animation.effect);
+
+    assert_true(player.source.effect === effect,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+    assert_true(player.source.effect === animation.effect,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+}, 'EffectCallback function from different Animation object instance as a value ' +
+    'of effect argument of Animatable.animate() method produces animation with the same ' +
+    'effect instance');
+
+test(function() {
+    var effect =  {top: '100px', width: '300px'};
+    var animatable = createDiv(this);
+    var player = animatable.animate(effect);
+
+    assert_equals(player.source.effect.getFrames()[0].top, effect.top,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+    assert_equals(player.source.effect.getFrames()[0].width, effect.width,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+    assert_equals(player.source.effect.getFrames()[0].offset, null,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+    assert_equals(player.source.effect.getFrames()[0].easing, 'linear',
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+    assert_equals(player.source.effect.getFrames()[0].composite, null,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+}, 'Single Keyframe object as a value of effect argument of Animatable.animate() ' +
+    'produces Animation with the specified effect');
+
+test(function() {
+    var effect =  {top: '100px', width: '300px', offset: 0.5, easing: 'ease', composite: 'add'};
+    var animatable = createDiv(this);
+    var player = animatable.animate(effect);
+
+    assert_equals(player.source.effect.getFrames()[0].top, effect.top,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+    assert_equals(player.source.effect.getFrames()[0].width, effect.width,
+        'Animation.effect should be set by the Animatable.animate() effect parameter');
+    assert_equals(player.source.effect.getFrames()[0].offset, effect.offset,
+        'Keyframe parameters set by Animatable.animate() should have specified values');
+    assert_equals(player.source.effect.getFrames()[0].easing, effect.easing,
+        'Keyframe parameters set by Animatable.animate() should have specified values');
+    assert_equals(player.source.effect.getFrames()[0].composite, effect.composite,
+        'Keyframe parameters set by Animatable.animate() should have specified values');
+}, 'Single Keyframe object with not default properties as a value of effect ' +
+    'argument of Animatable.animate() produces Animation with the specified effect');
+
+test(function() {
+    var effect =  [];
+    var animatable = createDiv(this);
+    var player = animatable.animate(effect);
+
+    assert_array_equals(player.source.effect.getFrames(), effect,
+        'Animation.effect should be set by Animatable.animate()');
+}, 'Empty sequence of Keyframe objects as a value of effect argument ' +
+    'of Animatable.animate() produces Animation with empty keyframes sequence');
+
+test(function() {
+    var effect = [{top: '0px', width: '10px', offset: 0},
+                  {top: '20px', width: '30px', offset: 1}];
+    var animatable = createDiv(this);
+    var player = animatable.animate(effect);
+
+    assert_equals(player.source.effect.getFrames().length, 2,
+        'Animation.effect should have 2 frames set by the constructor');
+
+    player.source.effect.getFrames().forEach(function(value, index) {
+        assert_equals(value.top, effect[index].top,
+            'Animation.effect should be set by Animatable.animate()');
+        assert_equals(value.width, effect[index].width,
+            'Animation.effect should be set by Animatable.animate()');
+        assert_equals(value.offset, effect[index].offset,
+            'Offset of the animation effect should be set by Animatable.animate()');
+        assert_equals(value.easing, 'linear',
+            'Animation effect easing should have default value');
+        assert_equals(value.composite, null,
+            'Animation effect composite should have default value');
+    });
+}, 'Sequence of Keyframe objects as a value of effect argument ' +
+    'of Animatable.animate() produces Animation with the specified effect');
+
+test(function() {
+    var effect = [{top: '0px', width: '10px', offset: 0, easing: 'ease', composite: 'add'},
+                  {top: '20px', width: '30px', offset: 1, easing: 'ease-in', composite: 'replace'}];
+    var animatable = createDiv(this);
+    var player = animatable.animate(effect);
+
+    assert_equals(player.source.effect.getFrames().length, 2,
+        'Animation.effect should have 2 frames set by the constructor');
+
+    player.source.effect.getFrames().forEach(function(value, index) {
+        assert_equals(value.top, effect[index].top,
+            'Animation.effect should be set by Animatable.animate()');
+        assert_equals(value.width, effect[index].width,
+            'Animation.effect should be set by Animatable.animate()');
+        assert_equals(value.offset, effect[index].offset,
+            'Offset of the animation effect should be set by Animatable.animate()');
+        assert_equals(value.easing, effect[index].easing,
+            'Animation effect easing should be set by Animatable.animate()');
+        assert_equals(value.composite, effect[index].composite,
+            'Animation effect composite should be set by Animatable.animate()');
+    });
+}, 'Sequence of Keyframe objects, with all properties specified, as a value of effect ' +
+    'argument of Animatable.animate() produces Animation with the specified effect');
+</script>
+</body>

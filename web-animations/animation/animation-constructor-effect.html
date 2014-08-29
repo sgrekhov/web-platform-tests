@@ -86,11 +86,11 @@ test(function() {
     assert_equals(animation.effect.getFrames()[0].width, effect.width,
         'Animation.effect should be set by the constructor');
     assert_equals(animation.effect.getFrames()[0].offset, effect.offset,
-        'Keyframe parameters set by the constructor should not have their default values');
+        'Keyframe parameters set by the constructor should have specified values');
     assert_equals(animation.effect.getFrames()[0].easing, effect.easing,
-        'Keyframe parameters set by the constructor should not have their default values');
+        'Keyframe parameters set by the constructor should have specified values');
     assert_equals(animation.effect.getFrames()[0].composite, effect.composite,
-        'Keyframe parameters set by the constructor should not have their default values');
+        'Keyframe parameters set by the constructor should have specified values');
 }, 'Test single Keyframe object with not default properties as a value of effect ' +
     'argument of Animation constructor');
 
@@ -142,9 +142,9 @@ test(function() {
         assert_equals(value.offset, effect[index].offset,
             'Offset of the animation effect should be set by the constructor');
         assert_equals(value.easing, effect[index].easing,
-            'Animation effect easing should have default value');
+            'Animation effect easing should be set by the constructor');
         assert_equals(value.composite, effect[index].composite,
-            'Animation effect composite should have default value');
+            'Animation effect composite should be set by the constructor');
     });
 }, 'Test sequence of Keyframe objects as a value of effect argument ' +
     'of Animation constructor. Set all Keyframe properties');
