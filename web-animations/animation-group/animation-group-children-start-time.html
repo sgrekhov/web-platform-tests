@@ -11,7 +11,7 @@
 <body>
 <div id="log"></div>
 <script>
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var animationGroup = new AnimationGroup([node1, node2]);
@@ -21,9 +21,9 @@ test(function(t) {
         'child animation node of an animation group should be zero');
     assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
         'child animation node of an animation group should be zero');
-}, 'Test that start time of a child node of AnimationGroup is zero');
+}, 'Test AnimationGroup constructor sets start time to zero for each child');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = new AnimationGroup([]);
     var node3 = new AnimationSequence([]);
@@ -36,10 +36,10 @@ test(function(t) {
         'animation node of an animation group should be zero');
     assert_equals(node3.computedTiming.startTime, 0, 'The start time of a child ' +
         'animation node of an animation group should be zero');
-}, 'The start time of a child animation node of an animation group is zero. ' +
-    'Test different types of child nodes');
+}, 'Test AnimationGroup constructor sets start time to zero for each child. ' +
+    'Children are of different types');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var node3 = newAnimation(createDiv(this));
@@ -53,18 +53,16 @@ test(function(t) {
         'animation node of an animation group should be zero');
     assert_equals(node2.computedTiming.startTime, 0, 'The start time of a child ' +
         'animation node of an animation group should be zero');
-    assert_equals(node3.computedTiming.startTime, 0, 'The start time of a child ' +
-        'animation node of an animation group should be zero');
     assert_equals(node4.computedTiming.startTime, 0, 'The start time of a child ' +
         'animation node of an animation group should be zero');
     assert_equals(node5.computedTiming.startTime, 0, 'The start time of a child ' +
         'animation node of an animation group should be zero');
     assert_equals(node6.computedTiming.startTime, 0, 'The start time of a child ' +
         'animation node of an animation group should be zero');
-}, 'The start time of a child animation node of an animation group is zero. ' +
-    'Test different types of not empty child nodes');
+}, 'Test AnimationGroup constructor sets start time to zero for each child. ' +
+    'Test tree structure');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var animationGroup = new AnimationGroup([node1]);
@@ -75,9 +73,9 @@ test(function(t) {
         'child animation node of an animation group should be zero');
     assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
         'child animation node of an animation group should be zero');
-}, 'Test that start time of prepended child node of AnimationGroup is zero');
+}, 'Test AnimationGroup.prepend() sets start time to zero on prepended node');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var node3 = new AnimationGroup([]);
@@ -94,9 +92,9 @@ test(function(t) {
         'child animation node of an animation group should be zero');
     assert_equals(node4.computedTiming.startTime, 0, 'The start time of a ' +
         'child animation node of an animation group should be zero');
-}, 'Test that start time of different prepended child nodes of AnimationGroup is zero');
+}, 'Test AnimationGroup.prepend() sets start time to zero on different prepended nodes');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var animationGroup = new AnimationGroup([node1]);
@@ -107,9 +105,9 @@ test(function(t) {
         'child animation node of an animation group should be zero');
     assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
         'child animation node of an animation group should be zero');
-}, 'Test that start time of appended child node of AnimationGroup is zero');
+}, 'Test AnimationGroup.append() sets start time to zero on appended node');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var node3 = new AnimationGroup([]);
@@ -126,9 +124,9 @@ test(function(t) {
         'child animation node of an animation group should be zero');
     assert_equals(node4.computedTiming.startTime, 0, 'The start time of a ' +
         'child animation node of an animation group should be zero');
-}, 'Test that start time of different appended child nodes of AnimationGroup is zero');
+}, 'Test AnimationGroup.append() sets start time to zero on different appended nodes');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var animationGroup = new AnimationGroup([node1]);
@@ -139,9 +137,10 @@ test(function(t) {
         'child animation node of an animation group should be zero');
     assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
         'child animation node of an animation group should be zero');
-}, 'Test that start time of a child node of AnimationGroup inserted by before() call is zero');
+}, 'Test AnimationNode.before() sets start time to sero on inserted node, ' +
+    'if adding the node to animation group');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var node3 = new AnimationGroup([]);
@@ -158,10 +157,10 @@ test(function(t) {
         'child animation node of an animation group should be zero');
     assert_equals(node4.computedTiming.startTime, 0, 'The start time of a ' +
         'child animation node of an animation group should be zero');
-}, 'Test that start time of different nodes of AnimationGroup inserted by before() ' +
-    'call is zero');
+}, 'Test AnimationNode.before() sets start time to sero on inserted nodes, ' +
+    'if adding nodes to animation group');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var animationGroup = new AnimationGroup([node1]);
@@ -172,9 +171,10 @@ test(function(t) {
         'child animation node of an animation group should be zero');
     assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
         'child animation node of an animation group should be zero');
-}, 'Test that start time of a child node of AnimationGroup inserted by after() call is zero');
+}, 'Test AnimationNode.after() sets start time to sero on inserted node, ' +
+    'if adding the node to animation group');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var node3 = new AnimationGroup([]);
@@ -191,10 +191,10 @@ test(function(t) {
         'child animation node of an animation group should be zero');
     assert_equals(node4.computedTiming.startTime, 0, 'The start time of a ' +
         'child animation node of an animation group should be zero');
-}, 'Test that start time of different nodes of AnimationGroup inserted by after() ' +
-    'call is zero');
+}, 'Test AnimationNode.after() sets start time to sero on inserted nodes, ' +
+    'if adding nodes to animation group');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var animationGroup = new AnimationGroup([node1]);
@@ -203,10 +203,10 @@ test(function(t) {
     node1.replace(node2);
     assert_equals(node2.computedTiming.startTime, 0, 'The start time of a ' +
         'child animation node of an animation group should be zero');
-}, 'Test that start time of a child node of AnimationGroup inserted by replace() ' +
-    'call is zero');
+}, 'Test AnimationNode.replace() sets start time to sero on inserted node, ' +
+    'if parent node is animation group');
 
-test(function(t) {
+test(function() {
     var node1 = newAnimation(createDiv(this));
     var node2 = newAnimation(createDiv(this));
     var node3 = new AnimationGroup([]);
@@ -221,7 +221,7 @@ test(function(t) {
         'child animation node of an animation group should be zero');
     assert_equals(node4.computedTiming.startTime, 0, 'The start time of a ' +
         'child animation node of an animation group should be zero');
-}, 'Test that start time of different nodes of AnimationGroup inserted by replace() ' +
-    'call is zero');
+}, 'Test AnimationNode.replace() sets start time to sero on inserted nodes, ' +
+    'if parent node is animation group');
 </script>
 </body>
