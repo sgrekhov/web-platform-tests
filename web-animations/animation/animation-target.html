@@ -36,7 +36,66 @@ test(function() {
     assert_equals(animation.target, target2, 'Animation.target should be set by the attribute');
 }, 'Test setting target attribute to not null value. Initial value of the attribute is not null');
 
-// TODO add pseudo-element as a target tests
+test(function() {
+    var element1 = createDiv(this);
+    var element2 = createDiv(this);
+    var target = element2.pseudo(':before');
+    var animation = new Animation(target, null);
+    animation.target = null;
 
+    assert_equals(animation.target, null, 'Animation.target should be null');
+}, 'Test setting target attribute to null value. Initial value of the attribute is ' +
+    'not null PseudoElement');
+
+test(function() {
+    var animation = new Animation(null, null);
+    var element1 = createDiv(this);
+    var element2 = createDiv(this);
+    var target = element2.pseudo(':before');
+    animation.target = target;
+
+    assert_equals(animation.target, target, 'Animation.target should be set by the attribute');
+}, 'Test setting target attribute to not null PseudoElement. Initial value ' +
+    'of the attribute is null');
+
+test(function() {
+    var target1 = createDiv(this);
+    var element1 = createDiv(this);
+    var element2 = createDiv(this);
+    var target2 = element2.pseudo(':before');
+    var animation = new Animation(target1, null);
+    animation.target = target2;
+
+    assert_equals(animation.target, target2, 'Animation.target should be set by the attribute');
+}, 'Test setting target attribute to PseudoElement. Initial value of the attribute ' +
+    'is Element');
+
+test(function() {
+    var element1 = createDiv(this);
+    var element2 = createDiv(this);
+    var target1 = element2.pseudo(':before');
+    var target2 = createDiv(this);
+    var animation = new Animation(target1, null);
+    animation.target = target2;
+
+    assert_equals(animation.target, target2, 'Animation.target should be set by the attribute');
+}, 'Test setting target attribute to Element. Initial value of the attribute ' +
+    'is PseudoElement');
+
+test(function() {
+    var element1 = createDiv(this);
+    var element2 = createDiv(this);
+    var target1 = element2.pseudo(':before');
+
+    var element3 = createDiv(this);
+    var element4 = createDiv(this);
+    var target2 = element2.pseudo(':before');
+
+    var animation = new Animation(target1, null);
+    animation.target = target2;
+
+    assert_equals(animation.target, target2, 'Animation.target should be set by the attribute');
+}, 'Test setting target attribute to PseudoElement. Initial value of the attribute ' +
+    'is another PseudoElement');
 </script>
 </body>

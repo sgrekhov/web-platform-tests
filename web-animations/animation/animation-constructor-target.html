@@ -15,16 +15,28 @@ test(function() {
     var animation = new Animation(null, null);
 
     assert_equals(animation.target, null, 'Animation.target should be null');
-}, 'Test null value of target argument of Animation constructor');
+}, 'Animation constructor called with null value of target argument creates ' +
+    'Animation object instance with null target');
 
 test(function() {
     var target = createDiv(this);
     var animation = new Animation(target, null);
 
-    assert_equals(animation.target, target, 'Animation.target should be set by the constructor');
-}, 'Test not null value of target argument of Animation constructor');
+    assert_equals(animation.target, target, 'Animation.target should be set by ' +
+        'the constructor');
+}, 'Animation constructor called with not null value of target argument creates ' +
+    'Animation object instance with specified target');
 
-// TODO add pseudo-element as a target test
+test(function() {
+    var element1 = createDiv(this);
+    var element2 = createDiv(this);
+    var pseudoElement = element2.pseudo(':before');
 
+    var animation = new Animation(pseudoElement, null);
+
+    assert_equals(animation.target, pseudoElement, 'Animation.target should be set ' +
+        'by the constructor');
+}, 'Animation constructor called with pseudo-element as value of target argument creates ' +
+    'Animation object instance with specified PseudoElement as a target');
 </script>
 </body>
