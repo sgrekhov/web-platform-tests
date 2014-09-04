@@ -64,6 +64,24 @@ function createDiv(test, doc) {
     return div;
 }
 
+//creates two div elements, appends them to the document body and
+//add removing of the created elements to test cleanup
+function createPseudoElement(test, doc) {
+    if (!doc) {
+        doc = document;
+    }
+    var div1 = doc.createElement('div');
+    var div2 = doc.createElement('div');
+    doc.body.appendChild(div1);
+    doc.body.appendChild(div2);
+
+    test.add_cleanup(function() {
+        removeElement(div1);
+        removeElement(div2);
+    });
+    return div2.pseudo(':before');
+}
+
 // Removes element
 function removeElement(element) {
     element.parentNode.removeChild(element);
