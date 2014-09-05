@@ -15,77 +15,77 @@
 // First part If the child has no previous sibling the start time is zero
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]) ];
-    nodes.forEach(function(node) {
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])];
+    nodes.forEach(function(node, index) {
         var animationSequence = new AnimationSequence([node]);
-        assert_equals(node.computedTiming.startTime, 0, 'The start time of the first ' +
-            'child animation node of an animation sequence should be zero');
+        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
+            'time of the first child animation node of an animation sequence should be zero');
     });
 }, 'Test AnimationSequence constructor sets start time to zero for first child');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]) ];
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])];
     var animationSequence = new AnimationSequence([]);
-    nodes.forEach(function(node) {
+    nodes.forEach(function(node, index) {
         animationSequence.prepend(node);
-        assert_equals(node.computedTiming.startTime, 0, 'The start time of the first ' +
-            'child animation node of an animation sequence should be zero');
+        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
+            'time of the first child animation node of an animation sequence should be zero');
     });
 }, 'Test AnimationSequence.prepend sets start time to zero for first child');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]) ];
-    nodes.forEach(function(node) {
+    var nodes = [newAnimation(createDiv(this)),
+         new AnimationGroup([]),
+         new AnimationSequence([])];
+    nodes.forEach(function(node, index) {
         var animationSequence = new AnimationSequence([]);
         animationSequence.append(node);
-        assert_equals(node.computedTiming.startTime, 0, 'The start time of the first ' +
-            'child animation node of an animation sequence should be zero');
+        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
+            'time of the first child animation node of an animation sequence should be zero');
     });
 }, 'Test AnimationSequence.append sets start time to zero for first child');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]) ];
+    var nodes = [newAnimation(createDiv(this)),
+         new AnimationGroup([]),
+         new AnimationSequence([])];
     var firstChild = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([firstChild]);
-    nodes.forEach(function(node) {
+    nodes.forEach(function(node, index) {
         firstChild.before(node);
-        assert_equals(node.computedTiming.startTime, 0, 'The start time of the first ' +
-            'child animation node of an animation sequence should be zero');
+        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
+            'time of the first child animation node of an animation sequence should be zero');
         firstChild = node;
     });
 }, 'Test AnimationNode.before sets start time to zero for first child');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]) ];
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])];
     var firstChild = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([firstChild]);
-    nodes.forEach(function(node) {
+    nodes.forEach(function(node, index) {
         firstChild.replace(node);
-        assert_equals(node.computedTiming.startTime, 0, 'The start time of the first ' +
-            'child animation node of an animation sequence should be zero');
+        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
+            'time of the first child animation node of an animation sequence should be zero');
         firstChild = node;
     });
 }, 'Test AnimationNode.replace sets start time to zero for first child');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]) ];
+    var nodes = [newAnimation(createDiv(this)),
+        newAnimation(createPseudoElement(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])];
     var animationSequence = new AnimationSequence(nodes);
-    nodes.forEach(function(node) {
-        assert_equals(node.computedTiming.startTime, 0, 'The start time of the first ' +
-            'child animation node of an animation sequence should be zero');
+    nodes.forEach(function(node, index) {
+        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
+            'time of the first child animation node of an animation sequence should be zero');
         node.remove();
     });
 }, 'Test AnimationNode.remove sets start time to zero for first child');
@@ -95,18 +95,19 @@ test(function() {
 // Checks computed start time for each child of given animation sequence
 function checkAnimationSequenceChildrenStartTimes(animationSequence) {
     var startTime = 0;
-    animationSequence.children.forEach(function(node){
-        assert_equals(node.computedTiming.startTime, startTime, 'The start time of the animation node ' +
-            'should be the end time of its previous sibling or zero if there is no previous sibling');
+    animationSequence.children.forEach(function(node, index){
+        assert_equals(node.computedTiming.startTime, startTime, 'Node ' + index +
+            ': The start time of the animation node should be the end time of its ' +
+            'previous sibling or zero if there is no previous sibling');
         startTime = node.computedTiming.endTime;
     });
 }
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createPseudoElement(this));
     var node3 = newAnimation(createDiv(this));
-    var node4 = newAnimation(createDiv(this));
+    var node4 = newAnimation(createPseudoElement(this));
     var node5 = new AnimationGroup([node1, node2]);
     var node6 = new AnimationSequence([node3]);
     var node7 = newAnimation(createDiv(this));
@@ -118,24 +119,25 @@ test(function() {
     'the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]) ];
-    nodes.forEach(function(node1) {
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])];
+    nodes.forEach(function(node1, index) {
         var animationSequence = new AnimationSequence([node1]);
         var node2 = newAnimation(createDiv(this));
         animationSequence.prepend(node2);
         assert_equals(node1.computedTiming.startTime, node2.computedTiming.endTime,
-            'The start time of the animation node should be the end time of its previous sibling');
+            'Node ' + index + ': The start time of the animation node should be ' +
+            'the end time of its previous sibling');
     });
 }, 'Test AnimationSequence.prepend sets start time to the end time of the child\'s ' +
     'previous sibling for children after first one');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]) ];
+    var nodes = [newAnimation(createDiv(this)),
+        newAnimation(createPseudoElement(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])];
     var animationSequence = new AnimationSequence();
     animationSequence.prepend(nodes);
     checkAnimationSequenceChildrenStartTimes(animationSequence);
@@ -143,24 +145,25 @@ test(function() {
     'the end time of the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]) ];
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])];
     var prevNode = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([prevNode]);
-    nodes.forEach(function(node) {
+    nodes.forEach(function(node, index) {
         animationSequence.append(node);
         assert_equals(node.computedTiming.startTime, prevNode.computedTiming.endTime,
-            'The start time of the animation node should be the end time of its previous sibling');
+            'Node ' + index + ': The start time of the animation node should be ' +
+            'the end time of its previous sibling');
         prevNode = node;
     });
 }, 'Test AnimationSequence.append sets start time to the end time of the child\'s ' +
     'previous sibling for children after first one');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]) ];
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])];
     var prevNode = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([prevNode]);
     animationSequence.append(nodes);
@@ -169,15 +172,15 @@ test(function() {
     'the end time of the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationGroup([]),
-                    newAnimation(createDiv(this)),
-                    new AnimationSequence([]),
-                    new AnimationSequence([]),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]),
-                    newAnimation(createDiv(this)) ];
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationGroup([]),
+        newAnimation(createPseudoElement(this)),
+        new AnimationSequence([]),
+        new AnimationSequence([]),
+        new AnimationGroup([]),
+        new AnimationSequence([]),
+        newAnimation(createDiv(this))];
     var prevNode = newAnimation(createDiv(this));
     var nextNode = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([prevNode,nextNode]);
@@ -190,15 +193,15 @@ test(function() {
     'previous sibling for children after first one');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationGroup([]),
-                    newAnimation(createDiv(this)),
-                    new AnimationSequence([]),
-                    new AnimationSequence([]),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]),
-                    newAnimation(createDiv(this)) ];
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationGroup([]),
+        newAnimation(createPseudoElement(this)),
+        new AnimationSequence([]),
+        new AnimationSequence([]),
+        new AnimationGroup([]),
+        new AnimationSequence([]),
+        newAnimation(createDiv(this))];
     var prevNode = newAnimation(createDiv(this));
     var nextNode = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([prevNode,nextNode]);
@@ -208,15 +211,15 @@ test(function() {
     'time of the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationGroup([]),
-                    newAnimation(createDiv(this)),
-                    new AnimationSequence([]),
-                    new AnimationSequence([]),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]),
-                    newAnimation(createDiv(this)) ];
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationGroup([]),
+        newAnimation(createPseudoElement(this)),
+        new AnimationSequence([]),
+        new AnimationSequence([]),
+        new AnimationGroup([]),
+        new AnimationSequence([]),
+        newAnimation(createDiv(this))];
     var prevNode = newAnimation(createDiv(this));
     var nextNode = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([prevNode,nextNode]);
@@ -229,15 +232,15 @@ test(function() {
     'previous sibling for children after first one');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationGroup([]),
-                    newAnimation(createDiv(this)),
-                    new AnimationSequence([]),
-                    new AnimationSequence([]),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]),
-                    newAnimation(createDiv(this)) ];
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationGroup([]),
+        newAnimation(createPseudoElement(this)),
+        new AnimationSequence([]),
+        new AnimationSequence([]),
+        new AnimationGroup([]),
+        new AnimationSequence([]),
+        newAnimation(createDiv(this))];
     var prevNode = newAnimation(createDiv(this));
     var nextNode = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([prevNode,nextNode]);
@@ -247,40 +250,42 @@ test(function() {
     'time of the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationGroup([]),
-                    newAnimation(createDiv(this)),
-                    new AnimationSequence([]),
-                    new AnimationSequence([]),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]),
-                    newAnimation(createDiv(this)) ];
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationGroup([]),
+        newAnimation(createPseudoElement(this)),
+        new AnimationSequence([]),
+        new AnimationSequence([]),
+        new AnimationGroup([]),
+        new AnimationSequence([]),
+        newAnimation(createDiv(this))];
     var prevNode = newAnimation(createDiv(this));
     var nextNode = newAnimation(createDiv(this));
     var middleNode = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([prevNode, middleNode, nextNode]);
-    nodes.forEach(function(node) {
+    nodes.forEach(function(node, index) {
         middleNode.replace(node);
         assert_equals(node.computedTiming.startTime, prevNode.computedTiming.endTime,
-            'The start time of the animation node should be the end time of its previous sibling');
+            'Node ' + index + ': The start time of the animation node should be ' +
+            'the end time of its previous sibling');
         assert_equals(nextNode.computedTiming.startTime, node.computedTiming.endTime,
-            'The start time of the animation node should be the end time of its previous sibling');
+            'Node ' + index + ': The start time of the animation node should be ' +
+            'the end time of its previous sibling');
         middleNode = node;
     });
 }, 'Test AnimationNode.replace sets start time to the end time of the child\'s ' +
     'previous sibling for children after first one');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationGroup([]),
-                    newAnimation(createDiv(this)),
-                    new AnimationSequence([]),
-                    new AnimationSequence([]),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]),
-                    newAnimation(createDiv(this)) ];
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationGroup([]),
+        newAnimation(createPseudoElement(this)),
+        new AnimationSequence([]),
+        new AnimationSequence([]),
+        new AnimationGroup([]),
+        new AnimationSequence([]),
+        newAnimation(createDiv(this))];
     var prevNode = newAnimation(createDiv(this));
     var nextNode = newAnimation(createDiv(this));
     var middleNode = newAnimation(createDiv(this));
@@ -291,15 +296,15 @@ test(function() {
     'time of the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [ newAnimation(createDiv(this)),
-                    new AnimationGroup([]),
-                    new AnimationGroup([]),
-                    newAnimation(createDiv(this)),
-                    new AnimationSequence([]),
-                    new AnimationSequence([]),
-                    new AnimationGroup([]),
-                    new AnimationSequence([]),
-                    newAnimation(createDiv(this)) ];
+    var nodes = [newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationGroup([]),
+        newAnimation(createPseudoElement(this)),
+        new AnimationSequence([]),
+        new AnimationSequence([]),
+        new AnimationGroup([]),
+        new AnimationSequence([]),
+        newAnimation(createDiv(this))];
     var prevNode = newAnimation(createDiv(this));
     var nextNode = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([].concat(prevNode, nodes, nextNode));
