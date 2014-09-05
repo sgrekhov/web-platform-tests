@@ -119,6 +119,10 @@ function assert_timing_equals(actual, expected){
     assert_equals(actual.easing, expected.easing, 'Value of AnimationNode.timing.easing ' +
         'is unexpected');
 }
+// returns the type name of given object
+function type(object){
+    return Object.prototype.toString.call(object).slice(8, -1);
+}
 
 // FIXME The code below is stubs for Web Animations objects that don't implemented yet
 // Remove all of the code below before merge it with w3c branch

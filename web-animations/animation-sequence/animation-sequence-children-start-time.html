@@ -13,15 +13,14 @@
 <div id="log"></div>
 <script>
 // First part If the child has no previous sibling the start time is zero
-
 test(function() {
     var nodes = [newAnimation(createDiv(this)),
         new AnimationGroup([]),
         new AnimationSequence([])];
-    nodes.forEach(function(node, index) {
+    nodes.forEach(function(node) {
         var animationSequence = new AnimationSequence([node]);
-        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
-            'time of the first child animation node of an animation sequence should be zero');
+        assert_equals(node.computedTiming.startTime, 0, 'Animation sequence first ' +
+            'child of type ' + type(node) + ' should have startTime attribute equal to zero');
     });
 }, 'Test AnimationSequence constructor sets start time to zero for first child');
 
@@ -30,10 +29,10 @@ test(function() {
         new AnimationGroup([]),
         new AnimationSequence([])];
     var animationSequence = new AnimationSequence([]);
-    nodes.forEach(function(node, index) {
+    nodes.forEach(function(node) {
         animationSequence.prepend(node);
-        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
-            'time of the first child animation node of an animation sequence should be zero');
+        assert_equals(node.computedTiming.startTime, 0, 'Animation sequence first ' +
+            'child of type ' + type(node) + ' should have startTime attribute equal to zero');
     });
 }, 'Test AnimationSequence.prepend sets start time to zero for first child');
 
@@ -41,11 +40,11 @@ test(function() {
     var nodes = [newAnimation(createDiv(this)),
          new AnimationGroup([]),
          new AnimationSequence([])];
-    nodes.forEach(function(node, index) {
+    nodes.forEach(function(node) {
         var animationSequence = new AnimationSequence([]);
         animationSequence.append(node);
-        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
-            'time of the first child animation node of an animation sequence should be zero');
+        assert_equals(node.computedTiming.startTime, 0, 'Animation sequence first ' +
+            'child of type ' + type(node) + ' should have startTime attribute equal to zero');
     });
 }, 'Test AnimationSequence.append sets start time to zero for first child');
 
@@ -55,10 +54,10 @@ test(function() {
          new AnimationSequence([])];
     var firstChild = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([firstChild]);
-    nodes.forEach(function(node, index) {
+    nodes.forEach(function(node) {
         firstChild.before(node);
-        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
-            'time of the first child animation node of an animation sequence should be zero');
+        assert_equals(node.computedTiming.startTime, 0, 'Animation sequence first ' +
+            'child of type ' + type(node) + ' should have startTime attribute equal to zero');
         firstChild = node;
     });
 }, 'Test AnimationNode.before sets start time to zero for first child');
@@ -69,10 +68,10 @@ test(function() {
         new AnimationSequence([])];
     var firstChild = newAnimation(createDiv(this));
     var animationSequence = new AnimationSequence([firstChild]);
-    nodes.forEach(function(node, index) {
+    nodes.forEach(function(node) {
         firstChild.replace(node);
-        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
-            'time of the first child animation node of an animation sequence should be zero');
+        assert_equals(node.computedTiming.startTime, 0, 'Animation sequence first ' +
+            'child of type ' + type(node) + ' should have startTime attribute equal to zero');
         firstChild = node;
     });
 }, 'Test AnimationNode.replace sets start time to zero for first child');
@@ -83,9 +82,9 @@ test(function() {
         new AnimationGroup([]),
         new AnimationSequence([])];
     var animationSequence = new AnimationSequence(nodes);
-    nodes.forEach(function(node, index) {
-        assert_equals(node.computedTiming.startTime, 0, 'Node ' + index + ': The start ' +
-            'time of the first child animation node of an animation sequence should be zero');
+    nodes.forEach(function(node) {
+        assert_equals(node.computedTiming.startTime, 0, 'Animation sequence first ' +
+            'child of type ' + type(node) + ' should have startTime attribute equal to zero');
         node.remove();
     });
 }, 'Test AnimationNode.remove sets start time to zero for first child');
@@ -96,9 +95,9 @@ test(function() {
 function checkAnimationSequenceChildrenStartTimes(animationSequence) {
     var startTime = 0;
     animationSequence.children.forEach(function(node, index){
-        assert_equals(node.computedTiming.startTime, startTime, 'Node ' + index +
-            ': The start time of the animation node should be the end time of its ' +
-            'previous sibling or zero if there is no previous sibling');
+        assert_equals(node.computedTiming.startTime, startTime, 'The start time ' +
+            'of the animation node #' + index + ' of type ' + type(node) + ' should be ' +
+            'the end time of its previous sibling or zero if there is no previous sibling');
         startTime = node.computedTiming.endTime;
     });
 }
@@ -127,8 +126,8 @@ test(function() {
         var node2 = newAnimation(createDiv(this));
         animationSequence.prepend(node2);
         assert_equals(node1.computedTiming.startTime, node2.computedTiming.endTime,
-            'Node ' + index + ': The start time of the animation node should be ' +
-            'the end time of its previous sibling');
+            'The start time of the animation node #' + index + ' of type ' + type(node1) +
+            ' should be the end time of its previous sibling');
     });
 }, 'Test AnimationSequence.prepend sets start time to the end time of the child\'s ' +
     'previous sibling for children after first one');
@@ -153,8 +152,8 @@ test(function() {
     nodes.forEach(function(node, index) {
         animationSequence.append(node);
         assert_equals(node.computedTiming.startTime, prevNode.computedTiming.endTime,
-            'Node ' + index + ': The start time of the animation node should be ' +
-            'the end time of its previous sibling');
+            'The start time of the animation node #' + index + ' of type ' + type(node) +
+            ' should be the end time of its previous sibling');
         prevNode = node;
     });
 }, 'Test AnimationSequence.append sets start time to the end time of the child\'s ' +
@@ -266,11 +265,11 @@ test(function() {
     nodes.forEach(function(node, index) {
         middleNode.replace(node);
         assert_equals(node.computedTiming.startTime, prevNode.computedTiming.endTime,
-            'Node ' + index + ': The start time of the animation node should be ' +
-            'the end time of its previous sibling');
+            'The start time of the animation node #' + index + ' of type ' + type(node) +
+            ' should be the end time of its previous sibling');
         assert_equals(nextNode.computedTiming.startTime, node.computedTiming.endTime,
-            'Node ' + index + ': The start time of the animation node should be ' +
-            'the end time of its previous sibling');
+            'The start time of the animation node #' + (index + 1) + ' of type ' +
+            type(nextNode) + ' should be the end time of its previous sibling');
         middleNode = node;
     });
 }, 'Test AnimationNode.replace sets start time to the end time of the child\'s ' +
