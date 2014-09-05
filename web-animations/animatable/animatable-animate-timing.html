@@ -12,10 +12,12 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var animatable = createDiv(this);
-    var player = animatable.animate(null);
-
-    assert_timing_equals(player.source.timing, DEFAULT_TIMING);
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var player = animatable.animate(null);
+        assert_object_equals(player.source.timing, DEFAULT_TIMING, 'Node ' + index +
+            ': Timing properties should be default');
+    });
 }, 'By default Animatable.animate() call produces anumation with default timing properties');
 
 test(function() {
@@ -30,20 +32,24 @@ test(function() {
         playbackDirection: 'reverse',
         direction: 'reverse',
         easing: 'ease'};
-    var animatable = createDiv(this);
-    var player = animatable.animate(null, timing);
-
-    assert_timing_equals(player.source.timing, timing);
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var player = animatable.animate(null, timing);
+        assert_object_equals(player.source.timing, timing, 'Node ' + index +
+            ': Timing properties should be specified by timing argument');
+    });
 }, 'Animatable.animate() call with specified timing argument produces anumation ' +
     'with specified timing properties');
 
 test(function() {
-    var animatable = createDiv(this);
-    var player = animatable.animate(null, 5);
-
-    var timing = Object.create(DEFAULT_TIMING);
-    timing.duration = 5;
-    assert_timing_equals(player.source.timing, timing);
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var player = animatable.animate(null, 5);
+        var timing = Object.create(DEFAULT_TIMING);
+        timing.duration = 5;
+        assert_object_equals(player.source.timing, timing, 'Node ' + index +
+            ': Timing properties should be default except duration');
+    });
 }, 'Animatable.animate() call with double timing argument ' +
     'creates Animation instance with default timing properties and specified duration');
 </script>

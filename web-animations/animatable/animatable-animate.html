@@ -13,33 +13,30 @@
 <script>
 test(function() {
     var animatableElements = [createDiv(this), createPseudoElement(this)];
-    animatableElements.forEach(function(animatable) {
+    animatableElements.forEach(function(animatable, index) {
         var player = animatable.animate(null);
-
-        assert_not_equals(player, null, 'Player created by Animatable.animate() ' +
-            'method should be not null');
+        assert_not_equals(player, null, 'Node ' + index + ': Player created by ' +
+            'Animatable.animate() method should be not null');
     });
 }, 'Player created by Animatable.animate() method is not null');
 
 test(function() {
     var animatableElements = [createDiv(this), createPseudoElement(this)];
-    animatableElements.forEach(function(animatable) {
+    animatableElements.forEach(function(animatable, index) {
         var player = animatable.animate(null);
-
-        assert_class_string(player, 'AnimationPlayer', 'Object returned by ' +
-            'Animatable.animate() should be AnimationPlayer object instance');
+        assert_class_string(player, 'AnimationPlayer', 'Node ' + index + ': Object ' +
+            'returned by Animatable.animate() should be AnimationPlayer object instance');
     });
 }, 'Object returned by Animatable.animate() is AnimationPlayer object instance');
 
 test(function() {
     var animatableElements = [createDiv(this), createPseudoElement(this)];
-    animatableElements.forEach(function(animatable) {
+    animatableElements.forEach(function(animatable, index) {
         var player = animatable.animate(null);
-
-        assert_class_string(player.source, 'Animation', 'Source of newly created ' +
-            'player should be Animation object instance');
-        assert_equals(player.source.target, animatable, 'Animation target of newly ' +
-            'created Animation should be object on which the method is called');
+        assert_class_string(player.source, 'Animation', 'Node ' + index + ': Source of ' +
+            'newly created player should be Animation object instance');
+        assert_equals(player.source.target, animatable, 'Node ' + index + ': Animation ' +
+            'target of newly created Animation should be object on which the method is called');
     });
 }, 'Source of newly created animation player is Animation object instance ' +
     'with its animation target the object on which the method is called');
@@ -47,11 +44,11 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var animatableElements = [createDiv(this, doc), createPseudoElement(this, doc)];
-    animatableElements.forEach(function(animatable) {
+    animatableElements.forEach(function(animatable, index) {
         var player = animatable.animate(null);
-
-        assert_equals(player.timeline, doc.timeline, 'Timeline of newly created animation ' +
-            'player should be object, on which the method is called, owner document timeline');
+        assert_equals(player.timeline, doc.timeline, 'Node ' + index + ': Timeline of ' +
+            'newly created animation player should be object, on which the method ' +
+            'is called, owner document timeline');
     });
 }, 'Timeline of newly created animation player should be object, on which the method ' +
     'is called, owner document timeline');

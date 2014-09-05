@@ -12,110 +12,125 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var animatable = createDiv(this);
-    var player = animatable.animate(null);
-    var animations = animatable.getCurrentAnimations();
-
-    assert_array_equals(animations, [player.source], 'Animatable.getCurrentAnimations() ' +
-        'method should return all animations whose animation target is this object');
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var player = animatable.animate(null);
+        var animations = animatable.getCurrentAnimations();
+        assert_array_equals(animations, [player.source], 'Node ' + index + ': ' +
+            'Animatable.getCurrentAnimations() method should return all animations ' +
+            'whose animation target is this object');
+    });
 }, 'Test that Animatable.getCurrentAnimations() method returns single animation whose ' +
     'animation target is this object. Animation is created by Animatable.animate() call');
 
 test(function() {
-    var animatable = createDiv(this);
-    var animation = newAnimation(animatable);
-    document.timeline.play(animation);
-    var animations = animatable.getCurrentAnimations();
-
-    assert_array_equals(animations, [animation], 'Animatable.getCurrentAnimations() ' +
-        'method should return all animations whose animation target is this object');
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation = newAnimation(animatable);
+        document.timeline.play(animation);
+        var animations = animatable.getCurrentAnimations();
+        assert_array_equals(animations, [animation], 'Node ' + index + ': ' +
+            'Animatable.getCurrentAnimations() method should return all animations ' +
+            'whose animation target is this object');
+    });
 }, 'Test that Animatable.getCurrentAnimations() method returns single animation whose ' +
     'animation target is this object. Animation is created by Animation constructor');
 
 test(function() {
-    var animatable = createDiv(this);
-    var player1 = animatable.animate(null);
-    var player2 = animatable.animate(null);
-    var animations = animatable.getCurrentAnimations();
-
-    assert_array_equals(animations, [player1.source, player2.source],
-        'Animatable.getCurrentAnimations() method should return all animations whose ' +
-        'animation target is this object and sorted by their associated animation effect');
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var player1 = animatable.animate(null);
+        var player2 = animatable.animate(null);
+        var animations = animatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source, player2.source], 'Node ' +
+            index + ': ' + 'Animatable.getCurrentAnimations() method should return ' +
+            'all animations whose animation target is this object and sorted by ' +
+            'their associated animation effect');
+    });
 }, 'Test that Animatable.getCurrentAnimations() method returns all animations whose ' +
     'animation target is this object and sorted by their associated animation effect. ' +
     'Animations are created by Animatable.animate() call');
 
 test(function() {
-    var animatable = createDiv(this);
-    var animation1 = newAnimation(animatable);
-    var animation2 = newAnimation(animatable);
-    document.timeline.play(animation1);
-    document.timeline.play(animation2);
-    var animations = animatable.getCurrentAnimations();
-
-    assert_array_equals(animations, [animation1, animation2],
-        'Animatable.getCurrentAnimations() method should return all animations whose ' +
-        'animation target is this object');
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = newAnimation(animatable);
+        document.timeline.play(animation1);
+        document.timeline.play(animation2);
+        var animations = animatable.getCurrentAnimations();
+        assert_array_equals(animations, [animation1, animation2], 'Node ' + index + ': ' +
+            'Animatable.getCurrentAnimations() method should return all animations whose ' +
+            'animation target is this object');
+    });
 }, 'Test that Animatable.getCurrentAnimations() method returns single animation whose ' +
     'animation target is this object and and sorted by their associated animation effect. ' +
     'Animations are created by Animation constructor');
 
 test(function() {
-    var animatable = createDiv(this);
-    var player1 = animatable.animate(null);
-    var player2 = animatable.animate(null);
-    // this animation is not current, so it won't be returned by getCurrentAnimations()
-    var animation = newAnimation(animatable);
-    var animations = animatable.getCurrentAnimations();
-
-    assert_array_equals(animations, [player1.source, player2.source],
-        'Animatable.getCurrentAnimations() method should return current animations only');
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var player1 = animatable.animate(null);
+        var player2 = animatable.animate(null);
+        // this animation is not current, so it won't be returned by getCurrentAnimations()
+        var animation = newAnimation(animatable);
+        var animations = animatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source, player2.source], 'Node ' + index +
+            ': Animatable.getCurrentAnimations() method should return current animations only');
+    });
 }, 'Test that Animatable.getCurrentAnimations() method returns current animations only. ' +
     'Animations are created by Animatable.animate() call');
 
 test(function() {
-    var animatable = createDiv(this);
-    var animation1 = newAnimation(animatable);
-    var animation2 = newAnimation(animatable);
-    document.timeline.play(animation1);
-    document.timeline.play(animation2);
-    // this animation is not current, so it won't be returned by getCurrentAnimations()
-    var animation3 = newAnimation(animatable);
-    var animations = animatable.getCurrentAnimations();
-
-    assert_array_equals(animations, [animation1, animation2],
-        'Animatable.getCurrentAnimations() method should return current animations only');
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = newAnimation(animatable);
+        document.timeline.play(animation1);
+        document.timeline.play(animation2);
+        // this animation is not current, so it won't be returned by getCurrentAnimations()
+        var animation3 = newAnimation(animatable);
+        var animations = animatable.getCurrentAnimations();
+        assert_array_equals(animations, [animation1, animation2], 'Node ' + index + ': ' +
+            'Animatable.getCurrentAnimations() method should return current animations only');
+    });
 }, 'Test that Animatable.getCurrentAnimations() method returns current animations only. ' +
     'Animations are created by Animation constructor');
 
 test(function() {
-    var animatable = createDiv(this);
-    var animation1 = newAnimation(animatable);
-    var animation2 = newAnimation(animatable);
-	var animationGroup1 = new AnimationGroup([animation1]);
-	var animationGroup2 = new AnimationGroup([animation2, animationGroup1]);
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = newAnimation(animatable);
+        var animationGroup1 = new AnimationGroup([animation1]);
+        var animationGroup2 = new AnimationGroup([animation2, animationGroup1]);
 
-	document.timeline.play(animationGroup2);
-    var animations = animatable.getCurrentAnimations();
+        document.timeline.play(animationGroup2);
+        var animations = animatable.getCurrentAnimations();
 
-    assert_array_equals(animations, [animation1, animation2],
-        'Animatable.getCurrentAnimations() method should return animations sorted in tree order');
+        assert_array_equals(animations, [animation1, animation2], 'Node ' + index + ': ' +
+            'Animatable.getCurrentAnimations() method should return animations sorted ' +
+            'in tree order');
+    });
 }, 'Test that Animatable.getCurrentAnimations() method returns animations sorted in tree order');
 
 test(function() {
-    var animatable = createDiv(this);
-    var animation1 = newAnimation(animatable);
-    var animation2 = newAnimation(animatable);
-	var animationSequence1 = new AnimationSequence([animation1]);
-	var animationSequence2 = new AnimationSequence([animation2, animationSequence1]);
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = newAnimation(animatable);
+        var animationSequence1 = new AnimationSequence([animation1]);
+        var animationSequence2 = new AnimationSequence([animation2, animationSequence1]);
 
-	document.timeline.play(animationSequence2);
-    var animations = animatable.getCurrentAnimations();
+        document.timeline.play(animationSequence2);
+        var animations = animatable.getCurrentAnimations();
 
-    assert_array_equals(animations, [animation1, animation2],
-        'Animatable.getCurrentAnimations() method should return animations sorted in tree order');
-}, 'Test that Animatable.getCurrentAnimations() method returns animations sorted in tree order. ' +
-    'Test AnimationSequence');
+        assert_array_equals(animations, [animation1, animation2], 'Node ' + index + ': ' +
+            'Animatable.getCurrentAnimations() method should return animations sorted ' +
+            'in tree order');
+    });
+}, 'Test that Animatable.getCurrentAnimations() method returns animations sorted in tree ' +
+    'order. Test AnimationSequence');
 
 test(function() {
     var animatable1 = createDiv(this);
@@ -142,59 +157,64 @@ test(function() {
 }, 'Test that Animatable.getCurrentAnimations() method does include those animations whose ' +
     'target is a PseudoElement associated with the Element');
 
-test(function(t) {
-    var animatable = createDiv(this);
-    var animation1 = newAnimation(animatable);
-    var animation2 = new Animation(animatable, [], {
-        duration: ANIMATION_END_TIME,
-        fill: 'forwards'});
-    var player1 = document.timeline.play(animation1);
-    var player2 = document.timeline.play(animation2);
+test(function() {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = new Animation(animatable, [], {
+            duration: ANIMATION_END_TIME,
+            fill: 'forwards'});
+        var player1 = document.timeline.play(animation1);
+        var player2 = document.timeline.play(animation2);
 
-    player2.currentTime = ANIMATION_END_TIME / 2;
-    var animations = aniatable.getCurrentAnimations();
-    assert_array_equals(animations, [player1.source, player2.source],
-        'Animatable.getCurrentAnimations() method should include those animations ' +
-        'whose target is an Element and which are current');
+        player2.currentTime = ANIMATION_END_TIME / 2;
+        var animations = aniatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source, player2.source], 'Node ' + index +
+            ': Animatable.getCurrentAnimations() method should include those animations ' +
+            'whose target is an Element and which are current');
 
-    player2.currentTime = ANIMATION_END_TIME;
-    var animations = aniatable.getCurrentAnimations();
-    assert_array_equals(animations, [player1.source],
-        'Animatable.getCurrentAnimations() method should not include those animations ' +
-        'whose target is an Element but which are not current');
+        player2.currentTime = ANIMATION_END_TIME;
+        var animations = aniatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source], 'Node ' + index + ': ' +
+            'Animatable.getCurrentAnimations() method should not include those animations ' +
+            'whose target is an Element but which are not current');
 
-    player2.currentTime = ANIMATION_END_TIME + 100;
-    var animations = aniatable.getCurrentAnimations();
-    assert_array_equals(animations, [player1.source],
-        'Animatable.getCurrentAnimations() method should not include those animations ' +
-        'whose target is an Element but which are not current');
+        player2.currentTime = ANIMATION_END_TIME + 100;
+        var animations = aniatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source], 'Node ' + index + ': ' +
+            'Animatable.getCurrentAnimations() method should not include those animations ' +
+            'whose target is an Element but which are not current');
+    });
 }, 'Animatable.getCurrentAnimations() method does not include those animations whose ' +
-    'local time falls after the active interval but which are still in effect due to a fill mode');
+    'local time falls after the active interval but which are still in effect due to ' +
+    'a fill mode');
 
-test(function(t) {
-    var animatable = createDiv(this);
-    var animation1 = newAnimation(animatable);
-    var animation2 = newAnimation(animatable);
-    var player1 = document.timeline.play(animation1);
-    var player2 = document.timeline.play(animation2);
+test(function() {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = newAnimation(animatable);
+        var player1 = document.timeline.play(animation1);
+        var player2 = document.timeline.play(animation2);
 
-    player2.currentTime = -100;
-    var animations = aniatable.getCurrentAnimations();
-    assert_array_equals(animations, [player1.source, player2.source],
-        'Animatable.getCurrentAnimations() method should include those animations ' +
-        'whose target is an Element and which are current');
+        player2.currentTime = -100;
+        var animations = aniatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source, player2.source], 'Node ' + index +
+            ': Animatable.getCurrentAnimations() method should include those animations ' +
+            'whose target is an Element and which are current');
 
-    player2.currentTime = ANIMATION_END_TIME;
-    var animations = aniatable.getCurrentAnimations();
-    assert_array_equals(animations, [player1.source],
-        'Animatable.getCurrentAnimations() method should not include those animations ' +
-        'whose target is an Element but which are not current');
+        player2.currentTime = ANIMATION_END_TIME;
+        var animations = aniatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source], 'Node ' + index + ': ' +
+            'Animatable.getCurrentAnimations() method should not include those animations ' +
+            'whose target is an Element but which are not current');
 
-    player2.currentTime = ANIMATION_END_TIME + 100;
-    var animations = aniatable.getCurrentAnimations();
-    assert_array_equals(animations, [player1.source],
-        'Animatable.getCurrentAnimations() method should not include those animations ' +
-        'whose target is an Element but which are not current');
+        player2.currentTime = ANIMATION_END_TIME + 100;
+        var animations = aniatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source], 'Node ' + index + ': ' +
+            'Animatable.getCurrentAnimations() method should not include those animations ' +
+            'whose target is an Element but which are not current');
+    });
 }, 'Animatable.getCurrentAnimations() method includes current animations only');
 </script>
 </body>
