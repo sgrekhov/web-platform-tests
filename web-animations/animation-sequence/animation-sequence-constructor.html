@@ -15,7 +15,8 @@ test(function() {
     var sequence = new AnimationSequence(null);
 
     assert_array_equals(sequence.children, [], 'AnimationSequence should have no children');
-    assert_timing_equals(sequence.timing, DEFAULT_TIMING);
+    assert_object_equals(sequence.timing, DEFAULT_TIMING, 'AnimationSequence timing members ' +
+        'should be set to default values');
 }, 'Test AnimationSequence(null) constructor creates AnimationSequence instance ' +
     'without children and with default timing');
 
@@ -23,7 +24,8 @@ test(function() {
     var sequence = new AnimationSequence([]);
 
     assert_array_equals(sequence.children, [], 'AnimationSequence should have no children');
-    assert_timing_equals(sequence.timing, DEFAULT_TIMING);
+    assert_object_equals(sequence.timing, DEFAULT_TIMING, 'AnimationSequence timing members ' +
+        'should be set to default values');
 }, 'Test AnimationSequence constructor with emplty child list and with no second argument ' +
     'creates AnimationSequence instance without children and with default timing');
 
@@ -33,7 +35,8 @@ test(function() {
     assert_array_equals(sequence.children, [], 'AnimationSequence should have no children');
     var timing = Object.create(DEFAULT_TIMING);
     timing.duration = 5;
-    assert_timing_equals(sequence.timing, timing);
+    assert_object_equals(sequence.timing, timing, 'AnimationSequence timing members ' +
+        'should be set to default values, except duration');
 }, 'Test AnimationSequence constructor with emplty child list and with double second ' +
     'argument creates AnimationSequence instance without children and with default timing, ' +
     'except duration');
@@ -53,7 +56,8 @@ test(function() {
     var node = new AnimationSequence([], timing);
 
     assert_array_equals(node.children, [], 'AnimationSequence should have no children');
-    assert_timing_equals(node.timing, timing);
+    assert_object_equals(node.timing, timing, 'AnimationSequence timing should be equal ' +
+        'to the value passed to the constructor');
 }, 'Test AnimationSequence constructor with emplty child list and with AnimationTimingInput ' +
     'second argument creates AnimationSequence instance without children and with given timing');
 

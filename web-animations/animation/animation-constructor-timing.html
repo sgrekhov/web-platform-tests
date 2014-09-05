@@ -14,7 +14,8 @@
 test(function() {
     var animation = new Animation(null, null);
 
-    assert_timing_equals(animation.timing, DEFAULT_TIMING);
+    assert_object_equals(animation.timing, DEFAULT_TIMING, 'Animation timing members ' +
+        'should be set to default values');
 }, 'Test default value of timing argument of Animation constructor');
 
 test(function() {
@@ -31,7 +32,8 @@ test(function() {
         easing: 'ease'};
     var animation = new Animation(null, null, timing);
 
-    assert_timing_equals(animation.timing, timing);
+    assert_object_equals(animation.timing, timing, 'Animation timing should be equal ' +
+        'to the value passed to the constructor');
 }, 'Test not default value of timing argument of Animation constructor');
 
 test(function() {
@@ -39,7 +41,8 @@ test(function() {
 
     var timing = Object.create(DEFAULT_TIMING);
     timing.duration = 5;
-    assert_timing_equals(animation.timing, timing);
+    assert_object_equals(animation.timing, timing, 'AnimationGroup timing members ' +
+        'should be set to default values, except duration');
 }, 'Test that Animation constructor with double timing argument ' +
     'creates Animation instance with default timing, except duration');
 </script>

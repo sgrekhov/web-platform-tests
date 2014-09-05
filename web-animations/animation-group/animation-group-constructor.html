@@ -15,7 +15,8 @@ test(function() {
     var group = new AnimationGroup(null);
 
     assert_array_equals(group.children, [], 'AnimationGroup should have no children');
-    assert_timing_equals(group.timing, DEFAULT_TIMING);
+    assert_object_equals(group.timing, DEFAULT_TIMING, 'AnimationGroup timing members ' +
+        'should be set to default values');
 }, 'Test AnimationGroup(null) constructor creates AnimationGroup instance ' +
     'without children and with default timing');
 
@@ -23,7 +24,8 @@ test(function() {
     var group = new AnimationGroup([]);
 
     assert_array_equals(group.children, [], 'AnimationGroup should have no children');
-    assert_timing_equals(group.timing, DEFAULT_TIMING);
+    assert_object_equals(group.timing, DEFAULT_TIMING, 'AnimationGroup timing members ' +
+        'should be set to default values');
 }, 'Test AnimationGroup constructor with emplty child list and with no second argument ' +
     'creates AnimationGroup instance without children and with default timing');
 
@@ -33,7 +35,8 @@ test(function() {
     assert_array_equals(group.children, [], 'AnimationGroup should have no children');
     var timing = Object.create(DEFAULT_TIMING);
     timing.duration = 5;
-    assert_timing_equals(group.timing, timing);
+    assert_object_equals(group.timing, timing, 'AnimationGroup timing members ' +
+        'should be set to default values, except duration');
 }, 'Test AnimationGroup constructor with emplty child list and with double second argument ' +
     'creates AnimationGroup instance without children and with default timing, except duration');
 
@@ -52,7 +55,8 @@ test(function() {
     var node = new AnimationGroup([], timing);
 
     assert_array_equals(node.children, [], 'AnimationGroup should have no children');
-    assert_timing_equals(node.timing, timing);
+    assert_object_equals(node.timing, timing, 'AnimationGroup timing should be equal ' +
+        'to the value passed to the constructor');
 }, 'Test AnimationGroup constructor with emplty child list and with AnimationTimingInput ' +
     'second argument creates AnimationGroup instance without children and with given timing');
 
