@@ -16,7 +16,7 @@ test(function() {
     animatableElements.forEach(function(animatable, index) {
         var player = animatable.animate(null);
         var animations = animatable.getCurrentAnimations();
-        assert_array_equals(animations, [player.source], 'Node ' + index + ': ' +
+        assert_array_equals(animations, [player.source], 'Element ' + index + ': ' +
             'Animatable.getCurrentAnimations() method should return all animations ' +
             'whose animation target is this object');
     });
@@ -29,7 +29,7 @@ test(function() {
         var animation = newAnimation(animatable);
         document.timeline.play(animation);
         var animations = animatable.getCurrentAnimations();
-        assert_array_equals(animations, [animation], 'Node ' + index + ': ' +
+        assert_array_equals(animations, [animation], 'Element ' + index + ': ' +
             'Animatable.getCurrentAnimations() method should return all animations ' +
             'whose animation target is this object');
     });
@@ -42,7 +42,7 @@ test(function() {
         var player1 = animatable.animate(null);
         var player2 = animatable.animate(null);
         var animations = animatable.getCurrentAnimations();
-        assert_array_equals(animations, [player1.source, player2.source], 'Node ' +
+        assert_array_equals(animations, [player1.source, player2.source], 'Element ' +
             index + ': ' + 'Animatable.getCurrentAnimations() method should return ' +
             'all animations whose animation target is this object and sorted by ' +
             'their associated animation effect');
@@ -59,7 +59,7 @@ test(function() {
         document.timeline.play(animation1);
         document.timeline.play(animation2);
         var animations = animatable.getCurrentAnimations();
-        assert_array_equals(animations, [animation1, animation2], 'Node ' + index + ': ' +
+        assert_array_equals(animations, [animation1, animation2], 'Element ' + index + ': ' +
             'Animatable.getCurrentAnimations() method should return all animations whose ' +
             'animation target is this object');
     });
@@ -75,7 +75,7 @@ test(function() {
         // this animation is not current, so it won't be returned by getCurrentAnimations()
         var animation = newAnimation(animatable);
         var animations = animatable.getCurrentAnimations();
-        assert_array_equals(animations, [player1.source, player2.source], 'Node ' + index +
+        assert_array_equals(animations, [player1.source, player2.source], 'Element ' + index +
             ': Animatable.getCurrentAnimations() method should return current animations only');
     });
 }, 'Test that Animatable.getCurrentAnimations() method returns current animations only. ' +
@@ -108,7 +108,7 @@ test(function() {
         document.timeline.play(animationGroup2);
         var animations = animatable.getCurrentAnimations();
 
-        assert_array_equals(animations, [animation1, animation2], 'Node ' + index + ': ' +
+        assert_array_equals(animations, [animation1, animation2], 'Element ' + index + ': ' +
             'Animatable.getCurrentAnimations() method should return animations sorted ' +
             'in tree order');
     });
@@ -125,7 +125,7 @@ test(function() {
         document.timeline.play(animationSequence2);
         var animations = animatable.getCurrentAnimations();
 
-        assert_array_equals(animations, [animation1, animation2], 'Node ' + index + ': ' +
+        assert_array_equals(animations, [animation1, animation2], 'Element ' + index + ': ' +
             'Animatable.getCurrentAnimations() method should return animations sorted ' +
             'in tree order');
     });
@@ -169,21 +169,21 @@ test(function() {
 
         player2.currentTime = ANIMATION_END_TIME / 2;
         var animations = aniatable.getCurrentAnimations();
-        assert_array_equals(animations, [player1.source, player2.source], 'Node ' + index +
+        assert_array_equals(animations, [player1.source, player2.source], 'Element ' + index +
             ': Animatable.getCurrentAnimations() method should include those animations ' +
-            'whose target is an Element and which are current');
+            'which are current');
 
         player2.currentTime = ANIMATION_END_TIME;
-        var animations = aniatable.getCurrentAnimations();
-        assert_array_equals(animations, [player1.source], 'Node ' + index + ': ' +
+        animations = aniatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source], 'Element ' + index + ': ' +
             'Animatable.getCurrentAnimations() method should not include those animations ' +
-            'whose target is an Element but which are not current');
+            'which are not current');
 
         player2.currentTime = ANIMATION_END_TIME + 100;
-        var animations = aniatable.getCurrentAnimations();
-        assert_array_equals(animations, [player1.source], 'Node ' + index + ': ' +
+        animations = aniatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source], 'Element ' + index + ': ' +
             'Animatable.getCurrentAnimations() method should not include those animations ' +
-            'whose target is an Element but which are not current');
+            'which are not current');
     });
 }, 'Animatable.getCurrentAnimations() method does not include those animations whose ' +
     'local time falls after the active interval but which are still in effect due to ' +
@@ -199,21 +199,21 @@ test(function() {
 
         player2.currentTime = -100;
         var animations = aniatable.getCurrentAnimations();
-        assert_array_equals(animations, [player1.source, player2.source], 'Node ' + index +
+        assert_array_equals(animations, [player1.source, player2.source], 'Element ' + index +
             ': Animatable.getCurrentAnimations() method should include those animations ' +
-            'whose target is an Element and which are current');
+            'which are current');
 
         player2.currentTime = ANIMATION_END_TIME;
-        var animations = aniatable.getCurrentAnimations();
-        assert_array_equals(animations, [player1.source], 'Node ' + index + ': ' +
+        animations = aniatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source], 'Element ' + index + ': ' +
             'Animatable.getCurrentAnimations() method should not include those animations ' +
-            'whose target is an Element but which are not current');
+            'which are not current');
 
         player2.currentTime = ANIMATION_END_TIME + 100;
-        var animations = aniatable.getCurrentAnimations();
-        assert_array_equals(animations, [player1.source], 'Node ' + index + ': ' +
+        animations = aniatable.getCurrentAnimations();
+        assert_array_equals(animations, [player1.source], 'Element ' + index + ': ' +
             'Animatable.getCurrentAnimations() method should not include those animations ' +
-            'whose target is an Element but which are not current');
+            'which are not current');
     });
 }, 'Animatable.getCurrentAnimations() method includes current animations only');
 </script>

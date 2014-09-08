@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animatable.getAnimationPlayers() method tests</title>
+<meta name="assert" content="Returns the set of AnimationPlayer objects whose source content is current and contains at least one animation whose animation target is this object">
+<link rel="help" href="https://web-animations.github.io/web-animations-spec/bikeshed/Overview.html#dom-animatable-getcurrentanimations">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var player = animatable.animate(null);
+        var players = animatable.getAnimationPlayers();
+        assert_array_equals(players, [player], 'Element ' + index + ': ' +
+            'Animatable.getAnimationPlayers() method should return all players whose ' +
+            'source content contains animation whose animation target is this object');
+    });
+}, 'Animatable.getAnimationPlayers() method returns single player whose source content ' +
+    'contains animation whose animation target is this object. Animation is created ' +
+    'by Animatable.animate() call');
+
+test(function() {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation = newAnimation(animatable);
+        var player = document.timeline.play(animation);
+        var players = animatable.getAnimationPlayers();
+        assert_array_equals(players, [player], 'Element ' + index + ': ' +
+            'Animatable.getAnimationPlayers() method should return all players whose ' +
+            'source content contains animation whose animation target is this object');
+    });
+}, 'Animatable.getAnimationPlayers() method returns single player whose source content ' +
+    'contains animation whose animation target is this object. Animation is created ' +
+    'by Animation constructor');
+
+test(function() {
+    var animatableElements = [[createDiv(this), createDiv(this)],
+        [createPseudoElement(this), createPseudoElement(this)]];
+    animatableElements.forEach(function(animatables, index) {
+        var player1 = animatables[0].animate(null);
+        var player2 = animatables[0].animate(null);
+        var player3 = animatables[1].animate(null);
+        var players = animatables[0].getAnimationPlayers();
+
+        assert_array_equals(players, [player1, player2], 'Element ' + index + ': ' +
+            'Animatable.getAnimationPlayers() method should return all players whose ' +
+            'source content contains animation whose animation target is this object ' +
+            'and sorted in increasing order by player sequence number');
+    });
+}, 'Animatable.getAnimationPlayers() method should return all players whose source ' +
+    'content contains animation whose animation target is this object and sorted in ' +
+    'increasing order by player sequence number. Players are created by Animatable.animate()');
+
+test(function() {
+    var animatableElements = [[createDiv(this), createDiv(this)],
+        [createPseudoElement(this), createPseudoElement(this)]];
+    animatableElements.forEach(function(animatables, index) {
+        var player1 = document.timeline.play(newAnimation(animatables[0]));
+        var player2 = document.timeline.play(newAnimation(animatables[0]));
+        var player3 = document.timeline.play(newAnimation(animatables[1]));
+        var players = animatables[0].getAnimationPlayers();
+
+        assert_array_equals(players, [player1, player2], 'Element ' + index + ': ' +
+            'Animatable.getAnimationPlayers() method should return all players whose ' +
+            'source content contains animation whose animation target is this object ' +
+            'and sorted in increasing order by player sequence number');
+    });
+}, 'Animatable.getAnimationPlayers() method should return all players whose source ' +
+    'content contains animation whose animation target is this object and sorted in ' +
+    'increasing order by player sequence number. Animations are created by ' +
+    'Animation constructor');
+
+test(function() {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var player1 = animatable.animate(null);
+        var player2 = animatable.animate(null);
+        // this animation is not current, so it won't be returned by getAnimationPlayers()
+        var animation = newAnimation(animatable);
+        var players = animatable.getAnimationPlayers();
+
+        assert_array_equals(players, [player1, player2], 'Element ' + index +
+            ': Animatable.getAnimationPlayers() method should return only those players ' +
+            'whose source content is current');
+    });
+}, 'Test that Animatable.getAnimationPlayers() method returns only those players ' +
+    'whose source content is current. Animations are created by Animatable.animate() call');
+
+test(function() {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var player1 = document.timeline.play(newAnimation(animatable));
+        var player2 = document.timeline.play(newAnimation(animatable));
+        // this animation is not current, so it won't be returned by getCurrentAnimations()
+        var animation3 = newAnimation(animatable);
+        var players = animatable.getAnimationPlayers();
+
+        assert_array_equals(players, [player1, player2], 'Element ' + index +
+            ': Animatable.getAnimationPlayers() method should return only those players ' +
+            'whose source content is current');
+    });
+}, 'Test that Animatable.getAnimationPlayers() method returns only those players ' +
+    'whose source content is current. Animations are created by Animation constructor');
+
+test(function() {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = newAnimation(animatable);
+        var animationGroup = new AnimationGroup([animation1, animation2]);
+        var player = document.timeline.play(animationGroup);
+        var players = animatable.getAnimationPlayers();
+
+        assert_array_equals(players, [player], 'Element ' + index + ': ' +
+            'Player returned by Animatable.getAnimationPlayers() method should ' +
+            'appear in the returned list once');
+    });
+}, 'Test that If this object is the animation target of two or more animations ' +
+    'which are associated with the same player, the corresponding AnimationPlayer ' +
+    'object will still only appear in the returned list once. Test AnimationGroup');
+
+test(function() {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = newAnimation(animatable);
+        var animationSequence = new AnimationSequence([animation1, animation2]);
+        var player = document.timeline.play(animationSequence);
+        var players = animatable.getAnimationPlayers();
+
+        assert_array_equals(players, [player], 'Element ' + index + ': ' +
+            'Player returned by Animatable.getAnimationPlayers() method should ' +
+            'appear in the returned list once');
+    });
+}, 'Test that If this object is the animation target of two or more animations ' +
+    'which are associated with the same player, the corresponding AnimationPlayer ' +
+    'object will still only appear in the returned list once. Test AnimationSequence');
+
+test(function(t) {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = new Animation(animatable, [], {
+            duration: ANIMATION_END_TIME,
+            fill: 'forwards'});
+        var player1 = document.timeline.play(animation1);
+        var player2 = document.timeline.play(animation2);
+
+        player2.currentTime = ANIMATION_END_TIME / 2;
+        var players = aniatable.getAnimationPlayers();
+        assert_array_equals(players, [player1, player2], 'Element ' + index + ': ' +
+            'Animatable.getAnimationPlayers() method should include those players ' +
+            'whose source content is current');
+
+        player2.currentTime = ANIMATION_END_TIME;
+        players = aniatable.getAnimationPlayers();
+        assert_array_equals(players, [player1], 'Element ' + index + ': ' +
+            'Animatable.getAnimationPlayers() method should not include those players ' +
+            'whose source content is not current');
+
+        player2.currentTime = ANIMATION_END_TIME + 100;
+        players = aniatable.getAnimationPlayers();
+        assert_array_equals(players, [player1], 'Element ' + index + ': ' +
+            'Animatable.getAnimationPlayers() method should not include those players ' +
+            'whose source content is not current');
+    });
+}, 'Animatable.getAnimationPlayers() method does not include those players whose ' +
+    'source content is not current');
+
+test(function() {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = newAnimation(animatable);
+        var player1 = document.timeline.play(animation1);
+        var player2 = document.timeline.play(animation2);
+
+        player2.currentTime = -100;
+        var players = aniatable.getAnimationPlayers();
+        assert_array_equals(players, [player1, player2],  'Element ' + index + ': ' +
+            'Animatable.getAnimationPlayers() method should include those players ' +
+            'whose source content is current');
+
+        player2.currentTime = ANIMATION_END_TIME;
+        players = aniatable.getAnimationPlayers();
+        assert_array_equals(players, [player1],  'Element ' + index + ': ' +
+            'Animatable.getAnimationPlayers() method should not include those players ' +
+            'whose source content is not current');
+
+        player2.currentTime = ANIMATION_END_TIME + 100;
+        players = aniatable.getAnimationPlayers();
+        assert_array_equals(players, [player1],  'Element ' + index + ': ' +
+            'Animatable.getAnimationPlayers() method should not include those players ' +
+            'whose source content is not current');
+    });
+}, 'Animatable.getAnimationPlayers() method includes only those players whose source ' +
+    'content is current');
+</script>
+</body>
