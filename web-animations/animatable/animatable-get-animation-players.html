@@ -141,7 +141,49 @@ test(function() {
     'which are associated with the same player, the corresponding AnimationPlayer ' +
     'object will still only appear in the returned list once. Test AnimationSequence');
 
-test(function(t) {
+test(function() {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = newAnimation(animatable);
+        var animation3 = newAnimation(animatable);
+        var animation4 = newAnimation(animatable);
+        var childGroup = new AnimationGroup([animation3, animation4]);
+        var animationGroup = new AnimationGroup([animation1, animation2, childGroup]);
+        var player = document.timeline.play(animationGroup);
+        var players = animatable.getAnimationPlayers();
+
+        assert_array_equals(players, [player], 'Element ' + index + ': ' +
+            'Player returned by Animatable.getAnimationPlayers() method should ' +
+            'appear in the returned list once');
+    });
+}, 'Test that If this object is the animation target of two or more animations ' +
+    'which are associated with the same player, the corresponding AnimationPlayer ' +
+    'object will still only appear in the returned list once. Test AnimationGroup ' +
+    'with child group');
+
+test(function() {
+    var animatableElements = [createDiv(this), createPseudoElement(this)];
+    animatableElements.forEach(function(animatable, index) {
+        var animation1 = newAnimation(animatable);
+        var animation2 = newAnimation(animatable);
+        var animation3 = newAnimation(animatable);
+        var animation4 = newAnimation(animatable);
+        var childSequence = new AnimationSequence([animation3, animation4]);
+        var animationSequence = new AnimationSequence([animation1, animation2, childSequence]);
+        var player = document.timeline.play(animationSequence);
+        var players = animatable.getAnimationPlayers();
+
+        assert_array_equals(players, [player], 'Element ' + index + ': ' +
+            'Player returned by Animatable.getAnimationPlayers() method should ' +
+            'appear in the returned list once');
+    });
+}, 'Test that If this object is the animation target of two or more animations ' +
+    'which are associated with the same player, the corresponding AnimationPlayer ' +
+    'object will still only appear in the returned list once. Test AnimationSequence ' +
+    'with child sequence');
+
+test(function() {
     var animatableElements = [createDiv(this), createPseudoElement(this)];
     animatableElements.forEach(function(animatable, index) {
         var animation1 = newAnimation(animatable);
