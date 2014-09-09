@@ -18,6 +18,11 @@ var ANIMATION_WIDTH_0 = 10;
 var ANIMATION_WIDTH_0_5 = 100;
 var ANIMATION_WIDTH_1 = 200;
 
+var KEYFRAMES = [
+    {width: ANIMATION_WIDTH_0 + 'px', offset: 0},
+    {width: ANIMATION_WIDTH_0_5 + 'px', offset: 1/2},
+    {width: ANIMATION_WIDTH_1 + 'px', offset: 1}];
+
 // Default timing values as specified at
 // http://dev.w3.org/fxtf/web-animations/#the-animationtiminginput-dictionary
 var DEFAULT_TIMING = {
@@ -39,15 +44,20 @@ function newHTMLDocument() {
 
 function newAnimation(animationTarget) {
     animationTarget.style.width = ANIMATION_WIDTH_DEFAULT + 'px';
-    return new Animation(animationTarget, [
-        {width: ANIMATION_WIDTH_0 + 'px', offset: 0},
-        {width: ANIMATION_WIDTH_0_5 + 'px', offset: 1/2},
-        {width: ANIMATION_WIDTH_1 + 'px', offset: 1}], ANIMATION_END_TIME);
+    return new Animation(animationTarget, KEYFRAMES, ANIMATION_END_TIME);
 }
 
 function newAnimationPlayer(animationTarget) {
     var animation = newAnimation(animationTarget);
     return document.timeline.play(animation);
+}
+
+function newKeyframeEffect() {
+    return new KeyframeEffect(KEYFRAMES);
+}
+
+function newMotionPathEffect() {
+    return new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
 }
 
 // creates div element, appends it to the document body and
