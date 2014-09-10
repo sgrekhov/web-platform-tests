@@ -52,11 +52,17 @@ function newAnimationPlayer(animationTarget) {
     return document.timeline.play(animation);
 }
 
-function newKeyframeEffect() {
+function newKeyframeEffect(options) {
+    if (options) {
+        return new KeyframeEffect(KEYFRAMES, options);
+    }
     return new KeyframeEffect(KEYFRAMES);
 }
 
-function newMotionPathEffect() {
+function newMotionPathEffect(options) {
+    if (options) {
+        return new MotionPathEffect('M 100 100 L 300 100 L 200 300 z', options);
+    }
     return new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
 }
 

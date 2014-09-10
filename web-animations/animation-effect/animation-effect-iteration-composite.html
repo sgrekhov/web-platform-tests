@@ -15,8 +15,18 @@ test(function() {
     var effectsToTest = [newKeyframeEffect(), newMotionPathEffect()];
     effectsToTest.forEach(function(effect) {
         assert_equals(effect.iterationComposite, 'replace', 'Wrong default value of ' +
-        'iterationComposite attribute of effect ' + type(effect));
+            'iterationComposite attribute of effect ' + type(effect));
     });
-}, 'Test default value of iterationComposite attribute');
+}, 'Test that iterationComposite attribute returns default value of iteration composite ' +
+    'if it was not set by the constructor');
+
+test(function() {
+    var effectsToTest = [newKeyframeEffect({iterationComposite: 'accumulate'}),
+        newMotionPathEffect({iterationComposite: 'accumulate'})];
+    effectsToTest.forEach(function(effect) {
+        assert_equals(effect.iterationComposite, 'accumulate', 'Wrong value of ' +
+            'iterationComposite attribute of effect ' + type(effect));
+    });
+}, 'Test iterationComposite attribute returns value set by the constructor');
 </script>
 </body>
