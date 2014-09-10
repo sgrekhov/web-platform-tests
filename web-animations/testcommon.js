@@ -185,7 +185,7 @@ function AnimationSequence(children, timing) {
     this.timing = timing;
 }
 
-AnimationSequence.prototype = AnimationGroup.prototype;
+AnimationSequence.prototype = new AnimationGroup([]);
 
 //AnimationEffect stub
 function AnimationEffect() {
