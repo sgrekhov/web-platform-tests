@@ -13,108 +13,126 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var group = new AnimationGroup([]);
-    try {
-        group.append();
-    } catch (e) {
-        assert_unreached('Unexpected error ' + e);
-    }
+    var groups = [ new AnimationGroup([]), new AnimationSequence([]) ];
+    groups.forEach(function(group){
+        try {
+            group.append();
+        } catch (e) {
+            assert_unreached('Unexpected error ' + e + ' for node of type ' + type(group));
+        }
+    });
 }, 'AnimationGroup.append() with empty arguments does nothing');
 
 test(function() {
-    var group = new AnimationGroup([]);
-
-    assert_throws('HierarchyRequestError', function() {
-        group.append(group);
-    }, 'HierarchyRequestError should be thrown if appending itself');
+    var groups = [ new AnimationGroup([]), new AnimationSequence([]) ];
+    groups.forEach(function(group){
+        assert_throws('HierarchyRequestError', function() {
+            group.append(group);
+        }, 'HierarchyRequestError should be thrown if appending itself');
+    });
 }, 'AnimationGroup.append() throws HierarchyRequestError if appending itself');
 
 test(function() {
-    var group1 = new AnimationGroup([]);
-    var group2 = new AnimationGroup([group1]);
-
-    assert_throws('HierarchyRequestError', function() {
-        group1.append(group2);
-    }, 'HierarchyRequestError should be thrown if appending ' +
-        'direct parent');
+    var groups = [ new AnimationGroup([]), new AnimationSequence([]) ];
+    groups.forEach(function(group){
+        assert_throws('HierarchyRequestError', function() {
+            var parent = new AnimationGroup([group]);
+            group.append(parent);
+        }, 'HierarchyRequestError should be thrown if appending ' +
+            'direct parent');
+    });
 }, 'AnimationGroup.append() throws HierarchyRequestError if ' +
     'direct parent is appended');
 
 test(function() {
-    var group1 = new AnimationGroup([]);
-    var group2 = new AnimationGroup([group1]);
-    var group3 = new AnimationGroup([group2]);
-    var group4 = new AnimationGroup([group3]);
-    var group5 = new AnimationGroup([group4]);
+    var groups = [ new AnimationGroup([]), new AnimationSequence([]) ];
+    groups.forEach(function(group1){
+        var group2 = new AnimationGroup([group1]);
+        var group3 = new AnimationGroup([group2]);
+        var group4 = new AnimationGroup([group3]);
+        var group5 = new AnimationGroup([group4]);
 
-    assert_throws('HierarchyRequestError', function() {
-        group1.append(group5);
-    }, 'HierarchyRequestError should be thrown if appending ' +
-        'an inclusive ancestor');
+        assert_throws('HierarchyRequestError', function() {
+            group1.append(group5);
+        }, 'HierarchyRequestError should be thrown if appending ' +
+            'an inclusive ancestor');
+    });
 }, 'AnimationGroup.append() throws HierarchyRequestError if an ' +
     'inclusive ancestor is appended');
 
 test(function() {
-    var node = newAnimation(createDiv(this));
-    var group = new AnimationGroup([]);
+    var groups = [ new AnimationGroup([]), new AnimationSequence([]) ];
+    var test = this;
+    groups.forEach(function(group) {
+        var node = newAnimation(createDiv(test));
+        group.append(node);
 
-    group.append(node);
-
-    assert_array_equals(group.children, [node], 'AnimationGroup.append() should insert ' +
-        'the node before null');
-    assert_equals(node.parent, group, 'Parent of the newly appended node should point ' +
-        'to the group');
+        assert_array_equals(group.children, [node], 'AnimationGroup.append() should insert ' +
+            'the node before null');
+        assert_equals(node.parent, group, 'Parent of the newly appended node should point ' +
+            'to the group');
+    });
 }, 'Test AnimationGroup.append() on empty animation group inserts the node');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var group = new AnimationGroup([node1]);
+    var ctors = [ AnimationGroup, AnimationSequence ];
+    var test = this;
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var group = new ctor([node1]);
 
-    group.append(node2);
+        group.append(node2);
 
-    assert_array_equals(group.children, [node1, node2], 'AnimationGroup.append() should ' +
-        'insert the node before null');
-    assert_equals(node2.parent, group, 'Parent of the newly appended node should point ' +
-        'to the group');
-    assert_equals(node2.previousSibling, node1, 'previousSibling of the newly appended node ' +
-        'should be set');
-    assert_equals(node1.nextSibling, node2, 'nextSibling of the old last child ' +
-        'should point to newly appended node');
+        assert_array_equals(group.children, [node1, node2], 'AnimationGroup.append() should ' +
+            'insert the node before null');
+        assert_equals(node2.parent, group, 'Parent of the newly appended node should point ' +
+            'to the group');
+        assert_equals(node2.previousSibling, node1, 'previousSibling of the newly appended node ' +
+            'should be set');
+        assert_equals(node1.nextSibling, node2, 'nextSibling of the old last child ' +
+            'should point to newly appended node');
+    });
 }, 'Test AnimationGroup.append() inserts the Animation node after last child');
 
 test(function() {
-    var node1 = new AnimationGroup([]);
-    var node2 = new AnimationGroup([]);
-    var group = new AnimationGroup([node1]);
+    var ctors = [ AnimationGroup, AnimationSequence ];
+    ctors.forEach(function(ctor) {
+        var node1 = new AnimationGroup([]);
+        var node2 = new AnimationGroup([]);
+        var group = new ctor([node1]);
 
-    group.append(node2);
+        group.append(node2);
 
-    assert_array_equals(group.children, [node1, node2], 'AnimationGroup.append() should ' +
-        'insert the node before null');
-    assert_equals(node2.parent, group, 'Parent of the newly appended node should point ' +
-        'to the group');
-    assert_equals(node2.previousSibling, node1, 'previousSibling of the newly appended node ' +
-        'should be set');
-    assert_equals(node1.nextSibling, node2, 'nextSibling of the old last child ' +
-        'should point to newly appended node');
+        assert_array_equals(group.children, [node1, node2], 'AnimationGroup.append() should ' +
+            'insert the node before null');
+        assert_equals(node2.parent, group, 'Parent of the newly appended node should point ' +
+            'to the group');
+        assert_equals(node2.previousSibling, node1, 'previousSibling of the newly appended node ' +
+            'should be set');
+        assert_equals(node1.nextSibling, node2, 'nextSibling of the old last child ' +
+            'should point to newly appended node');
+    });
 }, 'Test AnimationGroup.append() inserts the AnimationGroup node after last child');
 
 test(function() {
-    var node1 = new AnimationSequence([]);
-    var node2 = new AnimationSequence([]);
-    var group = new AnimationGroup([node1]);
+    var ctors = [ AnimationGroup, AnimationSequence ];
+    ctors.forEach(function(ctor) {
+        var node1 = new AnimationSequence([]);
+        var node2 = new AnimationSequence([]);
+        var group = new ctor([node1]);
 
-    group.append(node2);
+        group.append(node2);
 
-    assert_array_equals(group.children, [node1, node2], 'AnimationGroup.append() should ' +
-        'insert the node before null');
-    assert_equals(node2.parent, group, 'Parent of the newly appended node should point ' +
-        'to the group');
-    assert_equals(node2.previousSibling, node1, 'previousSibling of the newly appended node ' +
-        'should be set');
-    assert_equals(node1.nextSibling, node2, 'nextSibling of the old last child ' +
-        'should point to newly appended node');
+        assert_array_equals(group.children, [node1, node2], 'AnimationGroup.append() should ' +
+            'insert the node before null');
+        assert_equals(node2.parent, group, 'Parent of the newly appended node should point ' +
+            'to the group');
+        assert_equals(node2.previousSibling, node1, 'previousSibling of the newly appended node ' +
+            'should be set');
+        assert_equals(node1.nextSibling, node2, 'nextSibling of the old last child ' +
+            'should point to newly appended node');
+    });
 }, 'Test AnimationGroup.append() inserts the AnimationSequence node after last child');
 
 test(function() {
@@ -146,7 +164,38 @@ test(function() {
         'should be set');
     assert_equals(node4.nextSibling, node3, 'nextSibling of the old last child ' +
         'should point to newly appended node');
-}, 'Test appending AnimationGroup with children and after that append Animation');
+}, 'Test AnimationGroup.append() called two times');
+
+test(function() {
+    var node1 = newAnimation(createDiv(this));
+    var node2 = newAnimation(createDiv(this));
+    var node3 = newAnimation(createDiv(this));
+    var node4 = new AnimationGroup([node1, node2]);
+    var node5 = newAnimation(createDiv(this));
+    var group = new AnimationSequence([node5]);
+
+    group.append(node4);
+
+    assert_array_equals(group.children, [node5, node4], 'AnimationGroup.append() should ' +
+        'insert the node before null');
+    assert_equals(node4.parent, group, 'Parent of the newly appended node should point ' +
+        'to the group');
+    assert_equals(node4.previousSibling, node5, 'previousSibling of the newly appended node ' +
+        'should be set');
+    assert_equals(node5.nextSibling, node4, 'nextSibling of the old last child ' +
+        'should point to newly appended node');
+
+    group.append(node3);
+
+    assert_array_equals(group.children, [node5, node4, node3], 'AnimationGroup.append() ' +
+        'should insert the node before null');
+    assert_equals(node3.parent, group, 'Parent of the newly appended node should point ' +
+        'to the group');
+    assert_equals(node3.previousSibling, node4, 'previousSibling of the newly appended node ' +
+        'should be set');
+    assert_equals(node4.nextSibling, node3, 'nextSibling of the old last child ' +
+        'should point to newly appended node');
+}, 'Test AnimationSequence.append() called two times');
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
@@ -189,91 +238,146 @@ test(function() {
 
 test(function() {
     var node1 = newAnimation(createDiv(this));
-    var group1 = new AnimationGroup([node1]);
     var node2 = newAnimation(createDiv(this));
-    var group2 = new AnimationGroup([node2]);
+    var node3 = newAnimation(createDiv(this));
+    var node4 = new AnimationGroup([node1, node2]);
+    var node5 = new AnimationSequence([]);
+    var node6 = newAnimation(createDiv(this));
+    var group = new AnimationSequence([node6]);
 
-    group2.append(node1);
+    group.append(node3, node4, node5);
 
-    assert_array_equals(group2.children, [node2, node1], 'AnimationGroup.append() should ' +
-        'insert the node before null');
-    assert_equals(node1.parent, group2, 'Parent of the newly appended node should point ' +
-        'to the group');
-    assert_equals(node1.previousSibling, node2, 'previousSibling of the newly appended node ' +
+    assert_array_equals(group.children, [node6, node3, node4, node5], 'AnimationGroup.append() ' +
+        'should insert the node before null');
+    assert_equals(node6.nextSibling, node3, 'nextSibling of the existing child node ' +
         'should be set');
-    assert_equals(node2.nextSibling, node1, 'nextSibling of the old last child ' +
+
+    assert_equals(node3.parent, group, 'Parent of the newly appended node should point ' +
+        'to the group');
+    assert_equals(node3.previousSibling, node6, 'previousSibling of the old last child ' +
         'should point to newly appended node');
-    assert_array_equals(group2.children, [], 'AnimationGroup.append() should ' +
-        'remove appended node from its previous group');
+    assert_equals(node3.nextSibling, node4, 'nextSibling of the newly appended node ' +
+        'should be set');
+
+    assert_equals(node4.parent, group, 'Parent of the newly appended node should point ' +
+        'to the group');
+    assert_equals(node4.previousSibling, node3, 'previousSibling of the newly appended node ' +
+        'should be set');
+    assert_equals(node4.nextSibling, node5, 'nextSibling of the newly appended node ' +
+        'should be set');
+
+    assert_equals(node5.parent, group, 'Parent of the newly appended node should point ' +
+        'to the group');
+    assert_equals(node5.previousSibling, node4, 'previousSibling of the old last child ' +
+        'should point to newly appended node');
+    assert_equals(node5.nextSibling, null, 'nextSibling of the newly appended node ' +
+        'should be set');
+}, 'Test AnimationSequence.append() with several nodes inserts given nodes after ' +
+    'last child in the specified order');
+
+test(function() {
+    var test = this;
+    var ctors = [ AnimationGroup, AnimationSequence ];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var group1 = new AnimationGroup([node1]);
+        var node2 = newAnimation(createDiv(test));
+        var group2 = new ctor([node2]);
+
+        group2.append(node1);
+
+        assert_array_equals(group2.children, [node2, node1], 'AnimationGroup.append() should ' +
+            'insert the node before null');
+        assert_equals(node1.parent, group2, 'Parent of the newly appended node should point ' +
+            'to the group');
+        assert_equals(node1.previousSibling, node2, 'previousSibling of the newly appended node ' +
+            'should be set');
+        assert_equals(node2.nextSibling, node1, 'nextSibling of the old last child ' +
+            'should point to newly appended node');
+        assert_array_equals(group1.children, [], 'AnimationGroup.append() should ' +
+            'remove appended node from its previous group');
+    });
 }, 'AnimationGroup.append() removes appended Animation node from its previous group');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var node3 = newAnimation(createDiv(this));
-    var group1 = new AnimationGroup([node1, node2]);
-    var group2 = new AnimationGroup([group1, node3]);
-    var node4 = newAnimation(createDiv(this));
-    var group3 = new AnimationGroup([node4]);
+    var test = this;
+    var ctors = [ AnimationGroup, AnimationSequence ];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var node3 = newAnimation(createDiv(test));
+        var group1 = new AnimationGroup([node1, node2]);
+        var group2 = new AnimationGroup([group1, node3]);
+        var node4 = newAnimation(createDiv(test));
+        var group3 = new ctor([node4]);
 
-    group3.append(group1);
+        group3.append(group1);
 
-    assert_array_equals(group3.children, [node4, group1], 'AnimationGroup.append() should ' +
-        'insert the node before null');
-    assert_equals(group1.parent, group3, 'Parent of the newly appended node should point ' +
-        'to the group');
-    assert_equals(group1.previousSibling, node4, 'previousSibling of the newly appended node ' +
-        'should be set');
-    assert_equals(node4.nextSibling, group1, 'nextSibling of the old last child ' +
-        'should point to newly appended node');
-    assert_array_equals(group2.children, [node3], 'AnimationGroup.append() should ' +
-        'remove appended node from its previous group');
-    assert_array_equals(group1.children, [node1, node2], 'AnimationGroup.append() ' +
-        'should not change appended node children');
+        assert_array_equals(group3.children, [node4, group1], 'AnimationGroup.append() should ' +
+            'insert the node before null');
+        assert_equals(group1.parent, group3, 'Parent of the newly appended node should point ' +
+            'to the group');
+        assert_equals(group1.previousSibling, node4, 'previousSibling of the newly appended node ' +
+            'should be set');
+        assert_equals(node4.nextSibling, group1, 'nextSibling of the old last child ' +
+            'should point to newly appended node');
+        assert_array_equals(group2.children, [node3], 'AnimationGroup.append() should ' +
+            'remove appended node from its previous group');
+        assert_array_equals(group1.children, [node1, node2], 'AnimationGroup.append() ' +
+            'should not change appended node children');
+    });
 }, 'AnimationGroup.append() removes appended AnimationGroup from its previous group');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var node3 = newAnimation(createDiv(this));
-    var sequence1 = new AnimationSequence([node1, node2]);
-    var group1 = new AnimationGroup([sequence1, node3]);
-    var node4 = newAnimation(createDiv(this));
-    var group2 = new AnimationGroup([node4]);
+    var test = this;
+    var ctors = [ AnimationGroup, AnimationSequence ];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var node3 = newAnimation(createDiv(test));
+        var sequence1 = new AnimationSequence([node1, node2]);
+        var group1 = new AnimationGroup([sequence1, node3]);
+        var node4 = newAnimation(createDiv(test));
+        var group2 = new ctor([node4]);
 
-    group2.append(sequence1);
+        group2.append(sequence1);
 
-    assert_array_equals(group2.children, [node4, sequence1], 'AnimationGroup.append() should ' +
-        'insert the node before null');
-    assert_equals(sequence1.parent, group2, 'Parent of the newly appended node should point ' +
-        'to the group');
-    assert_equals(sequence1.previousSibling, node4, 'previousSibling of the newly appended node ' +
-        'should be set');
-    assert_equals(node4.nextSibling, sequence1, 'nextSibling of the old last child ' +
-        'should point to newly appended node');
-    assert_array_equals(group1.children, [node3], 'AnimationGroup.append() should ' +
-        'remove appended node from its previous group');
-    assert_array_equals(sequence1.children, [node1, node2], 'AnimationGroup.append() ' +
-        'should not change appended node children');
+        assert_array_equals(group2.children, [node4, sequence1], 'AnimationGroup.append() should ' +
+            'insert the node before null');
+        assert_equals(sequence1.parent, group2, 'Parent of the newly appended node should point ' +
+            'to the group');
+        assert_equals(sequence1.previousSibling, node4, 'previousSibling of the newly appended node ' +
+            'should be set');
+        assert_equals(node4.nextSibling, sequence1, 'nextSibling of the old last child ' +
+            'should point to newly appended node');
+        assert_array_equals(group1.children, [node3], 'AnimationGroup.append() should ' +
+            'remove appended node from its previous group');
+        assert_array_equals(sequence1.children, [node1, node2], 'AnimationGroup.append() ' +
+            'should not change appended node children');
+    });
 }, 'AnimationGroup.append() removes appended AnimationSequence from its previous group');
 
 test(function() {
-    var node = newAnimation(createDiv(this));
-    var group1 = new AnimationGroup([node]);
-    var group2 = new AnimationGroup([group1]);
+    var test = this;
+    var ctors = [ AnimationGroup, AnimationSequence ];
+    ctors.forEach(function(ctor) {
+        var node = newAnimation(createDiv(test));
+        var group1 = new ctor([node]);
+        var group2 = new ctor([group1]);
 
-    group2.append(node);
+        group2.append(node);
 
-    assert_array_equals(group2.children, [group1, node], 'AnimationGroup.append() should ' +
-        'insert the node before null');
-    assert_equals(node.parent, group2, 'Parent of the newly appended node should point ' +
-        'to the group');
-    assert_equals(node.previousSibling, group1, 'previousSibling of the newly appended node ' +
-        'should be set');
-    assert_equals(group1.nextSibling, node, 'nextSibling of the old last child ' +
-        'should point to newly appended node');
-    assert_array_equals(group1.children, [], 'AnimationGroup.append() should ' +
-        'remove appended node from its previous group');
-}, 'Test AnimationGroup.prepend() removes the Animation node from its parent in the same tree');
+        assert_array_equals(group2.children, [group1, node], 'AnimationGroup.append() should ' +
+            'insert the node before null');
+        assert_equals(node.parent, group2, 'Parent of the newly appended node should point ' +
+            'to the group');
+        assert_equals(node.previousSibling, group1, 'previousSibling of the newly appended node ' +
+            'should be set');
+        assert_equals(group1.nextSibling, node, 'nextSibling of the old last child ' +
+            'should point to newly appended node');
+        assert_array_equals(group1.children, [], 'AnimationGroup.append() should ' +
+            'remove appended node from its previous group');
+    });
+}, 'Test AnimationGroup.append() removes the Animation node from its parent in the same tree');
 </script>
 </body>

@@ -171,6 +171,7 @@ function AnimationGroup(children, timing) {
     this.timing = timing;
     this.firstChild = null;
     this.lastChild = null;
+    this.parent = null;
 }
 
 AnimationGroup.prototype = new AnimationNode();
@@ -178,7 +179,25 @@ AnimationGroup.prototype = new AnimationNode();
 AnimationGroup.prototype.prepend = function(nodes) {
 };
 
-AnimationGroup.prototype.append = function(nodes) {
+AnimationGroup.prototype.append = function() {
+    for (var i = 0; i < arguments.length; i++) {
+        var node = arguments[i];
+        this.children.push(node);
+        if (node.parent){
+            var k = node.parent.children.indexOf(node);
+            node.parent.children.splice(k,1);
+        }
+        node.parent = this;
+    }
+    var prev = null;
+    this.children.forEach(function(node){
+        node.previousSibling = prev;
+        node.nextSibling = null;
+        if (prev) {
+            prev.nextSibling = node;
+        }
+        prev = node;
+    });
 };
 
 AnimationGroup.prototype.clone = function() {
@@ -189,6 +208,7 @@ AnimationGroup.prototype.clone = function() {
 function AnimationSequence(children, timing) {
     this.children = children;
     this.timing = timing;
+    this.parent = null;
 }
 
 AnimationSequence.prototype = new AnimationGroup([]);
