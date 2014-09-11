@@ -28,5 +28,41 @@ test(function() {
             'iterationComposite attribute of effect ' + type(effect));
     });
 }, 'Test iterationComposite attribute returns value set by the constructor');
+
+async_test(function(t) {
+    var effect = newKeyframeEffect();
+    effect.iterationComposite = 'accumulate';
+    // Now check that iteration composition is really 'accumulate'
+    var target = createDiv(this);
+    var animation = new Animation(target, effect,
+        {iterations: 3, duration: ANIMATION_END_TIME});
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    player.currentTime = ANIMATION_END_TIME - 10;
+
+    setTimeout(function() {
+        t.step(function () {
+            // After the first iteration target element width == 200px
+            // After 100 ms of the second iteration width should be
+            // 200 + 'width at 100 ms'
+            assert_approx_equals(window.getComputedStyle(target).width,
+                ANIMATION_WIDTH_1 + getExpectedWidth(100), EPSILON,
+                'Iteration composition should be \'accumulate\'');
+            // Now seek to the end, change iteration composition
+            // to replace and check
+            player.currentTime = 2 * ANIMATION_END_TIME - 10;
+            effect.iterationComposite = 'replace';
+            setTimeout(function() {
+                t.step(function () {
+                    assert_approx_equals(window.getComputedStyle(target).width,
+                        getExpectedWidth(100), EPSILON,
+                        'Iteration composition should be \'replace\'');
+                    t.done();
+                });
+            }, 110);
+
+        });
+    }, 110);
+}, 'Test that setting iterationComposite attribute changes iteration composition ' +
+    'according to the new value');
 </script>
 </body>

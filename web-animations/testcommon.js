@@ -115,29 +115,15 @@ function hasAncestorClassString(object, classString) {
     return hasAncestorClassString(proto, classString);
 }
 
-function assert_timing_equals(actual, expected){
-    assert_equals(actual.delay, expected.delay, 'Value of AnimationNode.timing.delay ' +
-        'is unexpected');
-    assert_equals(actual.endDelay, expected.endDelay, 'Value of AnimationNode.timing.endDelay ' +
-        'is unexpected');
-    assert_equals(actual.fill, expected.fill, 'Value of AnimationNode.timing.fill ' +
-        'is unexpected');
-    assert_equals(actual.iterationStart, expected.iterationStart, 'Value of ' +
-        'AnimationNode.timing.iterationStart is unexpected');
-    assert_equals(actual.iterations, expected.iterations, 'Value of ' +
-        'AnimationNode.timing.iterations is unexpected');
-    assert_equals(actual.duration, expected.duration, 'Value of AnimationNode.timing.duration ' +
-        'is unexpected');
-    assert_equals(actual.playbackRate, expected.playbackRate, 'Value of ' +
-        'AnimationNode.timing.playbackRate is unexpected');
-    assert_equals(actual.direction, expected.direction, 'Value of ' +
-        'AnimationNode.timing.direction is unexpected');
-    assert_equals(actual.easing, expected.easing, 'Value of AnimationNode.timing.easing ' +
-        'is unexpected');
-}
-// returns the type name of given object
+// Returns the type name of given object
 function type(object){
     return Object.prototype.toString.call(object).slice(8, -1);
+}
+
+// Returns expected width of the target element width at currentTime
+function getExpectedWidth(currentTime) {
+    return ANIMATION_WIDTH_0 + (ANIMATION_WIDTH_1 - ANIMATION_WIDTH_0) *
+        (currentTime % ANIMATION_END_TIME);
 }
 
 // FIXME The code below is stubs for Web Animations objects that don't implemented yet
