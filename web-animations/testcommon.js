@@ -162,7 +162,25 @@ function AnimationGroup(children, timing) {
 
 AnimationGroup.prototype = new AnimationNode();
 
-AnimationGroup.prototype.prepend = function(nodes) {
+AnimationGroup.prototype.prepend = function() {
+    for (var i = arguments.length - 1; i >= 0; i--) {
+        var node = arguments[i];
+        this.children.unshift(node);
+        if (node.parent){
+            var k = node.parent.children.indexOf(node);
+            node.parent.children.splice(k,1);
+        }
+        node.parent = this;
+    }
+    var prev = null;
+    this.children.forEach(function(node){
+        node.previousSibling = prev;
+        node.nextSibling = null;
+        if (prev) {
+            prev.nextSibling = node;
+        }
+        prev = node;
+    });
 };
 
 AnimationGroup.prototype.append = function() {
