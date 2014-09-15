@@ -13,11 +13,22 @@
 <div id="log"></div>
 <script>
 test(function() {
+    var groups = [new AnimationGroup([]), new AnimationSequence([])];
+    groups.forEach(function(group){
+        try {
+            group.append();
+        } catch (e) {
+            assert_unreached(type(group) + '.append() throws unexpected error ' + e);
+        }
+    });
+}, 'AnimationGroup.append() with empty arguments does nothing');
+
+test(function() {
     var groups = [ new AnimationGroup([]), new AnimationSequence([])];
     groups.forEach(function(group) {
         assert_throws('HierarchyRequestError', function() {
             group.append(group);
-        }, 'HierarchyRequestError should be thrown if appending itself');
+        }, type(group) + '.append() should throw HierarchyRequestError if appending itself');
     });
 }, 'AnimationGroup.append() throws HierarchyRequestError if appending itself');
 
@@ -27,7 +38,7 @@ test(function() {
         assert_throws('HierarchyRequestError', function() {
             var parent = new AnimationGroup([group]);
             group.append(parent);
-        }, 'HierarchyRequestError should be thrown if appending ' +
+        }, type(group) + '.append() should throw HierarchyRequestError if appending ' +
             'direct parent');
     });
 }, 'AnimationGroup.append() throws HierarchyRequestError if ' +
@@ -43,7 +54,7 @@ test(function() {
 
         assert_throws('HierarchyRequestError', function() {
             group1.append(group5);
-        }, 'HierarchyRequestError should be thrown if appending ' +
+        }, type(group1) + '.append() should throw HierarchyRequestError if appending ' +
             'an inclusive ancestor');
     });
 }, 'AnimationGroup.append() throws HierarchyRequestError if an ' +
@@ -56,7 +67,7 @@ test(function() {
         var node = newAnimation(createDiv(test));
         group.append(node);
 
-        assert_array_equals(group.children, [node], 'AnimationGroup.append() should insert ' +
+        assert_array_equals(group.children, [node], type(group) + '.append() should insert ' +
             'the node before null');
         assert_equals(node.parent, group, 'Parent of the newly appended node should point ' +
             'to the group');
