@@ -13,15 +13,15 @@ policies and contribution forms [3].
 // Epsilon value for assert_approx_equals()
 var EPSILON = 20;
 var ANIMATION_END_TIME = 1000;
-var ANIMATION_WIDTH_DEFAULT = 300;
-var ANIMATION_WIDTH_0 = 10;
-var ANIMATION_WIDTH_0_5 = 100;
-var ANIMATION_WIDTH_1 = 200;
+var ANIMATION_TOP_DEFAULT = 300;
+var ANIMATION_TOP_0 = 10;
+var ANIMATION_TOP_0_5 = 100;
+var ANIMATION_TOP_1 = 200;
 
 var KEYFRAMES = [
-    {width: ANIMATION_WIDTH_0 + 'px', offset: 0},
-    {width: ANIMATION_WIDTH_0_5 + 'px', offset: 1/2},
-    {width: ANIMATION_WIDTH_1 + 'px', offset: 1}];
+    {top: ANIMATION_TOP_0 + 'px', offset: 0},
+    {top: ANIMATION_TOP_0_5 + 'px', offset: 1/2},
+    {top: ANIMATION_TOP_1 + 'px', offset: 1}];
 
 // Default timing values as specified at
 // http://dev.w3.org/fxtf/web-animations/#the-animationtiminginput-dictionary
@@ -43,7 +43,7 @@ function newHTMLDocument() {
 }
 
 function newAnimation(animationTarget) {
-    animationTarget.style.width = ANIMATION_WIDTH_DEFAULT + 'px';
+    animationTarget.style.top = ANIMATION_TOP_DEFAULT + 'px';
     return new Animation(animationTarget, KEYFRAMES, ANIMATION_END_TIME);
 }
 
@@ -60,10 +60,11 @@ function newKeyframeEffect(options) {
 }
 
 function newMotionPathEffect(options) {
+    var pathString = 'M 0 ' + ANIMATION_TOP_0 + ' L 0 ' + ANIMATION_TOP_1 + ' z';
     if (options) {
-        return new MotionPathEffect('M 100 100 L 300 100 L 200 300 z', options);
+        return new MotionPathEffect(pathString, options);
     }
-    return new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    return new MotionPathEffect(pathString);
 }
 
 // creates div element, appends it to the document body and
@@ -120,9 +121,9 @@ function type(object){
     return Object.prototype.toString.call(object).slice(8, -1);
 }
 
-// Returns expected width of the target element width at currentTime
-function getExpectedWidth(currentTime) {
-    return ANIMATION_WIDTH_0 + (ANIMATION_WIDTH_1 - ANIMATION_WIDTH_0) *
+// Returns expected top of the target element width at currentTime
+function getExpectedTop(currentTime) {
+    return ANIMATION_TOP_0 + (ANIMATION_TOP_1 - ANIMATION_TOP_0) *
         (currentTime % ANIMATION_END_TIME);
 }
 

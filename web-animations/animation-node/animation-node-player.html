@@ -66,9 +66,9 @@ test(function() {
     var player = document.timeline.play(animationGroup);
     animationGroup.player.currentTime = ANIMATION_END_TIME/2;
 
-    assert_equals(window.getComputedStyle(node1.target).width, 100,
+    assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_0_5,
         'Nodes in the hierarchy should be controlled by parent group player');
-    assert_equals(window.getComputedStyle(node2.target).width, 100,
+    assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_0_5,
         'Nodes in the hierarchy should be controlled by parent group player');
 }, 'Nodes in the hierarchy are controlled by parent group player');
 </script>

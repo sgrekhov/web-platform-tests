@@ -11,24 +11,10 @@
 <body>
 <div id="log"></div>
 <script>
-function newAnimation(animationTarget) {
-    animationTarget.style.width = '300px';
-    return new Animation(animationTarget, [
-        {width: '10px', offset: 0},
-        {width: '100px', offset: 1/2},
-        {width: '200px', offset: 1}], 1000);
-}
-
-function newAnimationPlayer(animationTarget) {
-    var animation = newAnimation(animationTarget);
-    return document.timeline.play(animation);
-}
-
 function calculateStartTime(timelineTime, holdTime, playbackRate) {
     return timelineTime - holdTime / playbackRate;
 }
 
-var EPSILON = 20;
 var timesToTest = [-100, -1, 0, 1, 100, 900, 1000, 1001, 1100];
 
 test(function() {

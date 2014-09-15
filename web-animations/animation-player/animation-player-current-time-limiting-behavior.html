@@ -11,14 +11,6 @@
 <body>
 <div id="log"></div>
 <script>
-function newAnimation(animationTarget) {
-    animationTarget.style.width = '300px';
-    return new Animation(animationTarget, [
-	    {width: '10px', offset: 0},
-	    {width: '100px', offset: 1/2},
-	    {width: '200px', offset: 1}], 1000);
-}
-
 test(function() {
     var player = document.timeline.play(null);
 
@@ -42,11 +34,11 @@ test(function() {
         {time: -1, finished: true},
         {time: 0, finished: true},
         {time: 1, finished: false},
-        {time: 500, finished: false},
-        {time: player.source.endTime - 1, finished: false},
-        {time: player.source.endTime, finished: true},
-        {time: player.source.endTime + 1, finished: true},
-        {time: player.source.endTime + 100, finished: true}];
+        {time: ANIMATION_END_TIME / 2, finished: false},
+        {time: ANIMATION_END_TIME - 1, finished: false},
+        {time: ANIMATION_END_TIME, finished: true},
+        {time: ANIMATION_END_TIME + 1, finished: true},
+        {time: ANIMATION_END_TIME + 100, finished: true}];
 
 	pointsToTest.forEach(function (pointToTest) {
         player.currentTime = pointToTest.time;
@@ -62,7 +54,7 @@ test(function() {
 
 async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(this)));
-    player.currentTime = 990;
+    player.currentTime = ANIMATION_END_TIME - 10;
     setTimeout(function() {
         t.step(function () {
             assert_equals(player.currentTime, player.source.endTime,
@@ -96,7 +88,7 @@ async_test(function(t) {
 async_test(function(t) {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
-    player.currentTime = 990;
+    player.currentTime = ANIMATION_END_TIME - 10;
     setTimeout(function() {
         t.step(function () {
             var curTime =  player.currentTime;
@@ -124,7 +116,7 @@ async_test(function(t) {
 async_test(function(t) {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
-    player.currentTime = 500;
+    player.currentTime = ANIMATION_END_TIME / 2;
     setTimeout(function() {
         t.step(function () {
             assert_greater_than(player.currentTime, 500,

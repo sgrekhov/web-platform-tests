@@ -246,7 +246,7 @@ test(function() {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
 
-    assert_equals(window.getComputedStyle(animation.target).width, 10,
+    assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0,
         'Animation effect should take place');
 }, 'Test that animation effect is changed accordingly by setting ' +
     'AnimationPlayer.currentTime attribute when current time is zero');
@@ -254,9 +254,9 @@ test(function() {
 test(function() {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
-    player.currentTime = 500;
+    player.currentTime = ANIMATION_END_TIME / 2;
 
-    assert_equals(window.getComputedStyle(animation.target).width, 100,
+    assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
         'Animation effect should take place');
 }, 'Test that animation effect is changed accordingly by setting ' +
     'AnimationPlayer.currentTime attribute when current time is > 0 and < end time');
@@ -264,9 +264,9 @@ test(function() {
 test(function() {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
-    player.currentTime = player.source.endTime;
+    player.currentTime = ANIMATION_END_TIME;
 
-    assert_equals(window.getComputedStyle(animation.target).width, 300,
+    assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
         'Animation effect should take place');
 }, 'Test that animation effect is changed accordingly by setting ' +
     'AnimationPlayer.currentTime attribute when current time equals end time');
