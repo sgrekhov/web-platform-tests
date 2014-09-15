@@ -5,6 +5,7 @@
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationGroup-children">
 <link rel="help" href="http://dev.w3.org/fxtf/web-animations/#dfn-child-animation-node">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -13,46 +14,62 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var group = new AnimationGroup([]);
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var group = new ctor([]);
 
-    assert_array_equals(group.children, [], 'AnimationGroup.children should be empty');
+        assert_array_equals(group.children, [], ctor.name + '.children should be empty');
+    });
 }, 'Test AnimationGroup.children returns empty list for animation group without children');
 
 test(function() {
-    var node = newAnimation(createDiv(this));
-    var children = [node];
-    var group = new AnimationGroup(children);
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node = newAnimation(createDiv(test));
+        var children = [node];
+        var group = new ctor(children);
 
-    assert_array_equals(group.children, children, 'AnimationGroup.children should correspond ' +
-        'the first constructor argument');
+        assert_array_equals(group.children, children, ctor.name + '.children should correspond ' +
+            'the first constructor argument');
+    });
 }, 'Test AnimationGroup.children returns the list of child animation nodes in the group. ' +
     'Test group with single child');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = new AnimationGroup([]);
-    var node3 = newAnimation(createDiv(this));
-    var children = [node1, node2, node3];
-    var group = new AnimationGroup(children);
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = new AnimationGroup([]);
+        var node3 = newAnimation(createDiv(test));
+        var node4 = new AnimationSequence([]);
+        var children = [node1, node2, node3, node4];
+        var group = new ctor(children);
 
-    assert_array_equals(group.children, children, 'AnimationGroup.children should correspond ' +
-        'the first constructor argument');
+        assert_array_equals(group.children, children, ctor.name + '.children should correspond ' +
+            'the first constructor argument');
+    });
 }, 'Test AnimationGroup.children returns the list of child animation nodes in the group. ' +
     'Test group with different children: Animations and AnimationGroups');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var node3 = newAnimation(createDiv(this));
-    var node4 = new AnimationGroup([node1, node2]);
-    var node5 = newAnimation(createDiv(this));
-    var children = [node3, node4, node5];
-    var group = new AnimationGroup(children);
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var node3 = newAnimation(createDiv(test));
+        var node4 = new ctor([node1, node2]);
+        var node5 = newAnimation(createDiv(test));
+        var children = [node3, node4, node5];
+        var group = new ctor(children);
 
-    assert_array_equals(group.children, children, 'AnimationGroup.children should correspond ' +
-        'the first constructor argument');
-    assert_array_equals(node4.children, [node1, node2], 'AnimationGroup.children should ' +
-        'return the first constructor argument');
+        assert_array_equals(group.children, children, ctor.name + '.children should correspond ' +
+            'the first constructor argument');
+        assert_array_equals(node4.children, [node1, node2], ctor.name + '.children should ' +
+            'return the first constructor argument');
+    });
 }, 'Test AnimationGroup.children returns the list of child animation nodes in the group. ' +
     'Test low-level node in the tree');
 </script>
