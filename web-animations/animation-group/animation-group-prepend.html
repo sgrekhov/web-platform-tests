@@ -18,7 +18,7 @@ test(function() {
         try {
             group.prepend();
         } catch (e) {
-            assert_unreached('Unexpected error ' + e);
+            assert_unreached(type(group) + '.prepend() throws unexpected error ' + e);
         }
     });
 }, 'AnimationGroup.prepend() with empty arguments does nothing');
@@ -28,7 +28,7 @@ test(function() {
     groups.forEach(function(group){
         assert_throws('HierarchyRequestError', function() {
             group.prepend(group);
-        }, 'HierarchyRequestError should be thrown if prepending itself');
+        }, type(group) + '.prepend() should throw HierarchyRequestError if prepending itself');
     });
 }, 'AnimationGroup.prepend() throws HierarchyRequestError if prepending itself');
 
@@ -38,7 +38,7 @@ test(function() {
         var parent = new AnimationGroup([group]);
         assert_throws('HierarchyRequestError', function() {
             group.prepend(parent);
-        }, 'HierarchyRequestError should be thrown if prepending ' +
+        }, type(group) + '.prepend() should throw HierarchyRequestError if prepending ' +
             'an inclusive ancestor');
     });
 }, 'AnimationGroup.prepend() throws HierarchyRequestError ' +
@@ -54,7 +54,7 @@ test(function() {
 
         assert_throws('HierarchyRequestError', function() {
             group1.prepend(group5);
-        }, 'HierarchyRequestError should be thrown if prepending ' +
+        }, type(group1) + '.prepend() should throw HierarchyRequestError if prepending ' +
             'an inclusive ancestor');
     });
 }, 'AnimationGroup.prepend() throws HierarchyRequestError if an ' +
@@ -67,7 +67,7 @@ test(function() {
         var node = newAnimation(createDiv(test));
         group.prepend(node);
 
-        assert_array_equals(group.children, [node], 'AnimationGroup.prepend() should insert ' +
+        assert_array_equals(group.children, [node], type(group) + '.prepend() should insert ' +
             'the node before the first child');
         assert_equals(node.parent, group, 'Parent of the newly prepended node should point ' +
             'to the group');
@@ -84,7 +84,7 @@ test(function() {
 
         group.prepend(node2);
 
-        assert_array_equals(group.children, [node2, node1], 'AnimationGroup.prepend() should insert ' +
+        assert_array_equals(group.children, [node2, node1], type(group) + '.prepend() should insert ' +
             'the node before the first child');
         assert_equals(node2.parent, group, 'Parent of the newly prepended node should point ' +
             'to the group');
@@ -104,7 +104,7 @@ test(function() {
 
         group.prepend(node2);
 
-        assert_array_equals(group.children, [node2, node1], 'AnimationGroup.prepend() should insert ' +
+        assert_array_equals(group.children, [node2, node1], ctor.name + '.prepend() should insert ' +
             'the node before the first child');
         assert_equals(node2.parent, group, 'Parent of the newly prepended node should point ' +
             'to the group');
@@ -124,7 +124,7 @@ test(function() {
 
         group.prepend(node2);
 
-        assert_array_equals(group.children, [node2, node1], 'AnimationGroup.prepend() should insert ' +
+        assert_array_equals(group.children, [node2, node1], ctor.name + '.prepend() should insert ' +
             'the node before the first child');
         assert_equals(node2.parent, group, 'Parent of the newly prepended node should point ' +
             'to the group');
@@ -148,7 +148,7 @@ test(function() {
 
         group.prepend(node4);
 
-        assert_array_equals(group.children, [node4, node5], 'AnimationGroup.prepend() should ' +
+        assert_array_equals(group.children, [node4, node5], ctor.name + '.prepend() should ' +
             'insert the node before the first child');
         assert_equals(node4.parent, group, 'Parent of the newly prepended node should point ' +
             'to the group');
@@ -159,7 +159,7 @@ test(function() {
 
         group.prepend(node3);
 
-        assert_array_equals(group.children, [node3, node4, node5], 'AnimationGroup.prepend() should ' +
+        assert_array_equals(group.children, [node3, node4, node5], ctor.name + '.prepend() should ' +
             'insert the node before the first child');
         assert_equals(node3.parent, group, 'Parent of the newly prepended node should point ' +
             'to the group');
