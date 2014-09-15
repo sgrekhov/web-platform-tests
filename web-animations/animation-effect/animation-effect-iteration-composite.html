@@ -30,14 +30,15 @@ test(function() {
 }, 'Test iterationComposite attribute returns value set by the constructor');
 
 async_test(function(t) {
+    var test = this;
     var effectsToTest = [newKeyframeEffect(), newMotionPathEffect()];
     effectsToTest.forEach(function (effect) {
         effect.iterationComposite = 'accumulate';
         // Now check that iteration composition is really 'accumulate'
-        var target = createDiv(this);
+        var target = createDiv(test);
         var animation = new Animation(target, effect,
             {iterations: 3, duration: ANIMATION_END_TIME});
-        var player = document.timeline.play(newAnimation(createDiv(this)));
+        var player = document.timeline.play(animation);
         player.currentTime = ANIMATION_END_TIME - 10;
 
         setTimeout(function() {
