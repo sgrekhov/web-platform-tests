@@ -11,14 +11,6 @@
 <body>
 <div id="log"></div>
 <script>
-function newAnimation(animationTarget) {
-    animationTarget.style.width = '300px';
-    return new Animation(animationTarget, [
-	    {width: '10px', offset: 0},
-	    {width: '100px', offset: 1/2},
-	    {width: '200px', offset: 1}], 1000);
-}
-
 test(function() {
     var player = document.timeline.play(newAnimation(createDiv(this)));
     player.cancel();
@@ -31,12 +23,12 @@ test(function() {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
 
-    player.currentTime = 500;
-    assert_equals(window.getComputedStyle(animation.target).width, 100,
+    player.currentTime = ANIMATION_END_TIME / 2;
+    assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
         'Animation effect should take place');
 
     player.cancel();
-    assert_equals(window.getComputedStyle(animation.target).width, 300,
+    assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_DEFAULT,
         'Animation effect should be cleared');
 }, 'Test AnimationPlayer.cancel() clears animation effects');
 </script>
