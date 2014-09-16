@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationEffect composite attribute test</title>
+<meta name="assert" content="The composite operation used to composite this animation effect with the animation stack, as specified by one of the CompositeOperation enumeration values">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationeffect-composite">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var effectsToTest = [newKeyframeEffect(), newMotionPathEffect()];
+    effectsToTest.forEach(function(effect) {
+        assert_equals(effect.composite, 'replace', 'Wrong default value of ' +
+            'composite attribute of effect ' + type(effect));
+    });
+}, 'Test that composite attribute returns default value of composite operation ' +
+    'if it was not set by the constructor');
+
+test(function() {
+    var effectsToTest = [newKeyframeEffect({composite: 'accumulate'}),
+        newMotionPathEffect({composite: 'accumulate'})];
+    effectsToTest.forEach(function(effect) {
+        assert_equals(effect.composite, 'accumulate', 'Wrong value of ' +
+            'composite attribute of effect ' + type(effect));
+    });
+}, 'Test composite attribute returns value set by the constructor');
+
+async_test(function(t) {
+    var test = this;
+    var effectsToTest = [[newKeyframeEffect(), newKeyframeEffect()],
+        [newMotionPathEffect(), newMotionPathEffect()]];
+    effectsToTest.forEach(function (effects) {
+        var effect1 = effects[0];
+        var effect2 = effects[1];
+
+        // Now check that composition is really 'replace'
+        var target = createDiv(test);
+        var animation1 = new Animation(target, effect1, ANIMATION_END_TIME);
+        var player1 = document.timeline.play(animation1);
+        player1.currentTime = ANIMATION_END_TIME / 2 - 10;
+
+        var animation2 = new Animation(target, effect2, ANIMATION_END_TIME);
+        var player2 = document.timeline.play(animation2);
+        player2.currentTime = ANIMATION_END_TIME / 2 - 10;
+
+        setTimeout(function() {
+            t.step(function () {
+                // Expected top property value is
+                // (Animation top at the moment ANIMATION_END_TIME / 2 + 100)
+                assert_approx_equals(window.getComputedStyle(target).top,
+                    getExpectedTop(ANIMATION_END_TIME / 2 + 100), EPSILON,
+                    'Composition operation should be \'replace\'');
+            });
+        }, 110);
+    });
+}, 'Test that default composite attribute produces composition operation ' +
+    'according to the \'replace\' value');
+
+async_test(function(t) {
+    var test = this;
+    var effectsToTest = [[newKeyframeEffect(), newKeyframeEffect()],
+        [newMotionPathEffect(), newMotionPathEffect()]];
+    effectsToTest.forEach(function (effects) {
+        var effect1 = effects[0];
+        effect1.composite = 'add';
+        var effect2 = effects[1];
+        effect2.composite = 'add';
+
+        // Now check that composition is really 'add'
+        var target = createDiv(test);
+        var animation1 = new Animation(target, effect1, ANIMATION_END_TIME);
+        var player1 = document.timeline.play(animation1);
+        player1.currentTime = ANIMATION_END_TIME / 2 - 10;
+
+        var animation2 = new Animation(target, effect2, ANIMATION_END_TIME);
+        var player2 = document.timeline.play(animation2);
+        player2.currentTime = ANIMATION_END_TIME / 2 - 10;
+
+        setTimeout(function() {
+            t.step(function () {
+                // Expected top property value is
+                // 2 * (Animation top at the moment ANIMATION_END_TIME / 2 + 100)
+                assert_approx_equals(window.getComputedStyle(target).top,
+                    2 * getExpectedTop(ANIMATION_END_TIME / 2 + 100), EPSILON,
+                    'Composition operation should be \'add\'');
+            });
+        }, 110);
+    });
+}, 'Test that setting composite attribute to \'add\' changes composition oeration ' +
+    'according to the new value');
+</script>
+</body>

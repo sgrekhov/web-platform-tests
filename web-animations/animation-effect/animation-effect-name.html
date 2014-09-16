@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationEffect name attribute test</title>
+<meta name="assert" content="A string used to identify the effect">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationeffect-name">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var effectsToTest = [newKeyframeEffect(), newMotionPathEffect()];
+    effectsToTest.forEach(function(effect) {
+        assert_equals(effect[0].name, '', 'Wrong value of ' +
+            'name attribute of effect ' + type(effect));
+    });
+}, 'Test default value of name attribute of the AnimationEffect instance');
+
+test(function() {
+    var nameValue = 'someName';
+    var effectsToTest = [newKeyframeEffect({name: nameValue}),
+        newMotionPathEffect({name: nameValue})];
+    effectsToTest.forEach(function(effect) {
+        assert_equals(effect[0].name, nameValue, 'Wrong value of ' +
+            'name attribute of effect ' + type(effect));
+    });
+}, 'Test value of name attribute of the AnimationEffect instance set by the construstor');
+</script>
+</body>
