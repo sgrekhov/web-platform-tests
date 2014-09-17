@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>KeyframeEffect constructor frames parameter test</title>
+<meta name="assert" content="A Keyframe object or sequence of Keyframe objects used for calculating animation values for this animation effect">
+<link rel="help" href="http://w3c.github.io/web-animations/#the-keyframeeffect-interface">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var effect = new KeyframeEffect([]);
+
+    assert_array_equals(effect.getFrames(), [], 'Frames sequence should be empty');
+}, 'Test KeyframeEffect([]) constructor creates KeyframeEffect instance ' +
+    'with empty frames sequence');
+
+test(function() {
+    var effect = new KeyframeEffect({top: '10px',
+        offset: 0.5,
+        easing: 'linear',
+        composite: 'add'});
+
+    assert_not_equals(effect.getFrames(), null, 'Frames sequence should be empty');
+    assert_equals(effect.getFrames().length, 1, 'There should be only one Keyframe object');
+    assert_equals(effect.getFrames()[0].top, '10px', 'Keyframe target property value ' +
+        'should be specified by the KeyframeEffect constructor');
+    assert_equals(effect.getFrames[0].offset, 0.5, 'Keyframe offset ' +
+        'should be specified by the KeyframeEffect constructor');
+    assert_equals(effect.getFrames[0].easing, 'linear', 'Keyframe easing ' +
+        'should be specified by the KeyframeEffect constructor');
+    assert_equals(effect.getFrames[0].composite, 'add', 'Keyframe composite ' +
+        'should be specified by the KeyframeEffect constructor');
+    assert_equals(effect.getFrames[0].computedOffset, 0.5, 'Wrong computedOffset ' +
+        'property value');
+}, 'Test KeyframeEffect constructor creates KeyframeEffect instance ' +
+    'with a single Keyframe');
+
+</script>
+</body>

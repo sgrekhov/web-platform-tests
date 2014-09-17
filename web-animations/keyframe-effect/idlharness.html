@@ -1,0 +1,53 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>Web Animations API: KeyframeEffect tests</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="/resources/webidl2/lib/webidl2.js"></script>
+<script src="/resources/idlharness.js"></script>
+<div id="log"></div>
+<script type="text/plain" id="untested-IDL">
+dictionary Keyframe {
+};
+</script>
+<script type="text/plain" id="KeyframeEffect-IDL">
+enum IterationCompositeOperation {"replace", "accumulate"};
+
+enum CompositeOperation {"replace", "add", "accumulate"};
+
+dictionary KeyframeEffectOptions {
+    DOMString                   name = "";
+    IterationCompositeOperation iterationComposite = "replace";
+    CompositeOperation          composite = "replace";
+    DOMString                   spacing = "distribute";
+};
+
+dictionary ComputedKeyframe : Keyframe {
+    double computedOffset;
+};
+
+interface AnimationEffect {
+    attribute DOMString                   name;
+    attribute IterationCompositeOperation iterationComposite;
+    attribute CompositeOperation          composite;
+    AnimationEffect clone ();
+};
+
+[Constructor (object frames, optional KeyframeEffectOptions options)]
+interface KeyframeEffect : AnimationEffect {
+    attribute DOMString spacing;
+    sequence<ComputedKeyframe> getFrames ();
+    void                       setFrames (object frames);
+};
+</script>
+<script>
+'use strict';
+
+var effect = new KeyframeEffect([]);
+
+var idlArray = new IdlArray();
+idlArray.add_untested_idls(document.getElementById('untested-IDL').textContent);
+idlArray.add_idls(document.getElementById('KeyframeEffect-IDL').textContent);
+idlArray.add_objects( { KeyframeEffect: ['effect'] } );
+idlArray.test();
+</script>
