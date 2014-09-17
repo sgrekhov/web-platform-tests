@@ -167,8 +167,10 @@ AnimationGroup.prototype = new AnimationNode();
 AnimationGroup.prototype.updateFirstLastChild = function() {
     if (this.children.length>0){
         this.firstChild = this.children[0];
+        this.lastChild = this.children[this.children.length-1];
     } else {
         this.firstChild = null;
+        this.lastChild = null;
     }
 };
 

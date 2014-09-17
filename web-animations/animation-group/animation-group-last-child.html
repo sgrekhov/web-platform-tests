@@ -13,121 +13,260 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var group = new AnimationGroup([]);
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var group = new ctor([]);
 
-    assert_equals(group.lastChild, null, 'AnimationGroup.lastChild should return ' +
-        'the last child of the animation group');
-}, 'AnimationGroup.lastChild returns null if there is no children in the group');
+        assert_equals(group.lastChild, null, ctor.name + '.lastChild should return ' +
+            'null if there are no children in the group');
+    });
+}, 'AnimationGroup.lastChild returns null if there are no children in the group');
 
 test(function() {
-    var node = newAnimation(createDiv(this));
-    var group = new AnimationGroup([node]);
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node = newAnimation(createDiv(test));
+        var group = new ctor([node]);
 
-    assert_equals(group.lastChild, node, 'AnimationGroup.lastChild should return ' +
-        'the last child of the animation group');
+        assert_equals(group.lastChild, node, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
 }, 'AnimationGroup.lastChild returns the last child of the animation group. ' +
     'Test the group with single child');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var group = new AnimationGroup([node1, node2]);
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var group = new ctor([node1, node2]);
 
-    assert_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
-        'the last child of the animation group');
+        assert_equals(group.lastChild, node2, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
 },  'AnimationGroup.lastChild returns the last child of the animation group. ' +
     'Test the group with several children nodes');
 
 test(function() {
-    var node1 = new AnimationGroup([]);
-    var node2 = new AnimationGroup([]);
-    var group = new AnimationGroup([node1, node2]);
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = new AnimationGroup([]);
+        var node2 = new AnimationGroup([]);
+        var group = new ctor([node1, node2]);
 
-    assert_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
-        'the last child of the animation group');
+        assert_equals(group.lastChild, node2, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
 },  'AnimationGroup.lastChild returns the last child of the animation group. ' +
-    'Test AnimationNode as a last child');
+    'Test AnimationGroup as a last child');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var node3 = newAnimation(createDiv(this));
-    var node4 = new AnimationGroup([node1, node2]);
-    var node5 = newAnimation(createDiv(this));
-    var group = new AnimationGroup([node3, node4, node5]);
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = new AnimationSequence([]);
+        var node2 = new AnimationSequence([]);
+        var group = new ctor([node1, node2]);
 
-    assert_equals(group.lastChild, node5, 'AnimationGroup.lastChild should return ' +
-        'the last child of the animation group');
-    assert_equals(node4.lastChild, node2, 'AnimationGroup.lastChild should return ' +
-        'the last child of low-level animation group');
+        assert_equals(group.lastChild, node2, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
+},  'AnimationGroup.lastChild returns the last child of the animation group. ' +
+    'Test AnimationSequence as a last child');
+
+test(function() {
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var node3 = newAnimation(createDiv(test));
+        var node4 = new ctor([node1, node2]);
+        var node5 = newAnimation(createDiv(test));
+        var group = new ctor([node3, node4, node5]);
+
+        assert_equals(group.lastChild, node5, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+        assert_equals(node4.lastChild, node2, ctor.name + '.lastChild should return ' +
+            'the last child of low-level animation group');
+    });
 }, 'AnimationGroup.lastChild returns the last child of the animation group. ' +
     'Test tree structure');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var group = new AnimationGroup([node1, node2]);
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var group = new ctor([node1, node2]);
 
-    node1.before(node2);
-    assert_equals(group.lastChild, node1, 'AnimationGroup.lastChild should return ' +
-        'the last child of the animation group');
+        node1.before(node2);
+        assert_equals(group.lastChild, node1, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
 },  'AnimationGroup.lastChild returns the last child of the animation group, ' +
     'the last child is changed by method before()');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var group = new AnimationGroup([node1, node2]);
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var node3 = newAnimation(createDiv(test));
+        var group1 = new ctor([node1, node2]);
+        var group2 = new ctor([node3]);
 
-    node2.after(node1);
-    assert_equals(group.lastChild, node1, 'AnimationGroup.lastChild should return ' +
-        'the last child of the animation group');
+        node3.before(node2);
+        assert_equals(group1.lastChild, node1, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
+},  'AnimationGroup.lastChild returns the last child of the animation group, ' +
+    'the last child is removed by method before()');
+
+test(function() {
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var group = new ctor([node1, node2]);
+
+        node2.after(node1);
+        assert_equals(group.lastChild, node1, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
 },  'AnimationGroup.lastChild returns the last child of the animation group, ' +
     'the last child is changed by method after()');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var node3 = newAnimation(createDiv(this));
-    var group = new AnimationGroup([node1, node2]);
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var node3 = newAnimation(createDiv(test));
+        var group1 = new ctor([node1, node2]);
+        var group2 = new ctor([node3]);
 
-    node2.replace(node3);
-    assert_equals(group.lastChild, node3, 'AnimationGroup.lastChild should return ' +
-        'the last child of the animation group');
+        node3.after(node2);
+        assert_equals(group1.lastChild, node1, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
+},  'AnimationGroup.lastChild returns the last child of the animation group, ' +
+    'the last child is removed by method after()');
+
+test(function() {
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var node3 = newAnimation(createDiv(test));
+        var group = new ctor([node1, node2]);
+
+        node2.replace(node3);
+        assert_equals(group.lastChild, node3, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
 },  'AnimationGroup.lastChild returns the last child of the animation group, ' +
     'the last child is changed by method replace()');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var group = new AnimationGroup([node1, node2]);
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var node3 = newAnimation(createDiv(test));
+        var group1 = new ctor([node1, node2]);
+        var group2 = new ctor([node3]);
 
-    node2.remove();
-    assert_equals(group.lastChild, node1, 'AnimationGroup.lastChild should return ' +
-        'the last child of the animation group');
+        node3.replace(node2);
+        assert_equals(group1.lastChild, node1, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
+},  'AnimationGroup.lastChild returns the last child of the animation group, ' +
+    'the last child is removed by method replace()');
+
+test(function() {
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var group = new ctor([node1, node2]);
+
+        node2.remove();
+        assert_equals(group.lastChild, node1, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
 },  'AnimationGroup.lastChild returns the last child of the animation group, ' +
     'the last child is changed by method remove()');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var group = new AnimationGroup([node1, node2]);
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var group = new ctor([node1, node2]);
 
-    group.prepend(node2);
-    assert_equals(group.lastChild, node1, 'AnimationGroup.lastChild should return ' +
-        'the last child of the animation group');
+        group.prepend(node2);
+        assert_equals(group.lastChild, node1, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
 },  'AnimationGroup.lastChild returns the last child of the animation group, ' +
     'the last child is changed by method prepend()');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var group = new AnimationGroup([node1]);
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var node3 = newAnimation(createDiv(test));
+        var group1 = new ctor([node1, node2]);
+        var group2 = new ctor([node3]);
 
-    group.append(node1);
-    assert_equals(group.lastChild, node2, 'AnimationGroup.lastChild should return ' +
-        'the last child of the animation group');
+        group2.prepend(node2);
+        assert_equals(group1.lastChild, node1, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
+},  'AnimationGroup.lastChild returns the last child of the animation group, ' +
+    'the last child is removed by method prepend()');
+
+test(function() {
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var group = new ctor([]);
+
+        group.append(node1);
+        assert_equals(group.lastChild, node1, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
 },  'AnimationGroup.lastChild returns the last child of the animation group, ' +
     'the last child is changed by method append()');
+
+test(function() {
+    var test = this;
+    var ctors = [AnimationGroup, AnimationSequence];
+    ctors.forEach(function(ctor) {
+        var node1 = newAnimation(createDiv(test));
+        var node2 = newAnimation(createDiv(test));
+        var node3 = newAnimation(createDiv(test));
+        var group1 = new ctor([node1, node2]);
+        var group2 = new ctor([node3]);
+
+        group2.append(node1);
+        assert_equals(group1.lastChild, node1, ctor.name + '.lastChild should return ' +
+            'the last child of the animation group');
+    });
+},  'AnimationGroup.lastChild returns the last child of the animation group, ' +
+    'the last child is removed by method append()');
 </script>
 </body>
