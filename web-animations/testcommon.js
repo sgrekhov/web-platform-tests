@@ -159,9 +159,20 @@ function AnimationGroup(children, timing) {
     this.firstChild = null;
     this.lastChild = null;
     this.parent = null;
+    this.updateFirstLastChild();
 }
 
 AnimationGroup.prototype = new AnimationNode();
+
+AnimationGroup.prototype.updateFirstLastChild = function() {
+    if (this.children.length>0){
+        this.firstChild = this.children[0];
+        this.lastChild = this.children[this.children.length-1];
+    } else {
+        this.firstChild = null;
+        this.lastChild = null;
+    }
+};
 
 AnimationGroup.prototype.prepend = function() {
     for (var i = arguments.length - 1; i >= 0; i--) {
@@ -169,7 +180,8 @@ AnimationGroup.prototype.prepend = function() {
         this.children.unshift(node);
         if (node.parent){
             var k = node.parent.children.indexOf(node);
-            node.parent.children.splice(k,1);
+            node.parent.children = node.parent.children.splice(k,1);
+            node.parent.updateFirstLastChild();
         }
         node.parent = this;
     }
@@ -182,6 +194,7 @@ AnimationGroup.prototype.prepend = function() {
         }
         prev = node;
     });
+    this.updateFirstLastChild();
 };
 
 AnimationGroup.prototype.append = function() {
@@ -190,7 +203,8 @@ AnimationGroup.prototype.append = function() {
         this.children.push(node);
         if (node.parent){
             var k = node.parent.children.indexOf(node);
-            node.parent.children.splice(k,1);
+            node.parent.children = node.parent.children.splice(k,1);
+            node.parent.updateFirstLastChild();
         }
         node.parent = this;
     }
@@ -203,6 +217,7 @@ AnimationGroup.prototype.append = function() {
         }
         prev = node;
     });
+    this.updateFirstLastChild();
 };
 
 AnimationGroup.prototype.clone = function() {
@@ -214,6 +229,7 @@ function AnimationSequence(children, timing) {
     this.children = children;
     this.timing = timing;
     this.parent = null;
+    this.updateFirstLastChild();
 }
 
 AnimationSequence.prototype = new AnimationGroup([]);
