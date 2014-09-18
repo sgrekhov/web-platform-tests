@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>KeyframeEffect constructor frames parameter test</title>
+<meta name="assert" content="For each call to setFrames or the KeyframeEffect constructor, normalization is performed on the passed in frames parameter before storing its value">
+<link rel="help" href="http://w3c.github.io/web-animations/#normalizing-a-sequence-of-keyframes">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+function createEffectsToTest(keyframes) {
+    var effect1 = new KeyframeEffect(keyframes);
+    var effect2 = new KeyframeEffect([]);
+    effect2.setFrames(keyframes);
+    return [effect1, effect2];
+}
+
+function testKeyframe(keyframe, expected, message, computedOffset) {
+    for (var propertyName in expected) {
+        assert_equals(keyframe[propertyName], expected[propertyName], message +
+            '. Wrong value of property \'' + propertyName + '\'');
+    }
+    if (computedOffset) {
+        assert_equals(keyframe.computedOffset, computedOffset, message +
+            '. Wrong computedOffset value');
+    }
+}
+
+test(function() {
+    var effectsToTest = createEffectsToTest([]);
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), [], 'Effect ' + index + ': ' +
+            'Frames sequence should be empty');
+    });
+}, 'Test that normalizing of empty sequence of frames does nothing');
+
+test(function() {
+    var keyframe = {top: '10px',
+        offset: 0.5,
+        easing: 'ease',
+        composite: 'add'};
+    var effectsToTest = createEffectsToTest(keyframe);
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
+            'Frames sequence should not be empty');
+        assert_equals(effect.getFrames().length, 1, 'Effect ' + index + ': ' +
+            'There should be only one Keyframe object');
+        testKeyframe(effect.getFrames[0], keyframe, 'Effect ' + index);
+    });
+}, 'Test that normalizing of single Keyframe produces sequence with the same ' +
+    'single keyframe instance');
+
+test(function() {
+    var keyframes = [{top: '10px', offset: 0.1}, {top: '20px', offset: 0.2}];
+    var effectsToTest = createEffectsToTest(keyframes);
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
+            'Frames sequence should not be empty');
+        assert_equals(effect.getFrames().length, keyframes.length, 'Effect ' + index + ': ' +
+            'Wrong number of normalized keyframes');
+        testKeyframe(effect.getFrames()[0], keyframes[0], 'Effect ' + index + ', frame 0', 0.1);
+        testKeyframe(effect.getFrames()[1], keyframes[1], 'Effect ' + index + ', frame 1', 0.2);
+    });
+}, 'Test that normalizing of the sequence already loosely sorted by offset does not change ' +
+    'order of frames');
+
+test(function() {
+    var keyframes = [{top: '20px', offset: 0.2},
+        {top: '0px', offset: 0},
+        {top: '10px', offset: 0.1},
+        {top: '100px', offset: 1},
+        {top: '80px', offset: 0.8}];
+    var effectsToTest = createEffectsToTest(keyframes);
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
+            'Frames sequence should not be empty');
+        assert_equals(effect.getFrames().length, keyframes.length, 'Effect ' + index + ': ' +
+            'Wrong number of normalized keyframes');
+
+        testKeyframe(effect.getFrames()[0], keyframes[1], 'Effect ' + index + ', frame 0', 0);
+        testKeyframe(effect.getFrames()[1], keyframes[2], 'Effect ' + index + ', frame 1', 0.1);
+        testKeyframe(effect.getFrames()[2], keyframes[0], 'Effect ' + index + ', frame 2', 0.2);
+        testKeyframe(effect.getFrames()[3], keyframes[4], 'Effect ' + index + ', frame 3', 0.8);
+        testKeyframe(effect.getFrames()[4], keyframes[3], 'Effect ' + index + ', frame 4', 1);
+    });
+}, 'Test that normalizing loosely sorts sequnce of keyframes by offset');
+
+test(function() {
+    var keyframes = [{top: '20px'},
+        {top: '0px', offset: 0},
+        {top: '10px', offset: 0.1}];
+
+    assert_throws('InvalidModificationError', function() {
+        var effect = new KeyframeEffect(keyframes);
+    }, 'If there are keyframes with null and not-null offsets then ' +
+    'InvalidModificationError should be thrown');
+}, 'Test that KeyframeEffect constructor throws InvalidModificationError if ' +
+    'there are keyframes with null and not-null offsets. Keyframe with null offset ' +
+    'is the first keyframe in the sequence');
+
+test(function() {
+    var keyframes = [{top: '0px', offset: 0},
+        {top: '10px', offset: 0.1},
+        {top: '20px'}];
+
+    assert_throws('InvalidModificationError', function() {
+        var effect = new KeyframeEffect(keyframes);
+    }, 'If there are keyframes with null and not-null offsets then ' +
+    'InvalidModificationError should be thrown');
+}, 'Test that KeyframeEffect constructor throws InvalidModificationError if ' +
+    'there are keyframes with null and not-null offsets. Keyframe with null offset ' +
+    'is the last keyframe in the sequence');
+
+test(function() {
+    var keyframes = [{top: '0px', offset: 0},
+        {top: '20px'},
+        {top: '10px', offset: 0.1}];
+
+    assert_throws('InvalidModificationError', function() {
+        var effect = new KeyframeEffect(keyframes);
+    }, 'If there are keyframes with null and not-null offsets then ' +
+    'InvalidModificationError should be thrown');
+}, 'Test that KeyframeEffect constructor throws InvalidModificationError if ' +
+    'there are keyframes with null and not-null offsets. Keyframe with null offset ' +
+    'is in the middle of the sequence');
+
+test(function() {
+    var keyframes = [{top: '-20px', offset: -0.2},
+        {top: '20px'},
+        {top: '0px', offset: 0},
+        {top: '10px', offset: 0.1},
+        {top: '120px', offset: 1.2}];
+
+    assert_throws('InvalidModificationError', function() {
+        var effect = new KeyframeEffect(keyframes);
+    }, 'If there are keyframes with null and not-null offsets then ' +
+    'InvalidModificationError should be thrown');
+}, 'Test that KeyframeEffect constructor throws InvalidModificationError if ' +
+    'there are keyframes with null and not-null offsets. Error is thrown ' +
+    'even if there are keyframes with offset more than 1 or less than 0');
+
+test(function() {
+    var keyframes = [{top: '20px'},
+        {top: '0px', offset: 0},
+        {top: '10px', offset: 0.1}];
+    var effect = new KeyframeEffect([]);
+
+    assert_throws('InvalidModificationError', function() {
+        effect.setFrames(keyframes);
+    }, 'If there are keyframes with null and not-null offsets then ' +
+    'InvalidModificationError should be thrown');
+}, 'Test that KeyframeEffect.setFrames() throws InvalidModificationError if ' +
+    'there are keyframes with null and not-null offsets. Keyframe with null offset ' +
+    'is the first keyframe in the sequence');
+
+test(function() {
+    var keyframes = [{top: '0px', offset: 0},
+        {top: '10px', offset: 0.1},
+        {top: '20px'}];
+    var effect = new KeyframeEffect([]);
+
+    assert_throws('InvalidModificationError', function() {
+        effect.setFrames(keyframes);
+    }, 'If there are keyframes with null and not-null offsets then ' +
+    'InvalidModificationError should be thrown');
+}, 'Test that KeyframeEffect.setFrames() throws InvalidModificationError if ' +
+    'there are keyframes with null and not-null offsets. Keyframe with null offset ' +
+    'is the last keyframe in the sequence');
+
+test(function() {
+    var keyframes = [{top: '0px', offset: 0},
+        {top: '20px'},
+        {top: '10px', offset: 0.1}];
+    var effect = new KeyframeEffect([]);
+
+    assert_throws('InvalidModificationError', function() {
+        effect.setFrames(keyframes);
+    }, 'If there are keyframes with null and not-null offsets then ' +
+    'InvalidModificationError should be thrown');
+}, 'Test that KeyframeEffect.setFrames() throws InvalidModificationError if ' +
+    'there are keyframes with null and not-null offsets. Keyframe with null offset ' +
+    'is in the middle of the sequence');
+
+test(function() {
+    var keyframes = [{top: '-20px', offset: -0.2},
+        {top: '20px'},
+        {top: '0px', offset: 0},
+        {top: '10px', offset: 0.1},
+        {top: '120px', offset: 1.2}];
+    var effect = new KeyframeEffect([]);
+
+    assert_throws('InvalidModificationError', function() {
+        effect.setFrames(keyframes);
+    }, 'If there are keyframes with null and not-null offsets then ' +
+    'InvalidModificationError should be thrown');
+}, 'Test that KeyframeEffect.setFrames() throws InvalidModificationError if ' +
+    'there are keyframes with null and not-null offsets. Error is thrown ' +
+    'even if there are keyframes with offset more than 1 or less than 0');
+
+test(function() {
+    var keyframes = [{top: '20px', offset: 0.2},
+        {top: '-10000px', offset: Number.MIN_VALUE},
+        {top: '0px', offset: 0},
+        {top: '10px', offset: 0.1},
+        {top: '-10px', offset: -0.1},
+        {top: '2340px', offset: 234},
+        {top: '100px', offset: 1},
+        {top: '120px', offset: 1.2},
+        {top: '80px', offset: 0.8},
+        {top: '-1000px', offset: -100},
+        {top: '10000px', offset: Number.MAX_VALUE}];
+    var effectsToTest = createEffectsToTest(keyframes);
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
+            'Frames sequence should not be empty');
+        assert_equals(effect.getFrames().length, 5, 'Effect ' + index + ': ' +
+            'Wrong number of normalized keyframes');
+
+        testKeyframe(effect.getFrames()[0], keyframes[2], 'Effect ' + index + ', frame 0', 0);
+        testKeyframe(effect.getFrames()[1], keyframes[3], 'Effect ' + index + ', frame 1', 0.1);
+        testKeyframe(effect.getFrames()[2], keyframes[0], 'Effect ' + index + ', frame 2', 0.2);
+        testKeyframe(effect.getFrames()[3], keyframes[8], 'Effect ' + index + ', frame 3', 0.8);
+        testKeyframe(effect.getFrames()[4], keyframes[6], 'Effect ' + index + ', frame 4', 1);
+    });
+}, 'Test that normalizing removes keyframes with offsets more than 1 or less than 0');
+
+test(function() {
+    var keyframe = {top: '10px',
+        someUnsupportedProperty: 'someValue'};
+    var effectsToTest = createEffectsToTest(keyframe);
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
+            'Frames sequence should not be empty');
+        assert_equals(effect.getFrames().length, 1, 'Effect ' + index + ': ' +
+            'There should be only one Keyframe object');
+        testKeyframe(effect.getFrames[0], {top: '10px'}, 'Effect ' + index);
+        assert_false(effect.getFrames[0].hasOwnProperty('someUnsupportedProperty'),
+            'Unsupported property should be removed');
+    });
+}, 'Test that normalizing of single Keyframe removes properties unsupported by implementation');
+
+test(function() {
+    var keyframes = [{top: '10px', someUnsupportedProperty: 'someValue', offset: 0.1},
+        {top: '20px', someUnsupportedProperty: 'someValue', offset: 0.2}];
+    var effectsToTest = createEffectsToTest(keyframes);
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
+            'Frames sequence should not be empty');
+        assert_equals(effect.getFrames().length, keyframes.length, 'Effect ' + index + ': ' +
+            'Wrong number of normalized keyframes');
+        testKeyframe(effect.getFrames()[0], {top: '10px', offset: 0.1},
+            'Effect ' + index + ', frame 0', 0.1);
+        testKeyframe(effect.getFrames()[1], {top: '10px', offset: 0.1},
+            'Effect ' + index + ', frame 1', 0.2);
+        assert_false(effect.getFrames[0].hasOwnProperty('someUnsupportedProperty'),
+            'Effect ' + index + ', frame 0. Unsupported property should be removed');
+        assert_false(effect.getFrames[1].hasOwnProperty('someUnsupportedProperty'),
+            'Effect ' + index + ', frame 1. Unsupported property should be removed');
+    });
+}, 'Test that normalizing of the keyframe sequence removes properties ' +
+    'unsupported by implementation');
+</script>
+</body>
