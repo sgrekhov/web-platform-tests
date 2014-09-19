@@ -11,52 +11,68 @@
 <body>
 <div id="log"></div>
 <script>
-test(function() {
-    var effect = new KeyframeEffect([]);
-
-    assert_array_equals(effect.getFrames(), [], 'Frames sequence should be empty');
-}, 'Test KeyframeEffect([]) constructor creates KeyframeEffect instance ' +
-    'with empty frames sequence');
+// In the tests below we don't test normalizing of a keyframe sequence
+// Normalizing tests can be found in keyframe-effect/keyframe-effect-normalizing-keyframes.html
 
 test(function() {
     var effect = new KeyframeEffect({top: '10px'});
 
-    assert_not_equals(effect.getFrames(), null, 'Frames sequence should not be empty');
-    assert_equals(effect.getFrames().length, 1, 'There should be only one Keyframe object');
-    assert_equals(effect.getFrames()[0].top, '10px', 'Keyframe target property value ' +
-        'should be specified by the KeyframeEffect constructor');
-    assert_equals(effect.getFrames[0].offset, null, 'Keyframe offset ' +
-        'should have default value');
-    assert_equals(effect.getFrames[0].easing, 'linear', 'Keyframe easing ' +
-        'should have default value');
-    assert_equals(effect.getFrames[0].composite, null, 'Keyframe composite ' +
-        'should have default value');
-    assert_equals(effect.getFrames[0].computedOffset, 1, 'Wrong computedOffset ' +
-        'property value');
-}, 'Test KeyframeEffect constructor creates KeyframeEffect instance ' +
+    testKeyframe(effect.getFrames[0], {
+        top: '10px',
+        offset: null,
+        easing: 'linear',
+        composite: null
+    }, 'Created keyframe instance should have default propeties', 1);
+}, 'Test that KeyframeEffect constructor creates KeyframeEffect instance ' +
     'with a single Keyframe and default properties');
 
-
 test(function() {
-    var effect = new KeyframeEffect({top: '10px',
+    var keyframe = {top: '10px',
         offset: 0.5,
         easing: 'ease',
-        composite: 'add'});
+        composite: 'add'};
+    var effect = new KeyframeEffect(keyframe);
 
-    assert_not_equals(effect.getFrames(), null, 'Frames sequence should not be empty');
-    assert_equals(effect.getFrames().length, 1, 'There should be only one Keyframe object');
-    assert_equals(effect.getFrames()[0].top, '10px', 'Keyframe target property value ' +
-        'should be specified by the KeyframeEffect constructor');
-    assert_equals(effect.getFrames[0].offset, 0.5, 'Keyframe offset ' +
-        'should be specified by the KeyframeEffect constructor');
-    assert_equals(effect.getFrames[0].easing, 'ease', 'Keyframe easing ' +
-        'should be specified by the KeyframeEffect constructor');
-    assert_equals(effect.getFrames[0].composite, 'add', 'Keyframe composite ' +
-        'should be specified by the KeyframeEffect constructor');
-    assert_equals(effect.getFrames[0].computedOffset, 0.5, 'Wrong computedOffset ' +
-        'property value');
-}, 'Test KeyframeEffect constructor creates KeyframeEffect instance ' +
+    testKeyframe(effect.getFrames[0], keyframe,
+        'Created keyframe instance should have propeties set by constructor', 1);
+}, 'Test that KeyframeEffect constructor creates KeyframeEffect instance ' +
     'with a single Keyframe and properties set by the constructor');
 
+test(function() {
+    var keyframes = [{top: '10px', offset: 0.1}, {top: '20px', offset: 0.2}];
+    var effect = new KeyframeEffect(keyframes);
+
+    testKeyframe(effect.getFrames[0], {top: '10px',
+        offset: 0.1,
+        easing: 'linear',
+        composite: null}, 'Keyframe 0', 0.1);
+    testKeyframe(effect.getFrames[1], {top: '20px',
+        offset: 0.2,
+        easing: 'linear',
+        composite: null}, 'Keyframe 1', 0.1);
+}, 'Test that KeyframeEffect constructor creates KeyframeEffect instance ' +
+    'with the keyframes sequence with properties values specified by the constructor ' +
+    'or default if they were not specified');
+
+test(function() {
+    var keyframes = [{top: '10px', offset: 0.1, easing: 'ease', composite: 'add'},
+        {top: '20px', offset: 0.2, easing: 'ease-in', composite: 'replace'}];
+    var effect = new KeyframeEffect(keyframes);
+
+    testKeyframe(effect.getFrames[0], keyframes[0], 'Keyframe 0', 0.1);
+    testKeyframe(effect.getFrames[1], keyframes[1], 'Keyframe 1', 0.2);
+}, 'Test that KeyframeEffect constructor creates KeyframeEffect instance ' +
+    'with the keyframes sequence with properties values specified by the constructor');
+
+test(function() {
+    var keyframes = [{top: '10px', offset: 0.3, easing: 'ease', composite: 'add'},
+        {top: '20px', offset: 0.2, easing: 'ease-in', composite: 'replace'}];
+    var effect = new KeyframeEffect(keyframes);
+
+    testKeyframe(effect.getFrames[0], keyframes[1], 'Keyframe 0', 0.2);
+    testKeyframe(effect.getFrames[1], keyframes[0], 'Keyframe 1', 0.3);
+}, 'Test that KeyframeEffect constructor creates KeyframeEffect instance ' +
+    'with the normalized keyframes sequence with properties values ' +
+    'specified by the constructor');
 </script>
 </body>

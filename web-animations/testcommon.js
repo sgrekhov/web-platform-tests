@@ -127,6 +127,20 @@ function getExpectedTop(currentTime) {
         (currentTime % ANIMATION_END_TIME);
 }
 
+// Test that values of expected object properties are equal to the values of keyframe object
+// properties with the same names and tests additional property computedOffset
+function testKeyframe(keyframe, expected, message, computedOffset) {
+    for (var propertyName in expected) {
+        assert_equals(keyframe[propertyName], expected[propertyName], message +
+            '. Wrong value of property \'' + propertyName + '\'');
+    }
+    if (computedOffset) {
+        assert_equals(keyframe.computedOffset, computedOffset, message +
+            '. Wrong computedOffset value');
+    }
+}
+
+
 // FIXME The code below is stubs for Web Animations objects that don't implemented yet
 // Remove all of the code below before merge it with w3c branch
 

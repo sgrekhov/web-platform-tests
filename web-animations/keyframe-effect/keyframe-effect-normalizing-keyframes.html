@@ -11,22 +11,13 @@
 <body>
 <div id="log"></div>
 <script>
+// Creates two effects that tested in the tests below. One with frames,
+// defined by the constructor. And the second with keyframes defined by setFrames()
 function createEffectsToTest(keyframes) {
     var effect1 = new KeyframeEffect(keyframes);
     var effect2 = new KeyframeEffect([]);
     effect2.setFrames(keyframes);
     return [effect1, effect2];
-}
-
-function testKeyframe(keyframe, expected, message, computedOffset) {
-    for (var propertyName in expected) {
-        assert_equals(keyframe[propertyName], expected[propertyName], message +
-            '. Wrong value of property \'' + propertyName + '\'');
-    }
-    if (computedOffset) {
-        assert_equals(keyframe.computedOffset, computedOffset, message +
-            '. Wrong computedOffset value');
-    }
 }
 
 test(function() {
