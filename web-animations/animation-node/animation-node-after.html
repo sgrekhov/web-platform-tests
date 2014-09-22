@@ -121,7 +121,9 @@ test(function() {
 }, 'HierarchyRequestError is thrown if an inclusive ancestor is inserted after the node. ' +
     'Test several arguments in after() call');
 
-// Test step 3. Insert nodes after this animation node.
+// Test step 3 and 4.
+// 3. Let reference child be the next sibling of this animation node not in nodes.
+// 4. Insert nodes before reference child.
 test(function() {
     var test = this;
     var parents = [AnimationGroup, AnimationSequence];
@@ -139,7 +141,7 @@ test(function() {
             assert_equals(node1.nextSibling, node2, 'Node should be inserted into the tree ' +
                 'after this node');
             assert_equals(parent.children, [node1, node2], parentCtor.name +
-                    '.children should be updated');
+                '.children should be updated');
         });
     });
 }, 'AnimationNode.after() inserts nodes after this node');
@@ -302,6 +304,39 @@ test(function() {
     var parents = [AnimationGroup, AnimationSequence];
     parents.forEach(function(parentCtor) {
         var nodes = [newAnimation(createDiv(test)), new AnimationGroup([]), new AnimationSequence([])];
+        nodes.forEach(function(node1) {
+            var node2 = newAnimation(createDiv(test));
+            var node3 = newAnimation(createDiv(test));
+            var node4 = newAnimation(createDiv(test));
+            var parent = new parentCtor([node1, node2]);
+
+            node1.after(node3, node4, node3, node4);
+
+            assert_equals(node1.nextSibling, node3, type(node1) + '.after() should insert ' +
+                'nodes after this node');
+            assert_equals(node3.previousSibling, node1, type(node1) + '.after() should insert ' +
+                'nodes after this node');
+            assert_equals(node3.nextSibling, node4, type(node1) + '.after() should insert ' +
+                'nodes after this node');
+            assert_equals(node3.parent, parent, 'Parent group of the inserted node should be changed');
+            assert_equals(node4.previousSibling, node3, type(node1) + '.after() should insert ' +
+                'nodes after this node');
+            assert_equals(node4.nextSibling, node2, type(node1) + '.after() should insert ' +
+                'nodes after this node');
+            assert_equals(node4.parent, parent, 'Parent group of the inserted node should be changed');
+            assert_equals(node2.previousSibling, node4, type(node1) + '.after() should insert ' +
+                'nodes after this node');
+            assert_array_equals(parent.children, [node1, node3, node4, node2], parentCtor.name +
+                '.children should be updated');
+        });
+    });
+}, 'Test AnimationNode.after() inserts several nodes after this node, duplicate nodes are ignored');
+
+test(function() {
+    var test = this;
+    var parents = [AnimationGroup, AnimationSequence];
+    parents.forEach(function(parentCtor) {
+        var nodes = [newAnimation(createDiv(test)), new AnimationGroup([]), new AnimationSequence([])];
         nodes.forEach(function(node2) {
             var node1 = newAnimation(createDiv(test));
             var parent = new parentCtor([node1]);
@@ -351,6 +386,6 @@ test(function() {
         });
     });
 }, 'Test AnimationNode.after() associates the inserted node with animation group player, ' +
-    'if the node is directly associated with a player. Test Animation');
+    'if the node is directly associated with a player');
 </script>
 </body>
