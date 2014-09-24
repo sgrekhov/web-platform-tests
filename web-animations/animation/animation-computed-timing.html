@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Animation computedTiming attribute test</title>
+<meta name="assert" content="Returns the calculated timing properties for this animation node">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-computedTiming">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+// Test here only cases specific to Animation
+// The rest is tested in animation-node-computed-timing.html
+test(function() {
+    var node = new Animation(createDiv(this), []);
+    assert_equals(node.computedTiming.duration, 0,
+        'Animation.computedTiming.duration should return zero');
+}, 'Test Animation.computedTiming.duration initial value is intrinsic ' +
+    'iteration duration, which is zero');
+
+test(function() {
+    var timing = {duration: 'auto'};
+    var node = new Animation(createDiv(this), [], timing);
+
+    assert_equals(node.computedTiming.duration, 0,
+        'Animation.computedTiming.duration should return zero');
+}, 'Test Animation.computedTiming.duration returns intrinsic iteration duration (zero) ' +
+    'for nodes with timing.duration value \'auto\'');
+
+test(function() {
+    var timing = {duration: 'some unsupported value'};
+    var node = new Animation(createDiv(this), [], timing);
+
+    assert_equals(node.computedTiming.duration, 0,
+        'Animation.computedTiming.duration should return zero');
+}, 'Test Animation.computedTiming.duration returns intrinsic iteration duration (zero) ' +
+    'for nodes with unsupported timing.duration value');
+
+test(function() {
+    var timing = {fill: 'auto'};
+    var node = new Animation(createDiv(this), [], timing);
+
+    assert_equals(node.computedTiming.fill, 'none',
+        'AnimationNode.computedTiming.fill should return \'none\'');
+
+}, 'Test Animation.computedTiming.fill returns \'none\' for nodes ' +
+    'with timing.fill equal to \'auto\'');
+</script>
+</body>

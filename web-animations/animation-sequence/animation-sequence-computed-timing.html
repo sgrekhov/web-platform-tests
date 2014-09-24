@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationSequence node computedTiming attribute test</title>
+<meta name="assert" content="Returns the calculated timing properties for this animation node">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-computedTiming">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var node = new AnimationSequence([]);
+    assert_equals(node.computedTiming.duration, 0,
+        'AnimationSequence.computedTiming.duration should return zero');
+}, 'Test AnimationSequence.computedTiming.duration initial value is intrinsic ' +
+    'iteration duration, which is zero for sequence without children');
+
+test(function() {
+    var node = newAnimation(createDiv(this));
+    var sequence = new AnimationSequence([node]);
+
+    var duration = sequence.computedTiming.duration;
+    var probeNode = new AnimationGroup([]);
+    sequence.append(probeNode);
+    assert_equals(duration, probeNode.computedTiming.startTime,
+        'AnimationSequence.computedTiming.duration should return intrinsic iteration duration');
+}, 'Test AnimationSequence.computedTiming.duration initial value is intrinsic ' +
+    'iteration duration, which is max(0, start time of next appended node) ' +
+    'for sequence with single child');
+
+test(function() {
+    var node1 = new Animation(createDiv(this), [], 1000);
+    var node2 = new Animation(createDiv(this), [], 500);
+    var sequence = new AnimationSequence([node1, node2]);
+
+    var duration = sequence.computedTiming.duration;
+    var probeNode = new AnimationGroup([]);
+    sequence.append(probeNode);
+    assert_equals(duration, probeNode.computedTiming.startTime,
+        'AnimationSequence.computedTiming.duration should return intrinsic iteration duration');
+}, 'Test AnimationSequence.computedTiming.duration initial value is intrinsic ' +
+    'iteration duration, which is max(0, start time of next appended node) ' +
+    'for sequence several children');
+
+test(function() {
+    var node1 = new AnimationGroup([], -1000);
+    var node2 = new AnimationGroup([], -500);
+    var sequence = new AnimationSequence([node1, node2]);
+
+    var duration = sequence.computedTiming.duration;
+    var probeNode = new AnimationGroup([]);
+    sequence.append(probeNode);
+    assert_equals(duration, probeNode.computedTiming.startTime,
+        'AnimationSequence.computedTiming.duration should return zero');
+}, 'Test AnimationSequence.computedTiming.duration initial value is intrinsic ' +
+    'iteration duration, which is max(0, start time of next appended node) ' +
+    'for sequence with children with negative end time');
+
+test(function() {
+    var timing = {duration: 'auto'};
+    var node = new AnimationSequence([], timing);
+    assert_equals(node.computedTiming.duration, 0,
+        'AnimationSequence.computedTiming.duration should return zero');
+}, 'Test AnimationSequence.computedTiming.duration return intrinsic ' +
+    'iteration duration, which is zero for sequence without children, ' +
+    'if sequence timing.duration is \'auto\'');
+
+test(function() {
+    var timing = {duration: 'auto'};
+    var node = newAnimation(createDiv(this));
+    var sequence = new AnimationSequence([node], timing);
+
+    var duration = sequence.computedTiming.duration;
+    var probeNode = new AnimationGroup([]);
+    sequence.append(probeNode);
+    assert_equals(duration, probeNode.computedTiming.startTime,
+        'AnimationSequence.computedTiming.duration should return intrinsic iteration duration');
+}, 'Test AnimationSequence.computedTiming.duration returns intrinsic ' +
+    'iteration duration, which is max(0, start time of next appended node) ' +
+    'for sequence with single child and sequence timing.duration is \'auto\'');
+
+test(function() {
+    var timing = {duration: 'auto'};
+    var node1 = new Animation(createDiv(this), [], 1000);
+    var node2 = new Animation(createDiv(this), [], 500);
+    var sequence = new AnimationSequence([node1, node2], timing);
+
+    var duration = sequence.computedTiming.duration;
+    var probeNode = new AnimationGroup([]);
+    sequence.append(probeNode);
+    assert_equals(duration, probeNode.computedTiming.startTime,
+        'AnimationSequence.computedTiming.duration should return intrinsic iteration duration');
+}, 'Test AnimationSequence.computedTiming.duration returns intrinsic ' +
+    'iteration duration, which is max(0, start time of next appended node) ' +
+    'for sequence with several children and sequence timing.duration is \'auto\'');
+
+test(function() {
+    var timing = {duration: 'auto'};
+    var node1 = new AnimationGroup([], -1000);
+    var node2 = new AnimationGroup([], -500);
+    var sequence = new AnimationSequence([node1, node2], timing);
+
+    assert_equals(sequence.computedTiming.duration, 0,
+        'AnimationSequence.computedTiming.duration should return zero');
+}, 'Test AnimationSequence.computedTiming.duration returns intrinsic ' +
+    'iteration duration, which is max(0, start time of next appended node) ' +
+    'for sequence with children with negative end time and sequence timing.duration is \'auto\'');
+
+test(function() {
+    var timing = {duration: 'some unsupported value'};
+    var node = new AnimationSequence([], timing);
+    assert_equals(node.computedTiming.duration, 0,
+        'AnimationSequence.computedTiming.duration should return zero');
+}, 'Test AnimationSequence.computedTiming.duration return intrinsic ' +
+    'iteration duration, which is zero for sequence without children, ' +
+    'if sequence timing.duration value is unsupported');
+
+test(function() {
+    var timing = {duration: 'some unsupported value'};
+    var node = newAnimation(createDiv(this));
+    var sequence = new AnimationSequence([node], timing);
+
+    var duration = sequence.computedTiming.duration;
+    var probeNode = new AnimationGroup([]);
+    sequence.append(probeNode);
+    assert_equals(duration, probeNode.computedTiming.startTime,
+        'AnimationSequence.computedTiming.duration should return intrinsic iteration duration');
+}, 'Test AnimationSequence.computedTiming.duration returns intrinsic ' +
+    'iteration duration, which is max(0, start time of next appended node) ' +
+    'for sequence with single child and sequence timing.duration value is unsupported');
+
+test(function() {
+    var timing = {duration: 'some unsupported value'};
+    var node1 = new Animation(createDiv(this), [], 1000);
+    var node2 = new Animation(createDiv(this), [], 500);
+    var sequence = new AnimationSequence([node1, node2], timing);
+
+    var duration = sequence.computedTiming.duration;
+    var probeNode = new AnimationGroup([]);
+    sequence.append(probeNode);
+    assert_equals(duration, probeNode.computedTiming.startTime,
+        'AnimationSequence.computedTiming.duration should return intrinsic iteration duration');
+}, 'Test AnimationSequence.computedTiming.duration returns intrinsic ' +
+    'iteration duration, which is max(0, start time of next appended node) ' +
+    'for sequence several children and sequence timing.duration value is unsupported');
+
+test(function() {
+    var timing = {duration: 'some unsupported value'};
+    var node1 = new AnimationGroup([], -1000);
+    var node2 = new AnimationGroup([], -500);
+    var sequence = new AnimationSequence([node1, node2], timing);
+
+    assert_equals(sequence.computedTiming.duration, 0,
+        'AnimationSequence.computedTiming.duration should return zero');
+}, 'Test AnimationSequence.computedTiming.duration returns intrinsic ' +
+    'iteration duration, which is max(0, start time of next appended node) ' +
+    'for sequence with children with negative end time and sequence timing.duration value is unsupported');
+
+test(function() {
+    var timing = {fill: 'auto'};
+    var node = new AnimationSequence([], timing);
+
+    assert_equals(node.computedTiming.fill, 'both',
+        'AnimationSequence.computedTiming.fill should return \'both\'');
+}, 'Test AnimationSequence.computedTiming.fill returns \'both\' ' +
+    'if sequence timing.fill value is \'auto\'');
+</script>
+</body>
