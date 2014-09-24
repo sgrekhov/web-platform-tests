@@ -150,7 +150,11 @@ function computeOffset(keyframes, spacing, pacedProperty) {
     }
     // Set computedOffset to offset. Further check computedOffset only
     keyframes.forEach(function(keyframe) {
-        keyframe.computedOffset = keyframe.offset;
+        // If computedOffset not null - don't toch it
+        // (it could be calculated earlier in paced mode for example)
+        if (!keyframe.computedOffset) {
+            keyframe.computedOffset = keyframe.offset;
+        }
     });
     // If keyframes contains more than one keyframe and the keyframe offset of the first
     // keyframe in keyframes is null, set the keyframe offset of the first keyframe to 0
@@ -249,13 +253,6 @@ function distributeKeyframesPaced(keyframes, start, end, pacedProperty) {
         // Now evently distribute other (not paced) keyframes between pacedA and pacedB
         var keyframesToDistribute = (pacedB + 1 >= keyframes.length ? keyframes.slice(pacedA) :
             keyframes.slice(pacedA, end + 1));
-
-        // Set offset property of distributed frames. Otherwise computeOffset() won't worn
-        keyframesToDistribute.forEach(function(keyframe) {
-            if (keyframe.computedOffset) {
-                keyframe.offset = keyframe.computedOffset;
-            }
-        });
         var distributedKeyframes = computeOffset(keyframesToDistribute, 'distibute', pacedProperty);
 
         // Apply computed offset values to keyframe array
