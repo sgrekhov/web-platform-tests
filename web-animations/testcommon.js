@@ -154,12 +154,14 @@ function computeOffset(keyframes, spacing, pacedProperty) {
     });
     // If keyframes contains more than one keyframe and the keyframe offset of the first
     // keyframe in keyframes is null, set the keyframe offset of the first keyframe to 0
-    if (keyframes.length > 1 && keyframe[0].computedOffset === null) {
-        keyframe[0].computedOffset = 0;
+    // FIXME use === below
+    if (keyframes.length > 1 && keyframes[0].computedOffset == null) {
+        keyframes[0].computedOffset = 0;
     }
     // If the keyframe offset of the last keyframe in distributed keyframes is null,
     // set its keyframe offset to 1.
-    if (keyframes[keyframes.length - 1].computedOffset === null) {
+    // FIXME use === below
+    if (keyframes[keyframes.length - 1].computedOffset == null) {
         keyframes[keyframes.length - 1].computedOffset = 1;
     }
     // Find pair of frames startFrame and endFrame
@@ -167,7 +169,8 @@ function computeOffset(keyframes, spacing, pacedProperty) {
     var startFrame = 0;
     var endFrame = 0;
     for (var i = 1; i < keyframes.length; i++) {
-        if (keyframes[i].computedOffset !== null) {
+        // FIXME use !== below
+        if (keyframes[i].computedOffset != null) {
             endFrame = i;
             if (endFrame - startFrame > 1) {
                 if (spacing === 'distribute') {
@@ -211,10 +214,15 @@ function distributeKeyframesPaced(keyframes, start, end, pacedProperty) {
         // For each keyframe in the range (start, paced A] and [paced B, end),
         // apply the procedure for evenly distributing a keyframe using
         // start and end as the start and end keyframes respectively.
-        var keyframesToDistributeEvently =
-            keyframes.slice(start, pacedA + 1).concat(
+        var keyframesToDistributeEvently = [];
+        if (pacedA != start) {
+            keyframesToDistributeEvently = keyframes.slice(start, pacedA + 1);
+        }
+        if (pacedB != end) {
+            keyframesToDistributeEvently.concat(
                 end + 1 >= keyframes.length ? keyframes.slice(pacedB) :
                     keyframes.slice(pacedB, end + 1));
+        }
         var distributed = eventlyDistributeKeyframes(keyframesToDistributeEvently, 0,
             keyframesToDistributeEvently.length);
 
@@ -243,7 +251,7 @@ function distributeKeyframesPaced(keyframes, start, end, pacedProperty) {
             keyframes.slice(pacedA, end + 1));
 
         // Set offset property of distributed frames. Otherwise computeOffset() won't worn
-        distributedKeyframes.forEach(function(keyframe) {
+        keyframesToDistribute.forEach(function(keyframe) {
             if (keyframe.computedOffset) {
                 keyframe.offset = keyframe.computedOffset;
             }
@@ -272,7 +280,7 @@ function cumulativeDistance(keyframes, start, end, property) {
     var sum = 0;
     var previousPaced = start;
     for (var i = start + 1; i <= end; i++) {
-        if (keyframe[i][property]) {
+        if (keyframes[i][property]) {
             sum += distance(keyframes[previousPaced], keyframes[i], property);
             previousPaced = i;
         }
@@ -283,7 +291,7 @@ function cumulativeDistance(keyframes, start, end, property) {
 // Returns distance between two target properties as defined at
 // http://w3c.github.io/web-animations/#distance-computation
 // This function works for properties with scalar value only
-function dictance(keyframeStart, keyframeEnd, property) {
+function distance(keyframeStart, keyframeEnd, property) {
     // FIXME Probably it makes sense to add processing of non-scalar properties as well
     return Math.abs(parseFloat(keyframeEnd[property]) - parseFloat(keyframeStart[property]));
 }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>KeyframeEffect spacing attribute test</title>
+<meta name="assert" content="The spacing mode to use for this animation effect">
+<link rel="help" href="http://w3c.github.io/web-animations/#the-keyframeeffect-interface">
+<link rel="help" href="http://w3c.github.io/web-animations/#spacing-keyframes">
+<link rel="help" href="http://w3c.github.io/web-animations/#applying-spacing-to-keyframes">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+// Creates two effects that tested in the tests below. One with spacing,
+// defined by the constructor. And the second with spacing set by spacing attribute
+function createEffectsToTest(keyframes, spacingMode) {
+    var effect1 = new KeyframeEffect(keyframes, {spacing: spacingMode});
+    var effect2 = new KeyframeEffect(keyframes);
+    effect2.spacing = spacingMode;
+    return [effect1, effect2];
+}
+
+test(function() {
+    var effect = new KeyframeEffect([]);
+    assert_equals(effect.spacing, 'distribute', 'Default value of spacing should be ' +
+        '\'distribute\'');
+}, 'Test that KeyframeEffect constructor by default creates keyframe effect with ' +
+    '\'distribute\' spacing mode');
+
+test(function() {
+    var effectsToTest = createEffectsToTest([], 'paced');
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_equals(effect.spacing, 'paced', 'Effect ' + index + ': ' +
+            'Spacing attribute value should be set');
+    });
+}, 'Test that spacing attribute returns the current spacing mode');
+
+test(function() {
+    var keyframe = {top: '10px'};
+    var effectsToTest = createEffectsToTest(keyframe, 'distribute');
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_equals(effect.getFrames()[0].computedOffset, 1, 'Effect ' + index + ': ' +
+            'Wrong computedOffset value');
+    });
+}, 'Test that spacing of a single keyframe with spacing mode \'distribute\' ' +
+    'produces computedOffset 1');
+
+test(function() {
+    var keyframe = {top: '10px'};
+    var effectsToTest = createEffectsToTest(keyframe, 'paced');
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_equals(effect.getFrames()[0].computedOffset, 1, 'Effect ' + index + ': ' +
+            'Wrong computedOffset value');
+    });
+}, 'Test that spacing of a single keyframe with spacing mode \'paced\' ' +
+    'produces computedOffset 1');
+
+test(function() {
+    var keyframe = {top: '10px'};
+    var effectsToTest = createEffectsToTest(keyframe, 'paced(top)');
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_equals(effect.getFrames()[0].computedOffset, 1, 'Effect ' + index + ': ' +
+            'Wrong computedOffset value');
+    });
+}, 'Test that spacing of a single keyframe with spacing mode \'paced({ident})\' ' +
+    'produces computedOffset 1');
+
+test(function() {
+    var keyframes = [{top: '10px'},
+        {top: '20px'},
+        {top: '50px'}];
+    var effectsToTest = createEffectsToTest(keyframes, 'distribute');
+    var expected = computeOffset(keyframes, 'distribute');
+
+    effectsToTest.forEach(function(effect, index) {
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test spacing in \'distribute\' mode a sequence of keyframes with null offset');
+
+test(function() {
+    var keyframes = [{top: '10px'},
+        {top: '20px'},
+        {top: '50px'}];
+    var effectsToTest = createEffectsToTest(keyframes, 'paced');
+    var expected = computeOffset(keyframes, 'paced');
+
+    effectsToTest.forEach(function(effect, index) {
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test spacing in \'paced\' mode a sequence of keyframes with null offset');
+
+test(function() {
+    var keyframes = [{top: '10px'},
+        {top: '20px'},
+        {top: '50px'}];
+    var effectsToTest = createEffectsToTest(keyframes, 'paced(top)');
+    var expected = computeOffset(keyframes, 'paced', 'top');
+
+    effectsToTest.forEach(function(effect, index) {
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test spacing in \'paced({ident})\' mode a sequence of keyframes with null offset');
+</script>
+</body>
