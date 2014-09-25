@@ -18,23 +18,29 @@ var ANIMATION_TOP_0 = 10;
 var ANIMATION_TOP_0_5 = 100;
 var ANIMATION_TOP_1 = 200;
 
-var KEYFRAMES = [
-    {top: ANIMATION_TOP_0 + 'px', offset: 0},
-    {top: ANIMATION_TOP_0_5 + 'px', offset: 1/2},
-    {top: ANIMATION_TOP_1 + 'px', offset: 1}];
+var KEYFRAMES = [ {
+    top : ANIMATION_TOP_0 + 'px',
+    offset : 0
+}, {
+    top : ANIMATION_TOP_0_5 + 'px',
+    offset : 1 / 2
+}, {
+    top : ANIMATION_TOP_1 + 'px',
+    offset : 1
+} ];
 
 // Default timing values as specified at
 // http://dev.w3.org/fxtf/web-animations/#the-animationtiminginput-dictionary
 var DEFAULT_TIMING = {
-        delay: 0,
-        endDelay: 0,
-        fill: 'auto',
-        iterationStart: 0.0,
-        iterations: 1.0,
-        duration: 'auto',
-        playbackRate: 1.0,
-        direction: 'normal',
-        easing: 'linear'
+    delay : 0,
+    endDelay : 0,
+    fill : 'auto',
+    iterationStart : 0.0,
+    iterations : 1.0,
+    duration : 'auto',
+    playbackRate : 1.0,
+    direction : 'normal',
+    easing : 'linear'
 };
 
 // Creates and returns new HTML document
@@ -60,7 +66,8 @@ function newKeyframeEffect(options) {
 }
 
 function newMotionPathEffect(options) {
-    var pathString = 'M 0 ' + ANIMATION_TOP_0 + ' L 0 ' + ANIMATION_TOP_1 + ' z';
+    var pathString = 'M 0 ' + ANIMATION_TOP_0 + ' L 0 ' + ANIMATION_TOP_1
+            + ' z';
     if (options) {
         return new MotionPathEffect(pathString, options);
     }
@@ -81,8 +88,8 @@ function createDiv(test, doc) {
     return div;
 }
 
-//creates two div elements, appends them to the document body and
-//add removing of the created elements to test cleanup
+// creates two div elements, appends them to the document body and
+// add removing of the created elements to test cleanup
 function createPseudoElement(test, doc) {
     if (!doc) {
         doc = document;
@@ -117,26 +124,36 @@ function hasAncestorClassString(object, classString) {
 }
 
 // Returns the type name of given object
-function type(object){
+function type(object) {
     return Object.prototype.toString.call(object).slice(8, -1);
 }
 
 // Returns expected top of the target element width at currentTime
 function getExpectedTop(currentTime) {
-    return ANIMATION_TOP_0 + (ANIMATION_TOP_1 - ANIMATION_TOP_0) *
-        (currentTime % ANIMATION_END_TIME);
+    return ANIMATION_TOP_0 + (ANIMATION_TOP_1 - ANIMATION_TOP_0)
+            * (currentTime % ANIMATION_END_TIME);
 }
 
-// Test that values of expected object properties are equal to the values of keyframe object
+// Test that values of expected object properties are equal to the values of
+// keyframe object
 // properties with the same names and tests additional property computedOffset
 function testKeyframe(keyframe, expected, message, computedOffset) {
-    for (var propertyName in expected) {
-        assert_equals(keyframe[propertyName], expected[propertyName], message +
-            '. Wrong value of property \'' + propertyName + '\'');
+    var epsilon = 0.001;
+    for ( var propertyName in expected) {
+        if (propertyName === 'computedOffset') {
+            assert_approx_equals(keyframe[propertyName],
+                    expected[propertyName], epsilon, message
+                            + '. Wrong value of property \'' + propertyName
+                            + '\'');
+        } else {
+            assert_equals(keyframe[propertyName], expected[propertyName],
+                    message + '. Wrong value of property \'' + propertyName
+                            + '\'');
+        }
     }
     if (computedOffset) {
-        assert_equals(keyframe.computedOffset, computedOffset, message +
-            '. Wrong computedOffset value');
+        assert_approx_equals(keyframe.computedOffset, computedOffset, epsilon,
+                message, +'. Wrong computedOffset value');
     }
 }
 
@@ -156,14 +173,15 @@ function computeOffset(keyframes, spacing, pacedProperty) {
             keyframe.computedOffset = keyframe.offset;
         }
     });
-    // If keyframes contains more than one keyframe and the keyframe offset of the first
-    // keyframe in keyframes is null, set the keyframe offset of the first keyframe to 0
+    // If keyframes contains more than one keyframe and the keyframe offset of
+    // the first keyframe in keyframes is null, set the keyframe offset of the
+    // first keyframe to 0
     // FIXME use === below
     if (keyframes.length > 1 && keyframes[0].computedOffset == null) {
         keyframes[0].computedOffset = 0;
     }
-    // If the keyframe offset of the last keyframe in distributed keyframes is null,
-    // set its keyframe offset to 1.
+    // If the keyframe offset of the last keyframe in distributed keyframes is
+    // null, set its keyframe offset to 1.
     // FIXME use === below
     if (keyframes[keyframes.length - 1].computedOffset == null) {
         keyframes[keyframes.length - 1].computedOffset = 1;
@@ -172,7 +190,7 @@ function computeOffset(keyframes, spacing, pacedProperty) {
     // All frames between them have null offset
     var startFrame = 0;
     var endFrame = 0;
-    for (var i = 1; i < keyframes.length; i++) {
+    for ( var i = 1; i < keyframes.length; i++) {
         // FIXME use !== below
         if (keyframes[i].computedOffset != null) {
             endFrame = i;
@@ -181,8 +199,10 @@ function computeOffset(keyframes, spacing, pacedProperty) {
                     eventlyDistributeKeyframes(keyframes, startFrame, endFrame);
                 }
                 if (spacing === 'paced') {
-                    distributeKeyframesPaced(keyframes, startFrame, endFrame, pacedProperty);
+                    distributeKeyframesPaced(keyframes, startFrame, endFrame,
+                            pacedProperty);
                 }
+                startFrame = i;
             } else {
                 startFrame = i;
             }
@@ -192,27 +212,32 @@ function computeOffset(keyframes, spacing, pacedProperty) {
 }
 
 function eventlyDistributeKeyframes(keyframes, start, end) {
-    for (var i = start + 1; i < end; i++) {
-        keyframes[i].computedOffset = keyframes[start].computedOffset +
-            (keyframes[end].computedOffset - keyframes[start].computedOffset) * i / (end - start);
+    for ( var i = start + 1; i < end; i++) {
+        keyframes[i].computedOffset = keyframes[start].computedOffset
+                + (keyframes[end].computedOffset - keyframes[start].computedOffset)
+                * (i - start) / (end - start);
     }
     return keyframes;
 }
 
 function distributeKeyframesPaced(keyframes, start, end, pacedProperty) {
-    // In range [start, end] find two frames pacedA and pacedB that contain value
-    // for peaced property. peacedA is the first, peacedB is the last. If there are
-    // no such frames let both of them refer to end
-    var pacedA = end;
-    var pacedB = end;
-    for (var i = start; i <= end; i++) {
+    // In range [start, end] find two frames pacedA and pacedB that contain
+    // value for peaced property. peacedA is the first, peacedB is the last. If
+    // there are no such frames let both of them refer to end
+    var pacedA = -1;
+    var pacedB = -1;
+    for ( var i = start; i <= end; i++) {
         if (keyframes[i][pacedProperty]) {
-            if (pacedA == end) {
+            if (pacedA == -1) {
                 pacedA = i;
             } else {
                 pacedB = i;
             }
         }
+    }
+    if (pacedA == -1 || pacedB == -1) {
+        pacedA = end;
+        pacedB = end;
     }
     if (pacedA != pacedB) {
         // For each keyframe in the range (start, paced A] and [paced B, end),
@@ -221,18 +246,24 @@ function distributeKeyframesPaced(keyframes, start, end, pacedProperty) {
         var keyframesToDistributeEvently = [];
         if (pacedA != start) {
             keyframesToDistributeEvently = keyframes.slice(start, pacedA + 1);
+        } else {
+            keyframesToDistributeEvently = [ keyframes[start] ];
         }
         if (pacedB != end) {
-            keyframesToDistributeEvently.concat(
-                end + 1 >= keyframes.length ? keyframes.slice(pacedB) :
-                    keyframes.slice(pacedB, end + 1));
+            keyframesToDistributeEvently = keyframesToDistributeEvently
+                    .concat(end + 1 >= keyframes.length ? keyframes
+                            .slice(pacedB) : keyframes.slice(pacedB, end + 1));
+        } else {
+            keyframesToDistributeEvently = keyframesToDistributeEvently
+                    .concat(keyframes[end]);
         }
-        var distributed = eventlyDistributeKeyframes(keyframesToDistributeEvently, 0,
-            keyframesToDistributeEvently.length);
+        var distributed = eventlyDistributeKeyframes(
+                keyframesToDistributeEvently, 0,
+                keyframesToDistributeEvently.length - 1);
 
         // Apply computed offset values to keyframe array
         var counter = 1;
-        for (var j = start + 1; j <= pacedA; j++, counter++) {
+        for ( var j = start + 1; j <= pacedA; j++, counter++) {
             keyframes[j].computedOffset = distributed[counter].computedOffset;
         }
         for (j = pacedB; j < end; j++, counter++) {
@@ -240,24 +271,27 @@ function distributeKeyframesPaced(keyframes, start, end, pacedProperty) {
         }
 
         // Now distribute each pacable keyframe in the range (pacedA, pacedB)
-        var totalDistance = cumulativeDistance(keyframes, pacedA, pacedB, pacedProperty);
-        for (var k = pacedA + 1; k < pacedB; k++) {
+        var totalDistance = cumulativeDistance(keyframes, pacedA, pacedB,
+                pacedProperty);
+        for ( var k = pacedA + 1; k < pacedB; k++) {
             if (keyframes[k][pacedProperty]) {
-                keyframes[k].computedOffset = keyframes[pacedA].computedOffset +
-                    (keyframes[pacedB].computedOffset - keyframes[pacedA].computedOffset) *
-                    cumulativeDistance(keyframes, pacedA, k, pacedProperty) /
-                    totalDistance;
+                keyframes[k].computedOffset = keyframes[pacedA].computedOffset
+                        + (keyframes[pacedB].computedOffset - keyframes[pacedA].computedOffset)
+                        * cumulativeDistance(keyframes, pacedA, k,
+                                pacedProperty) / totalDistance;
             }
         }
 
-        // Now evently distribute other (not paced) keyframes between pacedA and pacedB
-        var keyframesToDistribute = (pacedB + 1 >= keyframes.length ? keyframes.slice(pacedA) :
-            keyframes.slice(pacedA, end + 1));
-        var distributedKeyframes = computeOffset(keyframesToDistribute, 'distibute', pacedProperty);
+        // Now evently distribute other (not paced) keyframes between pacedA and
+        // pacedB
+        var keyframesToDistribute = (pacedB + 1 >= keyframes.length ? keyframes
+                .slice(pacedA) : keyframes.slice(pacedA, end + 1));
+        var distributedKeyframes = computeOffset(keyframesToDistribute,
+                'distibute', pacedProperty);
 
         // Apply computed offset values to keyframe array
         counter = 1;
-        for (var j = pacedA + 1; j <= pacedB; j++, counter++) {
+        for ( var j = pacedA + 1; j <= pacedB; j++, counter++) {
             keyframes[j].computedOffset = distributedKeyframes[counter].computedOffset;
         }
     } else {
@@ -276,7 +310,7 @@ function distributeKeyframesPaced(keyframes, start, end, pacedProperty) {
 function cumulativeDistance(keyframes, start, end, property) {
     var sum = 0;
     var previousPaced = start;
-    for (var i = start + 1; i <= end; i++) {
+    for ( var i = start + 1; i <= end; i++) {
         if (keyframes[i][property]) {
             sum += distance(keyframes[previousPaced], keyframes[i], property);
             previousPaced = i;
@@ -289,11 +323,14 @@ function cumulativeDistance(keyframes, start, end, property) {
 // http://w3c.github.io/web-animations/#distance-computation
 // This function works for properties with scalar value only
 function distance(keyframeStart, keyframeEnd, property) {
-    // FIXME Probably it makes sense to add processing of non-scalar properties as well
-    return Math.abs(parseFloat(keyframeEnd[property]) - parseFloat(keyframeStart[property]));
+    // FIXME Probably it makes sense to add processing of non-scalar properties
+    // as well
+    return Math.abs(parseFloat(keyframeEnd[property])
+            - parseFloat(keyframeStart[property]));
 }
 
-// FIXME The code below is stubs for Web Animations objects that don't implemented yet
+// FIXME The code below is stubs for Web Animations objects that don't
+// implemented yet
 // Remove all of the code below before merge it with w3c branch
 
 // AnimationNode stub
@@ -331,9 +368,9 @@ function AnimationGroup(children, timing) {
 AnimationGroup.prototype = new AnimationNode();
 
 AnimationGroup.prototype.updateFirstLastChild = function() {
-    if (this.children.length>0){
+    if (this.children.length > 0) {
         this.firstChild = this.children[0];
-        this.lastChild = this.children[this.children.length-1];
+        this.lastChild = this.children[this.children.length - 1];
     } else {
         this.firstChild = null;
         this.lastChild = null;
@@ -341,18 +378,18 @@ AnimationGroup.prototype.updateFirstLastChild = function() {
 };
 
 AnimationGroup.prototype.prepend = function() {
-    for (var i = arguments.length - 1; i >= 0; i--) {
+    for ( var i = arguments.length - 1; i >= 0; i--) {
         var node = arguments[i];
         this.children.unshift(node);
-        if (node.parent){
+        if (node.parent) {
             var k = node.parent.children.indexOf(node);
-            node.parent.children = node.parent.children.splice(k,1);
+            node.parent.children = node.parent.children.splice(k, 1);
             node.parent.updateFirstLastChild();
         }
         node.parent = this;
     }
     var prev = null;
-    this.children.forEach(function(node){
+    this.children.forEach(function(node) {
         node.previousSibling = prev;
         node.nextSibling = null;
         if (prev) {
@@ -364,18 +401,18 @@ AnimationGroup.prototype.prepend = function() {
 };
 
 AnimationGroup.prototype.append = function() {
-    for (var i = 0; i < arguments.length; i++) {
+    for ( var i = 0; i < arguments.length; i++) {
         var node = arguments[i];
         this.children.push(node);
-        if (node.parent){
+        if (node.parent) {
             var k = node.parent.children.indexOf(node);
-            node.parent.children = node.parent.children.splice(k,1);
+            node.parent.children = node.parent.children.splice(k, 1);
             node.parent.updateFirstLastChild();
         }
         node.parent = this;
     }
     var prev = null;
-    this.children.forEach(function(node){
+    this.children.forEach(function(node) {
         node.previousSibling = prev;
         node.nextSibling = null;
         if (prev) {
@@ -400,7 +437,7 @@ function AnimationSequence(children, timing) {
 
 AnimationSequence.prototype = new AnimationGroup([]);
 
-//AnimationEffect stub
+// AnimationEffect stub
 function AnimationEffect() {
     this.iterationComposite = null;
     this.composite = null;
