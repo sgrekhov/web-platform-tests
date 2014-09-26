@@ -2,7 +2,7 @@
 <meta charset=utf-8>
 <title>Animation node computedTiming attribute test</title>
 <meta name="assert" content="Returns the calculated timing properties for this animation node">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-computedTiming">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationnode-computedtiming">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -13,7 +13,8 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var nodes = [new Animation(createDiv(this), []), new AnimationGroup([]), new AnimationSequence([])];
+    var nodes = [new Animation(createDiv(this), []), new AnimationGroup([]),
+        new AnimationSequence([])];
 
     nodes.forEach(function(node) {
         assert_equals(node.computedTiming.delay, 0, 'Default value of ' +
@@ -46,7 +47,8 @@ test(function() {
         playbackDirection: 'reverse',
         direction: 'reverse',
         easing: 'ease'};
-    var nodes = [new Animation(createDiv(this), [], timing), new AnimationGroup([], timing), new AnimationSequence([], timing)];
+    var nodes = [new Animation(createDiv(this), [], timing), new AnimationGroup([], timing),
+        new AnimationSequence([], timing)];
     nodes.forEach(function(node) {
         assert_equals(node.computedTiming.delay, timing.delay, 'Value of ' +
             type(node) + '.computedTiming.delay should be specified by AnimationTimingInput');
@@ -72,8 +74,9 @@ test(function() {
 
 test(function() {
     var timing = {easing: 'unsupported value'};
-    var nodes = [new Animation(createDiv(this), [], timing), new AnimationGroup([],timing), new AnimationSequence([], timing)];
-    nodes.forEach(function(node){
+    var nodes = [new Animation(createDiv(this), [], timing), new AnimationGroup([], timing),
+        new AnimationSequence([], timing)];
+    nodes.forEach(function(node) {
         assert_equals(node.computedTiming.easing, 'linear', 'Unsupported value of ' +
             type(node) + '.computedTiming.easing should be replaced by \'linear\'');
     });
