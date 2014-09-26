@@ -341,7 +341,6 @@ test(function() {
         {top: '210px', width: '480px'},
         {top: '220px'}];
     var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
-    // FIXME Not all frames have computedOffset. Fix computeOffset()
     var expected = computeOffset(keyframes, 'paced', 'width');
 
     effectsToTest.forEach(function(effect, index) {
@@ -352,5 +351,196 @@ test(function() {
 }, 'Test that spacing in paced({ident}) mode when there are different combinations of ' +
     'paceble and not paceble keyframes');
 
+test(function() {
+    var keyframes = [{top: '0px'}, // A
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px', width: '30px'}, // pacedA
+        {top: '40px'},
+        {top: '50px'},
+        {top: '60px', width: '50px'},
+        {top: '70px'},
+        {top: '80px'},
+        {top: '90px', width: '100px'}, // pacedB
+        {top: '100px'},
+        {top: '110px'},
+        {top: '120px'}]; //B
+    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
+    var expected = computeOffset(keyframes, 'paced', 'width');
+
+    effectsToTest.forEach(function(effect, index) {
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test that spacing in paced mode algorithm: there are frames between A, pacedA, pacedB ' +
+    'and B');
+
+test(function() {
+    var keyframes = [{top: '0px'}, // A
+        {top: '10px', width: '30px'}, // pacedA
+        {top: '20px'},
+        {top: '30px'},
+        {top: '40px', width: '50px'},
+        {top: '50px'},
+        {top: '60px'},
+        {top: '70px', width: '100px'}, // pacedB
+        {top: '80px'},
+        {top: '90px'},
+        {top: '100px'}]; //B
+    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
+    var expected = computeOffset(keyframes, 'paced', 'width');
+
+    effectsToTest.forEach(function(effect, index) {
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test that spacing in paced mode algorithm: no frames between A and pacedA');
+
+test(function() {
+    var keyframes = [{top: '0px', width: '10px'}, // A, pacedA
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px', width: '30px'},
+        {top: '40px'},
+        {top: '50px'},
+        {top: '60px', width: '50px'},
+        {top: '70px'},
+        {top: '80px'},
+        {top: '90px', width: '100px'}, // pacedB
+        {top: '100px'},
+        {top: '110px'},
+        {top: '120px'}]; //B
+    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
+    var expected = computeOffset(keyframes, 'paced', 'width');
+
+    effectsToTest.forEach(function(effect, index) {
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test that spacing in paced mode algorithm: A == pacedA');
+
+test(function() {
+    var keyframes = [{top: '0px'}, // A
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px', width: '30px'}, // pacedA
+        {top: '40px', width: '100px'}, // pacedB
+        {top: '50px'},
+        {top: '60px'},
+        {top: '70px'}]; //B
+    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
+    var expected = computeOffset(keyframes, 'paced', 'width');
+
+    effectsToTest.forEach(function(effect, index) {
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test that spacing in paced mode algorithm: there are no frames between pacedA and pacedB');
+
+test(function() {
+    var keyframes = [{top: '0px'}, // A
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px', width: '100px'},
+        {top: '40px'},
+        {top: '50px'},
+        {top: '60px'}]; //pacedA, pacedB, B
+    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
+    var expected = computeOffset(keyframes, 'paced', 'width');
+
+    effectsToTest.forEach(function(effect, index) {
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test that spacing in paced mode algorithm: only one paceble frame ' +
+    'between A and B - spacing behavior degenerates to distribute spacing');
+
+test(function() {
+    var keyframes = [{top: '0px'}, // A
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px', width: '30px'}, // pacedA
+        {top: '40px'},
+        {top: '50px'},
+        {top: '60px', width: '50px'},
+        {top: '70px'},
+        {top: '80px'},
+        {top: '90px', width: '100px'}, // pacedB
+        {top: '100px'}]; //B
+    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
+    var expected = computeOffset(keyframes, 'paced', 'width');
+
+    effectsToTest.forEach(function(effect, index) {
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test that spacing in paced mode algorithm: there are no frames between pacedB and B');
+
+test(function() {
+    var keyframes = [{top: '0px'}, // A
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px', width: '30px'}, // pacedA
+        {top: '40px'},
+        {top: '50px'},
+        {top: '60px', width: '50px'},
+        {top: '70px'},
+        {top: '80px'},
+        {top: '90px'},
+        {top: '100px', width: '100px'}]; //B, pacedB
+    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
+    var expected = computeOffset(keyframes, 'paced', 'width');
+
+    effectsToTest.forEach(function(effect, index) {
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test that spacing in paced mode algorithm: pacedB == B');
+
+test(function() {
+    var keyframes = [{top: '0px', width: '10px'}, // A, pacedA
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px'},
+        {top: '40px'},
+        {top: '50px', width: '100px'}]; //B, pacedB
+    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
+    var expected = computeOffset(keyframes, 'paced', 'width');
+
+    effectsToTest.forEach(function(effect, index) {
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test that spacing in paced mode algorithm: pacedA == A and pacedB == B');
+
+
+test(function() {
+    var keyframes = [{top: '0px'},
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px'},
+        {top: '40px'},
+        {top: '100px'}];
+    var spacing = 'unsupportedValue';
+    var effectsToTest = createEffectsToTest(keyframes, spacing);
+    var expected = computeOffset(keyframes, spacing);
+
+    effectsToTest.forEach(function(effect, index) {
+        assert_equals(effect.spacing, spacing,
+            'Wrong value of KeyframeEffect.spacing attribute');
+        expected.forEach(function(keyframe, i) {
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
+        });
+    });
+}, 'Test that all other spacing values are treated as \'distribute\' for ' +
+    'the purpose of animation model calculations.');
 </script>
 </body>
