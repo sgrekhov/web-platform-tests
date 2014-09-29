@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>MotionPathEffect constructor path parameter test</title>
+<meta name="assert" content="The motion path which defines the course the animation target follows">
+<link rel="help" href="http://w3c.github.io/web-animations/#the-motionpatheffect-interface">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+function testSegment(message, segment, classString, segType, x, y) {
+    assert_class_string(segment, classstring, message + ' wrong segment class string');
+    assert_equals(segment.pathSegType, segType, message + ' wrong segment type');
+    switch (segment.pathSegType) {
+    case SVGPathSeg.PATHSEG_CLOSEPATH:
+        break;
+    case SVGPathSeg.PATHSEG_MOVETO_ABS:
+    case SVGPathSeg.PATHSEG_MOVETO_REL:
+        assert_equals(segment.x, x, message + ' wrong X value');
+        assert_equals(segment.y, y, message + ' wrong Y value');
+        break;
+    case SVGPathSeg.PATHSEG_LINETO_ABS:
+    case SVGPathSeg.PATHSEG_LINETO_REL:
+        assert_equals(segment.x, x, message + ' wrong X value');
+        assert_equals(segment.y, y, message + ' wrong Y value');
+        break;
+    }
+}
+
+test(function() {
+    var effect = new MotionPathEffect('');
+
+    assert_equals(effect.segments.length, 0, 'Wrong number of items in the segments list');
+}, 'Test that MotionPathEffect constructor creates MotionPathEffect instance ' +
+    'with empty list of SVG path segments specified by empty \'path\' string');
+
+test(function() {
+    var effect = new MotionPathEffect('M 10 0 L 200 0 z');
+
+    assert_equals(effect.segments.length, 3, 'Wrong number of items in the segments list');
+    testSegment('Segment 0', effect.segments[0], 'SVGPathSegMovetoAbs',
+        SVGPathSeg.PATHSEG_MOVETO_ABS, 10, 0);
+    testSegment('Segment 1', effect.segments[1], 'SVGPathSegLinetoAbs',
+            SVGPathSeg.PATHSEG_LINETO_ABS, 200, 0);
+    testSegment('Segment 1', effect.segments[1], 'SVGPathSegClosePath',
+            SVGPathSeg.PATHSEG_CLOSEPATH);
+}, 'Test that MotionPathEffect constructor creates MotionPathEffect instance ' +
+    'with list of SVG path segments specified by \'path\' string');
+</script>
+</body>

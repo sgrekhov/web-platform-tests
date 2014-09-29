@@ -66,7 +66,7 @@ function newKeyframeEffect(options) {
 }
 
 function newMotionPathEffect(options) {
-    var pathString = 'M 0 ' + ANIMATION_TOP_0 + ' L 0 ' + ANIMATION_TOP_1 + ' z';
+    var pathString = 'M ' + ANIMATION_TOP_0 + ' 0 L ' + ANIMATION_TOP_1 + ' 0 z';
     if (options) {
         return new MotionPathEffect(pathString, options);
     }
