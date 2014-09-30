@@ -44,10 +44,37 @@ test(function() {
     testSegment('Segment 0', effect.segments[0], 'SVGPathSegMovetoAbs',
         SVGPathSeg.PATHSEG_MOVETO_ABS, 10, 0);
     testSegment('Segment 1', effect.segments[1], 'SVGPathSegLinetoAbs',
-            SVGPathSeg.PATHSEG_LINETO_ABS, 200, 0);
-    testSegment('Segment 1', effect.segments[1], 'SVGPathSegClosePath',
-            SVGPathSeg.PATHSEG_CLOSEPATH);
+        SVGPathSeg.PATHSEG_LINETO_ABS, 200, 0);
+    testSegment('Segment 2', effect.segments[2], 'SVGPathSegClosePath',
+        SVGPathSeg.PATHSEG_CLOSEPATH);
 }, 'Test that MotionPathEffect constructor creates MotionPathEffect instance ' +
     'with list of SVG path segments specified by \'path\' string');
+
+test(function() {
+    var effect = new MotionPathEffect('M 10 0 L 200 0; } L 400 0 z');
+
+    assert_equals(effect.segments.length, 2, 'Wrong number of items in the segments list');
+    testSegment('Segment 0', effect.segments[0], 'SVGPathSegMovetoAbs',
+        SVGPathSeg.PATHSEG_MOVETO_ABS, 10, 0);
+    testSegment('Segment 1', effect.segments[1], 'SVGPathSegLinetoAbs',
+        SVGPathSeg.PATHSEG_LINETO_ABS, 200, 0);
+}, 'Test that if any errors encountered in the path data then data processed up ' +
+    'to that point is used by the constructor');
+
+test(function() {
+    var effect1 = new MotionPathEffect('M 10 0 L 200 0 400 0 z');
+    var effect2 = new MotionPathEffect(effect1.segments);
+
+    assert_equals(effect2.segments.length, 4, 'Wrong number of items in the segments list');
+    testSegment('Segment 0', effect2.segments[0], 'SVGPathSegMovetoAbs',
+        SVGPathSeg.PATHSEG_MOVETO_ABS, 10, 0);
+    testSegment('Segment 1', effect2.segments[1], 'SVGPathSegLinetoAbs',
+        SVGPathSeg.PATHSEG_LINETO_ABS, 200, 0);
+    testSegment('Segment 2', effect2.segments[2], 'SVGPathSegLinetoAbs',
+        SVGPathSeg.PATHSEG_LINETO_ABS, 400, 0);
+    testSegment('Segment 3', effect2.segments[3], 'SVGPathSegClosePath',
+        SVGPathSeg.PATHSEG_CLOSEPATH);
+}, 'Test that MotionPathEffect constructor creates MotionPathEffect instance with ' +
+    'list of SVG path segments specified by \'path\' SVGPathSegList parameter');
 </script>
 </body>
