@@ -317,7 +317,7 @@ test(function() {
 
             node4.replace(node2);
 
-            assert_equals(node1.nextSibling, null, type(node4) + '.replace() should update ' +
+            assert_equals(node1.nextSibling, node3, type(node4) + '.replace() should update ' +
                 'next sibling of animation node');
             assert_equals(node2.nextSibling, null, type(node4) + '.replace() should update ' +
                 'next sibling of animation node');
@@ -397,13 +397,13 @@ test(function() {
     var parents = [AnimationGroup, AnimationSequence];
     parents.forEach(function(parentCtor) {
         var nodes = [newAnimation(createDiv(test)), new AnimationGroup([]), new AnimationSequence([])];
-        nodes.forEach(function(node3) {
-            var node1 = newAnimation(createDiv(test));
+        nodes.forEach(function(node1) {
             var node2 = newAnimation(createDiv(test));
+            var node3 = newAnimation(createDiv(test));
             var parent1 = new parentCtor([node1, node2]);
             var parent2 = new parentCtor([node3]);
 
-            parent2.append(node2);
+            parent2.prepend(node2);
 
             assert_equals(node1.nextSibling, null, parentCtor.name + '.prepend() should update ' +
                 'next sibling of animation node');
@@ -425,13 +425,11 @@ test(function() {
         var parent = new parentCtor([node1]);
         parent.prepend(node2, node3, node4);
 
-        assert_equals(node1.nextSibling, node2, parentCtor.name + '.prepend() should update ' +
-            'next sibling of animation node');
         assert_equals(node2.nextSibling, node3, parentCtor.name + '.prepend() should update ' +
             'next sibling of animation node');
         assert_equals(node3.nextSibling, node4, parentCtor.name + '.prepend() should update ' +
             'next sibling of animation node');
-        assert_equals(node4.nextSibling, null, parentCtor.name + '.prepend() should update ' +
+        assert_equals(node4.nextSibling, node1, parentCtor.name + '.prepend() should update ' +
             'next sibling of animation node');
     });
 }, 'AnimationNode.nextSibling returns next sibling of this animation node, ' +
