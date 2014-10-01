@@ -13,7 +13,7 @@ interface AnimationPlayer {
 interface AnimationTiming {
 };
 
-interface ComputedAnimationTiming {
+interface ComputedTimingProperties {
 };
 
 interface AnimationNodeList {
@@ -25,20 +25,17 @@ interface AnimationTimingInput {
 <script type="text/plain" id="AnimationSequence-IDL">
 interface AnimationNode {
     // Timing
-    readonly attribute AnimationTiming         timing;
-    readonly attribute ComputedAnimationTiming computedTiming;
+    readonly attribute AnimationTiming          timing;
+    readonly attribute ComputedTimingProperties computedTiming;
 
     // Timing hierarchy
-    readonly attribute AnimationGroup?         parent;
-    readonly attribute AnimationNode?          previousSibling;
-    readonly attribute AnimationNode?          nextSibling;
+    readonly attribute AnimationGroup?          parent;
+    readonly attribute AnimationNode?           previousSibling;
+    readonly attribute AnimationNode?           nextSibling;
     void before (AnimationNode... nodes);
     void after (AnimationNode... nodes);
     void replace (AnimationNode... nodes);
     void remove ();
-
-    // Associated player
-    readonly attribute AnimationPlayer?        player;
 };
 
 [Constructor (sequence<AnimationNode>? children, 
