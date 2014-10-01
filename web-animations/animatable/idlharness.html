@@ -23,15 +23,14 @@ interface AnimationPlayer {
 interface Animation {
 };
 
-interface AnimationTimingInput {
+interface AnimationTimingProperties {
 };
 </script>
 <script type="text/plain" id="Animatable-IDL">
 [NoInterfaceObject]
 interface Animatable {
-    AnimationPlayer           animate (object? effect,
-                                       optional (double or AnimationTimingInput) timing);
-    sequence<Animation>       getCurrentAnimations ();
+    AnimationPlayer animate (object? effect,
+        optional (double or AnimationTimingProperties) timing);
     sequence<AnimationPlayer> getAnimationPlayers ();
 };
 
