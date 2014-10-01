@@ -432,9 +432,9 @@ test(function() {
     var animationGroup = new AnimationGroup([node1]);
     var player = document.timeline.play(node2);
 
-    assert_equals(node2.player, player, 'The node should be associated with it own player');
+    assert_equals(player.source, node2, 'The node should be associated with its player');
     node1.replace(node2);
-    assert_equals(node2.player, null, 'The node should be disassociated from its player');
+    assert_equals(player.source, null, 'The node should be disassociated from its player');
 }, 'Test AnimationNode.replace() disassociates the inserted node from the player, ' +
     'if node is directly associated with a player. Test Animation');
 
@@ -444,65 +444,11 @@ test(function() {
     var animationGroup = new AnimationGroup([node1]);
     var player = document.timeline.play(node2);
 
-    assert_equals(node2.player, player, 'The node should be associated with it own player');
+    assert_equals(player.source, node2, 'The node should be associated with its player');
     node1.replace(node2);
-    assert_equals(node2.player, null, 'The node should be disassociated from its player');
+    assert_equals(player.source, null, 'The node should be disassociated from its player');
 
 }, 'Test AnimationNode.replace() disassociates the inserted node from the player, ' +
     'if node is directly associated with a player. Test AnimationGroup');
-
-test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var animationGroup = new AnimationGroup([node1]);
-    var animationGroupPlayer = document.timeline.play(animationGroup);
-
-    assert_equals(node2.player, null, 'The node should not be associated with it own player');
-    node1.replace(node2);
-    assert_equals(node2.player, animationGroupPlayer,
-        'The node should be associated with animation group player');
-}, 'Test AnimationNode.replace() associates the inserted node with animation group player. ' +
-    'Test Animation');
-
-test(function() {
-    var node1 = new AnimationGroup([]);
-    var node2 = new AnimationGroup([]);
-    var animationGroup = new AnimationGroup([node1]);
-    var animationGroupPlayer = document.timeline.play(animationGroup);
-
-    assert_equals(node2.player, null, 'The node should not be associated with it own player');
-    node1.replace(node2);
-    assert_equals(node2.player, animationGroupPlayer,
-        'The node should be associated with animation group player');
-}, 'Test AnimationNode.replace() associates the inserted node with animation group player. ' +
-    'Test AnimationGroup');
-
-test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var animationGroup = new AnimationGroup([node1]);
-    var player = document.timeline.play(node2);
-    var animationGroupPlayer = document.timeline.play(animationGroup);
-
-    assert_equals(node2.player, player, 'The node should be associated with it own player');
-    node1.replace(node2);
-    assert_equals(node2.player, animationGroupPlayer,
-        'The node should be associated with animation group player');
-}, 'Test AnimationNode.replace() associates the inserted node with animation group player, ' +
-    'if the node is directly associated with a player. Test Animation');
-
-test(function() {
-    var node1 = new AnimationGroup([]);
-    var node2 = new AnimationGroup([]);
-    var animationGroup = new AnimationGroup([node1]);
-    var player = document.timeline.play(node2);
-    var animationGroupPlayer = document.timeline.play(animationGroup);
-
-    assert_equals(node2.player, player, 'The node should be associated with it own player');
-    node1.replace(node2);
-    assert_equals(node2.player, animationGroupPlayer,
-        'The node should be associated with animation group player');
-}, 'Test AnimationNode.replace() associates the inserted node with animation group player, ' +
-    'if the node is directly associated with a player. Test AnimationGroup');
 </script>
 </body>

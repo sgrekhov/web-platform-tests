@@ -2,7 +2,7 @@
 <meta charset=utf-8>
 <title>Test source attribute of AnimationPlayer created by AnimationTimeline.play()</title>
 <meta name="assert" content="The source attribute of the created AnimationPlayer is set to source parameter value">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationTimeline-play-AnimationPlayer-AnimationNode-source">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationtimeline-play">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -43,14 +43,10 @@ test(function() {
 
     assert_equals(player1.source, animation, 'The source attribute of the created ' +
         'AnimationPlayer should be set to source parameter value');
-    assert_equals(animation.player, player1, 'The AnimationNode object, specified ' +
-        'by source parameter should be associated with AnimationPlayer');
 
     var player2 = document.timeline.play(animation);
     assert_equals(player1.source, null, 'The AnimationNode object, specified ' +
         'by source parameter should be disassociated with old AnimationPlayer');
-    assert_equals(animation.player, player2, 'The AnimationNode object, specified ' +
-        'by source parameter should be associated with new AnimationPlayer');
     assert_equals(player2.source, animation, 'The source attribute of the created ' +
         'AnimationPlayer should be set to source parameter value');
 }, 'Test the AnimationNode object, specified by source parameter, is disassociated first ' +
@@ -63,8 +59,6 @@ test(function() {
 
     assert_equals(player.source, animation, 'The source attribute of the created ' +
         'AnimationPlayer should be set to source parameter value');
-    assert_equals(animation.player, player, 'The AnimationNode object, specified ' +
-        'by source parameter should be associated with AnimationPlayer');
 
     assert_equals(animation.parent, null, 'The AnimationNode object, specified ' +
         'by source parameter should be removed from its parent group');
@@ -81,8 +75,6 @@ test(function() {
 
     assert_equals(player.source, animationGroup1, 'The source attribute of the created ' +
         'AnimationPlayer should be set to source parameter value');
-    assert_equals(animationGroup1.player, player, 'The AnimationNode object, specified ' +
-        'by source parameter should be associated with AnimationPlayer');
 
     assert_equals(animationGroup1.parent, null, 'The AnimationNode object, specified ' +
         'by source parameter should be removed from its parent group');

@@ -337,7 +337,6 @@ function AnimationNode() {
     this.parent = null;
     this.previousSibling = null;
     this.nextSibling = null;
-    this.player = null;
 }
 
 AnimationNode.prototype.before = function(nodes) {

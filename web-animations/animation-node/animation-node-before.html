@@ -340,50 +340,12 @@ test(function() {
             var parent = new parentCtor([node1]);
             var player = document.timeline.play(node2);
 
-            assert_equals(node2.player, player, 'The node should be associated with it own player');
+            assert_equals(player.source, node2, 'The node should be associated with its player');
             node1.before(node2);
-            assert_equals(node2.player, null, 'The node should be disassociated from its player');
+            assert_equals(player.source, null, 'The node should be disassociated from its player');
         });
     });
 }, 'Test AnimationNode.before() disassociates the inserted node from the player, ' +
     'if node is directly associated with a player');
-
-test(function() {
-    var test = this;
-    var parents = [AnimationGroup, AnimationSequence];
-    parents.forEach(function(parentCtor) {
-        var nodes = [newAnimation(createDiv(test)), new AnimationGroup([]), new AnimationSequence([])];
-        nodes.forEach(function(node2) {
-            var node1 = newAnimation(createDiv(test));
-            var parent = new parentCtor([node1]);
-            var parentPlayer = document.timeline.play(parent);
-
-            assert_equals(node2.player, null, 'The node should not be associated with it own player');
-            node1.before(node2);
-            assert_equals(node2.player, parentPlayer,
-                'The node should be associated with animation group player');
-        });
-    });
-}, 'Test AnimationNode.before() associates the inserted node with animation group player');
-
-test(function() {
-    var test = this;
-    var parents = [AnimationGroup, AnimationSequence];
-    parents.forEach(function(parentCtor) {
-        var nodes = [newAnimation(createDiv(test)), new AnimationGroup([]), new AnimationSequence([])];
-        nodes.forEach(function(node2) {
-            var node1 = newAnimation(createDiv(test));
-            var parent = new parentCtor([node1]);
-            var node2Player = document.timeline.play(node2);
-            var parentPlayer = document.timeline.play(parent);
-
-            assert_equals(node2.player, node2Player, 'The node should be associated with it own player');
-            node1.before(node2);
-            assert_equals(node2.player, parentPlayer,
-                'The node should be associated with animation group player');
-        });
-    });
-}, 'Test AnimationNode.before() associates the inserted node with animation group player, ' +
-    'if the node is directly associated with a player');
 </script>
 </body>

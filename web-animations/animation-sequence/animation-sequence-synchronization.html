@@ -18,31 +18,31 @@ async_test(function(t) {
     var player = document.timeline.play(animationSequence);
 
     player.ready.then(t.step_func(function() {
-        animationSequence.player.currentTime = 0;
+        player.currentTime = 0;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_0,
             'Animation should be at the start point for the first node in the sequence');
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should not take place for the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME/2;
+        player.currentTime = ANIMATION_END_TIME/2;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the first node in the sequence');
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should not take place for the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_END_TIME;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_1,
             'Animation should be at the end point for the first node in the sequence');
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_0,
             'Animation should be at the start point for the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME * 1.5;
+        player.currentTime = ANIMATION_END_TIME * 1.5;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should be finished for the first node in the sequence');
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME * 2;
+        player.currentTime = ANIMATION_END_TIME * 2;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should be finished for the first node in the sequence');
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_1,
@@ -59,15 +59,15 @@ async_test(function(t) {
     var player = document.timeline.play(animationSequence);
 
     player.ready.then(t.step_func(function() {
-        animationSequence.player.currentTime = 0;
+        player.currentTime = 0;
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_0,
             'Animation should be at the start point for the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME * 0.5;
+        player.currentTime = ANIMATION_END_TIME * 0.5;
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_END_TIME;
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_1,
             'Animation should be at the end point for the second node in the sequence');
 
@@ -85,7 +85,7 @@ async_test(function(t) {
     var player = document.timeline.play(animationSequence);
 
     player.ready.then(t.step_func(function() {
-        animationSequence.player.currentTime = 0;
+        player.currentTime = 0;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_0,
             'Animation should be at the start point for the first node in ' +
             'the first group in the sequence');
@@ -95,7 +95,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node4.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should not take place for the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME/2;
+        player.currentTime = ANIMATION_END_TIME/2;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the first node in ' +
             'the first group in the sequence');
@@ -105,7 +105,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node4.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should not take place for the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_END_TIME;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_1,
             'Animation should be at the end point for the first node in ' +
             'the first group in the sequence');
@@ -115,7 +115,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node4.target).top, ANIMATION_TOP_0,
             'Animation should be at the start point for the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME * 1.5;
+        player.currentTime = ANIMATION_END_TIME * 1.5;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should be finished for the first node in the first group ' +
             'in the sequence');
@@ -125,7 +125,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node4.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME * 2;
+        player.currentTime = ANIMATION_END_TIME * 2;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should be finished for the first node in the first group ' +
             'in the sequence');
@@ -149,7 +149,7 @@ async_test(function(t) {
     var player = document.timeline.play(animationSequence);
 
     player.ready.then(t.step_func(function() {
-        animationSequence.player.currentTime = 0;
+        player.currentTime = 0;
         assert_equals(window.getComputedStyle(node3.target).top, ANIMATION_TOP_0,
             'Animation should be at the start point for the first node in the sequence');
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_DEFAULT,
@@ -157,7 +157,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should not take place for nodes in the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME/2;
+        player.currentTime = ANIMATION_END_TIME/2;
         assert_equals(window.getComputedStyle(node3.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the first node in the sequence');
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_DEFAULT,
@@ -165,7 +165,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should not take place for nodes in the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_END_TIME;
         assert_equals(window.getComputedStyle(node3.target).top, ANIMATION_TOP_1,
             'Animation should be at the end point for the first node in the sequence');
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_0,
@@ -175,7 +175,7 @@ async_test(function(t) {
             'Animation should be at the start point for nodes in the second node ' +
             'in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME * 1.5;
+        player.currentTime = ANIMATION_END_TIME * 1.5;
         assert_equals(window.getComputedStyle(node3.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should be finished for the first node in the sequence');
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_0_5,
@@ -183,7 +183,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the nodes in the second node in the sequence');
 
-        animationSequence.player.currentTime = ANIMATION_END_TIME * 2;
+        player.currentTime = ANIMATION_END_TIME * 2;
         assert_equals(window.getComputedStyle(node3.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should be finished for the first node in the sequence');
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_1,

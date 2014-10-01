@@ -180,7 +180,6 @@ test(function() {
     node.remove();
 
     assert_equals(player.source, null, 'Node should be removed from the player');
-    assert_equals(node.player, null, 'Player should be disassociated from the node');
 }, 'AnimationNode.remove() removes node from player');
 
 
@@ -192,31 +191,6 @@ test(function() {
     group.remove();
 
     assert_equals(player.source, null, 'Node should be removed from the player');
-    assert_equals(group.player, null, 'Player should be disassociated from the node');
-    assert_equals(node.player, null, 'Player should be disassociated from the child node');
 }, 'AnimationNode.remove() removes node from player. Test AnimationGroup');
-
-test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var node3 = newAnimation(createDiv(this));
-    var node4 = newAnimation(createDiv(this));
-    var group1 = new AnimationGroup([node1, node2]);
-    var group2 = new AnimationGroup([node3, group1, node4]);
-    var player = document.timeline.play(group2);
-
-    group1.remove();
-
-    assert_equlas(group1.player, null, 'Player should be disassociated from the node');
-    assert_equlas(node1.player, null, 'Player should be disassociated from the node children');
-    assert_equlas(node2.player, null, 'Player should be disassociated from the node children');
-
-    assert_equals(node3.player, player,
-        'Remaining nodes in the tree should be associated with the player');
-    assert_equals(node4.player, player,
-        'Remaining nodes in the tree should be associated with the player');
-    assert_equals(group2.player, player,
-        'Remaining nodes in the tree should be associated with the player');
-}, 'Test removing a node with the children disassociates it from the player');
 </script>
 </body>
