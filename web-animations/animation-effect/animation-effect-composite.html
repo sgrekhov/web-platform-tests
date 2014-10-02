@@ -33,7 +33,7 @@ async_test(function(t) {
     var test = this;
     var effectsToTest = [[newKeyframeEffect(), newKeyframeEffect()],
         [newMotionPathEffect(), newMotionPathEffect()]];
-    effectsToTest.forEach(function (effects) {
+    effectsToTest.forEach(function(effects) {
         var effect1 = effects[0];
         var effect2 = effects[1];
 
@@ -48,7 +48,7 @@ async_test(function(t) {
         player2.currentTime = ANIMATION_END_TIME / 2 - 10;
 
         setTimeout(function() {
-            t.step(function () {
+            t.step(function() {
                 // Expected top property value is
                 // (Animation top at the moment ANIMATION_END_TIME / 2 + 100)
                 assert_approx_equals(window.getComputedStyle(target).top,
@@ -64,7 +64,7 @@ async_test(function(t) {
     var test = this;
     var effectsToTest = [[newKeyframeEffect(), newKeyframeEffect()],
         [newMotionPathEffect(), newMotionPathEffect()]];
-    effectsToTest.forEach(function (effects) {
+    effectsToTest.forEach(function(effects) {
         var effect1 = effects[0];
         effect1.composite = 'add';
         var effect2 = effects[1];
@@ -81,7 +81,7 @@ async_test(function(t) {
         player2.currentTime = ANIMATION_END_TIME / 2 - 10;
 
         setTimeout(function() {
-            t.step(function () {
+            t.step(function() {
                 // Expected top property value is
                 // 2 * (Animation top at the moment ANIMATION_END_TIME / 2 + 100)
                 assert_approx_equals(window.getComputedStyle(target).top,
