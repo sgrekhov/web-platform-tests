@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Effect callback test</title>
+<meta name="assert" content="An EffectCallback is called each time an Animation with which it is associated is sampled">
+<link rel="help" href="http://w3c.github.io/web-animations/#callbackdef-effectcallback">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+async_test(function(t) {
+    var numOfCalls = 0;
+    var target = createDiv(this);
+    var animation = new Animation(target,
+        function(timeFraction, currentTarget, animationObject) {
+            numOfCalls++;
+            assert_not_equals(timeFraction, null, 'timeFraction parameter of ' +
+                'AnimationEffect callback should not be null');
+            assert_equals(currentTarget, target, 'currentTarget parameter  of ' +
+                'AnimationEffect callback should return current animation target');
+            assert_equals(animationObject, animation, 'animationObject parameter  of ' +
+                'AnimationEffect callback should return Animation object that is being sampled');
+        }, 100);
+    var player = document.timeline.play(animation);
+
+    player.ready.then(t.step_func(function() {
+        assert_greater_than(numOfCalls, 0, 'AnimationEffect callback should be called at ' +
+            'least once');
+        t.done();
+    }));
+}, 'Test EffectCallback function parameters');
+
+async_test(function(t) {
+    var numOfCalls = 0;
+    var numOfCallsNullTime = 0;
+    var target1 = createDiv(this);
+    var target2 = createDiv(this);
+    var animation = new Animation(target1,
+        function(timeFraction, currentTarget, animationObject) {
+            numOfCalls++;
+            if (timeFraction === null) {
+                numOfCallsNullTime++;
+                assert_equals(currentTarget, target1, 'currentTarget parameter  of ' +
+                    'AnimationEffect callback should return old animation target');
+            } else {
+                if (numOfCallsNullTime == 0) {
+                    assert_equals(currentTarget, target1, 'currentTarget parameter  of ' +
+                        'AnimationEffect callback should return current animation target');
+                } else {
+                    assert_equals(currentTarget, target2, 'currentTarget parameter  of ' +
+                        'AnimationEffect callback should return current animation target');
+                }
+            }
+            assert_equals(animationObject, animation, 'animationObject parameter  of ' +
+                'should return Animation object that is being sampled');
+        }, 100);
+    var player = document.timeline.play(animation);
+
+    player.ready.then(t.step_func(function() {
+        assert_greater_than(numOfCalls, 0, 'AnimationEffect callback should be called at ' +
+            'least once');
+        animation.target = target2;
+        setTimeout(function() {
+            t.step(function() {
+                assert_equals(numOfCallsNullTime, 1, 'AnimationEffect callback should ' +
+                    'be called with null timeFraction after changing of animation target');
+                t.done();
+            });
+        }, 50);
+    }));
+}, 'Test that EffectCallback is called with null timeFraction and old currentTarget ' +
+    'if animation target was changed between samples');
+</script>
+</body>
