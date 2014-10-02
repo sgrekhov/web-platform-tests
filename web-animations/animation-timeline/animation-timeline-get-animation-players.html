@@ -49,7 +49,7 @@ test(function() {
     var player2 = newAnimationPlayer(createDiv(this, doc));
     var players = doc.timeline.getAnimationPlayers();
 
-    players.forEach(function (player) {
+    players.forEach(function(player) {
         assert_true(isCurrent(player.source),
             'Source content of the AnimationPlayer returned by ' +
             'AnimationTimeline.getAnimationPlayers() should be current');

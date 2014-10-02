@@ -32,7 +32,7 @@ test(function() {
 async_test(function(t) {
     var test = this;
     var effectsToTest = [newKeyframeEffect(), newMotionPathEffect()];
-    effectsToTest.forEach(function (effect) {
+    effectsToTest.forEach(function(effect) {
         effect.iterationComposite = 'accumulate';
         // Now check that iteration composition is really 'accumulate'
         var target = createDiv(test);
@@ -42,7 +42,7 @@ async_test(function(t) {
         player.currentTime = ANIMATION_END_TIME - 10;
 
         setTimeout(function() {
-            t.step(function () {
+            t.step(function() {
                 // After the first iteration target element top == 200px
                 // After 100 ms of the second iteration width should be
                 // 200 + 'width at 100 ms'
@@ -54,7 +54,7 @@ async_test(function(t) {
                 player.currentTime = 2 * ANIMATION_END_TIME - 10;
                 effect.iterationComposite = 'replace';
                 setTimeout(function() {
-                    t.step(function () {
+                    t.step(function() {
                         assert_approx_equals(window.getComputedStyle(target).top,
                             getExpectedTop(100), EPSILON,
                             'Iteration composition should be \'replace\'');
