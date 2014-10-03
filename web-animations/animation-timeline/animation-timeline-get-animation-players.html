@@ -57,7 +57,7 @@ test(function() {
 }, 'Test that source content of the AnimationPlayer returned by ' +
     'AnimationTimeline.getAnimationPlayers() is current');
 
-async_test(function(t){
+async_test(function(t) {
     var doc = newHTMLDocument();
     var animation1 = new Animation(createDiv(this, doc), [], 100);
     var player1 = document.timeline.play(animation1);
@@ -71,7 +71,7 @@ async_test(function(t){
         'which source content is current');
 
     setTimeout(
-        t.step_func(function(){
+        t.step_func(function() {
             assert_array_equals(doc.timeline.getAnimationPlayers(), [player2, player3],
                 'AnimationTimeline.getAnimationPlayers() should return only players, ' +
                 'which source content is current');
@@ -80,7 +80,7 @@ async_test(function(t){
     );
 
     setTimeout(
-        t.step_func(function(){
+        t.step_func(function() {
             assert_array_equals(doc.timeline.getAnimationPlayers(), [player2],
                 'AnimationTimeline.getAnimationPlayers() should return only players, ' +
                 'which source content is current');
@@ -89,7 +89,7 @@ async_test(function(t){
     );
 
     setTimeout(
-        t.step_func(function(){
+        t.step_func(function() {
             var players = doc.timeline.getAnimationPlayers();
             assert_true(players === null || players.length === 0,
                 'AnimationTimeline.getAnimationPlayers() should return only players, ' +

@@ -129,7 +129,7 @@ test(function() {
         cloned.children[1].children[1],
         cloned.children[1]
     ];
-    for (var i = 0; i < expected.length; i++){
+    for (var i = 0; i < expected.length; i++) {
         assert_false(actual[i] === expected[i], 'Descendant of cloned AnimationSequence ' +
             'object should be a copy of corresponding descendant of source object');
         assert_object_equals(actual[i], expected[i], 'Descendant of cloned AnimationSequence ' +

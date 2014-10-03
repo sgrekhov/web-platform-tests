@@ -2,7 +2,8 @@
 <meta charset=utf-8>
 <title>The document timeline currentTime attribute tests</title>
 <meta name="assert" content="AnimationTimeline currentTime attribute returns the time value for this timeline">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#dfn-document-timeline">
+<link rel="help" href="http://w3c.github.io/web-animations/#extensions-to-the-document-interface">
+<link rel="help" href="http://w3c.github.io/web-animations/#document-timeline">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -13,11 +14,9 @@
 <div id="log"></div>
 <script>
 test(function() {
-    assert_approx_equals(
-        document.timeline.currentTime,
-        new Date().getTime() - window.performance.timing.navigationStart,
-        EPSILON,
-        'document timeline time value should be relative to navigationStart moment');
+    assert_approx_equals(document.timeline.currentTime,
+        new Date().getTime() - window.performance.timing.navigationStart, EPSILON,
+        'Document timeline time value should be relative to navigationStart moment');
 }, 'Document timeline time value is relative to navigationStart moment');
 
 test(function() {
@@ -29,12 +28,12 @@ async_test(function(t) {
     var previousTime = document.timeline.currentTime;
     var repetitions = 10;
 
-    var intervalId = setInterval(t.step_func(function(){
-        assert_true(document.timeline.currentTime - previousTime > 50-EPSILON,
+    var intervalId = setInterval(t.step_func(function() {
+        assert_true(document.timeline.currentTime - previousTime > 50 - EPSILON,
             'AnimationTimeline.currentTime should increase its value');
         previousTime = document.timeline.currentTime;
         repetitions--;
-        if (repetitions===0){
+        if (repetitions === 0) {
             clearInterval(intervalId);
             t.done();
         }
@@ -52,7 +51,7 @@ test(function() {
         'attribute of a document timeline should not change within a script block');
 }, 'Document.timeline.currentTime attribute value does not change within a script block',
 {
-    help: 'http://dev.w3.org/fxtf/web-animations/#script-execution-and-live-updates-to-the-model'
+    help: 'http://w3c.github.io/web-animations/#script-execution-and-live-updates-to-the-model'
 });
 </script>
 </body>

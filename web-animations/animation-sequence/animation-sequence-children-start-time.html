@@ -94,7 +94,7 @@ test(function() {
 // Checks computed start time for each child of given animation sequence
 function checkAnimationSequenceChildrenStartTimes(animationSequence) {
     var startTime = 0;
-    animationSequence.children.forEach(function(node, index){
+    animationSequence.children.forEach(function(node, index) {
         assert_equals(node.computedTiming.startTime, startTime, 'The start time ' +
             'of the animation node #' + index + ' of type ' + type(node) + ' should be ' +
             'the end time of its previous sibling or zero if there is no previous sibling');
