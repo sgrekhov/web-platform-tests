@@ -1,0 +1,28 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>Web Animations API: Document interface tests</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="/resources/webidl2/lib/webidl2.js"></script>
+<script src="/resources/idlharness.js"></script>
+<div id="log"></div>
+<script type="text/plain" id="untested-IDL">
+interface Document {
+};
+
+interface AnimationTimeline {
+};
+</script>
+<script type="text/plain" id="Document-IDL">
+partial interface Document {
+    readonly attribute AnimationTimeline timeline;
+};
+</script>
+<script>
+'use strict';
+var idlArray = new IdlArray();
+idlArray.add_untested_idls(document.getElementById('untested-IDL').textContent);
+idlArray.add_idls(document.getElementById('Document-IDL').textContent);
+idlArray.add_objects( { Document: ['document'] } );
+idlArray.test();
+</script>

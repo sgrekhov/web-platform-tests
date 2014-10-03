@@ -1,0 +1,38 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>Web Animations API: Animatable interface tests</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="/resources/webidl2/lib/webidl2.js"></script>
+<script src="/resources/idlharness.js"></script>
+<div id="log"></div>
+<div id="element1"></div>
+<div id="element2"></div>
+<script type="text/plain" id="untested-IDL">
+interface PseudoElement {
+};
+
+interface Element {
+};
+
+interface HTMLElement {
+};
+
+interface HTMLDivElement {
+};
+</script>
+<script type="text/plain" id="PseudoElement-IDL">
+PseudoElement implements Animatable;
+</script>
+<script>
+'use strict';
+
+var element = document.getElementById('element1');
+var pseudo = element.pseudo(':after');
+
+var idlArray = new IdlArray();
+idlArray.add_untested_idls(document.getElementById('untested-IDL').textContent);
+idlArray.add_idls(document.getElementById('PseudoElement-IDL').textContent);
+idlArray.add_objects( { PseudoElement: ['pseudo'] } );
+idlArray.test();
+</script>
