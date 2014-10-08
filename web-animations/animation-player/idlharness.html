@@ -12,28 +12,26 @@ interface AnimationNode {
 
 interface AnimationTimeline {
 };
-
-interface AnimationPlayState {
-};
-
-interface Promise {
-};
 </script>
 <script type="text/plain" id="AnimationPlayer-IDL">
+enum AnimationPlayState { "idle", "pending", "running", "paused", "finished" };
+
+[Constructor (optional AnimationNode? source = null,
+              optional AnimationTimeline? timeline = null)]
 interface AnimationPlayer {
-             attribute AnimationNode?     source;
-    readonly attribute AnimationTimeline  timeline;
-             attribute double?            startTime;
-             attribute double?            currentTime;
-             attribute double             playbackRate;
-    readonly attribute AnimationPlayState playState;
-    readonly attribute Promise            ready;
-    readonly attribute Promise            finished;
-    void cancel();
-    void finish();
-    void play();
-    void pause();
-    void reverse();
+             attribute AnimationNode?           source;
+             attribute AnimationTimeline?       timeline;
+             attribute double?                  startTime;
+             attribute double?                  currentTime;
+             attribute double                   playbackRate;
+    readonly attribute AnimationPlayState       playState;
+    readonly attribute Promise<AnimationPlayer> ready;
+    readonly attribute Promise<AnimationPlayer> finished;
+    void cancel ();
+    void finish ();
+    void play ();
+    void pause ();
+    void reverse ();
 };
 </script>
 <script>
