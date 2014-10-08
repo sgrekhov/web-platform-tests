@@ -5,9 +5,14 @@
 <script src="/resources/testharnessreport.js"></script>
 <script src="/resources/webidl2/lib/webidl2.js"></script>
 <script src="/resources/idlharness.js"></script>
+<script src="../testcommon.js"></script>
+
 <div id="log"></div>
 <div id="target1"></div>
 <div id="target2"></div>
+<div id="target3"></div>
+<div id="target4"></div>
+
 <script type="text/plain" id="untested-IDL">
 interface AnimationNode {
 };
@@ -23,15 +28,21 @@ interface AnimationNodeList {
 
 var target1 = document.getElementById('target1');
 var target2 = document.getElementById('target2');
+var target3 = document.getElementById('target3');
+var target4 = document.getElementById('target4');
 var node1 = new Animation(target1, [], 5);
 var node2 = new Animation(target2, [], 5);
-var animationGroup = new AnimationGroup([node, node2]);
-var list = animationGroup.children;
+var node3 = new Animation(target3, [], 5);
+var node4 = new Animation(target4, [], 5);
+var animationGroup = new AnimationGroup([node1, node2]);
+var list1 = animationGroup.children;
+var animationSequence = new AnimationSequence([node3, node4]);
+var list2 = animationSequence.children;
 
 var idlArray = new IdlArray();
 idlArray.add_untested_idls(document.getElementById('untested-IDL').textContent);
 idlArray.add_idls(document.getElementById('AnimationNodeList-IDL').textContent);
-idlArray.add_objects( { AnimationNodeList: ['list'] } );
+idlArray.add_objects( { AnimationNodeList: ['list1', 'list2'] } );
 idlArray.test();
 
 </script>
