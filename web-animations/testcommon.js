@@ -225,28 +225,28 @@ function distributeKeyframesPaced(keyframes, start, end, pacedProperty) {
     var pacedB = -1;
     for (var i = start; i <= end; i++) {
         if (keyframes[i][pacedProperty]) {
-            if (pacedA == -1) {
+            if (pacedA === -1) {
                 pacedA = i;
             } else {
                 pacedB = i;
             }
         }
     }
-    if (pacedA == -1 || pacedB == -1) {
+    if (pacedA === -1 || pacedB === -1) {
         pacedA = end;
         pacedB = end;
     }
-    if (pacedA != pacedB) {
+    if (pacedA !== pacedB) {
         // For each keyframe in the range (start, paced A] and [paced B, end),
         // apply the procedure for evenly distributing a keyframe using
         // start and end as the start and end keyframes respectively.
         var keyframesToDistributeEvently = [];
-        if (pacedA != start) {
+        if (pacedA !== start) {
             keyframesToDistributeEvently = keyframes.slice(start, pacedA + 1);
         } else {
             keyframesToDistributeEvently = [ keyframes[start] ];
         }
-        if (pacedB != end) {
+        if (pacedB !== end) {
             keyframesToDistributeEvently = keyframesToDistributeEvently
                     .concat(end + 1 >= keyframes.length ? keyframes
                             .slice(pacedB) : keyframes.slice(pacedB, end + 1));
