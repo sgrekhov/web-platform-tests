@@ -115,7 +115,7 @@ test(function() {
         var node2 = newAnimation(createDiv(test));
         var node3 = newAnimation(createDiv(test));
 
-        node1.after(node2, node3);
+        node1.replace(node2, node3);
         assert_equals(parents[index].children.length, 2, type(parents[index]) + '.children.length ' +
             'should return the number of animation nodes in the list');
     });
@@ -126,10 +126,10 @@ test(function() {
     var nodes = [newAnimation(createDiv(this)), newAnimation(createDiv(this))];
     var parents = [new AnimationGroup([nodes[0]]), new AnimationSequence([nodes[1]])];
 
-    nodes.forEach(function(node1, index) {
+    nodes.forEach(function(node, index) {
         assert_equals(parents[index].children.length, 1, type(parents[index]) + '.children.length ' +
             'should return the number of animation nodes in the list');
-        node1.remove();
+        node.remove();
         assert_equals(parents[index].children.length, 0, type(parents[index]) + '.children.length ' +
             'should return the number of animation nodes in the list');
     });
