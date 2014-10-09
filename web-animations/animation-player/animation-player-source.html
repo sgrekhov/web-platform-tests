@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>AnimationPlayer source attribute return the source content associated with this player or null</title>
-<meta name="assert" content="AnimationPlayer source attribute return the source content associated with this player or null">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-source">
+<title>AnimationPlayer source attribute test</title>
+<meta name="assert" content="The source content associated with this player. Setting this attribute updates the object’s source content using the procedure to set the source content of a player">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-source">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -13,22 +13,6 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var player = document.timeline.play();
-
-    assert_equals(player.source, null, 'AnimationPlayer.source attribute value ' +
-        'should be null');
-}, 'Test AnimationPlayer.source attribute value is null if player ' +
-    'is created by call to AnimationTimeline.play() with no arguments');
-
-test(function() {
-    var player = document.timeline.play(null);
-
-    assert_equals(player.source, null, 'AnimationPlayer.source attribute value ' +
-        'should be null');
-}, 'Test AnimationPlayer.source attribute value is null if player ' +
-    'is created by AnimationTimeline.play(null) call');
-
-test(function() {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
 
@@ -38,10 +22,142 @@ test(function() {
     'to the AnimationTimeline.play()');
 
 test(function() {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var animation = newAnimation(createDiv(this));
+    var player = new AnimationPlayer(animation);
 
-    assert_true(hasAncestorClassString(player.source, 'AnimationNode'),
-        'AnimationPlayer.source attribute value should be of type AnimationNode');
-}, 'Test AnimationPlayer.source attribute value is of type AnimationNode');
+    assert_equals(player.source, animation, 'AnimationPlayer.source ' +
+        'attribute value should be the value passed to the constructor');
+}, 'Test AnimationPlayer.source attribute value is the value passed ' +
+    'to the AnimationPlayer constructor');
+
+test(function() {
+    var animation = newAnimation(createDiv(this));
+    var player = new AnimationPlayer();
+    player.source = animation;
+
+    assert_equals(player.source, animation, 'AnimationPlayer.source ' +
+        'attribute value should be set');
+}, 'Test setting value of AnimationPlayer.source attribute. Previous value of ' +
+    'the attribute is null');
+
+test(function() {
+    var oldSource = newAnimation(createDiv(this));
+    var newSource = newAnimation(createDiv(this));
+    var player = new AnimationPlayer(oldSource);
+    player.source = newSource;
+
+    assert_equals(player.source, newsource, 'AnimationPlayer.source ' +
+        'attribute value should be set');
+}, 'Test setting value of AnimationPlayer.source attribute. Previous value of ' +
+    'the attribute is not null');
+
+test(function() {
+    var parent = new AnimationGroup([newAnimation(createDiv(this)),
+        new AnimationGroup([]), new AnimationSequence([])]);
+    parent.children.forEach(function(source) {
+        var player = new AnimationPlayer();
+        player.source = source;
+
+        assert_equals(player.source, source, 'Source of newly created player ' +
+            'should be set');
+        assert_equals(source.parent, null, 'Source should be removed from its parent ' +
+            'animation group');
+    });
+    assert_array_equals(parent.children, [], 'Source should be removed from the parent ' +
+        'group\'s children');
+}, 'Test that setting value of AnimationPlayer.source attribute removes new source ' +
+    'from its parent group');
+
+test(function() {
+    var source = newAnimation(createDiv(this));
+    var player = document.timeline.play(source);
+    var readyPromise = player.ready;
+    player.source = source;
+
+    // FIXME How to check that nothing was changed? Here we check that
+    // current ready promise was not chaned. But probably this is not enough
+    assert_object_equals(player.ready, readyPromise, 'Player\'s current ready promise ' +
+        'should not be changed');
+}, 'Test that setting value of source attribute to the same value as old one does nothing');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var readyPromise = player.ready;
+
+    player.ready.then(
+        //onFulfilled. This never should called because we are going to reject
+        // current ready promise and cancel pending play task
+        t.step_func(function() {
+            assert_unreached('Current ready promise should be rejected');
+            t.done();
+        }),
+        // onRejected. Should be called with AbortError
+        t.step_func(function(error) {
+            assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
+                'with a DOMException named \'AbortError\'');
+            t.done();
+        }));
+
+    player.source = null;
+    assert_not_equals(player.ready, readyPromise, 'Player\'s current ready promise ' +
+        'should be a new resolved Promise object');
+}, 'Test that setting value of AnimationPlayer.source attribute to null ' +
+    'resets a player\'s pending tasks');
+
+async_test(function(t) {
+    var oldSource = newAnimation(createDiv(this));
+    var newSource = newAnimation(createDiv(this));
+    var player = document.timeline.play(oldSource);
+    player.pause();
+    player.source = newSource;
+
+    player.ready.then(t.step_func(function() {
+        assert_equals(player.source, newSource, 'Player should play new source content');
+        assert_equals(player.playState, 'paused', 'Paused task should not be canceled');
+        t.done();
+    }));
+}, 'Test that setting value of AnimationPlayer.source attribute to new value ' +
+    'reschedules player\'s pending play and pause tasks');
+
+async_test(function(t) {
+    var oldSource = newAnimation(createDiv(this));
+    var newSource = newAnimation(createDiv(this));
+    var player = document.timeline.play(oldSource);
+    player.pause();
+    player.source = newSource;
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = ANIMATION_END_TIME/2;
+        assert_equals(window.getComputedStyle(newSource.target).top, ANIMATION_TOP_0_5,
+            'Animation should take place for the new source content');
+        assert_equals(window.getComputedStyle(oldSource.target).top, ANIMATION_TOP_DEFAULT,
+            'Animation should not take place for the old source content');
+        t.done();
+    }));
+}, 'Test that after setting value of AnimationPlayer.source attribute to new value ' +
+    'animation takes place on new source content');
+
+async_test(function(t) {
+    var numOfCallsNullTime = 0;
+    var oldSource = new Animation(createDiv(this),
+        function(timeFraction, currentTarget, animationObject) {
+            if (timeFraction === null) {
+                numOfCallsNullTime++;
+            }
+        }, 100);
+    var newSource = newAnimation(createDiv(this));
+    var player = document.timeline.play(oldSource);
+
+    player.ready.then(t.step_func(function() {
+        setTimeout(function() {
+            t.step(function() {
+                assert_equals(numOfCallsNullTime, 1, 'AnimationEffect callback should ' +
+                    'be called with null timeFraction after changing of player source');
+                t.done();
+            });
+        }, 50);
+    }));
+}, 'Test that EffectCallback is called with null timeFraction ' +
+    'if player source is changed');
 </script>
 </body>
