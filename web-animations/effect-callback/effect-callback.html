@@ -17,12 +17,13 @@ async_test(function(t) {
     var animation = new Animation(target,
         function(timeFraction, currentTarget, animationObject) {
             numOfCalls++;
-            assert_not_equals(timeFraction, null, 'timeFraction parameter of ' +
-                'AnimationEffect callback should not be null');
-            assert_equals(currentTarget, target, 'currentTarget parameter  of ' +
-                'AnimationEffect callback should return current animation target');
-            assert_equals(animationObject, animation, 'animationObject parameter  of ' +
-                'AnimationEffect callback should return Animation object that is being sampled');
+            assert_not_equals(timeFraction, null, 'Call ' + numOfCalls + ': timeFraction ' +
+                'parameter of AnimationEffect callback should not be null');
+            assert_equals(currentTarget, target, 'Call ' + numOfCalls + ': currentTarget ' +
+                'parameter  of AnimationEffect callback should return current animation target');
+            assert_equals(animationObject, animation, 'Call ' + numOfCalls +
+                ': animationObject parameter  of AnimationEffect callback should ' +
+                'return Animation object that is being sampled');
         }, 100);
     var player = document.timeline.play(animation);
 
@@ -43,19 +44,22 @@ async_test(function(t) {
             numOfCalls++;
             if (timeFraction === null) {
                 numOfCallsNullTime++;
-                assert_equals(currentTarget, target1, 'currentTarget parameter  of ' +
-                    'AnimationEffect callback should return old animation target');
+                assert_equals(currentTarget, target1, 'Call ' + numOfCalls + ': currentTarget ' +
+                    'parameter  of AnimationEffect callback should return old animation target');
             } else {
                 if (numOfCallsNullTime == 0) {
-                    assert_equals(currentTarget, target1, 'currentTarget parameter  of ' +
-                        'AnimationEffect callback should return current animation target');
+                    assert_equals(currentTarget, target1, 'Call ' + numOfCalls + ': currentTarget' +
+                        'parameter  of AnimationEffect callback should return current ' +
+                        'animation target');
                 } else {
-                    assert_equals(currentTarget, target2, 'currentTarget parameter  of ' +
-                        'AnimationEffect callback should return current animation target');
+                    assert_equals(currentTarget, target2, 'Call ' + numOfCalls +
+                        ': currentTarget parameter  of AnimationEffect callback should ' +
+                        'return current animation target');
                 }
             }
-            assert_equals(animationObject, animation, 'animationObject parameter  of ' +
-                'should return Animation object that is being sampled');
+            assert_equals(animationObject, animation, 'Call ' + numOfCalls +
+                ': animationObject parameter  of should return Animation object ' +
+                'that is being sampled');
         }, 100);
     var player = document.timeline.play(animation);
 

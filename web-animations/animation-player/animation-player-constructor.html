@@ -63,7 +63,7 @@ test(function() {
 
 test(function() {
     var parent = new AnimationGroup([newAnimation(createDiv(this)),
-        new AnimationGroup(), new AnimationSequence()]);
+        new AnimationGroup([]), new AnimationSequence([])]);
     parent.children.forEach(function(source) {
         var player = new AnimationPlayer(source);
 
