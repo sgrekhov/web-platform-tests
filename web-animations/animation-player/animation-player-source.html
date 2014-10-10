@@ -123,6 +123,22 @@ async_test(function(t) {
     var oldSource = newAnimation(createDiv(this));
     var newSource = newAnimation(createDiv(this));
     var player = document.timeline.play(oldSource);
+    player.finish();
+    player.source = newSource;
+
+    player.ready.then(t.step_func(function() {
+        assert_equals(player.source, newSource, 'Player should play new source content');
+        assert_not_equals(player.playState, 'finished', 'Player finished state ' +
+            'should be updated');
+        t.done();
+    }));
+}, 'Test that setting value of AnimationPlayer.source attribute to new value ' +
+    'updates player\'s finished state');
+
+async_test(function(t) {
+    var oldSource = newAnimation(createDiv(this));
+    var newSource = newAnimation(createDiv(this));
+    var player = document.timeline.play(oldSource);
     player.pause();
     player.source = newSource;
 
