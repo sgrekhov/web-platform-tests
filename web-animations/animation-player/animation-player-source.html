@@ -128,12 +128,12 @@ async_test(function(t) {
 
     player.ready.then(t.step_func(function() {
         assert_equals(player.source, newSource, 'Player should play new source content');
-        assert_not_equals(player.playState, 'finished', 'Player finished state ' +
-            'should be updated');
+        assert_equals(player.playState, 'finished', 'Player finished state ' +
+            'should be preserved');
         t.done();
     }));
 }, 'Test that setting value of AnimationPlayer.source attribute to new value ' +
-    'updates player\'s finished state');
+    'does not change player finished state');
 
 async_test(function(t) {
     var oldSource = newAnimation(createDiv(this));
@@ -175,5 +175,38 @@ async_test(function(t) {
     }));
 }, 'Test that EffectCallback is called with null timeFraction ' +
     'if player source is changed');
+
+async_test(function(t) {
+    var oldSource = newAnimation(createDiv(this));
+    var newSource = newAnimation(createDiv(this));
+    var player = document.timeline.play(oldSource);
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = ANIMATION_END_TIME/2;
+        player.source = newSource;
+        player.ready.then(t.step_func(function() {
+            assert_equals(window.getComputedStyle(newSource.target).top, ANIMATION_TOP_0_5,
+                'Animation should take place for the new source content');
+            t.done();
+        }));
+    }));
+}, 'Test that after setting value of AnimationPlayer.source attribute to new value ' +
+    'goes on new animation from the same position');
+
+async_test(function(t) {
+    var oldSource = new Animation(createDiv(this), KEYFRAMES, 1000);
+    var newSource = new Animation(createDiv(this), KEYFRAMES, 400);
+    var player = document.timeline.play(oldSource);
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 500;
+        player.source = newSource;
+        player.ready.then(t.step_func(function() {
+            assert_equals(player.playState, 'finished', 'Player should be finished');
+            t.done();
+        }));
+    }));
+}, 'Test that after setting value of AnimationPlayer.source attribute to new value ' +
+    'finishes player if current time exceeds source duration');
 </script>
 </body>
