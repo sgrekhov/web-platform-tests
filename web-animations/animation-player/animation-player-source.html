@@ -75,7 +75,7 @@ test(function() {
     player.source = source;
 
     // FIXME How to check that nothing was changed? Here we check that
-    // current ready promise was not chaned. But probably this is not enough
+    // current ready promise was not changed. But probably this is not enough
     assert_object_equals(player.ready, readyPromise, 'Player\'s current ready promise ' +
         'should not be changed');
 }, 'Test that setting value of source attribute to the same value as old one does nothing');
@@ -139,7 +139,6 @@ async_test(function(t) {
     var oldSource = newAnimation(createDiv(this));
     var newSource = newAnimation(createDiv(this));
     var player = document.timeline.play(oldSource);
-    player.pause();
     player.source = newSource;
 
     player.ready.then(t.step_func(function() {
