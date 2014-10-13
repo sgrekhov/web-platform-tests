@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
 <title>AnimationPlayer timeline attribute tests</title>
-<meta name="assert" content="AnimationPlayer.timeline attribute returns the timeline associated with this player">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-source">
+<meta name="assert" content="The timeline associated with this player. Setting this attribute updates the object’s timeline using the procedure to set the timeline of a player">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-timeline">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -17,49 +17,96 @@ test(function() {
 
     assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
         'not be null');
-}, 'The that AnimationPlayer.timeline attribute is not null');
+    assert_equals(player.timeline, document.timeline, 'AnimationPlayer.timeline ' +
+        'should be equal to document.timeline');
+}, 'The AnimationPlayer.timeline attribute returns the timeline, used to create the player ' +
+    'by AnimationTimeline.play()');
 
 test(function() {
-    var player = document.timeline.play(null);
-
-    assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
-        'not be null');
-}, 'The that AnimationPlayer.timeline attribute is not null even if there is no source content');
-
-test(function() {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
-
-    assert_class_string(player.timeline, 'AnimationTimeline,',
-        'The value of AnimationPlayer.timeline attribute should be of type ' +
-        'AnimationTimeline');
-}, 'The value of AnimationPlayer.timeline attribute is of type AnimationTimeline');
-
-test(function() {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = new AnimationPlayer(null, document.timeline);
 
     assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
         'not be null');
     assert_equals(player.timeline, document.timeline, 'AnimationPlayer.timeline ' +
         'should be equal to document.timeline');
-}, 'The AnimationPlayer.timeline attribute returns the timeline, used to create the player');
+}, 'The AnimationPlayer.timeline attribute returns the timeline, passed to ' +
+    'AnimationPlayer constructor ');
 
-test(function() {
-    var player = document.timeline.play(null);
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var readyPromise = player.ready;
 
-    assert_equals(player.timeline, document.timeline, 'AnimationPlayer.timeline ' +
-        'should be equal to document.timeline');
-}, 'The AnimationPlayer.timeline attribute returns the timeline, used to create the player. ' +
-    'Player has no source content');
+    player.ready.then(
+        //onFulfilled. This never should called because we are going to reject
+        // current ready promise and cancel pending play task
+        t.step_func(function() {
+            assert_unreached('Current ready promise should be rejected');
+            t.done();
+        }),
+        // onRejected. Should be called with AbortError
+        t.step_func(function(error) {
+            assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
+                'with a DOMException named \'AbortError\'');
+            t.done();
+        }));
 
-test(function() {
+    player.timeline = null;
+    assert_not_equals(player.ready, readyPromise, 'Player\'s current ready promise ' +
+        'should be a new resolved Promise object');
+}, 'Test that setting value of AnimationPlayer.timeline attribute to null ' +
+    'resets a player\'s pending tasks');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    player.pause();
     var doc = newHTMLDocument();
-    var player = doc.timeline.play(newAnimation(createDiv(this)));
+    player.timeline = doc.timeline;
 
-    assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
-        'not be null');
-    assert_equals(player.timeline, doc.timeline, 'AnimationPlayer.timeline ' +
-        'should be equal to document.timeline');
-}, 'The AnimationPlayer.timeline attribute returns the timeline, used to create the player. ' +
-    'Test not the current document');
+    player.ready.then(t.step_func(function() {
+        assert_equals(player.timeline, doc.timeline, 'Player should have new timeline');
+        assert_equals(player.playState, 'paused', 'Paused task should not be canceled');
+        t.done();
+    }));
+}, 'Test that setting value of AnimationPlayer.timeline attribute to new not null value ' +
+    'don\'t cancel pending play and pause tasks');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    player.finish();
+    var doc = newHTMLDocument();
+    player.timeline = doc.timeline;
+
+    player.ready.then(t.step_func(function() {
+        assert_equals(player.timeline, doc.timeline, 'Player should have new timeline');
+        assert_equals(player.playState, 'finished', 'Player finished state ' +
+            'should be preserved');
+        t.done();
+    }));
+}, 'Test that setting value of AnimationPlayer.timeline attribute to new not null value ' +
+    'does not change player finished state');
+
+async_test(function(t) {
+    var numOfCallsNullTime = 0;
+    var source = new Animation(createDiv(this),
+        function(timeFraction, currentTarget, animationObject) {
+            if (timeFraction === null) {
+                numOfCallsNullTime++;
+            }
+        }, 100);
+    var player = document.timeline.play(source);
+    var doc = newHTMLDocument();
+    player.timeline = doc.timeline;
+
+    player.ready.then(t.step_func(function() {
+        setTimeout(function() {
+            t.step(function() {
+                assert_equals(numOfCallsNullTime, 1, 'AnimationEffect callback should ' +
+                    'be called with null timeFraction after changing of player source');
+                t.done();
+            });
+        }, 50);
+    }));
+}, 'Test that EffectCallback is called with null timeFraction ' +
+    'if player timeline is changed to new not null value');
 </script>
 </body>
