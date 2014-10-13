@@ -449,6 +449,11 @@ function MotionPathEffect(path, options) {
     this.autoRotate = null;
     this.angle = null;
     this.spacing = null;
+    if (options && options.name){
+        this.name = options.name;
+    } else {
+        this.name = '';
+    }
 }
 
 MotionPathEffect.prototype = new AnimationEffect();
@@ -456,6 +461,11 @@ MotionPathEffect.prototype = new AnimationEffect();
 // KeyframeEffect stub
 function KeyframeEffect(frames, options) {
     this.spacing = null;
+    if (options && options.name){
+        this.name = options.name;
+    } else {
+        this.name = '';
+    }
 }
 
 KeyframeEffect.prototype = new AnimationEffect();
