@@ -23,7 +23,7 @@ test(function() {
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
-    player.ready.then(function() {
+    player.ready.then(t.step_func(function() {
         var newStartTime = document.timeline.currentTime + 50;
         player.startTime = newStartTime;
         // New player start time is in 50ms.
@@ -35,14 +35,14 @@ async_test(function(t) {
                 t.done();
             });
         }, 100);        
-    });
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test setting AnimationPlayer start time in the future delays moves beginning of play ' +
     'accordingly');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
 
-    player.ready.then(function() {
+    player.ready.then(t.step_func(function() {
         var newStartTime = document.timeline.currentTime - 100;
         player.startTime = newStartTime;
         setTimeout(function() {
@@ -52,19 +52,19 @@ async_test(function(t) {
                 t.done();
             });
         }, 50);
-    });
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test setting AnimationPlayer start time in the past shifts beginning of play');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
-    player.ready.then(function() {
+    player.ready.then(t.step_func(function() {
         var newStartTime = document.timeline.currentTime - ANIMATION_END_TIME - 100;
         player.startTime = newStartTime;
         assert_equals(player.currentTime, ANIMATION_END_TIME, 'The value of ' +
             'AnimationPlayer.currentTime should correspond updated startTime');
         assert_equals(player.playState, 'finished', 'Player should be finished');
         t.done();
-    });
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test setting AnimationPlayer start time to the value in the past that ' +
     'earlier that current time minus animation length finishes the player');
 
@@ -72,10 +72,10 @@ async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     var newStartTime = document.timeline.currentTime + 100;
     player.startTime = newStartTime;
-    player.ready.then(function(plr) {
+    player.ready.then(t.step_func(function(plr) {
         assert_equals(plr, player, 'The current ready promise should be fulfilled with the player');
         t.done();
-    });
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that if player has a pending play task player\'s current ready promise ' +
     'is fulfilled with player');
 </script>
