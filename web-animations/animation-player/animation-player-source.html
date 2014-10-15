@@ -115,7 +115,7 @@ async_test(function(t) {
         assert_equals(player.source, newSource, 'Player should play new source content');
         assert_equals(player.playState, 'paused', 'Paused task should not be canceled');
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that setting value of AnimationPlayer.source attribute to new value ' +
     'reschedules player\'s pending play and pause tasks');
 
@@ -131,7 +131,7 @@ async_test(function(t) {
         assert_equals(player.playState, 'finished', 'Player finished state ' +
             'should be preserved');
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that setting value of AnimationPlayer.source attribute to new value ' +
     'does not change player finished state');
 
@@ -148,7 +148,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(oldSource.target).top, ANIMATION_TOP_DEFAULT,
             'Animation should not take place for the old source content');
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that after setting value of AnimationPlayer.source attribute to new value ' +
     'animation takes place on new source content');
 
@@ -171,7 +171,7 @@ async_test(function(t) {
                 t.done();
             });
         }, 50);
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that EffectCallback is called with null timeFraction ' +
     'if player source is changed');
 
@@ -187,7 +187,7 @@ async_test(function(t) {
             assert_equals(window.getComputedStyle(newSource.target).top, ANIMATION_TOP_0_5,
                 'Animation should take place for the new source content');
             t.done();
-        }));
+        }), t.unreached_func('Current ready promise should not be rejected'));
     }));
 }, 'Test that after setting value of AnimationPlayer.source attribute to new value ' +
     'goes on new animation from the same position');
@@ -204,7 +204,7 @@ async_test(function(t) {
             assert_equals(player.playState, 'finished', 'Player should be finished');
             t.done();
         }));
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that after setting value of AnimationPlayer.source attribute to new value ' +
     'finishes player if current time exceeds source duration');
 </script>

@@ -66,7 +66,7 @@ async_test(function(t) {
         assert_equals(player.timeline, doc.timeline, 'Player should have new timeline');
         assert_equals(player.playState, 'paused', 'Paused task should not be canceled');
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that setting value of AnimationPlayer.timeline attribute to new not null value ' +
     'don\'t cancel pending play and pause tasks');
 
@@ -81,7 +81,7 @@ async_test(function(t) {
         assert_equals(player.playState, 'finished', 'Player finished state ' +
             'should be preserved');
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that setting value of AnimationPlayer.timeline attribute to new not null value ' +
     'does not change player finished state');
 
@@ -105,7 +105,7 @@ async_test(function(t) {
                 t.done();
             });
         }, 50);
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that EffectCallback is called with null timeFraction ' +
     'if player timeline is changed to new not null value');
 </script>
