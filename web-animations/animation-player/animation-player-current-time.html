@@ -78,10 +78,10 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
+    player.currentTime = ANIMATION_END_TIME / 2;
     player.playbackRate = -1.5;
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME / 2;
         setTimeout(function() {
             assert_equals(player.currentTime, calculateCurrentTime(
                 player.timeline.currentTime, player.startTime, player.playbackRate),
@@ -92,165 +92,171 @@ async_test(function(t) {
 }, 'AnimationPlayer.currentTime value is (timeline time - start time) × playback rate. ' +
     'Test playbackRate < 0');
 
-// 15.10.2014 Finished here. Go on from this place
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+
+    player.ready.then(t.step_func(function() {
+        timesToTest.forEach(function(val) {
+            player.currentTime = val;
+            assert_equals(player.currentTime, val,
+                'AnimationPlayer.currentTime value should be set to the new value');
+            assert_equals(player.currentTime, calculateCurrentTime(
+                player.timeline.currentTime, player.startTime, player.playbackRate),
+                'AnimationPlayer.currentTime value should be calculated as defined');
+            t.done();
+        });
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test setting value of AnimationPlayer.currentTime attribute');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
-    player.startTime = 100;
-    setTimeout(function() {
-        t.step(function () {
-            assert_equals(player.currentTime, calculateCurrentTime(
-                player.timeline.currentTime, player.startTime, player.playbackRate),
-                'AnimationPlayer.currentTime value should be ' +
-                'effective current time of this player');
+
+    player.ready.then(t.step_func(function() {
+        timesToTest.forEach(function(seekTime) {
+            var expectedTime = calculateStartTime(player.timeline.currentTime, seekTime,
+                player.playbackRate);
+            player.currentTime = seekTime;
+
+            assert_equals(player.startTime, expectedTime,
+                'The value of AnimationPlayer.startTime attribute should be set when seek ' +
+                'is performed');
             t.done();
         });
-    }, 100);
-}, 'AnimationPlayer.currentTime value is effective current time of this player. ' +
-    'Start time > 0 and wait for some time before checking the value');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting value of AnimationPlayer.currentTime attribute sets start time');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = 0.4;
+
+    player.ready.then(t.step_func(function() {
+        timesToTest.forEach(function(seekTime) {
+            var expectedTime = calculateStartTime(player.timeline.currentTime, seekTime,
+                player.playbackRate);
+            player.currentTime = seekTime;
+
+            assert_equals(player.startTime, expectedTime,
+                'The value of AnimationPlayer.startTime attribute should be set when seek ' +
+                'is performed');
+            t.done();
+        });
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting value of AnimationPlayer.currentTime attribute correctly ' +
+    'sets start time when 0 < playback rate < 1');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = -0.4;
+
+    player.ready.then(t.step_func(function() {
+        timesToTest.forEach(function(seekTime) {
+            var expectedTime = calculateStartTime(player.timeline.currentTime, seekTime,
+                player.playbackRate);
+            player.currentTime = seekTime;
+
+            assert_equals(player.startTime, expectedTime,
+                'The value of AnimationPlayer.startTime attribute should be set when seek ' +
+                'is performed');
+            t.done();
+        });
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting value of AnimationPlayer.currentTime attribute correctly ' +
+    'sets start time when 0 > playback rate > -1');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = -2;
+
+    player.ready.then(t.step_func(function() {
+        timesToTest.forEach(function(seekTime) {
+            var expectedTime = calculateStartTime(player.timeline.currentTime, seekTime,
+                player.playbackRate);
+            player.currentTime = seekTime;
+
+            assert_equals(player.startTime, expectedTime,
+                'The value of AnimationPlayer.startTime attribute should be set when seek ' +
+                'is performed');
+            t.done();
+        });
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting value of AnimationPlayer.currentTime attribute correctly ' +
+    'sets start time when -1 > playback rate');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = 2;
+
+    player.ready.then(t.step_func(function() {
+        timesToTest.forEach(function(seekTime) {
+            var expectedTime = calculateStartTime(player.timeline.currentTime, seekTime,
+                player.playbackRate);
+            player.currentTime = seekTime;
+
+            assert_equals(player.startTime, expectedTime,
+                'The value of AnimationPlayer.startTime attribute should be set when seek ' +
+                'is performed');
+            t.done();
+        });
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting value of AnimationPlayer.currentTime attribute correctly ' +
+    'sets start time when playback rate > 1');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = 0;
+
+    player.ready.then(t.step_func(function() {
+        var startTime = player.startTime;
+        timesToTest.forEach(function(seekTime) {
+            player.currentTime = seekTime;
+            assert_equals(player.startTime, startTime,
+                'The value of AnimationPlayer.startTime attribute should not be updated');
+            t.done();
+        });
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting value of AnimationPlayer.currentTime attribute does not ' +
+    'change start time if playback rate is 0');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.pause();
+
+    player.ready.then(t.step_func(function() {
+        var startTime = player.startTime;
+        timesToTest.forEach(function(seekTime) {
+            player.currentTime = seekTime;
+            assert_equals(player.startTime, startTime,
+                'The value of AnimationPlayer.startTime attribute should not be updated');
+            t.done();
+        });
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting value of AnimationPlayer.currentTime attribute does not ' +
+    'change start time if player hold time is resolved');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = ANIMATION_END_TIME + 1;
+        assert_equals(player.playState, 'finished', 'Player state should be finished');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting value of AnimationPlayer.currentTime attribute to time after end ' +
+    'finishes the player');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     player.playbackRate = -1;
-    player.startTime = 500;
-    setTimeout(function() {
-        t.step(function () {
-            assert_equals(player.currentTime, calculateCurrentTime(
-                player.timeline.currentTime, player.startTime, player.playbackRate),
-                'AnimationPlayer.currentTime value should be ' +
-                'effective current time of this player');
-            t.done();
-        });
-    }, 100);
-}, 'AnimationPlayer.currentTime value is effective current time of this player. ' +
-    'Wait for some time is before checking the value, playbackRate < 0');
 
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -1;
+        assert_equals(player.playState, 'finished', 'Player state should be finished');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting value of AnimationPlayer.currentTime attribute to negative ' +
+    'value finishes player if playback rate < 0');
 
-    timesToTest.forEach(function(val) {
-        player.currentTime = val;
-        assert_equals(player.currentTime, val,
-            'AnimationPlayer.currentTime value should be set to the new value');
-    });
-}, 'Test setting value of AnimationPlayer.currentTime attribute');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.pause();
-
-    timesToTest.forEach(function(val) {
-        player.currentTime = val;
-        assert_equals(player.currentTime, val,
-            'AnimationPlayer.currentTime value should be set to the new value');
-    });
-}, 'Test setting value of AnimationPlayer.currentTime attribute when player is paused');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.playbackRate = 0;
-
-    timesToTest.forEach(function(val) {
-        player.currentTime = val;
-        assert_equals(player.currentTime, val,
-            'AnimationPlayer.currentTime value should be set to the new value');
-    });
-}, 'Test setting value of AnimationPlayer.currentTime attribute ' +
-    'when player playback rate is zero');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.currentTime = 100;
-    player.playbackRate = 0;
-
-    timesToTest.forEach(function(val) {
-        player.currentTime = val;
-        assert_equals(player.currentTime, val,
-            'AnimationPlayer.currentTime value should be set to the new value');
-    });
-}, 'Test setting value of AnimationPlayer.currentTime attribute ' +
-    'when player playback rate is zero and seek performed before setting playbackRate');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.pause();
-    player.playbackRate = 0;
-
-    timesToTest.forEach(function(val) {
-        player.currentTime = val;
-        assert_equals(player.currentTime, val,
-            'AnimationPlayer.currentTime value should be set to the new value');
-    });
-}, 'Test setting value of AnimationPlayer.currentTime attribute ' +
-    'when player playback rate is zero and player is paused');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-
-    timesToTest.forEach(function(val) {
-        player.playbackRate = 0;
-        player.currentTime = val;
-        assert_equals(player.currentTime, val,
-            'AnimationPlayer.currentTime value should be set to the new value');
-
-        player.playbackRate = 1;
-        assert_equals(player.currentTime, val, 'AnimationPlayer.currentTime value ' +
-            'should not be changed after changing playbackRate');
-    });
-}, 'Test changing of AnimationPlayer.currentTime value ' +
-    'when player playback rate is changed from zero to 1 and back');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-
-    timesToTest.forEach(function(seekTime) {
-        var expectedTime = calculateStartTime(player.timeline.currentTime, seekTime,
-            player.playbackRate);
-        player.currentTime = seekTime;
-
-        assert_equals(player.startTime, expectedTime,
-            'The value of AnimationPlayer.startTime attribute should be set when seek ' +
-            'is performed');
-        assert_false(player.finished, 'Player\'s finished flag should be set to false');
-    });
-}, 'Test that when player is not paused and playback rate is not zero ' +
-    'setting value of AnimationPlayer.currentTime attribute sets start time and finished flag');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.playbackRate = 0.4;
-
-    timesToTest.forEach(function(seekTime) {
-        var expectedTime = calculateStartTime(player.timeline.currentTime, seekTime,
-            player.playbackRate);
-        player.currentTime = seekTime;
-
-        assert_equals(player.startTime, expectedTime,
-            'The value of AnimationPlayer.startTime attribute should be set when seek ' +
-            'is performed');
-        assert_false(player.finished, 'Player\'s finished flag should be set to false');
-    });
-}, 'Test that when player is not paused and playback rate is not zero setting ' +
-    'value of AnimationPlayer.currentTime attribute sets start time and finished flag.' +
-    'Playback rate is > 0 and < 1');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.playbackRate = -0.4;
-
-    seekTimes.forEach(function(seekTime) {
-        var expectedTime = calculateStartTime(player.timeline.currentTime, seekTime,
-            player.playbackRate);
-        player.currentTime = seekTime;
-
-        assert_equals(player.startTime, expectedTime,
-            'The value of AnimationPlayer.startTime attribute should be set when seek ' +
-            'is performed');
-        assert_false(player.finished, 'Player\'s finished flag should be set to false');
-    });
-}, 'Test that when player is not paused and playback rate is not zero setting ' +
-    'value of AnimationPlayer.currentTime attribute sets start time and finished flag.' +
-    'Playback rate is < 0 and > -1');
+// 16/10/1024 Finished here
 
 test(function() {
     var animation = newAnimation(createDiv(this));
