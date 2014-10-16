@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>AnimationEffect clone() method test</title>
+<title>AnimationEffect clone() method s</title>
 <meta name="assert" content="Creates and returns a new object of the same type as this object’s most-derived interface such that it will produce the same output as this object">
 <link rel="help" href="http://w3c.github.io/web-animations/#dom-animationeffect-clone">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
@@ -12,8 +12,8 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var effectsToTest = [newKeyframeEffect(), newMotionPathEffect()];
-    effectsToTest.forEach(function(effect) {
+    var effects = [newKeyframeEffect(), newMotionPathEffect()];
+    effects.forEach(function(effect) {
         var cloned = effect.clone();
 
         assert_false(cloned === effect,
@@ -30,8 +30,8 @@ test(function() {
         iterationComposite: 'accumulate',
         composite: 'add'
     };
-    var effectsToTest = [newKeyframeEffect(options), newMotionPathEffect(options)];
-    effectsToTest.forEach(function(effect) {
+    var effects = [newKeyframeEffect(options), newMotionPathEffect(options)];
+    effects.forEach(function(effect) {
         var cloned = effect.clone();
 
         assert_false(cloned === effect,

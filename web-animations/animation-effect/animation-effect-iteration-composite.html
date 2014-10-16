@@ -26,7 +26,7 @@ test(function() {
         newMotionPathEffect({iterationComposite: 'accumulate'})];
     effects.forEach(function(effect) {
         assert_equals(effect.iterationComposite, 'accumulate', type(effect) +
-            '.iterationComposite should return the value specified in constructor arguments' );
+            '.iterationComposite should return the value specified in constructor arguments');
     });
 }, 'Test AnimationEffect.iterationComposite attribute returns value set by constructor');
 
@@ -73,7 +73,7 @@ async_test(function(t) {
         }), 110);
     });
 }, 'Test AnimationEffect.iterationComposite value \'repace\' forces animated value ' +
-    'to be produced independent of the current iteration.');
+    'to be produced independent of the current iteration');
 
 async_test(function(t) {
     var test = t;
