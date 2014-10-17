@@ -92,6 +92,13 @@ async_test(function(t) {
 }, 'AnimationPlayer.currentTime value is (timeline time - start time) × playback rate. ' +
     'Test playbackRate < 0');
 
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    assert_throws('NotSupportedError', function() {
+        player.currentTime = null;
+    }, 'NotSupportedError should be thrown if value to set is unresolved');
+}, 'Setting AnimationPlayer.currentTime to unresolved value throws NotSupportedError');
+
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
 
@@ -245,7 +252,7 @@ async_test(function(t) {
     'finishes the player');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     player.playbackRate = -1;
 
     player.ready.then(t.step_func(function() {
@@ -256,35 +263,45 @@ async_test(function(t) {
 }, 'Test that setting value of AnimationPlayer.currentTime attribute to negative ' +
     'value finishes player if playback rate < 0');
 
-// 16/10/1024 Finished here
-
-test(function() {
+async_test(function(t) {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
 
-    assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0,
-        'Animation effect should take place');
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 0;
+        assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0,
+            'Animation effect should take place');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation effect is changed accordingly by setting ' +
     'AnimationPlayer.currentTime attribute when current time is zero');
 
-test(function() {
+async_test(function(t) {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
-    player.currentTime = ANIMATION_END_TIME / 2;
 
-    assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
-        'Animation effect should take place');
+    player.ready.then(t.step_func(function() {
+        player.currentTime = ANIMATION_END_TIME / 2;
+        assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
+            'Animation effect should take place');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation effect is changed accordingly by setting ' +
     'AnimationPlayer.currentTime attribute when current time is > 0 and < end time');
 
-test(function() {
+async_test(function(t) {
     var animation = newAnimation(createDiv(this));
     var player = document.timeline.play(animation);
-    player.currentTime = ANIMATION_END_TIME;
 
-    assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
-        'Animation effect should take place');
+    player.ready.then(t.step_func(function() {
+        player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
+            'Animation effect should take place');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation effect is changed accordingly by setting ' +
     'AnimationPlayer.currentTime attribute when current time equals end time');
+
+// TODO Add tests for setting current time when player has no timeline associated
 </script>
 </body>
