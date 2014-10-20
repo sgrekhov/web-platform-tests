@@ -181,7 +181,7 @@ async_test(function(t) {
     var player = document.timeline.play(oldSource);
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME/2;
+        player.currentTime = ANIMATION_END_TIME / 2;
         player.source = newSource;
         player.ready.then(t.step_func(function() {
             assert_equals(window.getComputedStyle(newSource.target).top, ANIMATION_TOP_0_5,
@@ -207,5 +207,19 @@ async_test(function(t) {
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that after setting value of AnimationPlayer.source attribute to new value ' +
     'finishes player if current time exceeds source duration');
+
+async_test(function(t) {
+    var player = document.timeline.play(null);
+    var currentTime = ANIMATION_END_TIME / 2;
+    player.currentTime = currentTime;
+    var source = newAnimation(createDiv(this));
+    player.source = source;
+
+    player.ready.then(t.step_func(function() {
+        assert_equals(player.currentTime, currentTime, 'Player should start playing of ' +
+            'new source content from players\'s current time');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Player should start playing of new source content from players\'s current time');
 </script>
 </body>

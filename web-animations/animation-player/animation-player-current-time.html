@@ -110,8 +110,8 @@ async_test(function(t) {
             assert_equals(player.currentTime, calculateCurrentTime(
                 player.timeline.currentTime, player.startTime, player.playbackRate),
                 'AnimationPlayer.currentTime value should be calculated as defined');
-            t.done();
         });
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test setting value of AnimationPlayer.currentTime attribute');
 
@@ -127,31 +127,31 @@ async_test(function(t) {
             assert_equals(player.startTime, expectedTime,
                 'The value of AnimationPlayer.startTime attribute should be set when seek ' +
                 'is performed');
-            t.done();
         });
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that setting value of AnimationPlayer.currentTime attribute sets start time');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     var playbackRates = [-2, -0.4, 0.4, 2];
-    playbackRates.forEach(function(playbackRate) {
-        player.playbackRate = playbackRate;
 
-        player.ready.then(t.step_func(function() {
+    player.ready.then(t.step_func(function() {
+        playbackRates.forEach(function(playbackRate) {
+            player.playbackRate = playbackRate;
             timesToTest.forEach(function(seekTime) {
                 var expectedTime = calculateStartTime(player.timeline.currentTime, seekTime,
                     player.playbackRate);
                 player.currentTime = seekTime;
 
                 assert_equals(player.startTime, expectedTime,
-                    'The value of AnimationPlayer.startTime attribute should be set when seek ' +
-                    'is performed for playbackRate ' + playbackRate);
-                t.done();
+                    'The value of AnimationPlayer.startTime attribute should be set when ' +
+                    'seek is performed for playbackRate ' + playbackRate);
             });
-        }), t.unreached_func('Current ready promise should not be rejected for playback rate ' +
-                playbackRate));
-    });
+        });
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected for playback rate ' +
+            playbackRate));
 }, 'Test that setting value of AnimationPlayer.currentTime attribute correctly ' +
     'sets start time for different playback rates');
 
@@ -165,8 +165,8 @@ async_test(function(t) {
             player.currentTime = seekTime;
             assert_equals(player.startTime, startTime,
                 'The value of AnimationPlayer.startTime attribute should not be updated');
-            t.done();
         });
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that setting value of AnimationPlayer.currentTime attribute does not ' +
     'change start time if playback rate is 0');

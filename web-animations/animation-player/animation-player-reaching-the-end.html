@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Test animation player reaching the end of its source content</title>
+<meta name="assert" content="A player that has reached the natural boundary of its playback range is said to have finished">
+<link rel="help" href="http://w3c.github.io/web-animations/#reaching-the-end">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var pointsToTest = [
+        {time: -100, finished: false},
+        {time: -1, finished: false},
+        {time: 0, finished: false},
+        {time: 1, finished: false},
+        {time: ANIMATION_END_TIME / 2, finished: false},
+        {time: ANIMATION_END_TIME - 1, finished: false},
+        {time: ANIMATION_END_TIME, finished: true},
+        {time: ANIMATION_END_TIME + 1, finished: true},
+        {time: ANIMATION_END_TIME + 100, finished: true},
+        {time: ANIMATION_END_TIME / 3, finished: false}];
+
+    player.ready.then(t.step_func(function() {
+        pointsToTest.forEach(function(pointToTest) {
+            player.currentTime = pointToTest.time;
+            if (pointToTest.finished) {
+                assert_equals(player.playState, 'finished',
+                    'AnimationPlayer should be finished for time ' + pointToTest.time);
+            } else {
+                assert_not_equals(player.playState, 'finished',
+                    'AnimationPlayer should not be finished for time ' + pointToTest.time);
+            }
+        });
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected for time ' +
+        pointToTest.time));
+}, 'Test AnimationPlayer should be finished if seeked to a time past the end of the ' +
+    'source content when player playback rate is 1');
+
+test(function() {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    player.playbackRate = -1;
+    var pointsToTest = [
+        {time: -100, finished: true},
+        {time: -1, finished: true},
+        {time: 0, finished: true},
+        {time: 1, finished: false},
+        {time: ANIMATION_END_TIME / 2, finished: false},
+        {time: ANIMATION_END_TIME - 1, finished: false},
+        {time: ANIMATION_END_TIME, finished: false},
+        {time: ANIMATION_END_TIME + 1, finished: false},
+        {time: ANIMATION_END_TIME + 100, finished: false},
+        {time: -200, finished: true}];
+
+    player.ready.then(t.step_func(function() {
+        pointsToTest.forEach(function(pointToTest) {
+            player.currentTime = pointToTest.time;
+            if (pointToTest.finished) {
+                assert_equals(player.playState, 'finished',
+                    'AnimationPlayer should be finished for time ' + pointToTest.time);
+            } else {
+                assert_not_equals(player.playState, 'finished',
+                    'AnimationPlayer should not be finished for time ' + pointToTest.time);
+            }
+        });
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected for time ' +
+        pointToTest.time));
+}, 'Test AnimationPlayer should be finished if seeked to a time before zero ' +
+    'and player playback rate is -1');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    player.currentTime = ANIMATION_END_TIME - 10;
+
+    player.ready.then(t.step_func(function() {
+        setTimeout(function() {
+            t.step(function () {
+                assert_equals(player.currentTime, player.source.endTime,
+                    'The value of AnimationPlayer.currentTime attribute should be ' +
+                    'hold on source content end time');
+                assert_equals(player.playState, 'finished', 'AnimationPlayer ' +
+                    'should be finished');
+                t.done();
+            });
+        }, 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer does not play forwards beyond the end time');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    player.playbackRate = -1;
+    player.currentTime = 10;
+
+    player.ready.then(t.step_func(function() {
+        setTimeout(function() {
+            t.step(function () {
+                assert_equals(player.currentTime, 0,
+                    'The value of AnimationPlayer.currentTime attribute should be ' +
+                    'hold on source content end time');
+                assert_equals(player.playState, 'finished', 'AnimationPlayer ' +
+                    'should be finished');
+                t.done();
+            });
+        }, 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer does not progress past time zero if playback rate is negative');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    player.currentTime = ANIMATION_END_TIME / 2;
+
+    player.ready.then(t.step_func(function() {
+        player.source.timing.duration = ANIMATION_END_TIME / 4;
+
+        assert_equals(player.currentTime, ANIMATION_END_TIME / 4,
+            'The value of AnimationPlayer.currentTime attribute should be ' +
+            'hold on source content end time after changing duration');
+        assert_equals(player.playState, 'finished', 'AnimationPlayer ' +
+            'should be finished after changing source content duration');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer finishes if after changing source content length ' +
+    'player became finished if current time became after source content end');
+</script>
+</body>
