@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
 <title>AnimationPlayer playbackRate attribute test</title>
-<meta name="assert" content="Returns the playback rate of this player. Setting this attribute follows the procedure defined in section 3.5.3.1 Updating the playback rate.">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-playbackRate">
+<meta name="assert" content="The playback rate of this player. Setting this attribute follows the procedure to update the player playback rate of this object to the new value">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-playbackrate">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -12,134 +12,40 @@
 <body>
 <div id="log"></div>
 <script>
-function testSetPlaybackRate(player, playbackRate){
-    var previousPlaybackRate = player.playbackRate;
-    var playerCurrentTime = player.currentTime;
-    player.playbackRate = playbackRate;
-    assert_equals(player.playbackRate, playbackRate, 'The value of AnimationPlayer.playbackRate ' +
-        'attribute should be set to the new value');
-    assert_equals(player.currentTime, playerCurrentTime,
-        'The value of AnimationPlayer.currentTime attribute should not be changed');
-    if ((previousPlaybackRate>0 && playbackRate<0) ||
-        (previousPlaybackRate<0 && playbackRate>0)) {
-        assert_false(player.finished, 'Finished flag should be set to false, ' +
-            'if playbackRate changes sign');
-    }
-}
+test(function() {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    assert_equals(player.playbackRate, 1, 'The initial value of AnimationPlayer.playbackRate ' +
+        'attribute should be 1');
+}, 'Test that initial value of playbackRate attribute of AnimationPlayer ' +
+    'created by AnimationTimeline.play() method is 1');
 
 test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    testSetPlaybackRate(player, 2);
-}, 'Test setting value of AnimationPlayer.playbackRate attribute (keep the sign)');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.currentTime = ANIMATION_END_TIME / 2;
-    testSetPlaybackRate(player, -1);
-}, 'Test setting value of AnimationPlayer.playbackRate attribute (change the sign)');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.currentTime = ANIMATION_END_TIME / 2;
-    testSetPlaybackRate(player, 0.5);
-}, 'Test that changing AnimationPlayer.playbackRate does not affect current time ' +
-    '(current time is between animation start and end time)');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.currentTime = ANIMATION_END_TIME + 100;
-    testSetPlaybackRate(player, 0.5);
-}, 'Test that changing AnimationPlayer.playbackRate does not affect current time ' +
-    '(current time is after end time)');
+    var player = new AnimationPlayer(createDiv(this), document.timeline);
+    assert_equals(player.playbackRate, 1, 'The initial value of AnimationPlayer.playbackRate ' +
+        'attribute should be 1');
+}, 'Test that initial value of playbackRate attribute of AnimationPlayer ' +
+    'created by constructor is 1');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
-    player.currentTime = ANIMATION_END_TIME / 2;
-    setTimeout(function() {
-        t.step(function () {
-            testSetPlaybackRate(player, 0.5);
-            t.done();
-        });
-    }, 50);
-}, 'Test that changing AnimationPlayer.playbackRate does not affect current time (async)');
+    var times = [-100, -1, 0, 100, ANIMATION_END_TIME / 2, ANIMATION_END_TIME - 100,
+                 ANIMATION_END_TIME, ANIMATION_END_TIME + 100];
+    var playbackRates = [-2, -0.4, 0, 0.4, 2, -1];
 
-async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
-    player.currentTime = ANIMATION_END_TIME / 2;
-    setTimeout(function() {
-        t.step(function () {
-            testSetPlaybackRate(player, -1);
-            t.done();
+    player.ready.then(t.step_func(function() {
+        times.forEach(function(time) {
+            playbackRates.forEach(function(playbackRate) {
+                player.curentTime = time;
+                player.playbackRate = playbackRate;
+                assert_equals(player.playbackRate, playbackRate, 'Wrong value of playbackRate ' +
+                    'attribute for time ' + time);
+                assert_equals(player.currentTime, time, 'Value of currentTime attribute ' +
+                    'should not be changed');
+            });
         });
-    }, 50);
-}, 'Test that changing AnimationPlayer.playbackRate does not affect current time ' +
-    '(playbackRate differs in sign)');
-
-async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
-    player.currentTime = ANIMATION_END_TIME - 10;
-    setTimeout(function() {
-        t.step(function () {
-            assert_true(player.finished, 'Player should finish playback');
-            testSetPlaybackRate(player, -1);
-            t.done();
-        });
-    }, 50);
-}, 'Test that changing AnimationPlayer.playbackRate does not affect current time ' +
-    '(playbackRate differs in sign and player is finished)');
-
-async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
-    player.playbackRate = -1;
-    player.currentTime = 10;
-    setTimeout(function() {
-        t.step(function () {
-            assert_true(player.finished, 'Player should finish playback');
-            testSetPlaybackRate(player, 1);
-            t.done();
-        });
-    }, 50);
-}, 'Test that changing AnimationPlayer.playbackRate does not affect current time ' +
-    '(playbackRate is changed in sign (from negative to positive) and player is finished)');
-
-async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
-    player.currentTime = 10;
-    setTimeout(function() {
-        t.step(function () {
-            assert_greater_than(player.currentTime, 10, 'The value of ' +
-                'AnimationPlayer.currentTime should be increased');
-            t.done();
-        });
-    }, 100);
-}, 'Test that if playbackRate > 0 then player attribute currentTime is increased');
-
-async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
-    player.playbackRate = -1;
-    player.currentTime = ANIMATION_END_TIME / 2;
-    setTimeout(function() {
-        t.step(function () {
-            assert_less_than(player.currentTime, ANIMATION_END_TIME / 2, 'The value of ' +
-                'AnimationPlayer.currentTime should be decreased');
-            t.done();
-        });
-    }, 100);
-}, 'Test that if playbackRate < 0 then player attribute currentTime is decreased');
-
-async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
-    player.currentTime = ANIMATION_END_TIME / 2;
-    player.playbackRate = 0;
-    setTimeout(function() {
-        t.step(function () {
-            assert_equals(player.currentTime, ANIMATION_END_TIME / 2, 'The value of ' +
-                'AnimationPlayer.currentTime should not be changed');
-            assert_false(player.paused, 'Setting playbackRate to 0 should not set paused attribute');
-            t.done();
-        });
-    }, 100);
-}, 'Test that if playbackRate is 0 then player attribute currentTime ' +
-    'is not changed in time but paused flag is not set');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting value of AnimationPlayer.playbackRate attribute does ' +
+    'not change current time');
 </script>
 </body>

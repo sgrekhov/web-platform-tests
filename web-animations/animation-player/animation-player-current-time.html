@@ -150,8 +150,7 @@ async_test(function(t) {
             });
         });
         t.done();
-    }), t.unreached_func('Current ready promise should not be rejected for playback rate ' +
-            playbackRate));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that setting value of AnimationPlayer.currentTime attribute correctly ' +
     'sets start time for different playback rates');
 
