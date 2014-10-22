@@ -11,7 +11,7 @@
 <body>
 <div id="log"></div>
 <script>
-test(function() {
+async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(this)));
     var pointsToTest = [
         {time: -100, finished: false},
@@ -41,7 +41,7 @@ test(function() {
 }, 'Test AnimationPlayer should be finished if seeked to a time past the end of the ' +
     'source content when player playback rate is 1');
 
-test(function() {
+async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(this)));
     player.playbackRate = -1;
     var pointsToTest = [

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Test animation player playState attribute</title>
+<meta name="assert" content="Returns the play state of this player">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-playstate">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var player = new AnimationPlayer();
+
+    assert_equals(player.playState, 'idle', 'Wrong playState');
+}, 'Test AnimationPlayer.playState is \'idle\' for player without associated timeline');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+
+    player.ready.then(t.step_func(function() {
+        assert_equals(player.playState, 'running', 'AnimationPlayer should be running');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test AnimationPlayer.playState is \'running\' if player has a resolved current time');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    player.pause();
+
+    player.ready.then(t.step_func(function() {
+        assert_equals(player.playState, 'paused', 'AnimationPlayer should be paused');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test AnimationPlayer.playState is \'paused\' if player is paused');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    player.finish();
+
+    player.ready.then(t.step_func(function() {
+        assert_equals(player.playState, 'finished', 'AnimationPlayer should be finished');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test AnimationPlayer.playState is \'finished\' if player is finished');
+
+// TODO add tests for 'pending' state if it is possible
+
+test(function() {
+    var player = new AnimationPlayer();
+    player.pause();
+
+    assert_equals(player.playState, 'idle', 'Wrong playState');
+}, 'Test that AnimationPlayer \'idle\' play state \'wins\' over the \'paused\' state');
+
+test(function() {
+    var player = new AnimationPlayer();
+    player.finish();
+
+    assert_equals(player.playState, 'idle', 'Wrong playState');
+}, 'Test that AnimationPlayer \'idle\' play state \'wins\' over the \'finished\' state');
+
+test(function() {
+    var player = new AnimationPlayer();
+    player.play();
+
+    assert_equals(player.playState, 'idle', 'Wrong playState');
+}, 'Test that AnimationPlayer \'idle\' play state \'wins\' over the \'running\' state');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    player.currentTime = ANIMATION_END_TIME / 2;
+    player.pause();
+
+    player.ready.then(t.step_func(function() {
+        player.source.timing.duration = ANIMATION_END_TIME / 4;
+        assert_equals(player.playState, 'paused', 'Wrong playState');
+        player.play();
+        return player.ready;
+    }).then(function() {
+        assert_equals(player.playState, 'finished', 'Wrong playState');
+    }, t.unreached_func('Current ready promise should not be rejected')),
+    t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer play state is changed from paused to finished by ' +
+    'shortening of its duration');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = ANIMATION_END_TIME;
+        assert_equals(player.playState, 'finished', 'Wrong playState');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer play state is \'finished\' if current time is ' +
+    'greater than end time');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(this)));
+    player.playbackRate = -1;
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 0;
+        assert_equals(player.playState, 'finished', 'Wrong playState');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer play state is \'finished\' if current time ' +
+    '<= 0 and playback rate < 0');
+</script>
+</body>
