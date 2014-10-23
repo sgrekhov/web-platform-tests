@@ -22,7 +22,7 @@ test(function() {
 }, 'Test setting value of AnimationPlayer.startTime attribute to new value');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     player.ready.then(t.step_func(function() {
         var newStartTime = document.timeline.currentTime + 50;
         player.startTime = newStartTime;
@@ -40,7 +40,7 @@ async_test(function(t) {
     'accordingly');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
 
     player.ready.then(t.step_func(function() {
         var newStartTime = document.timeline.currentTime - 100;
@@ -56,7 +56,7 @@ async_test(function(t) {
 }, 'Test setting AnimationPlayer start time in the past shifts beginning of play');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     player.ready.then(t.step_func(function() {
         var newStartTime = document.timeline.currentTime - ANIMATION_END_TIME - 100;
         player.startTime = newStartTime;
@@ -69,7 +69,7 @@ async_test(function(t) {
     'earlier that current time minus animation length finishes the player');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     var newStartTime = document.timeline.currentTime + 100;
     player.startTime = newStartTime;
     player.ready.then(t.step_func(function(plr) {

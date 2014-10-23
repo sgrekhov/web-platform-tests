@@ -18,7 +18,7 @@ test(function() {
 }, 'Test AnimationPlayer.playState is \'idle\' for player without associated timeline');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(newAnimation(createDiv(t)));
 
     player.ready.then(t.step_func(function() {
         assert_equals(player.playState, 'running', 'AnimationPlayer should be running');
@@ -27,7 +27,7 @@ async_test(function(t) {
 }, 'Test AnimationPlayer.playState is \'running\' if player has a resolved current time');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(newAnimation(createDiv(t)));
     player.pause();
 
     player.ready.then(t.step_func(function() {
@@ -37,7 +37,7 @@ async_test(function(t) {
 }, 'Test AnimationPlayer.playState is \'paused\' if player is paused');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(newAnimation(createDiv(t)));
     player.finish();
 
     player.ready.then(t.step_func(function() {
@@ -70,7 +70,7 @@ test(function() {
 }, 'Test that AnimationPlayer \'idle\' play state \'wins\' over the \'running\' state');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(newAnimation(createDiv(t)));
     player.currentTime = ANIMATION_END_TIME / 2;
     player.pause();
 
@@ -87,7 +87,7 @@ async_test(function(t) {
     'shortening of its duration');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(newAnimation(createDiv(t)));
 
     player.ready.then(t.step_func(function() {
         player.currentTime = ANIMATION_END_TIME;
@@ -97,7 +97,7 @@ async_test(function(t) {
     'greater than end time');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(newAnimation(createDiv(t)));
     player.playbackRate = -1;
 
     player.ready.then(t.step_func(function() {

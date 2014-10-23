@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
 <title>Animation player cancel method test</title>
-<meta name="assert" content="Set source to null and clears all effects associated with the previous source content">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-cancel-void">
+<meta name="assert" content="Clears all effects caused by this player and aborts its playback by running the cancel a player procedure for this object">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-cancel">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -11,25 +11,71 @@
 <body>
 <div id="log"></div>
 <script>
-test(function() {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(t)));
+    var readyPromise = player.ready;
+    var finishedPromise = player.finished;
+
+    player.ready.then(t.unreached_func('Current ready promise should be rejected'),
+        t.step_func(function(error) {
+            assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
+                'with a DOMException named \'AbortError\'');
+            return player.ready;
+        }).then(t.step_func(function() {
+            assert_equals(player.startTime, null, 'Player start time should be unresolved');
+            assert_not_equals(player.ready, readyPromise, 'Current ready promise should be a ' +
+                'new Promise object');
+            assert_not_equals(player.finished, finishedPromise, 'Current finished promise ' +
+                'should be a new Promise object');
+            assert_equals(player.playState, 'idle', 'Player should be in idle state');
+            t.done();
+        }), t.unreached_func('Current ready promise should be rejected')));
+
+    player.finished.then(t.unreached_func('Current finished promise should be rejected'),
+        t.step_func(function(error) {
+                assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
+                    'with a DOMException named \'AbortError\'');
+        }));
     player.cancel();
+}, 'Test that AnimationPlayer.cancel() method rejects current ready and finished promises, ' +
+    'makes start time unresolved and replaces ready and finished promises by new Promise ' +
+    'objects');
 
-    assert_equals(player.source, null, 'Value of AnimationPlayer.source attribute ' +
-        'should be null');
-}, 'Test AnimationPlayer.cancel() sets the AnimationPlayer.source attribute to null');
+async_test(function(t) {
+    var numOfCallsNullTime = 0;
+    var source = new Animation(createDiv(t),
+        function(timeFraction, currentTarget, animationObject) {
+            if (timeFraction === null) {
+                numOfCallsNullTime++;
+            }
+        }, 100);
+    var player = document.timeline.play(source);
 
-test(function() {
-    var animation = newAnimation(createDiv(this));
-    var player = document.timeline.play(animation);
+    player.ready.then(t.step_func(function() {
+        player.cancel();
+        setTimeout(function() {
+            t.step(function() {
+                assert_equals(numOfCallsNullTime, 1, 'AnimationEffect callback should ' +
+                    'be called with null timeFraction after cancelling of the player');
+                t.done();
+            });
+        }, 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that EffectCallback is called with null timeFraction ' +
+    'if player is cancelled');
 
-    player.currentTime = ANIMATION_END_TIME / 2;
-    assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
-        'Animation effect should take place');
+async_test(function(t) {
+    var source = newAnimation(createDiv(t));
+    var player = document.timeline.play(source);
 
-    player.cancel();
-    assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_DEFAULT,
-        'Animation effect should be cleared');
-}, 'Test AnimationPlayer.cancel() clears animation effects');
+    player.ready.then(t.step_func(function() {
+        player.currentTime = ANIMATION_END_TIME/2;
+        player.cancel();
+
+        assert_equals(window.getComputedStyle(source.target).top, ANIMATION_TOP_DEFAULT,
+            'Animation should not take place for the old source content');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer.cancel() method removes all animation effects');
 </script>
 </body>

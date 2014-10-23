@@ -33,16 +33,13 @@ test(function() {
     'AnimationPlayer constructor ');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(newAnimation(createDiv(t)));
     var readyPromise = player.ready;
 
     player.ready.then(
         //onFulfilled. This never should called because we are going to reject
         // current ready promise and cancel pending play task
-        t.step_func(function() {
-            assert_unreached('Current ready promise should be rejected');
-            t.done();
-        }),
+        t.unreached_func('Current ready promise should be rejected'),
         // onRejected. Should be called with AbortError
         t.step_func(function(error) {
             assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
@@ -57,7 +54,7 @@ async_test(function(t) {
     'resets a player\'s pending tasks');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(newAnimation(createDiv(t)));
     player.pause();
     var doc = newHTMLDocument();
     player.timeline = doc.timeline;
@@ -71,7 +68,7 @@ async_test(function(t) {
     'don\'t cancel pending play and pause tasks');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(newAnimation(createDiv(t)));
     player.finish();
     var doc = newHTMLDocument();
     player.timeline = doc.timeline;
@@ -87,7 +84,7 @@ async_test(function(t) {
 
 async_test(function(t) {
     var numOfCallsNullTime = 0;
-    var source = new Animation(createDiv(this),
+    var source = new Animation(createDiv(t),
         function(timeFraction, currentTarget, animationObject) {
             if (timeFraction === null) {
                 numOfCallsNullTime++;

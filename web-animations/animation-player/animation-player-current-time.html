@@ -36,7 +36,7 @@ test(function() {
 }, 'Test that AnimationPlayer.currentTime attribute is null if player has no associated timeline');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
 
     player.ready.then(t.step_func(function() {
         assert_equals(player.currentTime, calculateCurrentTime(
@@ -47,7 +47,7 @@ async_test(function(t) {
 }, 'AnimationPlayer.currentTime value is (timeline time - start time) × playback rate');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     player.playbackRate = 0.4;
 
     player.ready.then(t.step_func(function() {
@@ -62,7 +62,7 @@ async_test(function(t) {
     'Test 0 < playbackRate < 1');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     player.playbackRate = 2;
 
     player.ready.then(t.step_func(function() {
@@ -77,7 +77,7 @@ async_test(function(t) {
     'Test playbackRate > 1');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     player.currentTime = ANIMATION_END_TIME / 2;
     player.playbackRate = -1.5;
 
@@ -100,7 +100,7 @@ test(function() {
 }, 'Setting AnimationPlayer.currentTime to unresolved value throws NotSupportedError');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
 
     player.ready.then(t.step_func(function() {
         timesToTest.forEach(function(val) {
@@ -116,7 +116,7 @@ async_test(function(t) {
 }, 'Test setting value of AnimationPlayer.currentTime attribute');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
 
     player.ready.then(t.step_func(function() {
         timesToTest.forEach(function(seekTime) {
@@ -171,7 +171,7 @@ async_test(function(t) {
     'change start time if playback rate is 0');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     player.pause();
 
     player.ready.then(t.step_func(function() {
@@ -187,7 +187,7 @@ async_test(function(t) {
     'change start time if player hold time is resolved');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
 
     player.ready.then(t.step_func(function() {
         player.currentTime = ANIMATION_END_TIME + 1;
@@ -210,7 +210,7 @@ async_test(function(t) {
     'value finishes player if playback rate < 0');
 
 async_test(function(t) {
-    var animation = newAnimation(createDiv(this));
+    var animation = newAnimation(createDiv(t));
     var player = document.timeline.play(animation);
 
     player.ready.then(t.step_func(function() {
@@ -223,7 +223,7 @@ async_test(function(t) {
     'AnimationPlayer.currentTime attribute when current time is zero');
 
 async_test(function(t) {
-    var animation = newAnimation(createDiv(this));
+    var animation = newAnimation(createDiv(t));
     var player = document.timeline.play(animation);
 
     player.ready.then(t.step_func(function() {
@@ -236,7 +236,7 @@ async_test(function(t) {
     'AnimationPlayer.currentTime attribute when current time is > 0 and < end time');
 
 async_test(function(t) {
-    var animation = newAnimation(createDiv(this));
+    var animation = newAnimation(createDiv(t));
     var player = document.timeline.play(animation);
 
     player.ready.then(t.step_func(function() {

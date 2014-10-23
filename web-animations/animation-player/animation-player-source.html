@@ -105,8 +105,8 @@ async_test(function(t) {
     'resets a player\'s pending tasks');
 
 async_test(function(t) {
-    var oldSource = newAnimation(createDiv(this));
-    var newSource = newAnimation(createDiv(this));
+    var oldSource = newAnimation(createDiv(t));
+    var newSource = newAnimation(createDiv(t));
     var player = document.timeline.play(oldSource);
     player.pause();
     player.source = newSource;
@@ -120,8 +120,8 @@ async_test(function(t) {
     'reschedules player\'s pending play and pause tasks');
 
 async_test(function(t) {
-    var oldSource = newAnimation(createDiv(this));
-    var newSource = newAnimation(createDiv(this));
+    var oldSource = newAnimation(createDiv(t));
+    var newSource = newAnimation(createDiv(t));
     var player = document.timeline.play(oldSource);
     player.finish();
     player.source = newSource;
@@ -136,8 +136,8 @@ async_test(function(t) {
     'does not change player finished state');
 
 async_test(function(t) {
-    var oldSource = newAnimation(createDiv(this));
-    var newSource = newAnimation(createDiv(this));
+    var oldSource = newAnimation(createDiv(t));
+    var newSource = newAnimation(createDiv(t));
     var player = document.timeline.play(oldSource);
     player.source = newSource;
 
@@ -154,7 +154,7 @@ async_test(function(t) {
 
 async_test(function(t) {
     var numOfCallsNullTime = 0;
-    var oldSource = new Animation(createDiv(this),
+    var oldSource = new Animation(createDiv(t),
         function(timeFraction, currentTarget, animationObject) {
             if (timeFraction === null) {
                 numOfCallsNullTime++;
@@ -176,8 +176,8 @@ async_test(function(t) {
     'if player source is changed');
 
 async_test(function(t) {
-    var oldSource = newAnimation(createDiv(this));
-    var newSource = newAnimation(createDiv(this));
+    var oldSource = newAnimation(createDiv(t));
+    var newSource = newAnimation(createDiv(t));
     var player = document.timeline.play(oldSource);
 
     player.ready.then(t.step_func(function() {
@@ -193,8 +193,8 @@ async_test(function(t) {
     'goes on new animation from the same position');
 
 async_test(function(t) {
-    var oldSource = new Animation(createDiv(this), KEYFRAMES, 1000);
-    var newSource = new Animation(createDiv(this), KEYFRAMES, 400);
+    var oldSource = new Animation(createDiv(t), KEYFRAMES, 1000);
+    var newSource = new Animation(createDiv(t), KEYFRAMES, 400);
     var player = document.timeline.play(oldSource);
 
     player.ready.then(t.step_func(function() {
@@ -212,7 +212,7 @@ async_test(function(t) {
     var player = document.timeline.play(null);
     var currentTime = ANIMATION_END_TIME / 2;
     player.currentTime = currentTime;
-    var source = newAnimation(createDiv(this));
+    var source = newAnimation(createDiv(t));
     player.source = source;
 
     player.ready.then(t.step_func(function() {

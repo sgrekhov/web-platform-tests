@@ -27,7 +27,7 @@ test(function() {
     'created by constructor is 1');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     var times = [-100, -1, 0, 100, ANIMATION_END_TIME / 2, ANIMATION_END_TIME - 100,
                  ANIMATION_END_TIME, ANIMATION_END_TIME + 100];
     var playbackRates = [-2, -0.4, 0, 0.4, 2, -1];
