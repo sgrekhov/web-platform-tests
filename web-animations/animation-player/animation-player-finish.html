@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationPlayer finish method tests</title>
+<meta name="assert" content="Seeks the player to the end of the source content in the current direction by running the finish a player procedure for this object">
+<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-finished">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+
+    player.ready.then(t.step_func(function() {
+        player.playbackRate = 0;
+        assert_throws('InvalidStateError', function() {
+            player.finish();
+        }, 'AnimationPlayer.finish() throws InvalidStateError if playback rate is 0');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'AnimationPlayer.finish() throws InvalidStateError if playback rate is 0');
+
+// TODO add test for source content end equals to infinity
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+
+    player.ready.then(t.step_func(function() {
+        player.finish();
+        assert_equals(player.currentTime, ANIMATION_END_TIME,
+            'AnimationPlayer.finish() should seek current time to the end time');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'AnimationPlayer.finish() method seeks current time to the source content end time');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    player.currentTime = ANIMATION_END_TIME / 2;
+    player.playbackRate = -1;
+
+    player.ready.then(t.step_func(function() {
+        player.finish();
+        assert_equals(player.currentTime, 0, 'AnimationPlayer.finish() should seek ' +
+            'current time to the 0 if playback rate < 0');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'AnimationPlayer.finish() method seeks current time to 0 if playback rate < 0');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+
+    player.ready.then(t.step_func(function() {
+        player.finish();
+        assert_equals(player.playState, 'finished',  'AnimationPlayer.finish() should ' +
+            'change play state to finished if player is not paused');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'AnimationPlayer.finish() changes play state to finished if player is not paused');
+</script>
+</body>
