@@ -71,6 +71,33 @@ test(function() {
 
 async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(t)));
+    player.pause();
+    player.finish();
+
+    player.ready.then(t.step_func(function() {
+        assert_equals(player.playState, 'paused', 'Wrong playState');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer \'paused\' play state \'wins\' over the \'finished\' state ' +
+    'if pause() method is called earlier than finish()');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(t)));
+    player.pause();
+
+    player.ready.then(t.step_func(function() {
+        player.finish();
+        return player.ready;
+    }).then(function() {
+        assert_equals(player.playState, 'paused', 'Wrong playState');
+        t.done();
+    }, t.unreached_func('Current ready promise should not be rejected')),
+    t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer \'paused\' play state is not changed after ' +
+    'finishing of the player');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(t)));
     player.currentTime = ANIMATION_END_TIME / 2;
     player.pause();
 
@@ -81,6 +108,7 @@ async_test(function(t) {
         return player.ready;
     }).then(function() {
         assert_equals(player.playState, 'finished', 'Wrong playState');
+        t.done();
     }, t.unreached_func('Current ready promise should not be rejected')),
     t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer play state is changed from paused to finished by ' +
@@ -92,6 +120,7 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         player.currentTime = ANIMATION_END_TIME;
         assert_equals(player.playState, 'finished', 'Wrong playState');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer play state is \'finished\' if current time is ' +
     'greater than end time');
@@ -103,6 +132,7 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         player.currentTime = 0;
         assert_equals(player.playState, 'finished', 'Wrong playState');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer play state is \'finished\' if current time ' +
     '<= 0 and playback rate < 0');
