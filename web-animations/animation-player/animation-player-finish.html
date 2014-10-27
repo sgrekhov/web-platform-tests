@@ -19,12 +19,24 @@ async_test(function(t) {
         player.playbackRate = 0;
         assert_throws('InvalidStateError', function() {
             player.finish();
-        }, 'AnimationPlayer.finish() throws InvalidStateError if playback rate is 0');
+        }, 'InvalidStateError should be thrown if playback rate is 0');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'AnimationPlayer.finish() throws InvalidStateError if playback rate is 0');
 
-// TODO add test for source content end equals to infinity
+async_test(function(t) {
+    var animation = new Animation(createDiv(t), KEYFRAMES, {iterations: Number.POSITIVE_INFINITY});
+    var player = document.timeline.play(animation);
+
+    player.ready.then(t.step_func(function() {
+        assert_throws('InvalidStateError', function() {
+            player.finish();
+        }, 'InvalidStateError should be thrown if playback rate is > 0 and ' +
+            'the end time of this player\'s source content is infinity');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'AnimationPlayer.finish() throws InvalidStateError if playback rate > 0 and ' +
+    'the end time of this player\'s source content is infinity');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
@@ -60,5 +72,34 @@ async_test(function(t) {
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'AnimationPlayer.finish() changes play state to finished if player is not paused');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+
+    player.ready.then(t.step_func(function() {
+        player.playbackRate = 2;
+        player.finish();
+        var expectedStartTime = player.timeline.currentTime -
+            ANIMATION_END_TIME / player.playbackRate;
+        assert_equals(player.startTime, expectedStartTime,  'AnimationPlayer.finish() should ' +
+            'update player\'s start time'');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'AnimationPlayer.finish() updates player\'s start time to ' +
+    'timeline time - source content end / player playback rate if playback rate > 0');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+
+    player.ready.then(t.step_func(function() {
+        player.playbackRate = -2;
+        player.finish();
+        var expectedStartTime = player.timeline.currentTime;
+        assert_equals(player.startTime, expectedStartTime,  'AnimationPlayer.finish() should ' +
+            'update player\'s start time');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'AnimationPlayer.finish() updates player\'s start time to ' +
+    'timeline time if playback rate < 0');
 </script>
 </body>
