@@ -35,6 +35,24 @@ test(function() {
     assert_equals(player.currentTime, null, 'AnimationPlayer.currentTime should be null');
 }, 'Test that AnimationPlayer.currentTime attribute is null if player has no associated timeline');
 
+test(function() {
+    var player = new AnimationPlayer();
+    var currentTime = document.timeline.currentTime + 100;
+    player.currentTime = currentTime;
+    assert_equals(player.currentTime, currentTime, 'AnimationPlayer.currentTime should be set');
+}, 'Test that AnimationPlayer.currentTime attribute is set to new value even if player ' +
+    'has no associated timeline');
+
+test(function() {
+    var player = new AnimationPlayer();
+    player.startTime = document.timeline.currentTime + 100;
+    var currentTime = document.timeline.currentTime + 200;
+    player.currentTime = currentTime;
+    assert_equals(player.currentTime, currentTime, 'AnimationPlayer.currentTime should be set');
+    assert_equals(player.startTime, null, 'AnimationPlayer.startTime should be unresolved');
+}, 'Test that setting AnimationPlayer.currentTime attribute makes start time unresolved ' +
+    'if player has no associated timeline');
+
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
 

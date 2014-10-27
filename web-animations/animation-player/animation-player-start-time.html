@@ -21,6 +21,36 @@ test(function() {
         'The value of AnimationPlayer.startTime attribute should be set to the new value');
 }, 'Test setting value of AnimationPlayer.startTime attribute to new value');
 
+test(function() {
+    var player = newAnimationPlayer(createDiv(this));
+    player.startTime = null;
+
+    assert_equals(player.startTime, null,
+        'The value of AnimationPlayer.startTime attribute should be set to the null value');
+}, 'Test setting value of AnimationPlayer.startTime attribute to unresolved value');
+
+test(function() {
+    var player = new AnimationPlayer();
+    var newStartTime = document.timeline.currentTime + 100;
+    player.startTime = newStartTime;
+
+    assert_equals(player.startTime, newStartTime,
+        'The value of AnimationPlayer.startTime attribute should be set to the new value');
+}, 'Test setting value of AnimationPlayer.startTime attribute to new value ' +
+    'for animation player with no associated timeline');
+
+test(function() {
+    var player = new AnimationPlayer();
+    player.currentTime = document.timeline.currentTime + 200;
+    var newStartTime = document.timeline.currentTime + 100;
+    player.startTime = newStartTime;
+
+    assert_equals(player.currentTime, null,
+        'Setting AnimationPlayer.startTime attribute for AnimationPlayer with no timeline ' +
+        'should make current time unresolved');
+}, 'Test that setting AnimationPlayer.startTime attribute for AnimationPlayer with no timeline ' +
+    'makes current time unresolved');
+
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
     player.ready.then(t.step_func(function() {
@@ -78,8 +108,5 @@ async_test(function(t) {
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that if player has a pending play task player\'s current ready promise ' +
     'is fulfilled with player');
-
-// TODO Add tests for setting null start time value and setting a value when 
-// Animation player has no timeline associated
 </script>
 </body>
