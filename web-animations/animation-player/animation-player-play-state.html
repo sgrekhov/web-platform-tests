@@ -136,5 +136,18 @@ async_test(function(t) {
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer play state is \'finished\' if current time ' +
     '<= 0 and playback rate < 0');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(t)));
+    player.currentTime = ANIMATION_END_TIME / 2;
+
+    player.ready.then(t.step_func(function() {
+        player.playbackRate = 4;
+        assert_equals(player.playState, 'finished', 'Wrong playState');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer play state is \'finished\' if animation is shortened by ' +
+    'changing of playback rate');
+
 </script>
 </body>
