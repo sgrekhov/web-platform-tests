@@ -94,12 +94,13 @@ test(function() {
 // Checks computed start time for each child of given animation sequence
 function checkAnimationSequenceChildrenStartTimes(animationSequence) {
     var startTime = 0;
-    animationSequence.children.forEach(function(node, index) {
-        assert_equals(node.computedTiming.startTime, startTime, 'The start time ' +
-            'of the animation node #' + index + ' of type ' + type(node) + ' should be ' +
-            'the end time of its previous sibling or zero if there is no previous sibling');
-        startTime = node.computedTiming.endTime;
-    });
+    for (var i = 0; i < animationSequence.children.length; i++) {
+        assert_equals(animationSequence.children[i].computedTiming.startTime, startTime,
+            'The start time of the animation node #' + i + ' of type ' +
+            type(animationSequence.children[i]) + ' should be the end time of its previous ' +
+            'sibling or zero if there is no previous sibling');
+        startTime = animationSequence.children[i].computedTiming.endTime;
+    }
 }
 
 test(function() {

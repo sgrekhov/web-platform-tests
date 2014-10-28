@@ -61,17 +61,17 @@ test(function() {
 }, 'The AnimationPlayer constructor with timeline parameter specified creates ' +
     'AnimationPlayer instance with timeline provided');
 
-test(function() {
+test (function() {
     var parent = new AnimationGroup([newAnimation(createDiv(this)),
         new AnimationGroup([]), new AnimationSequence([])]);
-    parent.children.forEach(function(source) {
+    for (var i = 0; i < parent.children.length; i++) {
         var player = new AnimationPlayer(source);
 
-        assert_equals(player.source, source, 'Source of newly created player ' +
+        assert_equals(player.source, parent.children[i], 'Source of newly created player ' +
             'should be specified by constructor source parameter');
         assert_equals(source.parent, null, 'Source should be removed from its parent ' +
             'animation group');
-    });
+    }
     assert_array_equals(parent.children, [], 'Source should be removed from the parent ' +
         'group\'s children');
 }, 'If source parameter of the AnimationPlayer constructor has a parent group ' +
