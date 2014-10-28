@@ -101,5 +101,20 @@ async_test(function(t) {
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'AnimationPlayer.finish() updates player\'s start time to ' +
     'timeline time if playback rate < 0');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    var counter = 0;
+
+    player.finish.then(t.step_func(function(plr) {
+        counter++;
+        assert_equals(plr, player, 'Finished promise should be resolved with player');
+    }), t.unreached_func('Current finished promise should not be rejected'));
+
+    player.ready.then(t.step_func(function() {
+        player.finish();
+        assert_equals(counter, 1, 'Current finished promise should be resolved');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Check that AnimationPlayer.finish() resolves curent finished promise');
 </script>
 </body>
