@@ -26,9 +26,9 @@ var effectsDescription = ['KeyframeEffect constructor', 'KeyframeEffect.setFrame
 //1. Let keyframe result be a Keyframe object with the offset, easing and composite attributes set to the default dictionary values.
 test(function() {
     var effects = createEffectsToTest({});
-    var keyframes = [{offset: null, easing: 'linear', composite: null}];
+    var keyframes = [{offset: null, easing: 'linear', composite: null, computedOffset: 0}];
     effects.forEach(function(effect, index) {
-        assert_array_equals(effect.getFrames(), computeOffset(keyframes),
+        assert_array_equals(effect.getFrames(), keyframes,
             effectsDescription[index] + ' should set Keyframe attributes to default values');
     });
 }, 'Test processing of keyframes sets set Keyframe attributes to default values. ' +
@@ -37,11 +37,11 @@ test(function() {
 test(function() {
     var effects = createEffectsToTest([{}, {}]);
     var keyframes = [
-        {offset: null, easing: 'linear', composite: null},
-        {offset: null, easing: 'linear', composite: null}
+        {offset: null, easing: 'linear', composite: null, computedOffset: 0},
+        {offset: null, easing: 'linear', composite: null, computedOffset: 1}
     ];
     effects.forEach(function(effect, index) {
-        assert_array_equals(effect.getFrames(), computeOffset(keyframes),
+        assert_array_equals(effect.getFrames(), keyframes,
             effectsDescription[index] + ' should set Keyframe attributes to default values');
     });
 }, 'Test processing of keyframes sets set Keyframe attributes to default values. ' +
@@ -55,9 +55,9 @@ test(function() {
 //    If property is a case-sensitive match for the string "offset",
 test(function() {
     var effects = createEffectsToTest({oFFset: 0.5});
-    var keyframes = [{offset: null, easing: 'linear', composite: null}];
+    var keyframes = [{offset: null, easing: 'linear', composite: null, computedOffset: 0}];
     effects.forEach(function(effect, index) {
-        assert_array_equals(effect.getFrames(), computeOffset(keyframes),
+        assert_array_equals(effect.getFrames(), keyframes,
             effectsDescription[index] + ' should set Keyframe attributes to default values');
     });
 }, 'Test processing of keyframes match atribute \'offset\' case-sensitevly. ' +
@@ -66,11 +66,11 @@ test(function() {
 test(function() {
     var effects = createEffectsToTest([{oFFset: 0.5}, {offSET: 0.5}]);
     var keyframes = [
-        {offset: null, easing: 'linear', composite: null},
-        {offset: null, easing: 'linear', composite: null}
+        {offset: null, easing: 'linear', composite: null, computedOffset: 0},
+        {offset: null, easing: 'linear', composite: null, computedOffset: 1}
     ];
     effects.forEach(function(effect, index) {
-        assert_array_equals(effect.getFrames(), computeOffset(keyframes),
+        assert_array_equals(effect.getFrames(), keyframes,
             effectsDescription[index] + ' should set Keyframe attributes to default values');
     });
 }, 'Test processing of keyframes match atribute \'offset\' case-sensitevly. ' +
@@ -82,13 +82,15 @@ test(function() {
     var expected = [0, 1, 0, 0.3, 0.5];
     values.forEach(function(value, index1) {
         var effects = createEffectsToTest({offset: value});
-        var keyframes = [{offset: expected[index1], easing: 'linear', composite: null}];
+        var keyframes = [
+            {offset: expected[index1], easing: 'linear', composite: null, computedOffset: expected[index1]}
+        ];
         effects.forEach(function(effect, index2) {
-            assert_array_equals(effect.getFrames(), computeOffset(keyframes),
+            assert_array_equals(effect.getFrames(), keyframes,
                 effectsDescription[index2] + ' should set Keyframe attribute \'offset\'');
         });
     });
-}, 'Test processing of keyframes caonverts atribute \'offset\' value to IDL double. ' +
+}, 'Test processing of keyframes converts atribute \'offset\' value to IDL double. ' +
     'Input is a single object');
 
 test(function() {
@@ -97,20 +99,119 @@ test(function() {
     values.forEach(function(value, index1) {
         var effects = createEffectsToTest([{offset: value}, {offset: value}]);
         var keyframes = [
-            {offset: expected[index1], easing: 'linear', composite: null},
-            {offset: expected[index1], easing: 'linear', composite: null}
+            {offset: expected[index1], easing: 'linear', composite: null, computedOffset: expected[index1]},
+            {offset: expected[index1], easing: 'linear', composite: null, computedOffset: expected[index1]}
         ];
         effects.forEach(function(effect, index2) {
-            assert_array_equals(effect.getFrames(), computeOffset(keyframes),
+            assert_array_equals(effect.getFrames(), keyframes,
                 effectsDescription[index2] + ' should set Keyframe attribute \'offset\'');
         });
     });
-}, 'Test processing of keyframes caonverts atribute \'offset\' value to IDL double. ' +
+}, 'Test processing of keyframes converts atribute \'offset\' value to IDL double. ' +
     'Input is a sequence of objects');
 
+test(function() {
+    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a', 'Infinity', '-Infinity' /* TODO object and more complex values */];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+            new KeyframeEffect({offset: value});
+        }, 'KeyframeEffect constructor should throw TypeError for not numeric ' +
+            'attribute \'offset\' value ' + value);
+    });
+}, 'Test KeyframeEffect constructor throws TypeError if atribute \'offset\' value ' +
+    'is not numeric. Input is a single object');
+
+test(function() {
+    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a', 'Infinity', '-Infinity' /* TODO object and more complex values */];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+            new KeyframeEffect({offset: 0}, {offset: value});
+        }, 'KeyframeEffect constructor should throw TypeError for not numeric ' +
+            'attribute \'offset\' value ' + value);
+    });
+}, 'Test KeyframeEffect constructor throws TypeError if atribute \'offset\' value ' +
+    'is not numeric. Input is a sequence of objects');
+
+test(function() {
+    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a', 'Infinity', '-Infinity' /* TODO object and more complex values */];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+            new KeyframeEffect().setFrames({offset: value});
+        }, 'KeyframeEffect.setFrames() should throw TypeError for not numeric ' +
+            'attribute \'offset\' value ' + value);
+    });
+}, 'Test KeyframeEffect.setFrames() throws TypeError if atribute \'offset\' value ' +
+    'is not numeric. Input is a single object');
+
+test(function() {
+    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a', 'Infinity', '-Infinity' /* TODO object and more complex values */];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+            new KeyframeEffect().setFrames({offset: 0}, {offset: value});
+        }, 'KeyframeEffect.setFrames() should throw TypeError for not numeric ' +
+            'attribute \'offset\' value ' + value);
+    });
+}, 'Test KeyframeEffect.setFrames() throws TypeError if atribute \'offset\' value ' +
+    'is not numeric. Input is a sequence of objects');
+
 //    If property is a case-sensitive match for the string "easing",
+test(function() {
+    var effects = createEffectsToTest({eAsing: 'hard'});
+    var keyframes = [{offset: null, easing: 'linear', composite: null, computedOffset: 0}];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values');
+    });
+}, 'Test processing of keyframes match atribute \'easing:\' case-sensitevly. ' +
+    'Input is a single object');
+
+test(function() {
+    var effects = createEffectsToTest([{eAsing: 'hard'}, {eaSING: 'harder'}]);
+    var keyframes = [
+        {offset: null, easing: 'linear', composite: null, computedOffset: 0},
+        {offset: null, easing: 'linear', composite: null, computedOffset: 1}
+    ];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values');
+    });
+}, 'Test processing of keyframes match atribute \'easing:\' case-sensitevly. ' +
+    'Input is a sequence of objects');
+
 //        Set the easing member of keyframe result to the result of applying the procedure for converting an ECMAScript value to an IDL DOMString value [WEBIDL] with the [TreatNullAs=EmptyString] annotation in effect, to the result of calling the [[Get]] internal method of keyframe input with property name "easing".
+//        TODO
 //        If the resulting string does not conform to the grammar defined for the easing attribute of the AnimationTiming interface or is not supported by the implementation, then set the easing of keyframe result to the string “linear”.
+test(function() {
+    var values = [null, undefined, true, false, 0.3, 'hard'/* TODO object and more complex values */];
+    values.forEach(function(value) {
+        var effects = createEffectsToTest({easing: value});
+        var keyframes = [
+            {offset: null, easing: 'linear', composite: null, computedOffset: 0}
+        ];
+        effects.forEach(function(effect, index) {
+            assert_array_equals(effect.getFrames(), keyframes,
+                effectsDescription[index] + ' should set Keyframe attribute \'easing\'');
+        });
+    });
+}, 'Test processing of keyframes sets atribute \'easing\' value to \'linear\', ' +
+    'if input value is invalid. Input is a single object');
+
+test(function() {
+    var values = [null, undefined, true, false, 0.3, 'hard'/* TODO object and more complex values */];
+    values.forEach(function(value) {
+        var effects = createEffectsToTest([{easing: value}, {easing: value}]);
+        var keyframes = [
+            {offset: null, easing: 'linear', composite: null, computedOffset: 0},
+            {offset: null, easing: 'linear', composite: null, computedOffset: 1}
+        ];
+        effects.forEach(function(effect, index) {
+            assert_array_equals(effect.getFrames(), keyframes,
+                effectsDescription[index] + ' should set Keyframe attribute \'offset\'');
+        });
+    });
+}, 'Test processing of keyframes sets atribute \'easing\' value to \'linear\', ' +
+    'if input value is invalid. Input is a sequence of objects');
+
 //    If property is a case-sensitive match for the string "composite",
 //        Set the composite member of keyframe result to the result applying the procedure for converting an ECMAScript value to an IDL enumeration type [WEBIDL] with CompositeOperation as the enumeration type, to the result of calling the [[Get]] internal method on keyframe input with property name "composite".
 //    Otherwise, if property also exists in supported properties based on a case-sensitive comparison,
