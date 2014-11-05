@@ -38,6 +38,16 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(t)));
+    player.startTime = null;
+
+    player.ready.then(t.step_func(function() {
+        assert_equals(player.playState, 'paused', 'AnimationPlayer should be paused');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test AnimationPlayer.playState is \'paused\' if start time is unresolved');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(t)));
     player.finish();
 
     player.ready.then(t.step_func(function() {
