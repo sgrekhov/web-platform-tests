@@ -326,6 +326,23 @@ function distance(keyframeStart, keyframeEnd, property) {
             - parseFloat(keyframeStart[property]));
 }
 
+// Implementation of AnimationTimeline interface that represents inactive timeline
+function InactiveTimeline() {
+    this.currentTime = null;
+    this.players = [];
+}
+
+InactiveTimeline.prototype.play = function(source) {
+    var player = new AnimationPlayer(source, this);
+    this.players.push(player);
+    return player;
+};
+
+InactiveTimeline.prototype.getAnimationPlayers = function() {
+    return players;
+};
+
+
 // FIXME The code below is stubs for Web Animations objects that don't
 // implemented yet
 // Remove all of the code below before merge it with w3c branch
