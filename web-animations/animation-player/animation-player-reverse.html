@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
 <title>Animation player reverse() method test</title>
-<meta name="assert" content="Inverts the playback rate of this player and seeks to the start of the source content if it has finished playing in the reversed direction using the reverse a player procedure for this object">
+<meta name="assert" content="Inverts the playback rate of this player and plays it using the reverse a player procedure for this object. As with play(), this method unpauses the player and, if the player has already finished playing in the reversed direction, seeks to the start of the source content">
 <link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-reverse">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -11,8 +11,6 @@
 <body>
 <div id="log"></div>
 <script>
-// TODO check that assert text is according to the spec
-
 test(function() {
     var player = new AnimationPlayer(createDiv(this));
     assert_throws('InvalidStateError', function() {
@@ -72,13 +70,10 @@ async_test(function(t) {
         assert_equals(player.playState, 'running', 'AnimationPlayer should not be paused');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'AnimationPlayer.reverse() reverses paused player and unpauses it');
-
-
-// 06/11/2014 finished here
+}, 'AnimationPlayer.reverse() reverses paused player and unpauses it when playback rate < 0');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     var timesToTest = [
         1,
         100,
@@ -86,110 +81,108 @@ async_test(function(t) {
         player.source.endTime - 100,
         player.source.endTime - 1];
 
-    timesToTest.forEach(function(time) {
-        player.currentTime = time;
-        player.pause();
-        var playbackRate = player.playbackRate; 
-        player.reverse();
+    player.ready.then(t.step_func(function() {
+        timesToTest.forEach(function(time) {
+            player.currentTime = time;
+            player.pause();
+            var playbackRate = player.playbackRate;
+            player.reverse();
 
-        assert_equals(player.playbackRate, -1 * playbackRate, 'Playback rate should be ' +
-            'changed in sign');
-        assert_false(player.paused, 'AnimationPlayer should not be paused');
-    });
-    testFinishedFalse(t, player);
-}, 'AnimationPlayer.reverse() reverses player when player is not limited');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.pause();
-    player.playbackRate = 0;
-
-    var timesToTest = [
-        -100,
-        -1,
-        0,
-        1,
-        100,
-        player.source.endTime / 2,
-        player.source.endTime - 100,
-        player.source.endTime - 1,
-        player.source.endTime,
-        player.source.endTime + 1,
-        player.source.endTime + 100];
-
-    timesToTest.forEach(function(time) {
-        player.currentTime = time;
-        player.reverse();
-
-        assert_equals(player.currentTime, time, 'Seek should not be performed');
-        assert_true(player.paused, 'AnimationPlayer paused state should not be changed');
-    });
-}, 'Test that if playback rate is zero reverse() call should do nothing');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.currentTime = player.source.endTime + 100;
-    player.reverse();
-
-    assert_equals(player.currentTime, player.source.endTime,
-        'Seek to source content end time should be performed');
-}, 'Test that if playback rate is > 0 and effective current time > source ' +
-    'content\'s end time then seek to source end time');
-
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
-    player.playbackRate = -1;
-    player.currentTime = -100;
-    player.reverse();
-
-    assert_equals(player.currentTime, 0, 'Seek to zero time should be performed');
-}, 'Test that if playback rate is < 0 and effective current time < 0 then seek to 0');
+            assert_equals(player.playbackRate, -1 * playbackRate, 'Playback rate should be ' +
+                'changed in sign');
+            assert_equals(player.playState, 'running', 'AnimationPlayer should not be paused');
+            assert_equals(player.currentTime, time, 'Current time should not be changed');
+        });
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'AnimationPlayer.reverse() reverses player and does not change current time if ' +
+    'player is not finished');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
-    setTimeout(function() {
-        t.step(function() {
+    var player = newAnimationPlayer(createDiv(t));
+    player.currentTime = player.source.endTime + 100;
+
+    player.ready.then(t.step_func(function() {
+        player.reverse();
+        assert_equals(player.currentTime, player.source.endTime,
+	        'Seek to source content end time should be performed');
+	    assert_equals(player.playbackRate, -1, 'Playback rate should be ' +
+	        'changed in sign');
+        return player.ready;
+    }).then(function() {
+        assert_equals(player.playState, 'running', 'AnimationPlayer should be running');
+        t.done();
+    }, t.unreached_func('Current ready promise should not be rejected')),
+    t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer.reverse() seeks to source content end if playback rate is > 0 ' +
+    'and current time > source content end time');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    player.playbackRate = -1;
+    player.currentTime = -100;
+
+    player.ready.then(t.step_func(function() {
+        player.reverse();
+        assert_equals(player.currentTime, 0, 'Seek to zero time should be performed');
+	    assert_equals(player.playbackRate, 1, 'Playback rate should be ' +
+	        'changed in sign');
+        return player.ready;
+    }).then(function() {
+        assert_equals(player.playState, 'running', 'AnimationPlayer should be running');
+        t.done();
+    }, t.unreached_func('Current ready promise should not be rejected')),
+    t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationPlayer.reverse() seeks to zero time if playback rate is < 0 ' +
+    'and current time < 0');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+
+    player.ready.then(t.step_func(function() {
+        setTimeout(t.step_func(function() {
             player.reverse();
-            setTimeout(function() {
-                t.step(function() {
-                    assert_approx_equals(player.currentTime, 0, EPSILON, 'Time should go ' +
-                        'backward after reverse() call');
-                    t.done();
-                });
-            }, 50);
-        });
-    }, 50);
+            setTimeout(t.step_func(function() {
+                assert_approx_equals(player.currentTime, 0, EPSILON, 'Time should go ' +
+                    'backward after reverse() call');
+                t.done();
+            }), 50);
+        }), 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer.reverse() call reverses player time');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     player.currentTime = player.source.endTime + 100;
     player.reverse();
-    setTimeout(function() {
-        t.step(function() {
-            assert_approx_equals(player.currentTime, player.source.endTime - 50, EPSILON,
-                'Time should go backward after reverse() call');
-            t.done();
-        });
-    }, 50);
+
+    player.ready.then(t.step_func(function() {
+        setTimeout(t.step_func(function() {
+            player.reverse();
+            setTimeout(t.step_func(function() {
+                assert_approx_equals(player.currentTime, player.source.endTime - 50, EPSILON,
+                    'Time should go backward after reverse() call');
+                t.done();
+            }), 50);
+        }), 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer.reverse() call reverses player time when current time > end time');
 
 async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
+    var player = newAnimationPlayer(createDiv(t));
     player.currentTime = player.source.endTime / 2;
     player.playbackRate = -1;
-    setTimeout(function() {
-        t.step(function() {
+
+    player.ready.then(t.step_func(function() {
+        setTimeout(t.step_func(function() {
             player.reverse();
-            setTimeout(function() {
-                t.step(function() {
-                    assert_approx_equals(player.currentTime, player.source.endTime / 2, EPSILON,
-                        'Time should go backward after reverse() call');
-                    t.done();
-                });
-            }, 50);
-        });
-    }, 50);
+            setTimeout(t.step_func(function() {
+                assert_approx_equals(player.currentTime, player.source.endTime / 2, EPSILON,
+                    'Time should go backward after reverse() call');
+                t.done();
+            }), 50);
+        }), 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer.reverse() call reverses player time when playback rate < 0');
 
 async_test(function(t) {
@@ -197,13 +190,14 @@ async_test(function(t) {
     player.currentTime = -100;
     player.playbackRate = -1;
     player.reverse();
-    setTimeout(function() {
-        t.step(function() {
+
+    player.ready.then(t.step_func(function() {
+        setTimeout(t.step_func(function() {
             assert_approx_equals(player.currentTime, 50, EPSILON,
                 'Time should go backward after reverse() call');
             t.done();
-        });
-    }, 50);
+        }), 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer.reverse() call reverses player time when playback rate < 0 and ' +
     'current time < 0');
 </script>
