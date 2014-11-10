@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationPlayer ready attribute tests</title>
+<meta name="assert" content="Returns the current ready promise for this object">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-ready">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+test(function() {
+    var player = new AnimationPlayer();
+
+    assert_class_string(player.ready, 'Promise', 'The current ready promise should be ' +
+        'initially a resolved Promise object');
+}, 'Test that the current ready promise is initially a resolved Promise object');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    var previousReady = player.ready;
+
+    player.ready.then(t.step_func(function() {
+        player.pause();
+
+        player.ready.then(t.step_func(function() {
+            assert_equals(player.playState, 'running', 'AnimationPlayer play state ' +
+                'should be running');
+            assert_not_equals(player.ready, readyPromise, 'Current ready promise should be a ' +
+                'new Promise object');
+            t.done();
+        }), t.unreached_func('Current ready promise should not be rejected'));
+        player.play();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that current ready promise is replaced by new Promise object every time when ' +
+    'player enters pending play state');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    var previousReady = player.ready;
+
+    player.ready.then(t.unreached_func('Current ready promise should be rejected'),
+        t.step_func(function(error) {
+            assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
+                'with a DOMException named \'AbortError\'');
+            return player.ready;
+        }).then(t.step_func(function() {
+            assert_not_equals(player.ready, readyPromise, 'Current ready promise should be a ' +
+                'new Promise object');
+            t.done();
+        }), t.unreached_func('Current ready promise should be rejected')));
+    player.cancel();
+}, 'Test that current ready promise is replaced by new Promise object every time when ' +
+    'player is cancelled');
+</script>
+</body>
