@@ -52,7 +52,8 @@ test(function() {
 //3. Convert each property name in supported properties to the equivalent IDL attribute by applying the CSS property to IDL attribute algorithm [CSSOM].
 //4. If the user agent supports animation of the float CSS property, replace "float" in supported properties with "cssFloat".
 //5. Let animation properties be an empty sequence.
-//6. Use the internal [[Enumerate]] operation on keyframe input to iterate over its properties. For each property perform the step corresponding to the first matching condition from below, if any.
+//6. Use the internal [[Enumerate]] operation on keyframe input to iterate over its properties.
+//For each property perform the step corresponding to the first matching condition from below, if any.
 //    If property is a case-sensitive match for the string "offset",
 test(function() {
     var effects = createEffectsToTest({oFFset: 0.5});
@@ -324,7 +325,7 @@ test(function() {
 }, 'Test processing of keyframes sets atribute \'composite\' to specified value. ' +
     'Input is a sequence of objects');
 
-// invalid input
+// test invalid input
  test(function() {
     var values = ['hello', 'composite', 0, 10, true, false, null, undefined /* TODO object and more complex values */];
     values.forEach(function(value) {
@@ -394,15 +395,178 @@ test(function() {
     'Input is a sequence of objects');
 
 //        append property to animation properties.
-//7. For user agents that support both a prefixed and an unprefixed version of some CSS properties, remove all prefixed properties from animation properties where the corresponding unprefixed version is also present in animation properties.
+//7. For user agents that support both a prefixed and an unprefixed version of some CSS properties,
+//remove all prefixed properties from animation properties
+//where the corresponding unprefixed version is also present in animation properties.
 
 //8. Sort animation properties lexicographically by the Unicode codepoints that define each element.
-//9. Iterate over animation properties from beginning to end and for each name in animation properties add a new member pair to keyframe result as follows:
-//        member name: the result of applying the the IDL attribute to CSS property algorithm [CSSOM] to name unless name is a case-sensitive match for the string "cssFloat" in which case use the string "float".
-//        member value: the result of calling ToString on the value returned from the [[Get]] method of keyframe input with property name, name. If [[Get]] returns null or undefined, let the member value be an empty string.
-// 
-// TODO
-//
+//9. Iterate over animation properties from beginning to end and
+//for each name in animation properties add a new member pair to keyframe result as follows:
+//        member name: the result of applying the the IDL attribute to CSS property algorithm [CSSOM] to name
+test(function() {
+    var effects = createEffectsToTest({top: '10px'});
+    var keyframes = [{top: '10px', offset: null, easing: 'linear', composite: null, computedOffset: 0}];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+            'and animation property \'top\'');
+    });
+}, 'Test processing of keyframes add supported properties to keyframe result. ' +
+    'Input is a single object');
+
+test(function() {
+    var effects = createEffectsToTest([{top: '10px'}, {top: '20px'}]);
+    var keyframes = [
+        {top: '10px', offset: null, easing: 'linear', composite: null, computedOffset: 0},
+        {top: '20px', offset: null, easing: 'linear', composite: null, computedOffset: 1}
+    ];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+            'and animation property \'top\'');
+    });
+}, 'Test processing of keyframes add supported properties to keyframe result. ' +
+    'Input is a sequence of objects');
+
+test(function() {
+    var effects = createEffectsToTest({backgroundOrigin: '10px'});
+    var keyframes = [{'background-origin': '10px', offset: null, easing: 'linear', composite: null, computedOffset: 0}];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+            'and animation property \'background-origin\'');
+    });
+}, 'Test processing of keyframes add supported properties to keyframe result. ' +
+    'Property name is converted by IDL attribute to CSS property algorithm. Input is a single object');
+
+test(function() {
+    var effects = createEffectsToTest([{backgroundOrigin: '10px'}, {backgroundOrigin: '20px'}]);
+    var keyframes = [
+        {'background-origin': '10px', offset: null, easing: 'linear', composite: null, computedOffset: 0},
+        {'background-origin': '20px', offset: null, easing: 'linear', composite: null, computedOffset: 1}
+    ];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+            'and animation property \'background-origin\'');
+    });
+}, 'Test processing of keyframes add supported properties to keyframe result. ' +
+    'Property name is converted by IDL attribute to CSS property algorithm. Input is a sequence of objects');
+
+//        unless name is a case-sensitive match for the string "cssFloat" in which case use the string "float".
+test(function() {
+    var effects = createEffectsToTest({cssFloat: 'left'});
+    var keyframes = [{float: 'left', offset: null, easing: 'linear', composite: null, computedOffset: 0}];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+            'and animation property \'float\'');
+    });
+}, 'Test processing of keyframes add property \'cssFloat\' to keyframe result as \'float\'. ' +
+    'Input is a single object');
+
+test(function() {
+    var effects = createEffectsToTest([{cssFloat: 'left'}, {cssFloat: 'right'}]);
+    var keyframes = [
+        {float: 'left', offset: null, easing: 'linear', composite: null, computedOffset: 0},
+        {float: 'right', offset: null, easing: 'linear', composite: null, computedOffset: 1}
+    ];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+            'and animation property \'background-origin\'');
+    });
+}, 'Test processing of keyframes add property \'cssFloat\' to keyframe result as \'float\'. ' +
+    'Input is a sequence of objects');
+
+//        member value: the result of calling ToString on the value returned
+//        from the [[Get]] method of keyframe input with property name, name.
+test(function() {
+    var values = [true, false, 0.3, '10px'/* TODO object and more complex values */];
+    var expected = ['true', 'false', '0.3', '10px'];
+    values.forEach(function(value, index) {
+        var effects = createEffectsToTest({top: value});
+        var keyframes = [
+            {top: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 0}
+        ];
+        effects.forEach(function(effect, index) {
+            assert_array_equals(effect.getFrames(), keyframes,
+                effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+                'and animation property \'top\'');
+        });
+    });
+}, 'Test processing of keyframes converts supported properties values via calling ToString. '+
+    'Input is a single object');
+
+test(function() {
+    var values = [true, false, 0.3, '10px'/* TODO object and more complex values */];
+    var expected = ['true', 'false', '0.3', '10px'];
+    values.forEach(function(value, index) {
+        var effects = createEffectsToTest([{easing: value}, {easing: value}]);
+        var keyframes = [
+            {top: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 0},
+            {top: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 1}
+        ];
+        effects.forEach(function(effect, index) {
+            assert_array_equals(effect.getFrames(), keyframes,
+                effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+                'and animation property \'top\'');
+        });
+    });
+}, 'Test processing of keyframes converts supported properties values via calling ToString. '+
+    'Input is a sequence of objects');
+
+//        If [[Get]] returns null or undefined, let the member value be an empty string.
+test(function() {
+    var effects = createEffectsToTest({top: null});
+    var keyframes = [{top: '', offset: null, easing: 'linear', composite: null, computedOffset: 0}];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+            'and animation property \'top\'');
+    });
+}, 'Test processing of keyframes add empty string value for supported properties ' +
+    'with null value to keyframe result. Input is a single object');
+
+test(function() {
+    var effects = createEffectsToTest([{top: null}, {top: null}]);
+    var keyframes = [
+        {top: '', offset: null, easing: 'linear', composite: null, computedOffset: 0},
+        {top: '', offset: null, easing: 'linear', composite: null, computedOffset: 1}
+    ];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+            'and animation property \'top\'');
+    });
+}, 'Test processing of keyframes add empty string value for supported properties ' +
+    'with null value to keyframe result. Input is a sequence of objects');
+
+test(function() {
+    var effects = createEffectsToTest({top: undefined});
+    var keyframes = [{top: '', offset: null, easing: 'linear', composite: null, computedOffset: 0}];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+            'and animation property \'top\'');
+    });
+}, 'Test processing of keyframes add empty string value for supported properties ' +
+    'with undefined value to keyframe result. Input is a single object');
+
+test(function() {
+    var effects = createEffectsToTest([{top: undefined}, {top: undefined}]);
+    var keyframes = [
+        {top: '', offset: null, easing: 'linear', composite: null, computedOffset: 0},
+        {top: '', offset: null, easing: 'linear', composite: null, computedOffset: 1}
+    ];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+            'and animation property \'top\'');
+    });
+}, 'Test processing of keyframes add empty string value for supported properties ' +
+    'with undefined value to keyframe result. Input is a sequence of objects');
+
 //10. Return keyframe result.
 
 </script>
