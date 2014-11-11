@@ -77,9 +77,9 @@ async_test(function(t) {
     var timesToTest = [
         1,
         100,
-        player.source.endTime / 2,
-        player.source.endTime - 100,
-        player.source.endTime - 1];
+        player.source.computedTiming.endTime / 2,
+        player.source.computedTiming.endTime - 100,
+        player.source.computedTiming.endTime - 1];
 
     player.ready.then(t.step_func(function() {
         timesToTest.forEach(function(time) {
@@ -100,11 +100,11 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
-    player.currentTime = player.source.endTime + 100;
+    player.currentTime = player.source.computedTiming.endTime + 100;
 
     player.ready.then(t.step_func(function() {
         player.reverse();
-        assert_equals(player.currentTime, player.source.endTime,
+        assert_equals(player.currentTime, player.source.computedTiming.endTime,
 	        'Seek to source content end time should be performed');
 	    assert_equals(player.playbackRate, -1, 'Playback rate should be ' +
 	        'changed in sign');
@@ -153,14 +153,14 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
-    player.currentTime = player.source.endTime + 100;
+    player.currentTime = player.source.computedTiming.endTime + 100;
     player.reverse();
 
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
             player.reverse();
             setTimeout(t.step_func(function() {
-                assert_approx_equals(player.currentTime, player.source.endTime - 50, EPSILON,
+                assert_approx_equals(player.currentTime, player.source.computedTiming.endTime - 50, EPSILON,
                     'Time should go backward after reverse() call');
                 t.done();
             }), 50);
@@ -170,14 +170,14 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
-    player.currentTime = player.source.endTime / 2;
+    player.currentTime = player.source.computedTiming.endTime / 2;
     player.playbackRate = -1;
 
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
             player.reverse();
             setTimeout(t.step_func(function() {
-                assert_approx_equals(player.currentTime, player.source.endTime / 2, EPSILON,
+                assert_approx_equals(player.currentTime, player.source.computedTiming.endTime / 2, EPSILON,
                     'Time should go backward after reverse() call');
                 t.done();
             }), 50);

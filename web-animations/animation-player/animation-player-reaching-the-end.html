@@ -79,7 +79,7 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         setTimeout(function() {
             t.step(function () {
-                assert_equals(player.currentTime, player.source.endTime,
+                assert_equals(player.currentTime, player.source.computedTiming.endTime,
                     'The value of AnimationPlayer.currentTime attribute should be ' +
                     'hold on source content end time');
                 assert_equals(player.playState, 'finished', 'AnimationPlayer ' +
