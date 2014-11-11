@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
 <title>AnimationPlayer finished attribute tests</title>
-<meta name="assert" content="AnimationPlayer finished returns true if this player has reached or passed the end of its source content in its current playback direction">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationPlayer-finished">
+<meta name="assert" content="Returns the current finished promise for this object">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-finished">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -12,63 +12,163 @@
 <body>
 <div id="log"></div>
 <script>
-function newLongAnimation(animationTarget) {
-    animationTarget.style.width = '300px';
-    return new Animation(animationTarget, [
-	    {width: '10px', offset: 0},
-	    {width: '100px', offset: 1/2},
-	    {width: '200px', offset: 1}], 2000);
-}
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    var finishedCounter = 0;
 
-test(function() {
-    var player = document.timeline.play(null);
+    player.finished.then(t.step_func(function() {
+        finishedCounter++;
+    }), t.unreached_func('Current finished promise should not be rejected'));
 
-    assert_true(player.finished, 'The value of AnimationPlayer.finished attribute ' +
-        'should be true for player without source');
-}, 'The AnimationPlayer.finished attribute is true for player without source');
+    player.ready.then(t.step_func(function() {
+        assert_equals(finishedCounter, 0, 'Curent finished promise should not be fulfilled');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that current finished promise is initially a pending Promise object');
 
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    var finishedCounter = 0;
 
-    assert_false(player.finished, 'The value of AnimationPlayer.finished attribute should be ' +
-        'false if player currentTime is within the bounds of player source content');
-}, 'The AnimationPlayer.finished attribute is false if player currentTime ' +
-    'is within the bounds of player source content');
+    player.finished.then(t.step_func(function() {
+        finishedCounter++;
+    }), t.unreached_func('Current finished promise should not be rejected'));
 
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
+    player.ready.then(t.step_func(function() {
+        setTimeout(t.step_func(function() {
+            assert_equals(finishedCounter, 0, 'Curent finished promise should not be fulfilled');
+            t.done();
+        }), 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that current finished promise is a pending Promise object and is not fulfilled ' +
+    'while player is running');
 
-    player.currentTime = ANIMATION_END_TIME - 100;
-    assert_false(player.finished, 'The AnimationPlayer.finished attribute should be ' +
-        'false if player time is less than source content end time');
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    var finishedCounter = 0;
 
-    player.currentTime = ANIMATION_END_TIME;
-    assert_true(player.finished, 'The AnimationPlayer.finished attribute should be ' +
-        'true if player time is equal to source content end time');
+    player.finished.then(t.step_func(function() {
+        finishedCounter++;
+    }), t.unreached_func('Current finished promise should not be rejected'));
 
-    player.currentTime = ANIMATION_END_TIME + 100;
-    assert_true(player.finished, 'The AnimationPlayer.finished attribute should be ' +
-        'true if player time is greater than source content end time');
-}, 'Test the value of AnimationPlayer.finished attribute is set to true ' +
-    'if player time is greater than or equal to source content end time');
+    player.ready.then(t.step_func(function() {
+        player.currentTime = player.source.computedTiming.endTime - 20;
+        setTimeout(t.step_func(function() {
+            assert_equals(finishedCounter, 1, 'Curent finished promise should not be fulfilled');
+            t.done();
+        }), 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that current finished promise is fulfilled when player is finished');
 
-test(function() {
-    var player = newAnimationPlayer(createDiv(this));
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    var finishedPromise = player.finished;
+    var finishedCounter = 0;
+
+    player.finished.then(t.step_func(function() {
+        finishedCounter++;
+    }), t.unreached_func('Current finished promise should not be rejected'));
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = player.source.computedTiming.endTime - 20;
+        setTimeout(t.step_func(function() {
+            assert_equals(finishedCounter, 1, 'Curent finished promise should be fulfilled');
+            player.play();
+
+            player.ready.then(t.step_func(function() {
+                assert_not_equals(player.finished, finishedPromise, 'The current finished ' +
+                    'promise should be replaced by new Promise object');
+                t.done();
+            }), t.unreached_func('Current ready promise should not be rejected'));
+        }), 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that current finished promise is replaced by new Promise object when player ' +
+    'leaves the finished play state');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
     player.playbackRate = -1;
+    player.currentTime = 20;
+    var finishedPromise = player.finished;
+    var finishedCounter = 0;
 
-    player.currentTime = 100;
-    assert_false(player.finished, 'The AnimationPlayer.finished attribute should be ' +
-        'false if player time is less than source content end time');
+    player.finished.then(t.step_func(function() {
+        finishedCounter++;
+    }), t.unreached_func('Current finished promise should not be rejected'));
 
-    player.currentTime = 0;
-    assert_true(player.finished, 'The AnimationPlayer.finished attribute should be ' +
-        'true if player time is zero');
+    player.ready.then(t.step_func(function() {
+        setTimeout(t.step_func(function() {
+            assert_equals(finishedCounter, 1, 'Curent finished promise should be fulfilled');
+            player.play();
 
-    player.currentTime = -100;
-    assert_true(player.finished, 'The AnimationPlayer.finished attribute should be ' +
-        'true if player currentTime is less than zero');
-}, 'Test the value of AnimationPlayer.finished attribute is true if player ' +
-    'playback rate < 0 and effective current time <= zero.');
+            player.ready.then(t.step_func(function() {
+                assert_not_equals(player.finished, finishedPromise, 'The current finished ' +
+                    'promise should be replaced by new Promise object');
+                t.done();
+            }), t.unreached_func('Current ready promise should not be rejected'));
+        }), 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that current finished promise is replaced by new Promise object when player ' +
+    'leaves the finished play state. Playback rate < 0');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    var finishedPromise = player.finished;
+    var finishedCounter = 0;
+
+    player.finished.then(t.step_func(function() {
+        finishedCounter++;
+    }), t.unreached_func('Current finished promise should not be rejected'));
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = player.source.computedTiming.endTime + 20;
+        assert_equals(finishedCounter, 1, 'Curent finished promise should be fulfilled');
+        assert_equals(player.finished, finishedPromise, 'Curent finished promise should be ' +
+            'the same object');
+
+        player.currentTime = player.source.computedTiming.endTime - 20;
+        assert_not_equals(player.finished, finishedPromise, 'The current finished ' +
+            'promise should be replaced by new Promise object');
+        assert_equals(finishedCounter, 1, 'Previous finished promise should not be fulfilled');
+
+        player.currentTime = player.source.computedTiming.endTime + 20;
+        assert_equals(finishedCounter, 2, 'Previous finished promise should be fulfilled');
+
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that current finished promise is replaced by new Promise object when player ' +
+    'leaves the finished play state. Finished state reached by setting currentTime');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    var finishedPromise = player.finished;
+    var finishedCounter = 0;
+
+    player.finished.then(t.step_func(function() {
+        finishedCounter++;
+    }), t.unreached_func('Current finished promise should not be rejected'));
+
+    player.ready.then(t.step_func(function() {
+        player.finish();
+        assert_equals(finishedCounter, 1, 'Curent finished promise should be fulfilled');
+        assert_equals(player.finished, finishedPromise, 'Curent finished promise should be ' +
+            'the same object');
+
+        player.play();
+        assert_not_equals(player.finished, finishedPromise, 'The current finished ' +
+            'promise should be replaced by new Promise object');
+        assert_equals(finishedCounter, 1, 'Previous finished promise should not be fulfilled');
+
+        player.currentTime = player.source.computedTiming.endTime + 20;
+        assert_equals(finishedCounter, 2, 'Previous finished promise should be fulfilled');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that current finished promise is replaced by new Promise object when player ' +
+    'leaves the finished play state and fulfilled when finished. Finished state reached ' +
+    'by calling AnimationPlayer.finish()');
+
+// 11/11/2014 fihished here
+
 
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
