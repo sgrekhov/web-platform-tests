@@ -65,14 +65,6 @@ function newKeyframeEffect(options) {
     return new KeyframeEffect(KEYFRAMES);
 }
 
-function newMotionPathEffect(options) {
-    var pathString = 'M ' + ANIMATION_TOP_0 + ' 0 L ' + ANIMATION_TOP_1 + ' 0 z';
-    if (options) {
-        return new MotionPathEffect(pathString, options);
-    }
-    return new MotionPathEffect(pathString);
-}
-
 // creates div element, appends it to the document body and
 // add removing of the created element to test cleanup
 function createDiv(test, doc) {
