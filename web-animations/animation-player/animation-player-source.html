@@ -87,10 +87,7 @@ async_test(function(t) {
     player.ready.then(
         //onFulfilled. This never should called because we are going to reject
         // current ready promise and cancel pending play task
-        t.step_func(function() {
-            assert_unreached('Current ready promise should be rejected');
-            t.done();
-        }),
+        t.unreached_func('Current ready promise should be rejected'),
         // onRejected. Should be called with AbortError
         t.step_func(function(error) {
             assert_class_string(error, 'AbortError', 'Promise should be rejected ' +

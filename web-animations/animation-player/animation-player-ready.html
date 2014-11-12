@@ -48,9 +48,32 @@ async_test(function(t) {
             assert_not_equals(player.ready, readyPromise, 'Current ready promise should be a ' +
             'new Promise object');
         t.done();
-        }), t.unreached_func('Current ready promise should be rejected')));
+        }));
     player.cancel();
 }, 'Test that current ready promise is replaced by new Promise object every time when ' +
     'player is cancelled');
+
+async_test(function(t) {
+    var player = new AnimationPlayer();
+
+    player.ready.then(t.unreached_func('Current ready promise should not be fulfilled'),
+        t.unreached_func('Current ready promise should be rejected'));
+    setTimeout(function() {
+        t.done();
+    }, 50);
+}, 'Test that current ready promise is not fulfilled if player is not ready (has no timeline ' +
+    'associated)');
+
+
+async_test(function(t) {
+    var player = new AnimationPlayer(new InactiveTimeline());
+
+    player.ready.then(t.unreached_func('Current ready promise should not be fulfilled'),
+        t.unreached_func('Current ready promise should be rejected'));
+    setTimeout(function() {
+        t.done();
+    }, 50);
+}, 'Test that current ready promise is not fulfilled if player is not ready (associated ' +
+    'timeline is inactive)');
 </script>
 </body>
