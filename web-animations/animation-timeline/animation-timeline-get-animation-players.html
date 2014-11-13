@@ -22,7 +22,7 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var player = newAnimationPlayer(createDiv(this, doc));
+    var player = doc.timeline.play(newAnimation(createDiv(this, doc)));
 
     assert_not_equals(doc.timeline.getAnimationPlayers(), null,
         'AnimationTimeline.getAnimationPlayers() method should not return null');
@@ -34,8 +34,8 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var player1 = newAnimationPlayer(createDiv(this, doc));
-    var player2 = newAnimationPlayer(createDiv(this, doc));
+    var player1 = doc.timeline.play(newAnimation(createDiv(this, doc)));
+    var player2 = doc.timeline.play(newAnimation(createDiv(this, doc)));
 
     assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
@@ -45,60 +45,20 @@ test(function() {
 
 test(function() {
     var doc = newHTMLDocument();
-    var player1 = newAnimationPlayer(createDiv(this, doc));
-    var player2 = newAnimationPlayer(createDiv(this, doc));
+    var player1 = doc.timeline.play(newAnimation(createDiv(this, doc)));
+    var player2 = doc.timeline.play(newAnimation(createDiv(this, doc)));
+    var player3 = doc.timeline.play(null);
     var players = doc.timeline.getAnimationPlayers();
 
-    players.forEach(function(player) {
-        assert_true(isCurrent(player.source),
-            'Source content of the AnimationPlayer returned by ' +
-            'AnimationTimeline.getAnimationPlayers() should be current');
-    });
-}, 'Test that source content of the AnimationPlayer returned by ' +
-    'AnimationTimeline.getAnimationPlayers() is current');
+    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2],
+        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+        'should contain two elements');
 
-async_test(function(t) {
-    var doc = newHTMLDocument();
-    var animation1 = new Animation(createDiv(this, doc), [], 100);
-    var player1 = document.timeline.play(animation1);
-    var animation2 = new Animation(createDiv(this, doc), [], 300);
-    var player2 = document.timeline.play(animation2);
-    var animation3 = new Animation(createDiv(this, doc), [], 200);
-    var player3 = document.timeline.play(animation3);
-
-    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
-        'AnimationTimeline.getAnimationPlayers() should return only players, ' +
-        'which source content is current');
-
-    setTimeout(
-        t.step_func(function() {
-            assert_array_equals(doc.timeline.getAnimationPlayers(), [player2, player3],
-                'AnimationTimeline.getAnimationPlayers() should return only players, ' +
-                'which source content is current');
-        }),
-        110
-    );
-
-    setTimeout(
-        t.step_func(function() {
-            assert_array_equals(doc.timeline.getAnimationPlayers(), [player2],
-                'AnimationTimeline.getAnimationPlayers() should return only players, ' +
-                'which source content is current');
-        }),
-        210
-    );
-
-    setTimeout(
-        t.step_func(function() {
-            var players = doc.timeline.getAnimationPlayers();
-            assert_true(players === null || players.length === 0,
-                'AnimationTimeline.getAnimationPlayers() should return only players, ' +
-                'which source content is current');
-            t.done();
-        }),
-        310
-    );
+    player2.source = null;
+    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1],
+        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+        'should contain one element');
 }, 'Test AnimationTimeline.getAnimationPlayers() returns only players, ' +
-    'which source content is current');
+    'which have associated source content');
 </script>
 </body>
