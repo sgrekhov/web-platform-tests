@@ -24,6 +24,23 @@ function createEffectsToTest(keyframes) {
 }
 var effectsDescription = ['KeyframeEffect constructor', 'KeyframeEffect.setFrames()'];
 
+// Utility function, which simply returns number value 0.4
+function returnsInt0_4(){
+    return 0.4;
+}
+// Utility function, which simply returns string value '0.7'
+function returnsString0_7() {
+    return '0.7';
+}
+// Utility function, which simply returns string value 'X'
+function returnsStringX() {
+    return 'X';
+}
+// Utility function, which simply returns dummy object
+function returnsObject() {
+    return {};
+}
+
 //1. Let keyframe result be a Keyframe object with the offset, easing and composite attributes
 // set to the default dictionary values.
 test(function() {
@@ -83,8 +100,16 @@ test(function() {
 // converting an ECMAScript value into an IDL double [WEBIDL] to the result of calling the
 // [[Get]] internal method on keyframe input with property name "offset".
 test(function() {
-    var values = [null, true, false, 0.3, '0.5'/* TODO object and more complex values */];
-    var expected = [0, 1, 0, 0.3, 0.5];
+    var values = [null, true, false, 0.3, '0.5',
+        {valueOf: returnsInt0_4},
+        {valueOf: returnsInt0_4, toString: returnsString0_7},
+        {valueOf: returnsInt0_4, toString: 'not callable'},
+        {valueOf: returnsString0_7},
+        {toString: returnsString0_7},
+        {valueOf: 'not callable', toString: returnsString0_7},
+        {valueOf: returnsObject, toString: returnsString0_7},
+        {valueOf: returnsInt0_4, toString: returnsObject}];
+    var expected = [0, 1, 0, 0.3, 0.5, 0.4, 0.4, 0.4, 0.7, 0.7, 0.7, 0.7, 0.4];
     values.forEach(function(value, index1) {
         var effects = createEffectsToTest({offset: value});
         var keyframes = [
@@ -100,8 +125,16 @@ test(function() {
     'Input is a single object');
 
 test(function() {
-    var values = [null, true, false, 0.3, '0.5'/* TODO object and more complex values */];
-    var expected = [0, 1, 0, 0.3, 0.5];
+    var values = [null, true, false, 0.3, '0.5',
+        {valueOf: returnsInt0_4},
+        {valueOf: returnsInt0_4, toString: returnsString0_7},
+        {valueOf: returnsInt0_4, toString: 'not callable'},
+        {valueOf: returnsString0_7},
+        {toString: returnsString0_7},
+        {valueOf: 'not callable', toString: returnsString0_7},
+        {valueOf: returnsObject, toString: returnsString0_7},
+        {valueOf: returnsInt0_4, toString: returnsObject}];
+    var expected = [0, 1, 0, 0.3, 0.5, 0.4, 0.4, 0.4, 0.7, 0.7, 0.7, 0.7, 0.4];
     values.forEach(function(value, index1) {
         var effects = createEffectsToTest([{offset: value}, {offset: value}]);
         var keyframes = [
@@ -117,8 +150,14 @@ test(function() {
     'Input is a sequence of objects');
 
 test(function() {
-    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a', 'Infinity',
-        '-Infinity' /* TODO object and more complex values */];
+    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a',
+        'Infinity', '-Infinity', {},
+        {valueOf: 'not callable', toString: 'not callable'},
+        {valueOf: returnsObject, toString: returnsObject},
+        {valueOf: returnsStringX},
+        {valueOf: 'not callable', toString: returnsStringX},
+        {valueOf: function() {return NaN;} },
+        {valueOf: returnsObject, toString: function() {return NaN;}}];
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
             new KeyframeEffect({offset: value});
@@ -129,8 +168,14 @@ test(function() {
     'is not numeric. Input is a single object');
 
 test(function() {
-    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a', 'Infinity',
-        '-Infinity' /* TODO object and more complex values */];
+    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a',
+        'Infinity', '-Infinity', {},
+        {valueOf: 'not callable', toString: 'not callable'},
+        {valueOf: returnsObject, toString: returnsObject},
+        {valueOf: returnsStringX},
+        {valueOf: 'not callable', toString: returnsStringX},
+        {valueOf: function() {return NaN;} },
+        {valueOf: returnsObject, toString: function() {return NaN;}}];
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
             new KeyframeEffect([{offset: 0}, {offset: value}]);
@@ -141,8 +186,14 @@ test(function() {
     'is not numeric. Input is a sequence of objects');
 
 test(function() {
-    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a', 'Infinity',
-        '-Infinity' /* TODO object and more complex values */];
+    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a',
+        'Infinity', '-Infinity', {},
+        {valueOf: 'not callable', toString: 'not callable'},
+        {valueOf: returnsObject, toString: returnsObject},
+        {valueOf: returnsStringX},
+        {valueOf: 'not callable', toString: returnsStringX},
+        {valueOf: function() {return NaN;} },
+        {valueOf: returnsObject, toString: function() {return NaN;}}];
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
             new KeyframeEffect().setFrames({offset: value});
@@ -153,8 +204,14 @@ test(function() {
     'is not numeric. Input is a single object');
 
 test(function() {
-    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a', 'Infinity',
-        '-Infinity' /* TODO object and more complex values */];
+    var values = [NaN, 1/0, -1/0, Infinity, -Infinity, undefined, ' ', 'a',
+        'Infinity', '-Infinity', {},
+        {valueOf: 'not callable', toString: 'not callable'},
+        {valueOf: returnsObject, toString: returnsObject},
+        {valueOf: returnsStringX},
+        {valueOf: 'not callable', toString: returnsStringX},
+        {valueOf: function() {return NaN;} },
+        {valueOf: returnsObject, toString: function() {return NaN;}}];
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
             new KeyframeEffect().setFrames([{offset: 0}, {offset: value}]);
@@ -195,17 +252,25 @@ test(function() {
 test(function() {
     var values = [
         'linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'cubic-bezier(0.5, 0, 0.5, 1)',
-        'step-start', 'step-middle', 'step-end', 'steps(2), steps(2, middle)'
+        'step-start', 'step-middle', 'step-end', 'steps(2), steps(2, middle)',
+        {toString: function() { return 'ease-in';}},
+        {toString: 'not callable', valueOf: function() { return 'ease-out';}},
+        {toString: returnsObject, valueOf: function() { return 'ease-in-out';}}
     ];
-    values.forEach(function(value) {
+    var expected = [
+        'linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'cubic-bezier(0.5, 0, 0.5, 1)',
+        'step-start', 'step-middle', 'step-end', 'steps(2), steps(2, middle)',
+        'ease-in', 'ease-out', 'ease-in-out'
+    ];
+    values.forEach(function(value, index1) {
         var effects = createEffectsToTest({easing: value});
         var keyframes = [
-            {offset: null, easing: value, composite: null, computedOffset: 0}
+            {offset: null, easing: expected[index1], composite: null, computedOffset: 0}
         ];
-        effects.forEach(function(effect, index) {
+        effects.forEach(function(effect, index2) {
             assert_array_equals(effect.getFrames(), keyframes,
-                effectsDescription[index] + ' should set Keyframe attribute ' +
-                'easing\' to \'' + value + '\'');
+                effectsDescription[index2] + ' should set Keyframe attribute ' +
+                'easing\' to \'' + expected[index1] + '\'');
         });
     });
 }, 'Test processing of keyframes sets atribute \'easing\' to specified value. ' +
@@ -214,18 +279,27 @@ test(function() {
 test(function() {
     var values = [
         'linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'cubic-bezier(0.5, 0, 0.5, 1)',
-        'step-start', 'step-middle', 'step-end', 'steps(2), steps(2, middle)'
+        'step-start', 'step-middle', 'step-end', 'steps(2), steps(2, middle)',
+        {toString: function() { return 'ease-in';}},
+        {toString: 'not callable', valueOf: function() { return 'ease-out';}},
+        {toString: returnsObject, valueOf: function() { return 'ease-in-out';}},
+        {valueOf: function() { return 'step-start';}}
     ];
-    values.forEach(function(value) {
+    var expected = [
+        'linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'cubic-bezier(0.5, 0, 0.5, 1)',
+        'step-start', 'step-middle', 'step-end', 'steps(2), steps(2, middle)',
+        'ease-in', 'ease-out', 'ease-in-out', 'step-start'
+    ];
+    values.forEach(function(value, index1) {
         var effects = createEffectsToTest([{easing: value}, {easing: value}]);
         var keyframes = [
-            {offset: null, easing: value, composite: null, computedOffset: 0},
-            {offset: null, easing: value, composite: null, computedOffset: 1}
+            {offset: null, easing: expected[index1], composite: null, computedOffset: 0},
+            {offset: null, easing: expected[index1], composite: null, computedOffset: 1}
         ];
-        effects.forEach(function(effect, index) {
+        effects.forEach(function(effect, index2) {
             assert_array_equals(effect.getFrames(), keyframes,
-                effectsDescription[index] + ' should set Keyframe attribute ' +
-                'easing\' to \'' + value + '\'');
+                effectsDescription[index2] + ' should set Keyframe attribute ' +
+                'easing\' to \'' + expected[index1] + '\'');
         });
     });
 }, 'Test processing of keyframes sets atribute \'easing\' to specified value. ' +
@@ -235,7 +309,74 @@ test(function() {
 // of the AnimationTiming interface or is not supported by the implementation, then set
 // the easing of keyframe result to the string “linear”.
 test(function() {
-    var values = [null, undefined, true, false, 0.3, 'hard'/* TODO object and more complex values */];
+    var values = [
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: 'not callable'},
+        {toString: 'not callable', valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsObject}
+    ];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+             new KeyframeEffect({easing: value});
+        }, 'TypeError should be thrown for \'easing\' value ' + value);
+    });
+}, 'Test KeyframeEffect constructor throws TypeError if atribute \'easing\' value ' +
+    'can not be converted to string value. Input is a single object');
+
+test(function() {
+    var values = [
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: 'not callable'},
+        {toString: 'not callable', valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsObject}
+    ];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+             new KeyframeEffect().setFrames({easing: value});
+        }, 'TypeError should be thrown for \'easing\' value ' + value);
+    });
+}, 'Test KeyframeEffect.setFrames() throws TypeError if atribute \'easing\' value ' +
+    'can not be converted to string value. Input is a single object');
+
+test(function() {
+    var values = [
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: 'not callable'},
+        {toString: 'not callable', valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsObject}
+    ];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+             new KeyframeEffect([{easing: value}, {easing: value}]);
+        }, 'TypeError should be thrown for \'easing\' value ' + value);
+    });
+}, 'Test KeyframeEffect constructor throws TypeError if atribute \'easing\' value ' +
+    'can not be converted to string value. Input is a sequence of objects');
+
+test(function() {
+    var values = [
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: 'not callable'},
+        {toString: 'not callable', valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsObject}
+    ];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+             new KeyframeEffect().setFrames([{easing: value}, {easing: value}]);
+        }, 'TypeError should be thrown for \'easing\' value ' + value);
+    });
+}, 'Test KeyframeEffect.setFrames() throws TypeError if atribute \'easing\' value ' +
+    'can not be converted to string value. Input is a sequence of objects');
+
+test(function() {
+    var values = [
+        null, undefined, true, false, 0.3, 'hard', {},
+        {toString: returnsStringX},
+        {toString: returnsString0_7},
+        {toString: 'not callable', valueOf: returnsInt0_4},
+        {toString: returnsObject, valueOf: returnsStringX()},
+        {a: 'b', c: 'd'}
+    ];
     values.forEach(function(value) {
         var effects = createEffectsToTest({easing: value});
         var keyframes = [
@@ -250,7 +391,14 @@ test(function() {
     'if input value is invalid. Input is a single object');
 
 test(function() {
-    var values = [null, undefined, true, false, 0.3, 'hard'/* TODO object and more complex values */];
+    var values = [
+        null, undefined, true, false, 0.3, 'hard', {},
+        {toString: returnsStringX},
+        {toString: returnsString0_7},
+        {toString: 'not callable', valueOf: returnsInt0_4},
+        {toString: returnsObject, valueOf: returnsStringX()},
+        {a: 'b', c: 'd'}
+    ];
     values.forEach(function(value) {
         var effects = createEffectsToTest([{easing: value}, {easing: value}]);
         var keyframes = [
@@ -294,33 +442,55 @@ test(function() {
 // as the enumeration type, to the result of calling the [[Get]] internal method on keyframe
 // input with property name "composite".
 test(function() {
-    var values = ['replace', 'add', 'accumulate'];
-    values.forEach(function(value) {
+    var values = [
+        'replace', 'add', 'accumulate',
+        {toString: function() { return 'replace';}},
+        {valueOf: function() { return 'add';}},
+        {toString: 'not callable', valueOf: function() { return 'accumulate';}},
+        {toString: returnsObject, valueOf: function() { return 'replace';}}
+    ];
+    var expected = [
+        'replace', 'add', 'accumulate',
+        'replace', 'add', 'accumulate',
+        'replace'
+    ];
+    values.forEach(function(value, index1) {
         var effects = createEffectsToTest({composite: value});
         var keyframes = [
-            {offset: null, easing: 'linear', composite: value, computedOffset: 0}
+            {offset: null, easing: 'linear', composite: expected[index1], computedOffset: 0}
         ];
-        effects.forEach(function(effect, index) {
+        effects.forEach(function(effect, index2) {
             assert_array_equals(effect.getFrames(), keyframes,
-                effectsDescription[index] + ' should set Keyframe attribute ' +
-                'composite\' to \'' + value + '\'');
+                effectsDescription[index2] + ' should set Keyframe attribute ' +
+                'composite\' to \'' + expected[index1] + '\'');
         });
     });
 }, 'Test processing of keyframes sets atribute \'composite\' to specified value. ' +
     'Input is a single object');
 
 test(function() {
-    var values = ['replace', 'add', 'accumulate'];
-    values.forEach(function(value) {
+    var values = [
+        'replace', 'add', 'accumulate',
+        {toString: function() { return 'replace';}},
+        {valueOf: function() { return 'add';}},
+        {toString: 'not callable', valueOf: function() { return 'accumulate';}},
+        {toString: returnsObject, valueOf: function() { return 'replace';}}
+    ];
+    var expected = [
+        'replace', 'add', 'accumulate',
+        'replace', 'add', 'accumulate',
+        'replace'
+    ];
+    values.forEach(function(value, index1) {
         var effects = createEffectsToTest([{composite: value}, {composite: value}]);
         var keyframes = [
-            {offset: null, easing: 'linear', composite: value, computedOffset: 0},
-            {offset: null, easing: 'linear', composite: value, computedOffset: 1}
+            {offset: null, easing: 'linear', composite: expected[index1], computedOffset: 0},
+            {offset: null, easing: 'linear', composite: expected[index1], computedOffset: 1}
         ];
-        effects.forEach(function(effect, index) {
+        effects.forEach(function(effect, index2) {
             assert_array_equals(effect.getFrames(), keyframes,
-                effectsDescription[index] + ' should set Keyframe attribute ' +
-                'composite\' to \'' + value + '\'');
+                effectsDescription[index2] + ' should set Keyframe attribute ' +
+                'composite\' to \'' + expected[index1] + '\'');
         });
     });
 }, 'Test processing of keyframes sets atribute \'composite\' to specified value. ' +
@@ -328,7 +498,19 @@ test(function() {
 
 // test invalid input
  test(function() {
-    var values = ['hello', 'composite', 0, 10, true, false, null, undefined /* TODO object and more complex values */];
+    var values = [
+        'hello', 'composite', 0, 10, true, false, null, undefined, {},
+        {a: 'b', c: 'd'},
+        {toString: returnsStringX},
+        {toString: 'not callable'},
+        {toString: returnsObject},
+        {valueOf: returnsStringX},
+        {valueOf: 'not callable'},
+        {valueOf: returnsObject},
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsStringX}
+    ];
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
             new KeyframeEffect({composite: value});
@@ -339,7 +521,19 @@ test(function() {
     'is not one of CompositeOperation enumeration values. Input is a single object');
 
 test(function() {
-    var values = ['hello', 'composite', 0, 10, true, false, null, undefined /* TODO object and more complex values */];
+    var values = [
+        'hello', 'composite', 0, 10, true, false, null, undefined, {},
+        {a: 'b', c: 'd'},
+        {toString: returnsStringX},
+        {toString: 'not callable'},
+        {toString: returnsObject},
+        {valueOf: returnsStringX},
+        {valueOf: 'not callable'},
+        {valueOf: returnsObject},
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsStringX}
+    ];
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
             new KeyframeEffect([{composite: 'add'}, {composite: value}]);
@@ -350,7 +544,19 @@ test(function() {
     'is not one of CompositeOperation enumeration values. Input is a sequence of objects');
 
 test(function() {
-    var values = ['hello', 'composite', 0, 10, true, false, null, undefined /* TODO object and more complex values */];
+    var values = [
+        'hello', 'composite', 0, 10, true, false, null, undefined, {},
+        {a: 'b', c: 'd'},
+        {toString: returnsStringX},
+        {toString: 'not callable'},
+        {toString: returnsObject},
+        {valueOf: returnsStringX},
+        {valueOf: 'not callable'},
+        {valueOf: returnsObject},
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsStringX}
+    ];
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
             new KeyframeEffect().setFrames({composite: value});
@@ -361,7 +567,19 @@ test(function() {
     'is not one of CompositeOperation enumeration values. Input is a single object');
 
 test(function() {
-    var values = ['hello', 'composite', 0, 10, true, false, null, undefined /* TODO object and more complex values */];
+    var values = [
+        'hello', 'composite', 0, 10, true, false, null, undefined, {},
+        {a: 'b', c: 'd'},
+        {toString: returnsStringX},
+        {toString: 'not callable'},
+        {toString: returnsObject},
+        {valueOf: returnsStringX},
+        {valueOf: 'not callable'},
+        {valueOf: returnsObject},
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsStringX}
+    ];
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
             new KeyframeEffect().setFrames([{composite: 'add'}, {composite: value}]);
@@ -485,8 +703,75 @@ test(function() {
 // member value: the result of calling ToString on the value returned
 // from the [[Get]] method of keyframe input with property name, name.
 test(function() {
-    var values = [true, false, 0.3, '10px'/* TODO object and more complex values */];
-    var expected = ['true', 'false', '0.3', '10px'];
+    var values = [
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: 'not callable'},
+        {toString: 'not callable', valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsObject}
+    ];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+             new KeyframeEffect({top: value});
+        }, 'TypeError should be thrown for \'top\' value ' + value);
+    });
+}, 'Test KeyframeEffect constructor throws TypeError if supported property value ' +
+    'can not be converted to string value. Input is a single object');
+
+test(function() {
+    var values = [
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: 'not callable'},
+        {toString: 'not callable', valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsObject}
+    ];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+             new KeyframeEffect().setFrames({top: value});
+        }, 'TypeError should be thrown for \'top\' value ' + value);
+    });
+}, 'Test KeyframeEffect.setFrames() throws TypeError if supported property value ' +
+    'can not be converted to string value. Input is a single object');
+
+test(function() {
+    var values = [
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: 'not callable'},
+        {toString: 'not callable', valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsObject}
+    ];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+             new KeyframeEffect([{top: value}, {top: value}]);
+        }, 'TypeError should be thrown for \'top\' value ' + value);
+    });
+}, 'Test KeyframeEffect constructor throws TypeError if supported property value ' +
+    'can not be converted to string value. Input is a sequence of objects');
+
+test(function() {
+    var values = [
+        {toString: 'not callable', valueOf: 'not callable'},
+        {toString: returnsObject, valueOf: 'not callable'},
+        {toString: 'not callable', valueOf: returnsObject},
+        {toString: returnsObject, valueOf: returnsObject}
+    ];
+    values.forEach(function(value) {
+        assert_throws('TypeError', function() {
+             new KeyframeEffect().setFrames([{top: value}, {top: value}]);
+        }, 'TypeError should be thrown for \'top\' value ' + value);
+    });
+}, 'Test KeyframeEffect.setFrames() throws TypeError if supported property value ' +
+    'can not be converted to string value. Input is a sequence of objects');
+
+
+test(function() {
+    var values = [
+        true, false, 0.3, '10px',
+        {toString: returnsStringX},
+        {toString: returnsInt0_4},
+        {toString: 'not callable', valueOf: returnsStringX},
+        {toString: returnsObject, valueOf: returnsInt0_4}
+    ];
+    var expected = ['true', 'false', '0.3', '10px', 'X', '0.4', 'X','0.4'];
     values.forEach(function(value, index) {
         var effects = createEffectsToTest({top: value});
         var keyframes = [
@@ -502,8 +787,14 @@ test(function() {
     'Input is a single object');
 
 test(function() {
-    var values = [true, false, 0.3, '10px'/* TODO object and more complex values */];
-    var expected = ['true', 'false', '0.3', '10px'];
+    var values = [
+        true, false, 0.3, '10px',
+        {toString: returnsStringX},
+        {toString: returnsInt0_4},
+        {toString: 'not callable', valueOf: returnsStringX},
+        {toString: returnsObject, valueOf: returnsInt0_4}
+    ];
+    var expected = ['true', 'false', '0.3', '10px', 'X', '0.4', 'X','0.4'];
     values.forEach(function(value, index) {
         var effects = createEffectsToTest([{easing: value}, {easing: value}]);
         var keyframes = [
