@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
 <title>AnimationTimeline.play() method tests</title>
-<meta name="assert" content="AnimationTimeline.play() method creates a new AnimationPlayer object">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#the-animationtimeline-interface">
+<meta name="assert" content="Creates a new AnimationPlayer object associated with this timeline that begins playback as soon as it is ready. The new AnimationPlayer object is created using the the AnimationPlayer constructor passing this AnimationTimeline object as the timeline parameter and source as the source parameter. Following construction of the AnimationPlayer object, the procedure to play a player is performed on the newly constructed object">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationtimeline-play">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -58,6 +58,62 @@ test(function() {
     'a new AnimationPlayer object instance');
 
 test(function() {
+    var animation = newAnimation(createDiv(this));
+    var player = document.timeline.play(animation);
+
+    assert_equals(player.source, animation, 'The source attribute of the created ' +
+        'AnimationPlayer should be set to source parameter value');
+}, 'Test that the source attribute of the created AnimationPlayer is set to source ' +
+    'parameter value');
+
+test(function() {
+    var player = document.timeline.play(null);
+
+    assert_equals(player.source, null, 'The source attribute of the created ' +
+        'AnimationPlayer should be null if source parameter value is null');
+}, 'Test that the source attribute of the created AnimationPlayer is null if source ' +
+    'parameter value is null');
+
+test(function() {
+    var player = document.timeline.play();
+
+    assert_equals(player.source, null, 'The source attribute of the created ' +
+        'AnimationPlayer should be null if source parameter value is not specified');
+}, 'Test that the source attribute of the created AnimationPlayer is null if source ' +
+    'parameter value is not specified');
+
+test(function() {
+    var animation = newAnimation(createDiv(this));
+    var animationGroup = new AnimationGroup([animation]);
+    var player = document.timeline.play(animation);
+
+    assert_equals(player.source, animation, 'The source attribute of the created ' +
+        'AnimationPlayer should be set to source parameter value');
+
+    assert_equals(animation.parent, null, 'The AnimationNode object, specified ' +
+        'by source parameter should be removed from its parent group');
+    assert_array_equals(animationGroup.children, [], 'The AnimationNode object, specified ' +
+        'by source parameter should be removed from its parent group');
+}, 'Test the AnimationNode object, specified by source parameter, is removed from ' +
+    'its parent group');
+
+test(function() {
+    var animation = newAnimation(createDiv(this));
+    var animationGroup1 = new AnimationGroup([animation]);
+    var animationGroup2 = new AnimationGroup([animationGroup1]);
+    var player = document.timeline.play(animationGroup1);
+
+    assert_equals(player.source, animationGroup1, 'The source attribute of the created ' +
+        'AnimationPlayer should be set to source parameter value');
+
+    assert_equals(animationGroup1.parent, null, 'The AnimationNode object, specified ' +
+        'by source parameter should be removed from its parent group');
+    assert_array_equals(animationGroup2.children, [], 'The AnimationNode object, specified ' +
+        'by source parameter should be removed from its parent group');
+}, 'Test the AnimationGroup object, specified by source parameter, is removed from ' +
+    'the parent group');
+
+test(function() {
     var animationNodes = [newAnimation(createDiv(this)), new AnimationGroup([]), new AnimationSequence([])];
     animationNodes.forEach(function(node, index) {
         var player = document.timeline.play(node);
@@ -66,5 +122,38 @@ test(function() {
     });
 }, 'Test the AnimationNode, specified by source parameter, ' +
     'is associated with the player');
+
+test(function() {
+    var animationNodes = [newAnimation(createDiv(this)), new AnimationGroup([]), new AnimationSequence([])];
+    animationNodes.forEach(function(node, index) {
+        var player = document.timeline.play(node);
+        assert_equals(player.timeline, document.timeline, 'Node ' + index + ': AnimationPlayer, ' +
+            'created by play() method should be accociated with this timeline');
+    });
+}, 'Test AnimationPlayer, created by play() method is accociated with this timeline');
+
+test(function() {
+    var doc = newHTMLDocument();
+    var animationNodes = [newAnimation(createDiv(this)), new AnimationGroup([]), new AnimationSequence([])];
+    animationNodes.forEach(function(node, index) {
+        var player = doc.timeline.play(node);
+        assert_equals(player.timeline, doc.timeline, 'Node ' + index + ': AnimationPlayer, ' +
+            'created by play() method should be accociated with this timeline');
+    });
+}, 'Test AnimationPlayer, created by play() method is accociated with this timeline when ' +
+    'timeline is not the current document timeline');
+
+async_test(function(t) {
+    var player = document.timeline.play(newAnimation(createDiv(t)));
+
+    player.ready.then(t.step_func(function() {
+        setTimeout(function() {
+            assert_approx_equals(player.currentTime, 50, EPSILON, 'AnimationTimeline.play() ' +
+                'should run play a player procedure');
+            assert_equals(player.playState, 'running', 'Play state should be in running state');
+            t.done();
+        }, 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationTimeline.play() runs play a player procedure');
 </script>
 </body>
