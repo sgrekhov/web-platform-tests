@@ -41,6 +41,20 @@ function returnsObject() {
     return {};
 }
 
+// Utility function, which return string representation for given object
+function toString(obj){
+    try {
+        return ''+obj;
+    } catch (TypeError){
+        var s = '{ ';
+        for (var propertyName in obj) {
+            s += propertyName + ': ' + toString(obj[propertyName]);
+        }
+        s += ' }';
+        return s;
+    }
+}
+
 //1. Let keyframe result be a Keyframe object with the offset, easing and composite attributes
 // set to the default dictionary values.
 test(function() {
@@ -162,7 +176,7 @@ test(function() {
         assert_throws('TypeError', function() {
             new KeyframeEffect({offset: value});
         }, 'KeyframeEffect constructor should throw TypeError for not numeric ' +
-            'attribute \'offset\' value ' + value);
+            'attribute \'offset\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect constructor throws TypeError if atribute \'offset\' value ' +
     'is not numeric. Input is a single object');
@@ -180,7 +194,7 @@ test(function() {
         assert_throws('TypeError', function() {
             new KeyframeEffect([{offset: 0}, {offset: value}]);
         }, 'KeyframeEffect constructor should throw TypeError for not numeric ' +
-            'attribute \'offset\' value ' + value);
+            'attribute \'offset\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect constructor throws TypeError if atribute \'offset\' value ' +
     'is not numeric. Input is a sequence of objects');
@@ -198,7 +212,7 @@ test(function() {
         assert_throws('TypeError', function() {
             new KeyframeEffect().setFrames({offset: value});
         }, 'KeyframeEffect.setFrames() should throw TypeError for not numeric ' +
-            'attribute \'offset\' value ' + value);
+            'attribute \'offset\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect.setFrames() throws TypeError if atribute \'offset\' value ' +
     'is not numeric. Input is a single object');
@@ -216,7 +230,7 @@ test(function() {
         assert_throws('TypeError', function() {
             new KeyframeEffect().setFrames([{offset: 0}, {offset: value}]);
         }, 'KeyframeEffect.setFrames() should throw TypeError for not numeric ' +
-            'attribute \'offset\' value ' + value);
+            'attribute \'offset\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect.setFrames() throws TypeError if atribute \'offset\' value ' +
     'is not numeric. Input is a sequence of objects');
@@ -318,7 +332,7 @@ test(function() {
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
              new KeyframeEffect({easing: value});
-        }, 'TypeError should be thrown for \'easing\' value ' + value);
+        }, 'TypeError should be thrown for \'easing\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect constructor throws TypeError if atribute \'easing\' value ' +
     'can not be converted to string value. Input is a single object');
@@ -333,7 +347,7 @@ test(function() {
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
              new KeyframeEffect().setFrames({easing: value});
-        }, 'TypeError should be thrown for \'easing\' value ' + value);
+        }, 'TypeError should be thrown for \'easing\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect.setFrames() throws TypeError if atribute \'easing\' value ' +
     'can not be converted to string value. Input is a single object');
@@ -348,7 +362,7 @@ test(function() {
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
              new KeyframeEffect([{easing: value}, {easing: value}]);
-        }, 'TypeError should be thrown for \'easing\' value ' + value);
+        }, 'TypeError should be thrown for \'easing\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect constructor throws TypeError if atribute \'easing\' value ' +
     'can not be converted to string value. Input is a sequence of objects');
@@ -363,7 +377,7 @@ test(function() {
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
              new KeyframeEffect().setFrames([{easing: value}, {easing: value}]);
-        }, 'TypeError should be thrown for \'easing\' value ' + value);
+        }, 'TypeError should be thrown for \'easing\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect.setFrames() throws TypeError if atribute \'easing\' value ' +
     'can not be converted to string value. Input is a sequence of objects');
@@ -515,7 +529,7 @@ test(function() {
         assert_throws('TypeError', function() {
             new KeyframeEffect({composite: value});
         }, 'KeyframeEffect constructor should throw TypeError for' +
-            'attribute \'composite\' value ' + value);
+            'attribute \'composite\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect constructor throws TypeError if atribute \'composite\' value ' +
     'is not one of CompositeOperation enumeration values. Input is a single object');
@@ -538,7 +552,7 @@ test(function() {
         assert_throws('TypeError', function() {
             new KeyframeEffect([{composite: 'add'}, {composite: value}]);
         }, 'KeyframeEffect constructor should throw TypeError for ' +
-            'attribute \'composite\' value ' + value);
+            'attribute \'composite\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect constructor throws TypeError if atribute \'composite\' value ' +
     'is not one of CompositeOperation enumeration values. Input is a sequence of objects');
@@ -561,7 +575,7 @@ test(function() {
         assert_throws('TypeError', function() {
             new KeyframeEffect().setFrames({composite: value});
         }, 'KeyframeEffect.setFrames() should throw TypeError for ' +
-            'attribute \'composite\' value ' + value);
+            'attribute \'composite\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect.setFrames() throws TypeError if atribute \'composite\' value ' +
     'is not one of CompositeOperation enumeration values. Input is a single object');
@@ -584,7 +598,7 @@ test(function() {
         assert_throws('TypeError', function() {
             new KeyframeEffect().setFrames([{composite: 'add'}, {composite: value}]);
         }, 'KeyframeEffect.setFrames() should throw TypeError for ' +
-            'attribute \'composite\' value ' + value);
+            'attribute \'composite\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect.setFrames() throws TypeError if atribute \'composite\' value ' +
     'is not one of CompositeOperation enumeration values. Input is a sequence of objects');
@@ -712,7 +726,7 @@ test(function() {
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
              new KeyframeEffect({top: value});
-        }, 'TypeError should be thrown for \'top\' value ' + value);
+        }, 'TypeError should be thrown for \'top\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect constructor throws TypeError if supported property value ' +
     'can not be converted to string value. Input is a single object');
@@ -727,7 +741,7 @@ test(function() {
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
              new KeyframeEffect().setFrames({top: value});
-        }, 'TypeError should be thrown for \'top\' value ' + value);
+        }, 'TypeError should be thrown for \'top\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect.setFrames() throws TypeError if supported property value ' +
     'can not be converted to string value. Input is a single object');
@@ -742,7 +756,7 @@ test(function() {
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
              new KeyframeEffect([{top: value}, {top: value}]);
-        }, 'TypeError should be thrown for \'top\' value ' + value);
+        }, 'TypeError should be thrown for \'top\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect constructor throws TypeError if supported property value ' +
     'can not be converted to string value. Input is a sequence of objects');
@@ -757,7 +771,7 @@ test(function() {
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
              new KeyframeEffect().setFrames([{top: value}, {top: value}]);
-        }, 'TypeError should be thrown for \'top\' value ' + value);
+        }, 'TypeError should be thrown for \'top\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect.setFrames() throws TypeError if supported property value ' +
     'can not be converted to string value. Input is a sequence of objects');
@@ -766,12 +780,12 @@ test(function() {
 test(function() {
     var values = [
         true, false, 0.3, '10px',
-        {toString: returnsStringX},
+        {toString: function() { return '20cm';}},
         {toString: returnsInt0_4},
-        {toString: 'not callable', valueOf: returnsStringX},
+        {toString: 'not callable', valueOf: function() { return '30%';}},
         {toString: returnsObject, valueOf: returnsInt0_4}
     ];
-    var expected = ['true', 'false', '0.3', '10px', 'X', '0.4', 'X','0.4'];
+    var expected = ['true', 'false', '0.3', '10px', '20cm', '0.4', '30%','0.4'];
     values.forEach(function(value, index) {
         var effects = createEffectsToTest({top: value});
         var keyframes = [
@@ -789,14 +803,14 @@ test(function() {
 test(function() {
     var values = [
         true, false, 0.3, '10px',
-        {toString: returnsStringX},
+        {toString: function() { return '20cm';}},
         {toString: returnsInt0_4},
-        {toString: 'not callable', valueOf: returnsStringX},
+        {toString: 'not callable', valueOf: function() { return '30%';}},
         {toString: returnsObject, valueOf: returnsInt0_4}
     ];
-    var expected = ['true', 'false', '0.3', '10px', 'X', '0.4', 'X','0.4'];
+    var expected = ['true', 'false', '0.3', '10px', '20cm', '0.4', '30%','0.4'];
     values.forEach(function(value, index) {
-        var effects = createEffectsToTest([{easing: value}, {easing: value}]);
+        var effects = createEffectsToTest([{top: value}, {top: value}]);
         var keyframes = [
             {top: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 0},
             {top: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 1}
