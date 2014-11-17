@@ -44,13 +44,18 @@ function returnsObject() {
 // Utility function, which return string representation for given object
 function toString(obj){
     try {
+        if (typeof(obj) === 'string'){
+            return '\''+obj+'\'';
+        }
         return ''+obj;
     } catch (TypeError){
-        var s = '{ ';
+        var s = '{';
+        var c = '';
         for (var propertyName in obj) {
-            s += propertyName + ': ' + toString(obj[propertyName]);
+            s += c + propertyName + ': ' + toString(obj[propertyName]);
+            c = ', ';
         }
-        s += ' }';
+        s += '}';
         return s;
     }
 }
@@ -776,16 +781,94 @@ test(function() {
 }, 'Test KeyframeEffect.setFrames() throws TypeError if supported property value ' +
     'can not be converted to string value. Input is a sequence of objects');
 
+test(function() {
+    var values = [true, false];
+    var expected = ['true', 'false'];
+    values.forEach(function(value, index) {
+        var effects = createEffectsToTest({checked: value});
+        var keyframes = [
+            {checked: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 0}
+        ];
+        effects.forEach(function(effect, index) {
+            assert_array_equals(effect.getFrames(), keyframes,
+                effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+                'and animation property \'top\'');
+        });
+    });
+}, 'Test processing of keyframes converts supported properties boolean values via calling ToString. '+
+    'Input is a single object');
+
+test(function() {
+    var values = [true, false];
+    var expected = ['true', 'false'];
+    values.forEach(function(value, index) {
+        var effects = createEffectsToTest([{checked: value}, {checked: value}]);
+        var keyframes = [
+            {checked: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 0},
+            {checked: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 1}
+        ];
+        effects.forEach(function(effect, index) {
+            assert_array_equals(effect.getFrames(), keyframes,
+                effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+                'and animation property \'top\'');
+        });
+    });
+}, 'Test processing of keyframes converts supported properties boolean values via calling ToString. '+
+    'Input is a sequence of objects');
 
 test(function() {
     var values = [
-        true, false, 0.3, '10px',
-        {toString: function() { return '20cm';}},
-        {toString: returnsInt0_4},
-        {toString: 'not callable', valueOf: function() { return '30%';}},
-        {toString: returnsObject, valueOf: returnsInt0_4}
+        10, 20,
+        {toString: function() { return 30;}},
+        {toString: returnsObject, valueOf: function() { return 40;}},
+        {toString: 'not callable', valueOf: function() { return 50;}}
     ];
-    var expected = ['true', 'false', '0.3', '10px', '20cm', '0.4', '30%','0.4'];
+    var expected = ['10', '20', '30', '40', '50'];
+    values.forEach(function(value, index) {
+        var effects = createEffectsToTest({size: value});
+        var keyframes = [
+            {size: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 0}
+        ];
+        effects.forEach(function(effect, index) {
+            assert_array_equals(effect.getFrames(), keyframes,
+                effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+                'and animation property \'top\'');
+        });
+    });
+}, 'Test processing of keyframes converts supported properties numeric values via calling ToString. '+
+    'Input is a single object');
+
+test(function() {
+    var values = [
+        10, 20,
+        {toString: function() { return 30;}},
+        {toString: returnsObject, valueOf: function() { return 40;}},
+        {toString: 'not callable', valueOf: function() { return 50;}}
+    ];
+    var expected = ['10', '20', '30', '40', '50'];
+    values.forEach(function(value, index) {
+        var effects = createEffectsToTest([{size: value}, {size: value}]);
+        var keyframes = [
+            {size: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 0},
+            {size: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 1}
+        ];
+        effects.forEach(function(effect, index) {
+            assert_array_equals(effect.getFrames(), keyframes,
+                effectsDescription[index] + ' should set Keyframe attributes to default values ' +
+                'and animation property \'top\'');
+        });
+    });
+}, 'Test processing of keyframes converts supported properties numeric values via calling ToString. '+
+    'Input is a sequence of objects');
+
+test(function() {
+    var values = [
+        '10px',
+        {toString: function() { return '20cm';}},
+        {toString: 'not callable', valueOf: function() { return '30%';}},
+        {toString: returnsObject, valueOf: function() { return '40in';}}
+    ];
+    var expected = ['10px', '20cm', '30%', '40in'];
     values.forEach(function(value, index) {
         var effects = createEffectsToTest({top: value});
         var keyframes = [
@@ -797,18 +880,17 @@ test(function() {
                 'and animation property \'top\'');
         });
     });
-}, 'Test processing of keyframes converts supported properties values via calling ToString. '+
+}, 'Test processing of keyframes converts supported properties string values via calling ToString. '+
     'Input is a single object');
 
 test(function() {
     var values = [
-        true, false, 0.3, '10px',
+        '10px',
         {toString: function() { return '20cm';}},
-        {toString: returnsInt0_4},
         {toString: 'not callable', valueOf: function() { return '30%';}},
-        {toString: returnsObject, valueOf: returnsInt0_4}
+        {toString: returnsObject, valueOf: function() { return '40in';}}
     ];
-    var expected = ['true', 'false', '0.3', '10px', '20cm', '0.4', '30%','0.4'];
+    var expected = ['10px', '20cm', '30%', '40in'];
     values.forEach(function(value, index) {
         var effects = createEffectsToTest([{top: value}, {top: value}]);
         var keyframes = [
@@ -821,7 +903,7 @@ test(function() {
                 'and animation property \'top\'');
         });
     });
-}, 'Test processing of keyframes converts supported properties values via calling ToString. '+
+}, 'Test processing of keyframes converts supported properties string values via calling ToString. '+
     'Input is a sequence of objects');
 
 // If [[Get]] returns null or undefined, let the member value be an empty string.
