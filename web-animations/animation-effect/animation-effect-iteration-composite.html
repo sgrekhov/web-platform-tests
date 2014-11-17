@@ -40,16 +40,18 @@ async_test(function(t) {
         var player = document.timeline.play(animation);
         player.currentTime = ANIMATION_END_TIME - 10;
 
-        setTimeout(t.step_func(function() {
-            // After the first iteration target element top == 200px
-            // After 100 ms of the second iteration width should be
-            // 200 + 'width at 100 ms'
-            assert_approx_equals(window.getComputedStyle(target).top,
-                ANIMATION_TOP_1 + getExpectedTop(100), EPSILON,
-                'Animated attribute \'top\' value should be accumulated ' +
-                'with the final value of the previous iteration');
-            t.done();
-        }), 110);
+        player.ready.then(t.step_func(function() {
+            setTimeout(t.step_func(function() {
+                // After the first iteration target element top == 200px
+                // After 100 ms of the second iteration top should be
+                // 200 + 'top at 100 ms'
+                assert_approx_equals(window.getComputedStyle(target).top,
+                    ANIMATION_TOP_1 + getExpectedTop(100), 10,
+                    'Animated attribute \'top\' value should be accumulated ' +
+                    'with the final value of the previous iteration');
+                t.done();
+            }), 110);
+        }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test AnimationEffect.iterationComposite value \'accumulate\' forces animated value ' +
     'to accumulate with the final value of the previous iteration');
@@ -64,13 +66,15 @@ async_test(function(t) {
         var player = document.timeline.play(animation);
         player.currentTime = ANIMATION_END_TIME - 10;
 
-        setTimeout(t.step_func(function() {
-            assert_approx_equals(window.getComputedStyle(target).top,
-                getExpectedTop(100), EPSILON,
-                'Animated attribute \'top\' value should replace ' +
-                'the final value of the previous iteration');
-            t.done();
-        }), 110);
+        player.ready.then(t.step_func(function() {
+            setTimeout(t.step_func(function() {
+                assert_approx_equals(window.getComputedStyle(target).top,
+                    getExpectedTop(100), EPSILON,
+                    'Animated attribute \'top\' value should replace ' +
+                    'the final value of the previous iteration');
+                t.done();
+            }), 110);
+        }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test AnimationEffect.iterationComposite value \'repace\' forces animated value ' +
     'to be produced independent of the current iteration');
@@ -86,27 +90,29 @@ async_test(function(t) {
         var player = document.timeline.play(animation);
         player.currentTime = ANIMATION_END_TIME - 10;
 
-        setTimeout(t.step_func(function() {
-            // After the first iteration target element top == 200px
-            // After 100 ms of the second iteration width should be
-            // 200 + 'width at 100 ms'
-            assert_approx_equals(window.getComputedStyle(target).top,
-                ANIMATION_TOP_1 + getExpectedTop(100), EPSILON,
-                'Animated attribute \'top\' value should be accumulated ' +
-                'with the final value of the previous iteration');
-
-            // Now seek to the end, change iteration composition
-            // to 'replace' and check
-            player.currentTime = 2 * ANIMATION_END_TIME - 10;
-            effect.iterationComposite = 'replace';
+        player.ready.then(t.step_func(function() {
             setTimeout(t.step_func(function() {
+                // After the first iteration target element top == 200px
+                // After 100 ms of the second iteration width should be
+                // 200 + 'width at 100 ms'
                 assert_approx_equals(window.getComputedStyle(target).top,
-                    getExpectedTop(100), EPSILON,
-                    'Animated attribute \'top\' value should replace ' +
-                    'the final value of the previous iteration');
-                t.done();
+                    ANIMATION_TOP_1 + getExpectedTop(100), EPSILON,
+                    'Animated attribute \'top\' value should be accumulated ' +
+                    'with the final value of the previous iteration');
+
+                // Now seek to the end, change iteration composition
+                // to 'replace' and check
+                player.currentTime = 2 * ANIMATION_END_TIME - 10;
+                effect.iterationComposite = 'replace';
+                setTimeout(t.step_func(function() {
+                    assert_approx_equals(window.getComputedStyle(target).top,
+                        getExpectedTop(100), EPSILON,
+                        'Animated attribute \'top\' value should replace ' +
+                        'the final value of the previous iteration');
+                    t.done();
+                }), 110);
             }), 110);
-        }), 110);
+        }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test AnimationEffect.iterationComposite controls how values are combined ' +
     'between successive iterations of the same animation');

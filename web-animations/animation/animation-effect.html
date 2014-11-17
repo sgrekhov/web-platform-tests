@@ -2,7 +2,7 @@
 <meta charset=utf-8>
 <title>Animation effect attribute test</title>
 <meta name="assert" content="The animation effect or custom effect to apply. May be null in which case the animation will produce no observable effect">
-<link rel="help" href="https://web-animations.github.io/web-animations-spec/bikeshed/Overview.html#dom-animation-effect">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animation-effect">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -12,7 +12,7 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var effect = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var effect = new KeyframeEffect(KEYFRAMES);
     var animation = new Animation(null, effect);
     animation.effect = null;
 
@@ -20,7 +20,7 @@ test(function() {
 }, 'Test setting Animation.effect value to null');
 
 test(function() {
-    var effect = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var effect = new KeyframeEffect(KEYFRAMES);
     var animation = new Animation(null, null);
     animation.effect = effect;
 
@@ -90,7 +90,7 @@ test(function() {
             nullTimeCounter++;
         }
     };
-    var effect2 = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var effect2 = new KeyframeEffect(KEYFRAMES);
     var animation = new Animation(null, effect1);
     animation.effect = effect2;
 

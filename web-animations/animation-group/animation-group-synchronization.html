@@ -37,7 +37,7 @@ async_test(function(t) {
             'Animation should be at the end point for the secong node in the group');
 
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation takes place at the same time in AnimationGroup');
 
 async_test(function(t) {
@@ -80,7 +80,7 @@ async_test(function(t) {
             'Animation should be at the end point for the second node in the sequence');
 
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation takes place at the same time in AnimationGroup. ' +
     'Test the case when the first node in the group is AnimationGroup');
 
@@ -118,7 +118,7 @@ async_test(function(t) {
             'Animation should be at the end point for nodes in the nested group');
 
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation takes place at the same time in AnimationGroup. ' +
     'Test the case when the second node in the group is AnimationGroup');
 </script>

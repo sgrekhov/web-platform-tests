@@ -26,14 +26,14 @@ test(function() {
     'Animation constructor');
 
 test(function() {
-    var effect = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var effect = new KeyframeEffect(KEYFRAMES);
     var animation = new Animation(null, effect);
 
     assert_equals(animation.effect, effect, 'Animation.effect should be set by the constructor');
 }, 'Test AnimationEffect as a value of effect argument of Animation constructor');
 
 test(function() {
-    var effect = new MotionPathEffect('M 100 100 L 300 100 L 200 300 z');
+    var effect = new KeyframeEffect(KEYFRAMES);
     var animation1 = new Animation(null, effect);
     var animation2 = new Animation(null, animation1.effect);
 

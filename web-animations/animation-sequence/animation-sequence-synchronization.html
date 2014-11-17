@@ -49,7 +49,7 @@ async_test(function(t) {
             'Animation should be at the end point for the second node in the sequence');
 
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation takes place in series in AnimationSequence');
 
 async_test(function(t) {
@@ -72,7 +72,7 @@ async_test(function(t) {
             'Animation should be at the end point for the second node in the sequence');
 
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation takes place in series in AnimationSequence. Test the case when ' +
     'the first node in the sequence is empty group');
 
@@ -136,7 +136,7 @@ async_test(function(t) {
             'Animation should be at the end point for the second node in the sequence');
 
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation takes place in series in AnimationSequence. ' +
     'Test the case when the first node in the sequence is AnimationGroup');
 
@@ -192,7 +192,7 @@ async_test(function(t) {
             'Animation should be at the end point for the second node in the sequence');
 
         t.done();
-    }));
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation takes place in series in AnimationSequence. ' +
     'Test the case when the second node in the sequence is AnimationGroup');
 </script>
