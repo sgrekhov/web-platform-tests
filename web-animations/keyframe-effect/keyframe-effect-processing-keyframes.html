@@ -42,13 +42,13 @@ function returnsObject() {
 }
 
 // Utility function, which return string representation for given object
-function toString(obj){
+function toString(obj) {
     try {
-        if (typeof(obj) === 'string'){
-            return '\''+obj+'\'';
+        if (typeof(obj) === 'string') {
+            return '\'' + obj + '\'';
         }
-        return ''+obj;
-    } catch (TypeError){
+        return '' + obj;
+    } catch (TypeError) {
         var s = '{';
         var c = '';
         for (var propertyName in obj) {
