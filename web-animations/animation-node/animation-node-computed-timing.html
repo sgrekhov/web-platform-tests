@@ -31,8 +31,26 @@ test(function() {
             type(node) + '.computedTiming.direction should be \'normal\'');
         assert_equals(node.computedTiming.easing, 'linear', 'Default value of ' +
             type(node) + '.computedTiming.easing should be \'linear\'');
+        assert_equals(node.computedTiming.startTime, 'null', 'Default value of ' +
+            type(node) + '.computedTiming.startTime should be null if ' +
+            'node has no parent and not associated with the player');
+        assert_equals(node.computedTiming.endTime, 'null', 'Default value of ' +
+            type(node) + '.computedTiming.endTime should be null if ' +
+            'node has no parent and not associated with the player');
+        assert_equals(node.computedTiming.activeDuration, 0, 'Default value of ' +
+            type(node) + '.computedTiming.activeDuration should be 0 if ' +
+            'node has no children');
+        assert_equals(node.computedTiming.localTime, 'null', 'Default value of ' +
+            type(node) + '.computedTiming.localTime should be null if ' +
+            'node has no parent and not associated with the player');
+        // FIXME timeFraction value in not defined in the spec for this case
+        assert_equals(node.computedTiming.timeFraction, 'null', 'Default value of ' +
+            type(node) + '.computedTiming.localTime should be null if ' +
+            'node has no parent and not associated with the player');
+        assert_equals(node.computedTiming.currentIteration, 'null', 'Default value of ' +
+            type(node) + '.computedTiming.currentIteration should be null if ' +
+            'node has no parent and not associated with the player');
     });
-
 }, 'Test AnimationNode.computedTiming calculated timing properties ' +
     'for node with default timing values');
 
