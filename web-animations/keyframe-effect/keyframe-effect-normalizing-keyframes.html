@@ -41,7 +41,7 @@ test(function() {
             'Frames sequence should not be empty');
         assert_equals(effect.getFrames().length, 1, 'Effect ' + index + ': ' +
             'There should be only one Keyframe object');
-        testKeyframe(effect.getFrames[0], keyframe, 'Effect ' + index);
+        testKeyframe(effect.getFrames()[0], keyframe, 'Effect ' + index);
     });
 }, 'Test that normalizing of single Keyframe produces sequence with the same ' +
     'single keyframe instance');
@@ -93,7 +93,7 @@ test(function() {
 
     effectsToTest.forEach(function(effect, index) {
         keyframes.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframes, 'Effect ' + index + ', frame ' + i);
+            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
         });
     });
 }, 'Test that if frames are loosely sorted by offset then normalizing ' +
@@ -134,7 +134,8 @@ test(function() {
     'non-null offsets are not loosely sorted by offset');
 
 test(function() {
-    var keyframes = [{top: '20px', offset: 0.2},
+    var keyframes = [
+        {top: '20px', offset: 0.2},
         {top: '-10000px', offset: Number.MIN_VALUE},
         {top: '0px', offset: 0},
         {top: '10px', offset: 0.1},
@@ -144,7 +145,8 @@ test(function() {
         {top: '120px', offset: 1.2},
         {top: '80px', offset: 0.8},
         {top: '-1000px', offset: -100},
-        {top: '10000px', offset: Number.MAX_VALUE}];
+        {top: '10000px', offset: Number.MAX_VALUE}
+    ];
     var effectsToTest = createEffectsToTest(keyframes);
 
     effectsToTest.forEach(function(effect, index) {
@@ -162,7 +164,8 @@ test(function() {
 }, 'Test that normalizing removes keyframes with offsets more than 1 or less than 0');
 
 test(function() {
-    var keyframes = [{top: '-10000px', offset: Number.MIN_VALUE},
+    var keyframes = [
+        {top: '-10000px', offset: Number.MIN_VALUE},
         {top: '-1000px', offset: -100},
         {top: '-50px'},
         {top: '-10px', offset: -0.1},
@@ -177,7 +180,8 @@ test(function() {
         {top: '120px', offset: 1.2},
         {top: '150px'},
         {top: '2340px', offset: 234},
-        {top: '10000px', offset: Number.MAX_VALUE}];
+        {top: '10000px', offset: Number.MAX_VALUE}
+    ];
     var effectsToTest = createEffectsToTest(keyframes);
     var expected = keyframes.slice(4, 12);
 
@@ -203,8 +207,8 @@ test(function() {
             'Frames sequence should not be empty');
         assert_equals(effect.getFrames().length, 1, 'Effect ' + index + ': ' +
             'There should be only one Keyframe object');
-        testKeyframe(effect.getFrames[0], {top: '10px'}, 'Effect ' + index);
-        assert_false(effect.getFrames[0].hasOwnProperty('someUnsupportedProperty'),
+        testKeyframe(effect.getFrames()[0], {top: '10px'}, 'Effect ' + index);
+        assert_false(effect.getFrames()[0].hasOwnProperty('someUnsupportedProperty'),
             'Unsupported property should be removed');
     });
 }, 'Test that normalizing of single Keyframe removes properties unsupported by implementation');
@@ -223,9 +227,9 @@ test(function() {
             'Effect ' + index + ', frame 0', 0.1);
         testKeyframe(effect.getFrames()[1], {top: '10px', offset: 0.1},
             'Effect ' + index + ', frame 1', 0.2);
-        assert_false(effect.getFrames[0].hasOwnProperty('someUnsupportedProperty'),
+        assert_false(effect.getFrames()[0].hasOwnProperty('someUnsupportedProperty'),
             'Effect ' + index + ', frame 0. Unsupported property should be removed');
-        assert_false(effect.getFrames[1].hasOwnProperty('someUnsupportedProperty'),
+        assert_false(effect.getFrames()[1].hasOwnProperty('someUnsupportedProperty'),
             'Effect ' + index + ', frame 1. Unsupported property should be removed');
     });
 }, 'Test that normalizing of the keyframe sequence removes properties ' +

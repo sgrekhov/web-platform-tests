@@ -533,7 +533,7 @@ test(function() {
     values.forEach(function(value) {
         assert_throws('TypeError', function() {
             new KeyframeEffect({composite: value});
-        }, 'KeyframeEffect constructor should throw TypeError for' +
+        }, 'KeyframeEffect constructor should throw TypeError for ' +
             'attribute \'composite\' value ' + toString(value));
     });
 }, 'Test KeyframeEffect constructor throws TypeError if atribute \'composite\' value ' +
@@ -632,6 +632,29 @@ test(function() {
 }, 'Test processing of keyframes match supported properties case-sensitevly. ' +
     'Input is a sequence of objects');
 
+test(function() {
+    var effects = createEffectsToTest({'column-width': '10px'});
+    var keyframes = [{offset: null, easing: 'linear', composite: null, computedOffset: 0}];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values');
+    });
+}, 'Test processing of keyframes ignores input properties with dash. ' +
+    'Input is a single object');
+
+test(function() {
+    var effects = createEffectsToTest([{'column-width': '10px'}, {'column-width': '10px'}]);
+    var keyframes = [
+        {offset: null, easing: 'linear', composite: null, computedOffset: 0},
+        {offset: null, easing: 'linear', composite: null, computedOffset: 1}
+    ];
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), keyframes,
+            effectsDescription[index] + ' should set Keyframe attributes to default values');
+    });
+}, 'Test processing of keyframes ignores input properties with dash. ' +
+    'Input is a sequence of objects');
+
 // append property to animation properties.
 // 7. For user agents that support both a prefixed and an unprefixed version of some CSS
 // properties, remove all prefixed properties from animation properties
@@ -669,26 +692,26 @@ test(function() {
     'Input is a sequence of objects');
 
 test(function() {
-    var effects = createEffectsToTest({backgroundOrigin: '10px'});
-    var keyframes = [{'background-origin': '10px', offset: null, easing: 'linear', composite: null, computedOffset: 0}];
+    var effects = createEffectsToTest({minHeight: '10px'});
+    var keyframes = [{'min-height': '10px', offset: null, easing: 'linear', composite: null, computedOffset: 0}];
     effects.forEach(function(effect, index) {
         assert_array_equals(effect.getFrames(), keyframes,
             effectsDescription[index] + ' should set Keyframe attributes to default values ' +
-            'and animation property \'background-origin\'');
+            'and animation property \'min-height\'');
     });
 }, 'Test processing of keyframes add supported properties to keyframe result. ' +
     'Property name is converted by IDL attribute to CSS property algorithm. Input is a single object');
 
 test(function() {
-    var effects = createEffectsToTest([{backgroundOrigin: '10px'}, {backgroundOrigin: '20px'}]);
+    var effects = createEffectsToTest([{minHeight: '10px'}, {minHeight: '20px'}]);
     var keyframes = [
-        {'background-origin': '10px', offset: null, easing: 'linear', composite: null, computedOffset: 0},
-        {'background-origin': '20px', offset: null, easing: 'linear', composite: null, computedOffset: 1}
+        {'min-height': '10px', offset: null, easing: 'linear', composite: null, computedOffset: 0},
+        {'min-height': '20px', offset: null, easing: 'linear', composite: null, computedOffset: 1}
     ];
     effects.forEach(function(effect, index) {
         assert_array_equals(effect.getFrames(), keyframes,
             effectsDescription[index] + ' should set Keyframe attributes to default values ' +
-            'and animation property \'background-origin\'');
+            'and animation property \'min-height\'');
     });
 }, 'Test processing of keyframes add supported properties to keyframe result. ' +
     'Property name is converted by IDL attribute to CSS property algorithm. Input is a sequence of objects');
@@ -714,7 +737,7 @@ test(function() {
     effects.forEach(function(effect, index) {
         assert_array_equals(effect.getFrames(), keyframes,
             effectsDescription[index] + ' should set Keyframe attributes to default values ' +
-            'and animation property \'background-origin\'');
+            'and animation property \'float\'');
     });
 }, 'Test processing of keyframes add property \'cssFloat\' to keyframe result as \'float\'. ' +
     'Input is a sequence of objects');
@@ -792,7 +815,7 @@ test(function() {
         effects.forEach(function(effect, index) {
             assert_array_equals(effect.getFrames(), keyframes,
                 effectsDescription[index] + ' should set Keyframe attributes to default values ' +
-                'and animation property \'top\'');
+                'and animation property \'checked\'');
         });
     });
 }, 'Test processing of keyframes converts supported properties boolean values via calling ToString. '+
@@ -810,7 +833,7 @@ test(function() {
         effects.forEach(function(effect, index) {
             assert_array_equals(effect.getFrames(), keyframes,
                 effectsDescription[index] + ' should set Keyframe attributes to default values ' +
-                'and animation property \'top\'');
+                'and animation property \'checked\'');
         });
     });
 }, 'Test processing of keyframes converts supported properties boolean values via calling ToString. '+
@@ -825,14 +848,14 @@ test(function() {
     ];
     var expected = ['10', '20', '30', '40', '50'];
     values.forEach(function(value, index) {
-        var effects = createEffectsToTest({size: value});
+        var effects = createEffectsToTest({order: value});
         var keyframes = [
-            {size: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 0}
+            {order: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 0}
         ];
         effects.forEach(function(effect, index) {
             assert_array_equals(effect.getFrames(), keyframes,
                 effectsDescription[index] + ' should set Keyframe attributes to default values ' +
-                'and animation property \'top\'');
+                'and animation property \'order\'');
         });
     });
 }, 'Test processing of keyframes converts supported properties numeric values via calling ToString. '+
@@ -847,15 +870,15 @@ test(function() {
     ];
     var expected = ['10', '20', '30', '40', '50'];
     values.forEach(function(value, index) {
-        var effects = createEffectsToTest([{size: value}, {size: value}]);
+        var effects = createEffectsToTest([{order: value}, {order: value}]);
         var keyframes = [
-            {size: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 0},
-            {size: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 1}
+            {order: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 0},
+            {order: expected[index], offset: null, easing: 'linear', composite: null, computedOffset: 1}
         ];
         effects.forEach(function(effect, index) {
             assert_array_equals(effect.getFrames(), keyframes,
                 effectsDescription[index] + ' should set Keyframe attributes to default values ' +
-                'and animation property \'top\'');
+                'and animation property \'order\'');
         });
     });
 }, 'Test processing of keyframes converts supported properties numeric values via calling ToString. '+
@@ -958,6 +981,5 @@ test(function() {
     'with undefined value to keyframe result. Input is a sequence of objects');
 
 //10. Return keyframe result.
-
 </script>
 </body>
