@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>KeyframeEffect constructor frames parameter test</title>
+<title>Test normalizing a sequence of keyframes</title>
 <meta name="assert" content="For each call to setFrames or the KeyframeEffect constructor, normalization is performed on the passed in frames parameter before storing its value">
 <link rel="help" href="http://w3c.github.io/web-animations/#normalizing-a-sequence-of-keyframes">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -20,119 +21,156 @@ function createEffectsToTest(keyframes) {
     return [effect1, effect2];
 }
 
-test(function() {
-    var effectsToTest = createEffectsToTest([]);
+var effectsDescription = ['KeyframeEffect constructor', 'KeyframeEffect.setFrames()'];
 
-    effectsToTest.forEach(function(effect, index) {
-        assert_array_equals(effect.getFrames(), [], 'Effect ' + index + ': ' +
-            'Frames sequence should be empty');
+// produces expected keyframe sequence from given single input keyframe
+// or input sequence of keyframes
+function expected(){
+    var result = [];
+    for (var i=0; i<arguments.length; i++){
+        var a = arguments[i];
+        if (!Array.isArray(a)){
+            a = [a];
+        }
+        for (var k=0; k<a.length; k++) {
+            var keyframe = {offset: null, easing: 'linear', composite: null};
+            for (var propertyName in a[k]){
+                keyframe[propertyName] = a[k][propertyName];
+            }
+            if (keyframe.offset !== null){
+                keyframe.computedOffset = keyframe.offset;
+            }
+            result.push(keyframe);
+        }
+    }
+    return result;
+}
+
+
+test(function() {
+    var effects = createEffectsToTest([]);
+
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), [], effectsDescription[index] +
+            ' should initialize frames sequence with empty array');
     });
-}, 'Test that normalizing of empty sequence of frames does nothing');
+}, 'Test keyframes normalization of empty sequence of frames does nothing');
 
+// 1. If frames is a single Keyframe object, replaces frames with a new sequence with a single item that is the previous value of frames.
 test(function() {
-    var keyframe = {top: '10px',
+    var keyframe = {
+        top: '10px',
         offset: 0.5,
         easing: 'ease',
-        composite: 'add'};
-    var effectsToTest = createEffectsToTest(keyframe);
-
-    effectsToTest.forEach(function(effect, index) {
-        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
-            'Frames sequence should not be empty');
-        assert_equals(effect.getFrames().length, 1, 'Effect ' + index + ': ' +
-            'There should be only one Keyframe object');
-        testKeyframe(effect.getFrames()[0], keyframe, 'Effect ' + index);
+        composite: 'add'
+    };
+    var expectedFrames = expected(keyframe);
+    var effects = createEffectsToTest(keyframe);
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), expectedFrames,
+            effectsDescription[index] + ' should replace input keyframe with the sequence');
     });
-}, 'Test that normalizing of single Keyframe produces sequence with the same ' +
-    'single keyframe instance');
+}, 'Test keyframes normalization replaces single input Keyframe with ' +
+    'sequence of that single keyframe instance');
 
+// 2. If frames is not loosely sorted by offset, then,
 test(function() {
     var keyframes = [{top: '10px', offset: 0.1}, {top: '20px', offset: 0.2}];
-    var effectsToTest = createEffectsToTest(keyframes);
+    var effects = createEffectsToTest(keyframes);
+    var expectedFrames = expected(keyframes);
 
-    effectsToTest.forEach(function(effect, index) {
-        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
-            'Frames sequence should not be empty');
-        assert_equals(effect.getFrames().length, keyframes.length, 'Effect ' + index + ': ' +
-            'Wrong number of normalized keyframes');
-        testKeyframe(effect.getFrames()[0], keyframes[0], 'Effect ' + index + ', frame 0', 0.1);
-        testKeyframe(effect.getFrames()[1], keyframes[1], 'Effect ' + index + ', frame 1', 0.2);
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), expectedFrames,
+            effectsDescription[index] + ' should keep the order of the frames');
     });
-}, 'Test that normalizing of the sequence already loosely sorted by offset does not change ' +
-    'order of frames');
+}, 'Test keyframes normalization keeps the order of the frames, ' +
+    'if input keyframe sequense is already loosely sorted by offset');
 
 test(function() {
-    var keyframes = [{top: '20px', offset: 0.2},
-        {top: '0px', offset: 0},
-        {top: '10px', offset: 0.1},
-        {top: '100px', offset: 1},
-        {top: '80px', offset: 0.8}];
-    var effectsToTest = createEffectsToTest(keyframes);
-
-    effectsToTest.forEach(function(effect, index) {
-        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
-            'Frames sequence should not be empty');
-        assert_equals(effect.getFrames().length, keyframes.length, 'Effect ' + index + ': ' +
-            'Wrong number of normalized keyframes');
-
-        testKeyframe(effect.getFrames()[0], keyframes[1], 'Effect ' + index + ', frame 0', 0);
-        testKeyframe(effect.getFrames()[1], keyframes[2], 'Effect ' + index + ', frame 1', 0.1);
-        testKeyframe(effect.getFrames()[2], keyframes[0], 'Effect ' + index + ', frame 2', 0.2);
-        testKeyframe(effect.getFrames()[3], keyframes[4], 'Effect ' + index + ', frame 3', 0.8);
-        testKeyframe(effect.getFrames()[4], keyframes[3], 'Effect ' + index + ', frame 4', 1);
-    });
-}, 'Test that normalizing loosely sorts sequnce of keyframes by offset');
-
-test(function() {
-    var keyframes = [{top: '0px'},
+    var keyframes = [
+        {top: '0px'},
         {top: '10px', offset: 0.1},
         {top: '20px'},
         {top: '30px', offset: 0.3},
-        {top: '100px'}];
-    var effectsToTest = createEffectsToTest(keyframes);
+        {top: '100px'}
+    ];
+    var effects = createEffectsToTest(keyframes);
+    var expectedFrames = computeOffset(expected(keyframes), 'distribute');
 
-    effectsToTest.forEach(function(effect, index) {
-        keyframes.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), expectedFrames,
+            effectsDescription[index] + ' should keep the order of the frames');
     });
-}, 'Test that if frames are loosely sorted by offset then normalizing ' +
-    'doesn\'t sort them');
+}, 'Test keyframes normalization keeps the order of the frames, ' +
+    'if input keyframe sequense is already loosely sorted by offset. ' +
+    'Some keyframes have no offset defined');
 
-
+// If each Keyframe has a non-null offset,
+//    Sort frames in ascending order by offset.
 test(function() {
-    var keyframes = [{top: '0px'},
+    var keyframes = [
+        {top: '20px', offset: 0.2},
+        {top: '0px', offset: 0},
+        {top: '10px', offset: 0.1},
+        {top: '100px', offset: 1},
+        {top: '80px', offset: 0.8}
+    ];
+    var effects = createEffectsToTest(keyframes);
+    var expectedFrames = expected(
+        keyframes[1],
+        keyframes[2],
+        keyframes[0],
+        keyframes[4],
+        keyframes[3]
+    );
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), expectedFrames,
+            effectsDescription[index] + ' should loosely sort ' +
+            'input sequence of keyframes by offset');
+    });
+}, 'Test keyframes normalization loosely sorts sequence of input keyframes by offset');
+
+// Otherwise,
+//    Throw a DOMException of type InvalidModificationError.
+test(function() {
+    var keyframes = [
+        {top: '0px'},
         {top: '10px', offset: 0.3},
         {top: '20px'},
         {top: '30px', offset: 0.1},
-        {top: '100px'}];
+        {top: '100px'}
+    ];
 
     assert_throws('InvalidModificationError', function() {
-        var effect = new KeyframeEffect(keyframes);
-    }, 'If there are keyframes with null and not-null offsets and ones with ' +
-    'non-null offsets are not loosely sorted by offset then InvalidModificationError ' +
-    'should be thrown');
-}, 'Test that KeyframeEffect constructor throws InvalidModificationError if ' +
-    'there are keyframes with null and not-null offsets and ones with ' +
-    'non-null offsets are not loosely sorted by offset');
+        new KeyframeEffect(keyframes);
+    }, 'KeyframeEffect constructor should throw InvalidModificationError, ' +
+        'if input sequence is not sorted and some keyframes have no offset defined');
+}, 'Test KeyframeEffect constructor throws InvalidModificationError, ' +
+    'if input sequence is not sorted and some keyframes have no offset defined');
 
 test(function() {
-    var keyframes = [{top: '0px'},
+    var keyframes = [
+        {top: '0px'},
         {top: '10px', offset: 0.3},
         {top: '20px'},
         {top: '30px', offset: 0.1},
-        {top: '100px'}];
+        {top: '100px'}
+    ];
     var effect = new KeyframeEffect([]);
 
     assert_throws('InvalidModificationError', function() {
         effect.setFrames(keyframes);
-    }, 'If there are keyframes with null and not-null offsets and ones with ' +
-    'non-null offsets are not loosely sorted by offset then InvalidModificationError ' +
-    'should be thrown');
-}, 'Test that KeyframeEffect.setFrames() throws InvalidModificationError if ' +
-    'there are keyframes with null and not-null offsets and ones with ' +
-    'non-null offsets are not loosely sorted by offset');
+    }, 'KeyframeEffect.setFrames() should throw InvalidModificationError, ' +
+        'if input sequence is not sorted and some keyframes have no offset defined');
+}, 'Test KeyframeEffect.setFrames() throws InvalidModificationError, ' +
+    'if input sequence is not sorted and some keyframes have no offset defined');
 
+// 3. If there exist any Keyframe objects in frames whose offset member is non-null
+// and less than zero, remove all keyframes objects from the start of frames up to
+// and including the keyframe with the largest non-null offset that is still less than zero.
+// 4. Likewise, if there exist any Keyframe objects in frames whose offset member
+// is non-null and greater than one, remove all keyframes from the keyframe
+// with the smallest non-null offset that is still greater than one until the end of frames.
 test(function() {
     var keyframes = [
         {top: '20px', offset: 0.2},
@@ -147,21 +185,21 @@ test(function() {
         {top: '-1000px', offset: -100},
         {top: '10000px', offset: Number.MAX_VALUE}
     ];
-    var effectsToTest = createEffectsToTest(keyframes);
+    var effects = createEffectsToTest(keyframes);
+    var expectedFrames = expected(
+        keyframes[2],
+        keyframes[3],
+        keyframes[0],
+        keyframes[8],
+        keyframes[6]
+    );
 
-    effectsToTest.forEach(function(effect, index) {
-        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
-            'Frames sequence should not be empty');
-        assert_equals(effect.getFrames().length, 5, 'Effect ' + index + ': ' +
-            'Wrong number of normalized keyframes');
-
-        testKeyframe(effect.getFrames()[0], keyframes[2], 'Effect ' + index + ', frame 0', 0);
-        testKeyframe(effect.getFrames()[1], keyframes[3], 'Effect ' + index + ', frame 1', 0.1);
-        testKeyframe(effect.getFrames()[2], keyframes[0], 'Effect ' + index + ', frame 2', 0.2);
-        testKeyframe(effect.getFrames()[3], keyframes[8], 'Effect ' + index + ', frame 3', 0.8);
-        testKeyframe(effect.getFrames()[4], keyframes[6], 'Effect ' + index + ', frame 4', 1);
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), expectedFrames,
+            effectsDescription[index] + ' should remove frames with offset ' +
+                'value outside [0..1]');
     });
-}, 'Test that normalizing removes keyframes with offsets more than 1 or less than 0');
+}, 'Test keyframes normalization removes keyframes with offsets greater than 1 or less than 0');
 
 test(function() {
     var keyframes = [
@@ -182,58 +220,43 @@ test(function() {
         {top: '2340px', offset: 234},
         {top: '10000px', offset: Number.MAX_VALUE}
     ];
-    var effectsToTest = createEffectsToTest(keyframes);
-    var expected = keyframes.slice(4, 12);
+    var effects = createEffectsToTest(keyframes);
+    var expectedFrames = computeOffset(expected(keyframes.slice(4, 12)), 'distribute');
 
-    effectsToTest.forEach(function(effect, index) {
-        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
-            'Frames sequence should not be empty');
-        assert_equals(effect.getFrames().length, expected.length, 'Effect ' + index + ': ' +
-            'Wrong number of normalized keyframes');
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), expectedFrames,
+            effectsDescription[index] + ' should remove frames with offset ' +
+                'value outside [0..1]');
     });
-}, 'Test that normalizing removes keyframes with offsets more than 1 or less than 0. ' +
-    'Keyframes have null and non-null offsets and loosely sorted by offset');
+}, 'Test keyframes normalization removes keyframes with offsets greater than 1 or less than 0. ' +
+    'Keyframes have null and non-null offsets and are loosely sorted by offset');
 
 test(function() {
-    var keyframe = {top: '10px',
-        someUnsupportedProperty: 'someValue'};
-    var effectsToTest = createEffectsToTest(keyframe);
+    var keyframe = {top: '10px', someUnsupportedProperty: 'someValue'};
+    var effects = createEffectsToTest(keyframe);
+    var expectedFrames = expected({top: '10px', computedOffset: 0});
 
-    effectsToTest.forEach(function(effect, index) {
-        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
-            'Frames sequence should not be empty');
-        assert_equals(effect.getFrames().length, 1, 'Effect ' + index + ': ' +
-            'There should be only one Keyframe object');
-        testKeyframe(effect.getFrames()[0], {top: '10px'}, 'Effect ' + index);
-        assert_false(effect.getFrames()[0].hasOwnProperty('someUnsupportedProperty'),
-            'Unsupported property should be removed');
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), expectedFrames,
+            effectsDescription[index] + ' should remove not supported properties');
     });
-}, 'Test that normalizing of single Keyframe removes properties unsupported by implementation');
+}, 'Test keyframes normalization of single Keyframe removes properties not supported ' +
+    'by implementation');
 
 test(function() {
-    var keyframes = [{top: '10px', someUnsupportedProperty: 'someValue', offset: 0.1},
-        {top: '20px', someUnsupportedProperty: 'someValue', offset: 0.2}];
-    var effectsToTest = createEffectsToTest(keyframes);
+    var keyframes = [
+        {top: '10px', someUnsupportedProperty: 'someValue', offset: 0.1},
+        {top: '20px', someUnsupportedProperty: 'someValue', offset: 0.2}
+    ];
+    var effects = createEffectsToTest(keyframes);
+    var expectedFrames = expected(keyframes);
 
-    effectsToTest.forEach(function(effect, index) {
-        assert_not_equals(effect.getFrames(), null, 'Effect ' + index + ': ' +
-            'Frames sequence should not be empty');
-        assert_equals(effect.getFrames().length, keyframes.length, 'Effect ' + index + ': ' +
-            'Wrong number of normalized keyframes');
-        testKeyframe(effect.getFrames()[0], {top: '10px', offset: 0.1},
-            'Effect ' + index + ', frame 0', 0.1);
-        testKeyframe(effect.getFrames()[1], {top: '10px', offset: 0.1},
-            'Effect ' + index + ', frame 1', 0.2);
-        assert_false(effect.getFrames()[0].hasOwnProperty('someUnsupportedProperty'),
-            'Effect ' + index + ', frame 0. Unsupported property should be removed');
-        assert_false(effect.getFrames()[1].hasOwnProperty('someUnsupportedProperty'),
-            'Effect ' + index + ', frame 1. Unsupported property should be removed');
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), expectedFrames,
+            effectsDescription[index] + ' should remove not supported properties');
     });
-}, 'Test that normalizing of the keyframe sequence removes properties ' +
-    'unsupported by implementation');
+}, 'Test keyframes normalization of the keyframe sequence removes properties ' +
+    'not supported by implementation');
 
 // TODO Add test of keyframes with the same offset
 </script>
