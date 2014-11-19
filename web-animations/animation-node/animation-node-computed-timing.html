@@ -13,7 +13,9 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var nodes = [new Animation(createDiv(this), []), new AnimationGroup([]),
+    var nodes = [
+        new Animation(createDiv(this), []),
+        new AnimationGroup([]),
         new AnimationSequence([])];
 
     nodes.forEach(function(node) {
@@ -43,10 +45,8 @@ test(function() {
         assert_equals(node.computedTiming.localTime, 'null', 'Default value of ' +
             type(node) + '.computedTiming.localTime should be null if ' +
             'node has no parent and not associated with the player');
-        // FIXME timeFraction value in not defined in the spec for this case
         assert_equals(node.computedTiming.timeFraction, 'null', 'Default value of ' +
-            type(node) + '.computedTiming.localTime should be null if ' +
-            'node has no parent and not associated with the player');
+            type(node) + '.computedTiming.localTime should be null');
         assert_equals(node.computedTiming.currentIteration, 'null', 'Default value of ' +
             type(node) + '.computedTiming.currentIteration should be null if ' +
             'node has no parent and not associated with the player');
@@ -91,8 +91,25 @@ test(function() {
     'for node with non default timing values');
 
 test(function() {
+    var timing = {
+        iterations: Infinity,
+        duration: 0};
+    var nodes = [
+        new Animation(createDiv(this), [], timing),
+        new AnimationGroup([], timing),
+        new AnimationSequence([], timing)];
+    nodes.forEach(function(node) {
+        assert_equals(node.computedTiming.currentIteration, Infinity, 'Value of ' +
+            type(node) + '.computedTiming.currentIteration should be infinity');
+    });
+}, 'AnimationNode.computedTiming.currentIteration returns infinity ' +
+    'in the case where the current iteration index is infinity');
+
+test(function() {
     var timing = {easing: 'unsupported value'};
-    var nodes = [new Animation(createDiv(this), [], timing), new AnimationGroup([], timing),
+    var nodes = [
+        new Animation(createDiv(this), [], timing),
+        new AnimationGroup([], timing),
         new AnimationSequence([], timing)];
     nodes.forEach(function(node) {
         assert_equals(node.computedTiming.easing, 'linear', 'Unsupported value of ' +
