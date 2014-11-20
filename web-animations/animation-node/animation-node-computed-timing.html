@@ -193,8 +193,8 @@ test(function() {
         {duration: -100},
         {duration: Infinity}
     ];
-    var expected = {'auto', 'auto', 0, 'auto', 'auto'};
-    duration.forEach(function(timing, index) {
+    var expected = ['auto', 'auto', 0, 'auto', 'auto'];
+    timing.forEach(function(timing, index) {
         var nodes = [
             new Animation(createDiv(this), [], timing),
             new AnimationGroup([], timing),
