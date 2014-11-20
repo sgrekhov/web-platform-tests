@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
-<title>Animation node computedTiming attribute test</title>
+<title>AnimationNode computedTiming attribute test</title>
 <meta name="assert" content="Returns the calculated timing properties for this animation node">
 <link rel="help" href="http://w3c.github.io/web-animations/#dom-animationnode-computedtiming">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
@@ -16,7 +16,8 @@ test(function() {
     var nodes = [
         new Animation(createDiv(this), []),
         new AnimationGroup([]),
-        new AnimationSequence([])];
+        new AnimationSequence([])
+    ];
 
     nodes.forEach(function(node) {
         assert_equals(node.computedTiming.delay, 0, 'Default value of ' +
@@ -35,29 +36,30 @@ test(function() {
             type(node) + '.computedTiming.direction should be \'normal\'');
         assert_equals(node.computedTiming.easing, 'linear', 'Default value of ' +
             type(node) + '.computedTiming.easing should be \'linear\'');
-        assert_equals(node.computedTiming.startTime, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.startTime, null, 'Default value of ' +
             type(node) + '.computedTiming.startTime should be null if ' +
             'node has no parent and not associated with the player');
-        assert_equals(node.computedTiming.endTime, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.endTime, null, 'Default value of ' +
             type(node) + '.computedTiming.endTime should be null if ' +
             'node has no parent and not associated with the player');
         assert_equals(node.computedTiming.activeDuration, 0, 'Default value of ' +
             type(node) + '.computedTiming.activeDuration should be 0 if ' +
             'node has no children');
-        assert_equals(node.computedTiming.localTime, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.localTime, null, 'Default value of ' +
             type(node) + '.computedTiming.localTime should be null if ' +
             'node has no parent and not associated with the player');
-        assert_equals(node.computedTiming.timeFraction, 'null', 'Default value of ' +
-            type(node) + '.computedTiming.localTime should be null');
-        assert_equals(node.computedTiming.currentIteration, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.timeFraction, null, 'Default value of ' +
+            type(node) + '.computedTiming.timeFraction should be null');
+        assert_equals(node.computedTiming.currentIteration, null, 'Default value of ' +
             type(node) + '.computedTiming.currentIteration should be null if ' +
             'node has no parent and not associated with the player');
     });
-}, 'Test AnimationNode.computedTiming calculated timing properties ' +
+}, 'Test AnimationNode.computedTiming returns calculated timing properties ' +
     'for node with default timing values');
 
 test(function() {
-    var timing = {delay: 1,
+    var timing = {
+        delay: 1,
         endDelay: 1,
         fill: 'none',
         iterationStart: 1.1,
@@ -66,7 +68,8 @@ test(function() {
         playbackRate: -2,
         playbackDirection: 'reverse',
         direction: 'reverse',
-        easing: 'ease'};
+        easing: 'ease'
+    };
     var nodes = [
         new Animation(createDiv(this), [], timing),
         new AnimationGroup([], timing),
@@ -91,21 +94,21 @@ test(function() {
             type(node) + '.computedTiming.direction should be specified by AnimationTimingInput');
         assert_equals(node.computedTiming.easing, timing.easing, 'Value of ' +
             type(node) + '.computedTiming.easing should be specified by AnimationTimingInput');
-        assert_equals(node.computedTiming.startTime, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.startTime, null, 'Default value of ' +
             type(node) + '.computedTiming.startTime should be null if ' +
             'node has no parent and not associated with the player');
-        assert_equals(node.computedTiming.endTime, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.endTime, null, 'Default value of ' +
             type(node) + '.computedTiming.endTime should be null if ' +
             'node has no parent and not associated with the player');
         assert_equals(node.computedTiming.activeDuration, 0, 'Default value of ' +
             type(node) + '.computedTiming.activeDuration should be 0 if ' +
             'node has no children');
-        assert_equals(node.computedTiming.localTime, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.localTime, null, 'Default value of ' +
             type(node) + '.computedTiming.localTime should be null if ' +
             'node has no parent and not associated with the player');
-        assert_equals(node.computedTiming.timeFraction, 'null', 'Default value of ' +
-            type(node) + '.computedTiming.localTime should be null');
-        assert_equals(node.computedTiming.currentIteration, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.timeFraction, null, 'Default value of ' +
+            type(node) + '.computedTiming.timeFraction should be null');
+        assert_equals(node.computedTiming.currentIteration, null, 'Default value of ' +
             type(node) + '.computedTiming.currentIteration should be null if ' +
             'node has no parent and not associated with the player');
     });
@@ -136,48 +139,51 @@ test(function() {
             type(node) + '.computedTiming.direction should be \'normal\'');
         assert_equals(node.computedTiming.easing, 'linear', 'Default value of ' +
             type(node) + '.computedTiming.easing should be \'linear\'');
-        assert_equals(node.computedTiming.startTime, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.startTime, null, 'Default value of ' +
             type(node) + '.computedTiming.startTime should be null if ' +
             'node has no parent and not associated with the player');
-        assert_equals(node.computedTiming.endTime, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.endTime, null, 'Default value of ' +
             type(node) + '.computedTiming.endTime should be null if ' +
             'node has no parent and not associated with the player');
         assert_equals(node.computedTiming.activeDuration, 0, 'Default value of ' +
             type(node) + '.computedTiming.activeDuration should be 0 if ' +
             'node has no children');
-        assert_equals(node.computedTiming.localTime, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.localTime, null, 'Default value of ' +
             type(node) + '.computedTiming.localTime should be null if ' +
             'node has no parent and not associated with the player');
-        assert_equals(node.computedTiming.timeFraction, 'null', 'Default value of ' +
-            type(node) + '.computedTiming.localTime should be null');
-        assert_equals(node.computedTiming.currentIteration, 'null', 'Default value of ' +
+        assert_equals(node.computedTiming.timeFraction, null, 'Default value of ' +
+            type(node) + '.computedTiming.timeFraction should be null');
+        assert_equals(node.computedTiming.currentIteration, null, 'Default value of ' +
             type(node) + '.computedTiming.currentIteration should be null if ' +
             'node has no parent and not associated with the player');
     });
-}, 'Test AnimationNode.computedTiming calculated timing properties ' +
+}, 'Test AnimationNode.computedTiming returns calculated timing properties ' +
     'for node with double value as a timing');
 
 test(function() {
     var timing = {
         iterations: Infinity,
-        duration: 0};
+        duration: 0
+    };
     var nodes = [
         new Animation(createDiv(this), [], timing),
         new AnimationGroup([], timing),
-        new AnimationSequence([], timing)];
+        new AnimationSequence([], timing)
+    ];
     nodes.forEach(function(node) {
         assert_equals(node.computedTiming.currentIteration, Infinity, 'Value of ' +
             type(node) + '.computedTiming.currentIteration should be infinity');
     });
 }, 'AnimationNode.computedTiming.currentIteration returns infinity ' +
-    'in the case where the current iteration index is infinity');
+    'if the current iteration index is infinity');
 
 test(function() {
     var timing = {easing: 'unsupported value'};
     var nodes = [
         new Animation(createDiv(this), [], timing),
         new AnimationGroup([], timing),
-        new AnimationSequence([], timing)];
+        new AnimationSequence([], timing)
+    ];
     nodes.forEach(function(node) {
         assert_equals(node.computedTiming.easing, 'linear', 'Unsupported value of ' +
             type(node) + '.computedTiming.easing should be replaced by \'linear\'');
@@ -207,6 +213,7 @@ test(function() {
                 type(node) + '.computedTiming.duration should be replaced by \'auto\'');
         });
     });
-}, 'Test that unsupported values of duration is replaced to \'auto\'');
+}, 'Test AnimationNode.computedTiming.duration: is equal to \'auto\' for nodes ' +
+    'with unsupported timing.duration value');
 </script>
 </body>
