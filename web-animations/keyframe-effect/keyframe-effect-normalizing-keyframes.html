@@ -25,14 +25,14 @@ var effectsDescription = ['KeyframeEffect constructor', 'KeyframeEffect.setFrame
 
 // produces expected keyframe sequence from given single input keyframe
 // or input sequence of keyframes
-function expected(){
+function expected() {
     var result = [];
-    for (var i=0; i<arguments.length; i++){
+    for (var i = 0; i < arguments.length; i++){
         var a = arguments[i];
         if (!Array.isArray(a)){
             a = [a];
         }
-        for (var k=0; k<a.length; k++) {
+        for (var k = 0; k < a.length; k++) {
             var keyframe = {offset: null, easing: 'linear', composite: null};
             for (var propertyName in a[k]){
                 keyframe[propertyName] = a[k][propertyName];
@@ -45,7 +45,6 @@ function expected(){
     }
     return result;
 }
-
 
 test(function() {
     var effects = createEffectsToTest([]);
