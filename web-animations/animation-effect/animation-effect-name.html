@@ -12,21 +12,16 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var effects = [newKeyframeEffect(), newMotionPathEffect()];
-    effects.forEach(function(effect) {
-        assert_equals(effect.name, '', type(effect) + '.name should be ' +
-            '\'\' by defalt');
-    });
+    var effect = newKeyframeEffect();
+    assert_equals(effect.name, '', type(effect) + '.name should be ' +
+        '\'\' by defalt');
 }, 'Test AnimationEffect.name default value is \'\'');
 
 test(function() {
     var nameValue = 'someName';
-    var effects = [newKeyframeEffect({name: nameValue}),
-        newMotionPathEffect({name: nameValue})];
-    effects.forEach(function(effect) {
-        assert_equals(effect.name, nameValue, type(effect) + '.name should be ' +
-            'equal to value specified in constructor');
-    });
+    var effect = newKeyframeEffect({name: nameValue});
+    assert_equals(effect.name, nameValue, type(effect) + '.name should be ' +
+        'equal to value specified in constructor');
 }, 'Test AnimationEffect.name is initialized by construstor');
 </script>
 </body>

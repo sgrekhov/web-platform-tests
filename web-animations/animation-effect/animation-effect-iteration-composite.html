@@ -14,59 +14,86 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var effects = [newKeyframeEffect(), newMotionPathEffect()];
-    effects.forEach(function(effect) {
-        assert_equals(effect.iterationComposite, 'replace', 'Wrong default value of ' +
-            'iterationComposite attribute of effect ' + type(effect));
-    });
+    var effect = newKeyframeEffect();
+
+    assert_equals(effect.iterationComposite, 'replace', 'Wrong default value of ' +
+        'iterationComposite attribute of effect ' + type(effect));
 }, 'Test AnimationEffect.iterationComposite default value is \'replace\'');
 
 test(function() {
-    var effects = [newKeyframeEffect({iterationComposite: 'accumulate'}),
-        newMotionPathEffect({iterationComposite: 'accumulate'})];
-    effects.forEach(function(effect) {
-        assert_equals(effect.iterationComposite, 'accumulate', type(effect) +
-            '.iterationComposite should return the value specified in constructor arguments');
-    });
+    var effect = newKeyframeEffect({iterationComposite: 'accumulate'});
+
+    assert_equals(effect.iterationComposite, 'accumulate', type(effect) +
+        '.iterationComposite should return the value specified in constructor arguments');
 }, 'Test AnimationEffect.iterationComposite attribute returns value set by constructor');
 
 async_test(function(t) {
-    var effects = [newKeyframeEffect({iterationComposite: 'accumulate'}),
-        newMotionPathEffect({iterationComposite: 'accumulate'})];
-    effects.forEach(function(effect) {
-        var target = createDiv(t);
-        var animation = new Animation(target, effect,
-            {iterations: 3, duration: ANIMATION_END_TIME});
-        var player = document.timeline.play(animation);
-        player.currentTime = ANIMATION_END_TIME - 10;
+    var effect = newKeyframeEffect({iterationComposite: 'accumulate'});
 
-        player.ready.then(t.step_func(function() {
-            setTimeout(t.step_func(function() {
-                // After the first iteration target element top == 200px
-                // After 100 ms of the second iteration top should be
-                // 200 + 'top at 100 ms'
-                assert_approx_equals(window.getComputedStyle(target).top,
-                    ANIMATION_TOP_1 + getExpectedTop(100), 10,
-                    'Animated attribute \'top\' value should be accumulated ' +
-                    'with the final value of the previous iteration');
-                t.done();
-            }), 110);
-        }), t.unreached_func('Current ready promise should not be rejected'));
-    });
+    var target = createDiv(t);
+    var animation = new Animation(target, effect,
+        {iterations: 3, duration: ANIMATION_END_TIME});
+    var player = document.timeline.play(animation);
+    player.currentTime = ANIMATION_END_TIME - 10;
+
+    player.ready.then(t.step_func(function() {
+        setTimeout(t.step_func(function() {
+            // After the first iteration target element top == 200px
+            // After 100 ms of the second iteration top should be
+            // 200 + 'top at 100 ms'
+            assert_approx_equals(window.getComputedStyle(target).top,
+                ANIMATION_TOP_1 + getExpectedTop(100), 10,
+                'Animated attribute \'top\' value should be accumulated ' +
+                'with the final value of the previous iteration');
+            t.done();
+        }), 110);
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test AnimationEffect.iterationComposite value \'accumulate\' forces animated value ' +
     'to accumulate with the final value of the previous iteration');
 
 async_test(function(t) {
-    var effects = [newKeyframeEffect({iterationComposite: 'repace'}),
-        newMotionPathEffect({iterationComposite: 'repace'})];
-    effects.forEach(function(effect) {
-        var target = createDiv(t);
-        var animation = new Animation(target, effect,
-            {iterations: 3, duration: ANIMATION_END_TIME});
-        var player = document.timeline.play(animation);
-        player.currentTime = ANIMATION_END_TIME - 10;
+    var effect = newKeyframeEffect({iterationComposite: 'repace'});
+    var target = createDiv(t);
+    var animation = new Animation(target, effect,
+        {iterations: 3, duration: ANIMATION_END_TIME});
+    var player = document.timeline.play(animation);
+    player.currentTime = ANIMATION_END_TIME - 10;
 
-        player.ready.then(t.step_func(function() {
+    player.ready.then(t.step_func(function() {
+        setTimeout(t.step_func(function() {
+            assert_approx_equals(window.getComputedStyle(target).top,
+                getExpectedTop(100), EPSILON,
+                'Animated attribute \'top\' value should replace ' +
+                'the final value of the previous iteration');
+            t.done();
+        }), 110);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test AnimationEffect.iterationComposite value \'repace\' forces animated value ' +
+    'to be produced independent of the current iteration');
+
+async_test(function(t) {
+    var effect = newKeyframeEffect();
+    effect.iterationComposite = 'accumulate';
+    var target = createDiv(t);
+    var animation = new Animation(target, effect,
+        {iterations: 3, duration: ANIMATION_END_TIME});
+    var player = document.timeline.play(animation);
+    player.currentTime = ANIMATION_END_TIME - 10;
+
+    player.ready.then(t.step_func(function() {
+        setTimeout(t.step_func(function() {
+            // After the first iteration target element top == 200px
+            // After 100 ms of the second iteration width should be
+            // 200 + 'width at 100 ms'
+            assert_approx_equals(window.getComputedStyle(target).top,
+                ANIMATION_TOP_1 + getExpectedTop(100), EPSILON,
+                'Animated attribute \'top\' value should be accumulated ' +
+                'with the final value of the previous iteration');
+
+            // Now seek to the end, change iteration composition
+            // to 'replace' and check
+            player.currentTime = 2 * ANIMATION_END_TIME - 10;
+            effect.iterationComposite = 'replace';
             setTimeout(t.step_func(function() {
                 assert_approx_equals(window.getComputedStyle(target).top,
                     getExpectedTop(100), EPSILON,
@@ -74,46 +101,8 @@ async_test(function(t) {
                     'the final value of the previous iteration');
                 t.done();
             }), 110);
-        }), t.unreached_func('Current ready promise should not be rejected'));
-    });
-}, 'Test AnimationEffect.iterationComposite value \'repace\' forces animated value ' +
-    'to be produced independent of the current iteration');
-
-async_test(function(t) {
-    var test = t;
-    var effects = [newKeyframeEffect(), newMotionPathEffect()];
-    effects.forEach(function(effect) {
-        effect.iterationComposite = 'accumulate';
-        var target = createDiv(test);
-        var animation = new Animation(target, effect,
-            {iterations: 3, duration: ANIMATION_END_TIME});
-        var player = document.timeline.play(animation);
-        player.currentTime = ANIMATION_END_TIME - 10;
-
-        player.ready.then(t.step_func(function() {
-            setTimeout(t.step_func(function() {
-                // After the first iteration target element top == 200px
-                // After 100 ms of the second iteration width should be
-                // 200 + 'width at 100 ms'
-                assert_approx_equals(window.getComputedStyle(target).top,
-                    ANIMATION_TOP_1 + getExpectedTop(100), EPSILON,
-                    'Animated attribute \'top\' value should be accumulated ' +
-                    'with the final value of the previous iteration');
-
-                // Now seek to the end, change iteration composition
-                // to 'replace' and check
-                player.currentTime = 2 * ANIMATION_END_TIME - 10;
-                effect.iterationComposite = 'replace';
-                setTimeout(t.step_func(function() {
-                    assert_approx_equals(window.getComputedStyle(target).top,
-                        getExpectedTop(100), EPSILON,
-                        'Animated attribute \'top\' value should replace ' +
-                        'the final value of the previous iteration');
-                    t.done();
-                }), 110);
-            }), 110);
-        }), t.unreached_func('Current ready promise should not be rejected'));
-    });
+        }), 110);
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test AnimationEffect.iterationComposite controls how values are combined ' +
     'between successive iterations of the same animation');
 </script>
