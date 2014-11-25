@@ -31,15 +31,6 @@ test(function() {
     'for nodes with timing.duration value \'auto\'');
 
 test(function() {
-    var timing = {duration: 'some unsupported value'};
-    var node = new Animation(createDiv(this), [], timing);
-
-    assert_equals(node.computedTiming.duration, 0,
-        'Animation.computedTiming.duration should return zero');
-}, 'Test Animation.computedTiming.duration returns intrinsic iteration duration (zero) ' +
-    'for nodes with unsupported timing.duration value');
-
-test(function() {
     var timing = {fill: 'auto'};
     var node = new Animation(createDiv(this), [], timing);
 

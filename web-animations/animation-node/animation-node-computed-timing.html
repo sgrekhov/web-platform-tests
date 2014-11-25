@@ -28,8 +28,6 @@ test(function() {
             type(node) + '.computedTiming.iterationStart should be 0.0');
         assert_equals(node.computedTiming.iterations, 1, 'Default value of ' +
             type(node) + '.computedTiming.iterations should be 1.0');
-        assert_equals(node.computedTiming.duration, 'auto', 'Default value of ' +
-                type(node) + '.computedTiming.duration should be \'auto\'');
         assert_equals(node.computedTiming.playbackRate, 1, 'Default value of ' +
             type(node) + '.computedTiming.playbackRate should be 1.0');
         assert_equals(node.computedTiming.direction, 'normal', 'Default value of ' +
@@ -171,6 +169,8 @@ test(function() {
         new AnimationSequence([], timing)
     ];
     nodes.forEach(function(node) {
+        assert_equals(node.computedTiming.iterations, Infinity, 'Value of ' +
+                type(node) + '.computedTiming.iterations should be infinity');
         assert_equals(node.computedTiming.currentIteration, Infinity, 'Value of ' +
             type(node) + '.computedTiming.currentIteration should be infinity');
     });
@@ -192,28 +192,81 @@ test(function() {
     'with unsupported timing.easing value');
 
 test(function() {
+    var timing = {duration: Infinity};
+    var nodes = [
+        new Animation(createDiv(this), [], timing),
+        new AnimationGroup([], timing),
+        new AnimationSequence([], timing)
+    ];
+    nodes.forEach(function(node) {
+        assert_equals(node.computedTiming.duration, Infinity, 'Value of ' +
+            type(node) + '.computedTiming.duration should be Infinity');
+    });
+}, 'Test AnimationNode.computedTiming.duration: is equal to Infinity for nodes ' +
+    'with Infinity timing.duration value');
+
+test(function() {
     var timing = [
         {duration: 'unsupported value'},
+        {duration: 'aUto'},
         {duration: Number.NaN},
-        {duration: 0},
         {duration: -100},
-        {duration: Infinity},
+        {duration: -Infinity},
         {duration: 'aa10.3'},
-        {duration: '10.3abc'}
+        {duration: '0.3'},
+        {duration: '1'},
     ];
-    var expected = ['auto', 'auto', 0, 'auto', Infinity, 'auto', 10.3];
-    timing.forEach(function(timing, index) {
+    timing.forEach(function(timing) {
         var nodes = [
             new Animation(createDiv(this), [], timing),
             new AnimationGroup([], timing),
             new AnimationSequence([], timing)
         ];
         nodes.forEach(function(node) {
-            assert_equals(node.computedTiming.duration, expected[index], 'Unsupported value of ' +
-                type(node) + '.computedTiming.duration should be replaced by \'auto\'');
+            assert_equals(node.computedTiming.duration, 0, 'Unsupported value of ' +
+                type(node) + '.computedTiming.duration should be treated as \'auto\'');
         });
     });
-}, 'Test AnimationNode.computedTiming.duration: is equal to \'auto\' for nodes ' +
+}, 'Test that AnimationNode.computedTiming.duration is equal to \'auto\' for nodes ' +
     'with unsupported timing.duration value');
+
+test(function() {
+    var timing = [
+        {iterationStart: -1},
+        {iterationStart: -100}
+    ];
+    timing.forEach(function(timing) {
+        var nodes = [
+            new Animation(createDiv(this), [], timing),
+            new AnimationGroup([], timing),
+            new AnimationSequence([], timing)
+        ];
+        nodes.forEach(function(node) {
+            assert_equals(node.computedTiming.iterationStart, 0, 'Unsupported value of ' +
+                type(node) + '.computedTiming.iterationStart should be treated as 0');
+        });
+    });
+}, 'Test that AnimationNode.computedTiming.iterationStart is equal to 0 for nodes ' +
+    'with unsupported timing.iterationStart value');
+
+test(function() {
+    var timing = [
+        {iterations: -1},
+        {iterations: -Infinity},
+        {iterations: Number.NaN}
+    ];
+    timing.forEach(function(timing) {
+        var nodes = [
+            new Animation(createDiv(this), [], timing),
+            new AnimationGroup([], timing),
+            new AnimationSequence([], timing)
+        ];
+        nodes.forEach(function(node) {
+            assert_equals(node.computedTiming.iterations, 1, 'Unsupported value of ' +
+                type(node) + '.computedTiming.iterations should be treated as 1');
+        });
+    });
+}, 'Test that AnimationNode.computedTiming.iterations is equal to 1 for nodes ' +
+    'with unsupported timing.iterations value');
 </script>
 </body>
