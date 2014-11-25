@@ -43,6 +43,8 @@ var DEFAULT_TIMING = {
     easing : 'linear'
 };
 
+var COMPUTED_OFFSET_EPSILON = 0.000001;
+
 // Creates and returns new HTML document
 function newHTMLDocument() {
     return document.implementation.createHTMLDocument('Test Document');
@@ -123,6 +125,38 @@ function type(object) {
 function getExpectedTop(currentTime) {
     return ANIMATION_TOP_0 + (ANIMATION_TOP_1 - ANIMATION_TOP_0)
         * (currentTime % ANIMATION_END_TIME);
+}
+
+// Compares actual and expected keyframes similar to
+// assert_object_equals way, except for the property computedOffset,
+// which is compared via assert_approx_equals with COMPUTED_OFFSET_EPSILON
+function assert_keyframe_equals(actual, expected, description) {
+    for (var propertyName in expected) {
+        assert_true(actual.hasOwnProperty(propertyName),
+            description + ', expected property ' + propertyName + ' missing');
+        var message = description + ', property ' + propertyName + ', ';
+        if (propertyName === 'computedOffset') {
+            assert_approx_equals(actual[propertyName],
+                expected[propertyName], COMPUTED_OFFSET_EPSILON, message);
+        } else {
+            assert_equals(actual[propertyName], expected[propertyName], message);
+        }
+    }
+    for (var propertyName in actual) {
+        assert_true(expected.hasOwnProperty(propertyName), description +
+            ', unexpected property ' + propertyName);
+    }
+}
+
+// compares two sequences of keyframes, similar to
+// assert_array_equals way, except for the property computedOffset,
+// which is compared via assert_approx_equals with COMPUTED_OFFSET_EPSILON
+function assert_keyframes_equals(actual, expected, description) {
+    assert_equals(actual.length, expected.length, description +
+        ', length differ, ');
+    for (var i = 0; i < actual.length; i++) {
+        assert_keyframes_equals(actual[i], expected[i], description + ', index ' + i);
+    }
 }
 
 // Test that values of expected object properties are equal to the values of

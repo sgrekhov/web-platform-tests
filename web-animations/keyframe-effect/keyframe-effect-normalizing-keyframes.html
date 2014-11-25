@@ -97,7 +97,7 @@ test(function() {
     var expectedFrames = computeOffset(expected(keyframes), 'distribute');
 
     effects.forEach(function(effect, index) {
-        assert_array_equals(effect.getFrames(), expectedFrames,
+        assert_keyframes_equals(effect.getFrames(), expectedFrames,
             effectsDescription[index] + ' should keep the order of the frames');
     });
 }, 'Test keyframes normalization keeps the order of the frames, ' +
@@ -223,13 +223,14 @@ test(function() {
     var expectedFrames = computeOffset(expected(keyframes.slice(4, 12)), 'distribute');
 
     effects.forEach(function(effect, index) {
-        assert_array_equals(effect.getFrames(), expectedFrames,
+        assert_keyframes_equals(effect.getFrames(), expectedFrames,
             effectsDescription[index] + ' should remove frames with offset ' +
                 'value outside [0..1]');
     });
 }, 'Test keyframes normalization removes keyframes with offsets greater than 1 or less than 0. ' +
     'Keyframes have null and non-null offsets and are loosely sorted by offset');
 
+// 5. Remove all property values in frames that are invalid or not supported by the implementation.
 test(function() {
     var keyframe = {top: '10px', someUnsupportedProperty: 'someValue'};
     var effects = createEffectsToTest(keyframe);
@@ -239,8 +240,8 @@ test(function() {
         assert_array_equals(effect.getFrames(), expectedFrames,
             effectsDescription[index] + ' should remove not supported properties');
     });
-}, 'Test keyframes normalization of single Keyframe removes properties not supported ' +
-    'by implementation');
+}, 'Test keyframes normalization of single Keyframe instance removes properties ' +
+    'not supported by implementation');
 
 test(function() {
     var keyframes = [
@@ -248,7 +249,10 @@ test(function() {
         {top: '20px', someUnsupportedProperty: 'someValue', offset: 0.2}
     ];
     var effects = createEffectsToTest(keyframes);
-    var expectedFrames = expected(keyframes);
+    var expectedFrames = expected(
+        {top: '10px', offset: 0.1},
+        {top: '20px', offset: 0.2}
+    );
 
     effects.forEach(function(effect, index) {
         assert_array_equals(effect.getFrames(), expectedFrames,
