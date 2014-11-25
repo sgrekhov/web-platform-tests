@@ -12,15 +12,13 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var effects = [newKeyframeEffect(), newMotionPathEffect()];
-    effects.forEach(function(effect) {
-        var cloned = effect.clone();
+    var effect = newKeyframeEffect();
+    var cloned = effect.clone();
 
-        assert_false(cloned === effect,
-            'Cloned AnimationEffect object should be a copy of source object');
-        assert_object_equals(cloned, effect, 'Cloned AnimationEffect object should be ' +
-            'identical to source object');
-    });
+    assert_false(cloned === effect,
+        'Cloned AnimationEffect object should be a copy of source object');
+    assert_object_equals(cloned, effect, 'Cloned AnimationEffect object should be ' +
+        'identical to source object');
 }, 'Test AnimationEffect.clone() creates a copy of AnimationEffect object ' +
     'with default options');
 
@@ -30,15 +28,13 @@ test(function() {
         iterationComposite: 'accumulate',
         composite: 'add'
     };
-    var effects = [newKeyframeEffect(options), newMotionPathEffect(options)];
-    effects.forEach(function(effect) {
-        var cloned = effect.clone();
+    var effect = newKeyframeEffect(options);
+    var cloned = effect.clone();
 
-        assert_false(cloned === effect,
-            'Cloned AnimationEffect object should be a copy of source object');
-        assert_object_equals(cloned, effect, 'Cloned AnimationEffect object should be ' +
-            'identical to source object');
-    });
+    assert_false(cloned === effect,
+        'Cloned AnimationEffect object should be a copy of source object');
+    assert_object_equals(cloned, effect, 'Cloned AnimationEffect object should be ' +
+        'identical to source object');
 }, 'Test AnimationEffect.clone() creates a copy of AnimationEffect object ' +
     'with not default options');
 </script>

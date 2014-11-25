@@ -2,7 +2,7 @@
 <meta charset=utf-8>
 <title>Animation computedTiming attribute test</title>
 <meta name="assert" content="Returns the calculated timing properties for this animation node">
-<link rel="help" href="http://dev.w3.org/fxtf/web-animations/#widl-AnimationNode-computedTiming">
+<link rel="help" href=http://w3c.github.io/web-animations/#dom-animationnode-computedtiming">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -29,15 +29,6 @@ test(function() {
         'Animation.computedTiming.duration should return zero');
 }, 'Test Animation.computedTiming.duration returns intrinsic iteration duration (zero) ' +
     'for nodes with timing.duration value \'auto\'');
-
-test(function() {
-    var timing = {duration: 'some unsupported value'};
-    var node = new Animation(createDiv(this), [], timing);
-
-    assert_equals(node.computedTiming.duration, 0,
-        'Animation.computedTiming.duration should return zero');
-}, 'Test Animation.computedTiming.duration returns intrinsic iteration duration (zero) ' +
-    'for nodes with unsupported timing.duration value');
 
 test(function() {
     var timing = {fill: 'auto'};
