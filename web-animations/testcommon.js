@@ -30,7 +30,7 @@ var KEYFRAMES = [ {
 } ];
 
 // Default timing values as specified at
-// http://dev.w3.org/fxtf/web-animations/#the-animationtiminginput-dictionary
+// http://w3c.github.io/web-animations/#dictdef-animationtimingproperties
 var DEFAULT_TIMING = {
     delay : 0,
     endDelay : 0,
