@@ -130,7 +130,7 @@ function getExpectedTop(currentTime) {
 // Compares actual and expected keyframes similar to
 // assert_object_equals way, except for the property computedOffset,
 // which is compared via assert_approx_equals with COMPUTED_OFFSET_EPSILON
-function assert_keyframe_equals(actual, expected, description) {
+function assert_keyframe_instance_equals(actual, expected, description) {
     for (var propertyName in expected) {
         assert_true(actual.hasOwnProperty(propertyName),
             description + ', expected property ' + propertyName + ' missing');
@@ -155,7 +155,7 @@ function assert_keyframes_equals(actual, expected, description) {
     assert_equals(actual.length, expected.length, description +
         ', length differ, ');
     for (var i = 0; i < actual.length; i++) {
-        assert_keyframes_equals(actual[i], expected[i], description + ', index ' + i);
+        assert_keyframe_instance_equals(actual[i], expected[i], description + ', index ' + i);
     }
 }
 
