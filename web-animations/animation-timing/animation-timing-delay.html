@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationTiming delay attribute test</title>
+<meta name="assert" content="The start delay which represents the number of milliseconds from an animation node’s start time to the start of the active interval">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationtiming-delay">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+async_test(function(t) {
+    var timing = {
+        delay: 100,
+        duration: ANIMATION_END_TIME
+    };
+    var target = createDiv(t);
+    var animation = new Animation(target, KEYFRAMES, timing);
+    var player = document.timeline.play(animation);
+
+    assert_equals(animation.computedTiming.delay, timing.delay, 'Wrong computedTiming.delay value');
+
+    player.ready.then(t.step_func(function() {
+        // We have delay 100ms. Wait for 50ms and make sure that
+        // animation is delayed
+        setTimeout(t.step_func(function() {
+            assert_equals(window.getComputedStyle(target).top, ANIMATION_TOP_0, 'Animation ' +
+                'should be delayed and should not be started');
+            // Wait for 100ms and then make sure that animation corresponds 50ms
+            setTimeout(t.step_func(function() {
+                assert_approx_equals(window.getComputedStyle(target).top, getExpectedTop(50),
+                    COMPUTED_STYLE_EPSILON, 'Animation should be started after the delay');
+                t.done();
+            }), 100);
+        }), 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting AnimationTiming.delay sets start delay of the animation');
+
+async_test(function(t) {
+    var timing = {
+        delay: -50,
+        duration: ANIMATION_END_TIME
+    };
+    var target = createDiv(t);
+    var animation = new Animation(target, KEYFRAMES, timing);
+    var player = document.timeline.play(animation);
+
+    assert_equals(animation.computedTiming.delay, timing.delay, 'Wrong computedTiming.delay value');
+
+    player.ready.then(t.step_func(function() {
+        // We have delay -50ms. Animation should start at 50ms
+        assert_equals(window.getComputedStyle(target).top, getExpectedTop(50), 'Animation ' +
+            'should be started with negative delay');
+        setTimeout(t.step_func(function() {
+            assert_approx_equals(window.getComputedStyle(target).top, getExpectedTop(100),
+                COMPUTED_STYLE_EPSILON, 'Animation should be performed according the delay');
+            t.done();
+        }), 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting negative AnimationTiming.delay sets start delay of the animation');
+
+async_test(function(t) {
+    var timing1 = {
+        delay: 25,
+        duration: ANIMATION_END_TIME
+    };
+    var timing2 = {
+        delay: 50,
+        duration: ANIMATION_END_TIME
+    };
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+    var animation1 = new Animation(target1, KEYFRAMES, timing1);
+    var animation2 = new Animation(target2, KEYFRAMES, timing2);
+    var animationGroup = new AnimationGroup([animation1, animation2]);
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.delay, timing1.delay,
+        'Wrong computedTiming.delay value');
+    assert_equals(animation2.computedTiming.delay, timing2.delay,
+        'Wrong computedTiming.delay value');
+
+    player.ready.then(t.step_func(function() {
+        // We have delay 25 and 50ms. Wait for 10ms and make sure that
+        // both animations are delayed
+        setTimeout(t.step_func(function() {
+            assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_0, 'Animation 1 ' +
+                'should be delayed and should not be started');
+            assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_0, 'Animation 2 ' +
+                'should be delayed and should not be started');
+            // Wait for 25ms and then make sure that animation1 started,
+            // animation2 is still delayed
+            setTimeout(t.step_func(function() {
+                assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(10),
+                    COMPUTED_STYLE_EPSILON, 'Animation 1 should be started after the delay');
+                assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_0,
+                    'Animation 2 should be still delayed and should not be started');
+                // Wait for 50ms and then make sure that both animations started
+                setTimeout(t.step_func(function() {
+                    assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(60),
+                        COMPUTED_STYLE_EPSILON, 'Animation 1 should be started after the delay');
+                    assert_equals(window.getComputedStyle(target2).top, getExpectedTop(35),
+                        'Animation 2 should be still delayed and should not be started');
+                    t.done();
+                }), 50);
+            }), 25);
+        }), 10);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting AnimationTiming.delay of group\'s child nodes delays play ' +
+    'of the animations');
+
+async_test(function(t) {
+    var timing1 = {
+        delay: 25,
+        duration: ANIMATION_END_TIME
+    };
+    var timing2 = {
+        delay: -10,
+        duration: ANIMATION_END_TIME
+    };
+    var group1Timing = {
+        delay: 20,
+        duration: ANIMATION_END_TIME
+    };
+    var group2Timing = {
+        delay: 20,
+        duration: ANIMATION_END_TIME
+    };
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+    var target3 = createDiv(t);
+    var target4 = createDiv(t);
+    var animation1 = new Animation(target1, KEYFRAMES, timing1);
+    var animation2 = new Animation(target2, KEYFRAMES, timing2);
+    var animation3 = new Animation(target3, KEYFRAMES, timing1);
+    var animation4 = new Animation(target4, KEYFRAMES, timing2);
+    var animationGroup2 = new AnimationGroup([animation3, animation4], group2Timing);
+    var animationGroup1 = new AnimationGroup([animation1, animation2, animationGroup2],
+        group1Timing);
+    var player = document.timeline.play(animationGroup1);
+
+    assert_equals(animation1.computedTiming.delay, timing1.delay,
+        'Wrong animation1 computedTiming.delay value');
+    assert_equals(animation2.computedTiming.delay, timing2.delay,
+        'Wrong animation2 computedTiming.delay value');
+    assert_equals(animation3.computedTiming.delay, timing1.delay,
+        'Wrong animation3 computedTiming.delay value');
+    assert_equals(animation4.computedTiming.delay, timing2.delay,
+        'Wrong animation4 computedTiming.delay value');
+    assert_equals(animationGroup1.computedTiming.delay, group1Timing.delay,
+        'Wrong animationGroup1 computedTiming.delay value');
+    assert_equals(animationGroup2.computedTiming.delay, group2Timing.delay,
+        'Wrong animationGroup2 computedTiming.delay value');
+
+    player.ready.then(t.step_func(function() {
+        // Wait for 10ms and test. All should wait
+        setTimeout(t.step_func(function() {
+            assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_0, 'Animation 1 ' +
+                'should be delayed and should not be started');
+            assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_0, 'Animation 2 ' +
+                'should be delayed and should not be started');
+            assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0, 'Animation 3 ' +
+                'should be delayed and should not be started');
+            assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0, 'Animation 4 ' +
+                'should be delayed and should not be started');
+            // Wait for 20ms. Group2 should still wait
+            setTimeout(t.step_func(function() {
+                assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_0,
+                    'Animation 1 should be delayed and should not be started');
+                assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(20),
+                    COMPUTED_STYLE_EPSILON, 'Animation 2 should be started');
+                assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0,
+                    'Animation 3 should be delayed and should not be started');
+                assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+                    'Animation 4 should be delayed and should not be started');
+                // Wait for 50ms and then make sure that both animations started
+                setTimeout(t.step_func(function() {
+                    assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(35),
+                        COMPUTED_STYLE_EPSILON, 'Animation 2 should be started');
+                    assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(70),
+                        COMPUTED_STYLE_EPSILON, 'Animation 2 should be started');
+                    assert_approx_equals(window.getComputedStyle(target3).top, getExpectedTop(15),
+                        COMPUTED_STYLE_EPSILON, 'Animation 2 should be started');
+                    assert_approx_equals(window.getComputedStyle(target4).top, getExpectedTop(50),
+                        COMPUTED_STYLE_EPSILON, 'Animation 2 should be started');
+                    t.done();
+                }), 50);
+            }), 20);
+        }), 10);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting AnimationTiming.delay of group\'s child nodes delays play ' +
+    'of the animations. There are groups and animations among the children');
+</script>
+</body>
