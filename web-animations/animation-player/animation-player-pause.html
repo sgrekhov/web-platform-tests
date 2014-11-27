@@ -60,7 +60,7 @@ async_test(function(t) {
             player.pause();
             // wait for 50 ms
             setTimeout(t.step_func(function() {
-                assert_approx_equals(player.currentTime, 50, EPSILON,
+                assert_approx_equals(player.currentTime, 50, TIME_EPSILON,
                     'Current time should be paused');
                 assert_equals(player.startTime, null, 'Start time should be unresolved');
                 assert_equals(player.playState, 'paused', 'AnimationPlayer should be paused');                
@@ -82,7 +82,7 @@ async_test(function(t) {
             // wait for 50 ms
             setTimeout(t.step_func(function() {
                 assert_approx_equals(player.currentTime, ANIMATION_END_TIME / 2 - 50,
-                    EPSILON, 'Current time should be paused');
+                    TIME_EPSILON, 'Current time should be paused');
                 assert_equals(player.startTime, null, 'Start time should be unresolved');
                 assert_equals(player.playState, 'paused', 'AnimationPlayer should be paused');                
                 t.done();

@@ -60,7 +60,7 @@ async_test(function(t) {
         // Wait for 100ms and chek that currentTime is about 50ms
         setTimeout(function() {
             t.step(function () {
-                assert_approx_equals(player.currentTime, 50, EPSILON, 'The value of ' +
+                assert_approx_equals(player.currentTime, 50, TIME_EPSILON, 'The value of ' +
                     'AnimationPlayer.currentTime should correspond to startTime');
                 t.done();
             });
@@ -77,7 +77,7 @@ async_test(function(t) {
         player.startTime = newStartTime;
         setTimeout(function() {
             t.step(function () {
-                assert_approx_equals(player.currentTime, 150, EPSILON, 'The value of ' +
+                assert_approx_equals(player.currentTime, 150, TIME_EPSILON, 'The value of ' +
                     'AnimationPlayer.currentTime should correspond to startTime');
                 t.done();
             });

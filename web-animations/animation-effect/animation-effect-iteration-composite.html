@@ -62,7 +62,7 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
             assert_approx_equals(window.getComputedStyle(target).top,
-                getExpectedTop(100), EPSILON,
+                getExpectedTop(100), COMPUTED_STYLE_EPSILON,
                 'Animated attribute \'top\' value should replace ' +
                 'the final value of the previous iteration');
             t.done();
@@ -86,7 +86,7 @@ async_test(function(t) {
             // After 100 ms of the second iteration width should be
             // 200 + 'width at 100 ms'
             assert_approx_equals(window.getComputedStyle(target).top,
-                ANIMATION_TOP_1 + getExpectedTop(100), EPSILON,
+                ANIMATION_TOP_1 + getExpectedTop(100), COMPUTED_STYLE_EPSILON,
                 'Animated attribute \'top\' value should be accumulated ' +
                 'with the final value of the previous iteration');
 
@@ -96,7 +96,7 @@ async_test(function(t) {
             effect.iterationComposite = 'replace';
             setTimeout(t.step_func(function() {
                 assert_approx_equals(window.getComputedStyle(target).top,
-                    getExpectedTop(100), EPSILON,
+                    getExpectedTop(100), COMPUTED_STYLE_EPSILON,
                     'Animated attribute \'top\' value should replace ' +
                     'the final value of the previous iteration');
                 t.done();

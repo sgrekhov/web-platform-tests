@@ -96,7 +96,7 @@ async_test(function(t) {
                         // wait for 50 ms
                         setTimeout(function() {
                             t.step(function() {
-                                assert_approx_equals(player.currentTime, 100, EPSILON,
+                                assert_approx_equals(player.currentTime, 100, TIME_EPSILON,
                                     'After player is unpaused by AnimationPlayer.play() ' +
                                     'current time should go on increasing');
                                 t.done();
@@ -128,7 +128,7 @@ async_test(function(t) {
                         setTimeout(function() {
                             t.step(function() {
                                 var expectedTime = ANIMATION_END_TIME / 2 - 100;
-                                assert_approx_equals(player.currentTime, expectedTime, EPSILON,
+                                assert_approx_equals(player.currentTime, expectedTime, TIME_EPSILON,
                                     'After player is unpaused by AnimationPlayer.play() ' +
                                     'current time should go on decreasing');
                                 t.done();
@@ -222,7 +222,7 @@ async_test(function(t) {
                 // wait for 50 ms
                 setTimeout(function() {
                     t.step(function() {
-                        assert_approx_equals(player.currentTime, 50, EPSILON,
+                        assert_approx_equals(player.currentTime, 50, TIME_EPSILON,
                             'After AnimationPlayer.play() call ' +
                             'current time should go on increasing');
                         t.done();
@@ -249,7 +249,7 @@ async_test(function(t) {
                 setTimeout(function() {
                     t.step(function() {
                         assert_approx_equals(player.currentTime,
-                            player.source.computedTiming.endTime - 50, EPSILON,
+                            player.source.computedTiming.endTime - 50, TIME_EPSILON,
                             'After AnimationPlayer.play() call' +
                             'current time should go on decreasing');
                         t.done();

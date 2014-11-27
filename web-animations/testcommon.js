@@ -10,8 +10,13 @@ policies and contribution forms [3].
 
 "use strict";
 
-// Epsilon value for assert_approx_equals()
-var EPSILON = 20;
+// Epsilon value for assert_approx_equals(). Used for time measurements
+var TIME_EPSILON = 5;
+// Precision for computedOffset
+var COMPUTED_OFFSET_EPSILON = 0.000001;
+// Precision (in px) for expected style at the moment and the one returned by getComputedStyle()
+var COMPUTED_STYLE_EPSILON = 5;
+
 var ANIMATION_END_TIME = 1000;
 var ANIMATION_TOP_DEFAULT = 300;
 var ANIMATION_TOP_0 = 10;
@@ -42,8 +47,6 @@ var DEFAULT_TIMING = {
     direction : 'normal',
     easing : 'linear'
 };
-
-var COMPUTED_OFFSET_EPSILON = 0.000001;
 
 // Creates and returns new HTML document
 function newHTMLDocument() {

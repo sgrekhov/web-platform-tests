@@ -148,7 +148,7 @@ async_test(function(t) {
 
     player.ready.then(t.step_func(function() {
         setTimeout(function() {
-            assert_approx_equals(player.currentTime, 50, EPSILON, 'AnimationTimeline.play() ' +
+            assert_approx_equals(player.currentTime, 50, TIME_EPSILON, 'AnimationTimeline.play() ' +
                 'should run play a player procedure');
             assert_equals(player.playState, 'running', 'Play state should be in running state');
             t.done();

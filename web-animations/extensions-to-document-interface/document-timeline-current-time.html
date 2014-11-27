@@ -15,12 +15,12 @@
 <script>
 test(function() {
     assert_approx_equals(document.timeline.currentTime,
-        new Date().getTime() - window.performance.timing.navigationStart, EPSILON,
+        new Date().getTime() - window.performance.timing.navigationStart, TIME_EPSILON,
         'Document timeline time value should be relative to navigationStart moment');
 }, 'Document timeline time value is relative to navigationStart moment');
 
 test(function() {
-    assert_approx_equals(document.timeline.currentTime, window.performance.now(), EPSILON,
+    assert_approx_equals(document.timeline.currentTime, window.performance.now(), TIME_EPSILON,
         'document.timeline.currentTime should roughly correspond to Performance.now()');
 }, 'Document timeline time value roughly corresponds Performance.now()');
 
@@ -29,7 +29,7 @@ async_test(function(t) {
     var repetitions = 10;
 
     var intervalId = setInterval(t.step_func(function() {
-        assert_true(document.timeline.currentTime - previousTime > 50 - EPSILON,
+        assert_true(document.timeline.currentTime - previousTime > 50 - TIME_EPSILON,
             'AnimationTimeline.currentTime should increase its value');
         previousTime = document.timeline.currentTime;
         repetitions--;
