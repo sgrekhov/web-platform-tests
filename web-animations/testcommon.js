@@ -125,9 +125,12 @@ function type(object) {
 }
 
 // Returns expected top of the target element width at currentTime
-function getExpectedTop(currentTime) {
+function getExpectedTop(currentTime, endTime) {
+    if (!endTime) {
+        endTime = ANIMATION_END_TIME;
+    }
     return ANIMATION_TOP_0 + (ANIMATION_TOP_1 - ANIMATION_TOP_0)
-        * (currentTime % ANIMATION_END_TIME);
+        * (currentTime % endTime);
 }
 
 // Compares actual and expected keyframes similar to
