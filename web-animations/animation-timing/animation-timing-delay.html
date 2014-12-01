@@ -26,7 +26,7 @@ async_test(function(t) {
         // We have delay 100ms. Wait for 50ms and make sure that
         // animation is delayed
         setTimeout(t.step_func(function() {
-            assert_equals(window.getComputedStyle(target).top, ANIMATION_TOP_0, 'Animation ' +
+            assert_equals(window.getComputedStyle(target).top, ANIMATION_TOP_DEFAULT, 'Animation ' +
                 'should be delayed and should not be started');
             // Wait for 100ms and then make sure that animation corresponds 50ms
             setTimeout(t.step_func(function() {
@@ -86,16 +86,16 @@ async_test(function(t) {
         // We have delay 25 and 50ms. Wait for 10ms and make sure that
         // both animations are delayed
         setTimeout(t.step_func(function() {
-            assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_0, 'Animation 1 ' +
+            assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_DEFAULT, 'Animation 1 ' +
                 'should be delayed and should not be started');
-            assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_0, 'Animation 2 ' +
+            assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_DEFAULT, 'Animation 2 ' +
                 'should be delayed and should not be started');
             // Wait for 25ms and then make sure that animation1 started,
             // animation2 is still delayed
             setTimeout(t.step_func(function() {
                 assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(10),
                     COMPUTED_STYLE_EPSILON, 'Animation 1 should be started after the delay');
-                assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_0,
+                assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_DEFAULT,
                     'Animation 2 should be still delayed and should not be started');
                 // Wait for 50ms and then make sure that both animations started
                 setTimeout(t.step_func(function() {
@@ -155,23 +155,23 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         // Wait for 10ms and test. All should wait
         setTimeout(t.step_func(function() {
-            assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_0, 'Animation 1 ' +
+            assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_DEFAULT, 'Animation 1 ' +
                 'should be delayed and should not be started');
-            assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_0, 'Animation 2 ' +
+            assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_DEFAULT, 'Animation 2 ' +
                 'should be delayed and should not be started');
-            assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0, 'Animation 3 ' +
+            assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_DEFAULT, 'Animation 3 ' +
                 'should be delayed and should not be started');
-            assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0, 'Animation 4 ' +
+            assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT, 'Animation 4 ' +
                 'should be delayed and should not be started');
             // Wait for 20ms. Group2 should still wait
             setTimeout(t.step_func(function() {
-                assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_0,
+                assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_DEFAULT,
                     'Animation 1 should be delayed and should not be started');
                 assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(20),
                     COMPUTED_STYLE_EPSILON, 'Animation 2 should be started');
-                assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0,
+                assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_DEFAULT,
                     'Animation 3 should be delayed and should not be started');
-                assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+                assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT,
                     'Animation 4 should be delayed and should not be started');
                 // Wait for 50ms and then make sure that both animations started
                 setTimeout(t.step_func(function() {
@@ -237,26 +237,26 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         // Wait for 10ms. All should wait
         setTimeout(t.step_func(function() {
-            assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_0,
+            assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_DEFAULT,
                 'Animation 1 should be delayed and should not be started');
-            assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_0,
+            assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_DEFAULT,
                 'Animation 2 should be delayed and should not be started');
-            assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0,
+            assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_DEFAULT,
                 'Animation 3 should be delayed and should not be started');
-            assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+            assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT,
                 'Animation 4 should be delayed and should not be started');
             // Wait for 20ms. The first should running, all others wait
             setTimeout(t.step_func(function() {
                 assert_approx_equals(window.getComputedStyle(target1).top,
                     getExpectedTop(10, animationDuration), COMPUTED_STYLE_EPSILON,
                     'Animation 1 should be started after the delay');
-                assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_0,
+                assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_DEFAULT,
                     'Animation 2 should be delayed and should not be started');
-                assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0,
+                assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_DEFAULT,
                     'Animation 3 should be delayed and should not be started');
-                assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+                assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT,
                     'Animation 4 should be delayed and should not be started');
-                // Wait for 30ms. The first and the second shoul run, others wait
+                // Wait for 30ms. The first and the second should run, others wait
                 setTimeout(t.step_func(function() {
                     assert_approx_equals(window.getComputedStyle(target1).top,
                         getExpectedTop(40, animationDuration), COMPUTED_STYLE_EPSILON,
@@ -264,54 +264,51 @@ async_test(function(t) {
                     assert_approx_equals(window.getComputedStyle(target2).top,
                         getExpectedTop(10, animationDuration), COMPUTED_STYLE_EPSILON,
                         'Animation 2 should be started after the delay');
-                    assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0,
+                    assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_DEFAULT,
                         'Animation 3 should be delayed and should not be started');
-                    assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+                    assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT,
                         'Animation 4 should be delayed and should not be started');
-                    // Wait for 50ms. The first and the second shoul be finished, third run,
+                    // Wait for 50ms. The first and the second should be finished, third run,
                     // fourth wait
                     setTimeout(t.step_func(function() {
-                        assert_approx_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_1,
-                            COMPUTED_STYLE_EPSILON, 'Animation 1 should be finished');
-                        assert_approx_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_1,
-                            COMPUTED_STYLE_EPSILON, 'Animation 2 should be finished');
+                        assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_1,
+                            'Animation 1 should be finished');
+                        assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_1,
+                            'Animation 2 should be finished');
                         assert_approx_equals(window.getComputedStyle(target3).top,
                             getExpectedTop(10, animationDuration), COMPUTED_STYLE_EPSILON,
                             'Animation 3 should be started after the delay');
-                        assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+                        assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT,
                             'Animation 4 should be delayed and should not be started');
                         // Wait for 50ms. The fourth wait, others finished
                         setTimeout(t.step_func(function() {
-                            assert_approx_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_1,
-                                COMPUTED_STYLE_EPSILON, 'Animation 1 should be finished');
-                            assert_approx_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_1,
-                                COMPUTED_STYLE_EPSILON, 'Animation 2 should be finished');
-                            assert_approx_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_1,
-                                COMPUTED_STYLE_EPSILON, 'Animation 3 should be finished');
-                            assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+                            assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_1,
+                                'Animation 1 should be finished');
+                            assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_1,
+                                'Animation 2 should be finished');
+                            assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_1,
+                                'Animation 3 should be finished');
+                            assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT,
                                 'Animation 4 should be delayed and should not be started');
                             // Wait for 20ms. The fourth running, others finished
                             setTimeout(t.step_func(function() {
-                                assert_approx_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_1,
-                                    COMPUTED_STYLE_EPSILON, 'Animation 1 should be finished');
-                                assert_approx_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_1,
-                                    COMPUTED_STYLE_EPSILON, 'Animation 2 should be finished');
-                                assert_approx_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_1,
-                                    COMPUTED_STYLE_EPSILON, 'Animation 3 should be finished');
+                                assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_1,
+                                    'Animation 1 should be finished');
+                                assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_1,
+                                    'Animation 2 should be finished');
+                                assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_1,
+                                    'Animation 3 should be finished');
                                 assert_approx_equals(window.getComputedStyle(target4).top,
                                     getExpectedTop(10, animationDuration), COMPUTED_STYLE_EPSILON,
                                    'Animation 4 should be started after the delay');
                                 // Wait for 50ms. All should be finished
                                 setTimeout(t.step_func(function() {
-                                    assert_approx_equals(window.getComputedStyle(target1).top,
-                                        ANIMATION_TOP_1, COMPUTED_STYLE_EPSILON,
-                                        'Animation 1 should be finished');
-                                    assert_approx_equals(window.getComputedStyle(target2).top,
-                                        ANIMATION_TOP_1, COMPUTED_STYLE_EPSILON,
-                                        'Animation 2 should be finished');
-                                    assert_approx_equals(window.getComputedStyle(target3).top,
-                                        ANIMATION_TOP_1, COMPUTED_STYLE_EPSILON,
-                                        'Animation 3 should be finished');
+                                    assert_equals(window.getComputedStyle(target1).top,
+                                        ANIMATION_TOP_1, 'Animation 1 should be finished');
+                                    assert_equals(window.getComputedStyle(target2).top,
+                                        ANIMATION_TOP_1, 'Animation 2 should be finished');
+                                    assert_equals(window.getComputedStyle(target3).top,
+                                        ANIMATION_TOP_1, 'Animation 3 should be finished');
                                     assert_approx_equals(window.getComputedStyle(target4).top,
                                         ANIMATION_TOP_1, COMPUTED_STYLE_EPSILON,
                                         'Animation 4 should be finished');
@@ -372,34 +369,34 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         // Wait for 10ms and test. All should wait
         setTimeout(t.step_func(function() {
-            assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_0, 'Animation 1 ' +
+            assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_DEFAULT, 'Animation 1 ' +
                 'should be delayed and should not be started');
-            assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_0, 'Animation 2 ' +
+            assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_DEFAULT, 'Animation 2 ' +
                 'should be delayed and should not be started');
-            assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0, 'Animation 3 ' +
+            assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_DEFAULT, 'Animation 3 ' +
                 'should be delayed and should not be started');
-            assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0, 'Animation 4 ' +
+            assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT, 'Animation 4 ' +
                 'should be delayed and should not be started');
             // Wait for 20ms. All should wait
             setTimeout(t.step_func(function() {
-                assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_0,
+                assert_equals(window.getComputedStyle(target1).top, ANIMATION_TOP_DEFAULT,
                     'Animation 1 should be delayed and should not be started');
-                assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_0,
+                assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_DEFAULT,
                     'Animation 2 should be delayed and should not be started');
-                assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0,
+                assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_DEFAULT,
                     'Animation 3 should be delayed and should not be started');
-                assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+                assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT,
                     'Animation 4 should be delayed and should not be started');
                 // Wait for 20ms. The first running, others wait
                 setTimeout(t.step_func(function() {
                     assert_approx_equals(window.getComputedStyle(target1).top,
                         getExpectedTop(10, animationDuration), COMPUTED_STYLE_EPSILON,
                         'Animation 1 should be started');
-                    assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_0,
+                    assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_DEFAULT,
                         'Animation 2 should be delayed and should not be started');
-                    assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0,
+                    assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_DEFAULT,
                         'Animation 3 should be delayed and should not be started');
-                    assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+                    assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT,
                         'Animation 4 should be delayed and should not be started');
                     // Wait for 30ms. The first and second running, others wait
                     setTimeout(t.step_func(function() {
@@ -409,9 +406,9 @@ async_test(function(t) {
                         assert_approx_equals(window.getComputedStyle(target2).top,
                             getExpectedTop(10, animationDuration), COMPUTED_STYLE_EPSILON,
                             'Animation 2 should be running');
-                        assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0,
+                        assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_DEFAULT,
                             'Animation 3 should be delayed and should not be started');
-                        assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+                        assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT,
                             'Animation 4 should be delayed and should not be started');
                         // Wait for 20ms. The first finished, second running, others wait
                         setTimeout(t.step_func(function() {
@@ -420,9 +417,9 @@ async_test(function(t) {
                             assert_approx_equals(window.getComputedStyle(target2).top,
                                 getExpectedTop(10, animationDuration), COMPUTED_STYLE_EPSILON,
                                 'Animation 2 should be running');
-                            assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0,
+                            assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_DEFAULT,
                                 'Animation 3 should be delayed and should not be started');
-                            assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+                            assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT,
                                 'Animation 4 should be delayed and should not be started');
                             // Wait for 50ms. The first and second finished, others wait
                             setTimeout(t.step_func(function() {
@@ -430,9 +427,9 @@ async_test(function(t) {
                                     'Animation 1 should be finished');
                                 assert_equals(window.getComputedStyle(target2).top, ANIMATION_TOP_1,
                                     'Animation 2 should be finished');
-                                assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_0,
+                                assert_equals(window.getComputedStyle(target3).top, ANIMATION_TOP_DEFAULT,
                                     'Animation 3 should be delayed and should not be started');
-                                assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_0,
+                                assert_equals(window.getComputedStyle(target4).top, ANIMATION_TOP_DEFAULT,
                                     'Animation 4 should be delayed and should not be started');
                                 // Wait for 20ms. 1, 2 finished, 4 running, 3 wait
                                 setTimeout(t.step_func(function() {
@@ -441,7 +438,7 @@ async_test(function(t) {
                                     assert_equals(window.getComputedStyle(target2).top,
                                         ANIMATION_TOP_1, 'Animation 2 should be finished');
                                     assert_equals(window.getComputedStyle(target3).top,
-                                        ANIMATION_TOP_0, 'Animation 3 should be delayed and ' +
+                                        ANIMATION_TOP_DEFAULT, 'Animation 3 should be delayed and ' +
                                         'should not be started');
                                     assert_approx_equals(window.getComputedStyle(target4).top,
                                         getExpectedTop(30, animationDuration),
