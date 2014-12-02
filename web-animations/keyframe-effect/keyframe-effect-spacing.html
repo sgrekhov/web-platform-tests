@@ -6,6 +6,7 @@
 <link rel="help" href="http://w3c.github.io/web-animations/#spacing-keyframes">
 <link rel="help" href="http://w3c.github.io/web-animations/#applying-spacing-to-keyframes">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -13,209 +14,518 @@
 <body>
 <div id="log"></div>
 <script>
-// Creates two effects that tested in the tests below. One with spacing,
-// defined by the constructor. And the second with spacing set by spacing attribute
+// Creates four KeyframeEffect instances, created by various ways:
+// keyframes are passed via constructor or via method setFrames()
+// spacingMode is passed via constructor or via changing spacing attribute
 function createEffectsToTest(keyframes, spacingMode) {
     var effect1 = new KeyframeEffect(keyframes, {spacing: spacingMode});
+
     var effect2 = new KeyframeEffect(keyframes);
     effect2.spacing = spacingMode;
-    return [effect1, effect2];
+
+    var effect3 = new KeyframeEffect([], {spacing: spacingMode});
+    effect3.setFrames(keyframes);
+
+    var effect4 = new KeyframeEffect([]);
+    effect4.spacing = spacingMode;
+    effect4.setFrames(keyframes);
+
+    return [effect1, effect2, effect3, effect4];
+}
+
+// produces expected keyframe sequence from given single input keyframe
+// or input sequence of keyframes
+function expected() {
+    var result = [];
+    for (var i = 0; i < arguments.length; i++){
+        var a = arguments[i];
+        if (!Array.isArray(a)){
+            a = [a];
+        }
+        for (var k = 0; k < a.length; k++) {
+            var keyframe = {offset: null, easing: 'linear', composite: null};
+            for (var propertyName in a[k]){
+                keyframe[propertyName] = a[k][propertyName];
+            }
+            if (keyframe.offset !== null){
+                keyframe.computedOffset = keyframe.offset;
+            }
+            result.push(keyframe);
+        }
+    }
+    return result;
 }
 
 test(function() {
     var effect = new KeyframeEffect([]);
     assert_equals(effect.spacing, 'distribute', 'Default value of spacing should be ' +
         '\'distribute\'');
-}, 'Test that KeyframeEffect constructor by default creates keyframe effect with ' +
-    '\'distribute\' spacing mode');
+}, 'Test KeyframeEffect constructor sets spacing mode to \'distribute\' by default');
 
 test(function() {
-    var effectsToTest = createEffectsToTest([], 'paced');
-
-    effectsToTest.forEach(function(effect, index) {
-        assert_equals(effect.spacing, 'paced', 'Effect ' + index + ': ' +
-            'Spacing attribute value should be set');
+    var values = ['distribute', 'paced(top)', 'paced(bottom)'];
+    values.forEach(function(value) {
+        var effect = new KeyframeEffect([], {spacing: value});
+        assert_equals(effect.spacing, value, 'KeyframeEffect constructor ' +
+            'should set spacing attribute to value ' + value);
     });
-}, 'Test that spacing attribute returns the current spacing mode');
+}, 'Test KeyframeEffect.spacing attribute returns the spacing mode, ' +
+    'which is set by constructor');
 
+test(function() {
+    var effect = new KeyframeEffect([]);
+    var values = ['distribute', 'paced(top)', 'paced(bottom)'];
+    values.forEach(function(value) {
+        effect.spacing = value;
+        assert_equals(effect.spacing, value, 'KeyframeEffect.spacing attribute ' +
+            'should return value ' + value);
+    });
+}, 'Test KeyframeEffect.spacing attribute returns current spacing mode');
+
+// http://w3c.github.io/web-animations/#applying-spacing-to-keyframes
+// 1. Let keyframes refer to the list of keyframes associated with the keyframe animation effect.
+// 2. If keyframes contains more than one keyframe and the keyframe offset
+// of the first keyframe in keyframes is null, set the keyframe offset of the first keyframe to 0.
+test(function() {
+    var keyframes = [{top: '10px'}, {top: '20px', offset: 0.5}];
+    var effects = createEffectsToTest(keyframes, 'distribute');
+    effects.concat(createEffectsToTest(keyframes, 'paced(top)'));
+    var expectedFrames = expected(
+        {top: '10px', computedOffset: 0},
+        {top: '20px', offset: 0.5}
+    );
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), expectedFrames, 'Effect ' + index +
+            ' with spacing ' + effect.spacing + ' should set computedOffset to 0 ' +
+            'for the first keyframe');
+    });
+}, 'Test spacing keyframes sets computedOffset to 0 for the first keyframe, ' +
+    'if first keyframe offset is null and there are more than one keyframes');
+
+// 3. If the keyframe offset of the last keyframe in distributed keyframes is null,
+// set its keyframe offset to 1.
 test(function() {
     var keyframe = {top: '10px'};
-    var effectsToTest = createEffectsToTest(keyframe, 'distribute');
+    var effects = createEffectsToTest(keyframe, 'distribute');
+    effects.concat(createEffectsToTest(keyframe, 'paced(top)'));
+    var expectedFrames = expected({top: '10px', computedOffset: 1});
 
-    effectsToTest.forEach(function(effect, index) {
-        assert_equals(effect.getFrames()[0].computedOffset, 1, 'Effect ' + index + ': ' +
-            'Wrong computedOffset value');
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), expectedFrames, 'Effect ' + index +
+            ' with spacing ' + effect.spacing + ' should set computedOffset to 1 ' +
+            'for the last keyframe');
     });
-}, 'Test that spacing of a single keyframe with spacing mode \'distribute\' ' +
-    'produces computedOffset 1');
+}, 'Test spacing keyframes sets computedOffset to 1 for the last keyframe, ' +
+    'if last keyframe offset is null and there is only one keyframe.');
 
 test(function() {
-    var keyframe = {top: '10px'};
-    var effectsToTest = createEffectsToTest(keyframe, 'paced');
-
-    effectsToTest.forEach(function(effect, index) {
-        assert_equals(effect.getFrames()[0].computedOffset, 1, 'Effect ' + index + ': ' +
-            'Wrong computedOffset value');
+    var keyframes = [{top: '10px', offset: 0.5}, {top: '20px'}];
+    var effects = createEffectsToTest(keyframes, 'distribute');
+    effects.concat(createEffectsToTest(keyframes, 'paced(top)'));
+    var expectedFrames = expected(
+        {top: '10px', offset: 0.5},
+        {top: '20px', computedOffset: 1}
+    );
+    effects.forEach(function(effect, index) {
+        assert_array_equals(effect.getFrames(), expectedFrames, 'Effect ' + index +
+            ' with spacing ' + effect.spacing + ' should set computedOffset to 1 ' +
+            'for the last keyframe');
     });
-}, 'Test that spacing of a single keyframe with spacing mode \'paced\' ' +
-    'produces computedOffset 1');
+}, 'Test spacing keyframes sets computedOffset to 1 for the last keyframe, ' +
+    'if last keyframe offset is null and there are more than one keyframes');
 
+// 4. For each pair of keyframes A and B where:
+//   * A appears before B in keyframes, and
+//   * A and B have a keyframe offset that is not null, and
+//   * all keyframes between A and B have a null keyframe offset,
+// calculate the keyframe offset of each keyframe between A and B
+// depending on the keyframe spacing mode as follows:
+//  If the spacing mode is paced,
+//    1) Define a keyframe as paceable if it contains a value for the paced property.
+//    2) Let paced A be the first keyframe in the range [A, B] that is paceable, if any.
+//    3) Let paced B be the last keyframe in the range [A, B] that is paceable, if any.
+//    4) If there is no paced A or paced B let both refer to B.
+//    Note that in this case, the spacing behavior degenerates to distribute spacing.
+//    5) For each keyframe in the range (A, paced A] and [paced B, B), apply
+//    the procedure for evenly distributing a keyframe using A and B
+//    as the start and end keyframes respectively.
 test(function() {
-    var keyframe = {top: '10px'};
-    var effectsToTest = createEffectsToTest(keyframe, 'paced(top)');
-
-    effectsToTest.forEach(function(effect, index) {
-        assert_equals(effect.getFrames()[0].computedOffset, 1, 'Effect ' + index + ': ' +
-            'Wrong computedOffset value');
-    });
-}, 'Test that spacing of a single keyframe with spacing mode \'paced({ident})\' ' +
-    'produces computedOffset 1');
-
-test(function() {
-    var keyframes = [{top: '10px'},
+    var keyframes = [
+        {top: '0px', offset: 0.2}, // A
+        {top: '10px'},
         {top: '20px'},
-        {top: '50px'}];
-    var effectsToTest = createEffectsToTest(keyframes, 'distribute');
-    var expected = computeOffset(keyframes, 'distribute');
-
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
-    });
-}, 'Test spacing in \'distribute\' mode a sequence of keyframes with null offset');
-
-test(function() {
-    var keyframes = [{top: '10px'},
-        {top: '20px'},
-        {top: '50px'}];
-    var effectsToTest = createEffectsToTest(keyframes, 'paced');
-    var expected = computeOffset(keyframes, 'paced');
-
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
-    });
-}, 'Test spacing in \'paced\' mode a sequence of keyframes with null offset');
-
-test(function() {
-    var keyframes = [{top: '10px'},
-        {top: '20px'},
-        {top: '50px'}];
-    var effectsToTest = createEffectsToTest(keyframes, 'paced(top)');
-    var expected = computeOffset(keyframes, 'paced', 'top');
-
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
-    });
-}, 'Test spacing in \'paced({ident})\' mode a sequence of keyframes with null offset');
-
-test(function() {
-    var keyframes = [{top: '10px'},
-        {top: '20px'},
-        {top: '30px', offset: 0.5},
+        {top: '30px'},
         {top: '40px'},
+        {top: '50px', offset: 1.0}//pacedA, pacedB, B
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var expectedFrames = expected(
+        {top: '0px', offset: 0.2},
+        {top: '10px', computedOffset: 0.2+(1.0-0.2)*1/5},
+        {top: '20px', computedOffset: 0.2+(1.0-0.2)*2/5},
+        {top: '30px', computedOffset: 0.2+(1.0-0.2)*3/5},
+        {top: '40px', computedOffset: 0.2+(1.0-0.2)*4/5},
+        {top: '50px', offset: 1.0}
+    );
+
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' + index +
+            ', keyframes do not match');
+    });
+}, 'Test spacing keyframes sets computedOffset according to procedure for evenly ' +
+    'distributing a keyframe, if there are no paceable keyframes');
+
+test(function() {
+    var keyframes = [
+        {top: '0px', offset: 0.2}, // A
+        {top: '10px'},
+        {top: '20px', width: '100px'},
+        {top: '30px'},
+        {top: '40px'},
+        {top: '50px', offset: 0.7}//pacedA, pacedB, B
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var expectedFrames = expected(
+        {top: '0px', offset: 0.2},
+        {top: '10px', computedOffset: 0.2+(0.7-0.2)*1/5},
+        {top: '20px', width: '100px', computedOffset: 0.2+(0.7-0.2)*2/5},
+        {top: '30px', computedOffset: 0.2+(0.7-0.2)*3/5},
+        {top: '40px', computedOffset: 0.2+(0.7-0.2)*4/5},
+        {top: '50px', offset: 0.7}
+    );
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
+    });
+}, 'Test spacing keyframes sets computedOffset according to procedure for evenly ' +
+    'distributing a keyframe, if there is single paceable keyframe');
+
+test(function() {
+    var keyframes = [
+        {top: '0px', offset: 0.1}, // A
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px', width: '30px'}, // pacedA
+        {top: '90px', width: '100px'}, // pacedB
+        {top: '100px'},
+        {top: '110px'},
+        {top: '120px', offset: 0.8}  //B
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var expectedFrames = expected(
+        {top: '0px', offset: 0.1}, // A
+        {top: '10px', computedOffset: 0.1+(0.8-0.1)*1/7},
+        {top: '20px', computedOffset: 0.1+(0.8-0.1)*2/7},
+        {top: '30px', width: '30px', computedOffset: 0.1+(0.8-0.1)*3/7}, // pacedA
+        {top: '90px', width: '100px', computedOffset: 0.1+(0.8-0.1)*4/7}, // pacedB
+        {top: '100px', computedOffset: 0.1+(0.8-0.1)*5/7},
+        {top: '110px', computedOffset: 0.1+(0.8-0.1)*6/7},
+        {top: '120px', offset: 0.8}  //B
+    );
+
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
+    });
+}, 'Test spacing keyframes sets computedOffset according to procedure for evenly ' +
+    'distributing a keyframe for frames in the range (A, paced A] and [paced B, B)');
+
+test(function() {
+    var keyframes = [
+        {top: '0px'}, // A
+        {top: '10px', width: '30px'}, // pacedA
+        {top: '20px'},
+        {top: '30px'},
+        {top: '40px', width: '50px'},
         {top: '50px'},
         {top: '60px'},
-        {top: '70px'}];
-    var effectsToTest = createEffectsToTest(keyframes, 'distribute');
-    var expected = computeOffset(keyframes, 'distribute', 'top');
+        {top: '70px', width: '100px'}, // pacedB
+        {top: '80px'},
+        {top: '90px'},
+        {top: '100px'} //B
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var expectedFrames = computeOffset(expected(keyframes), 'paced', 'width');
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test spacing in \'distribute\' mode when there are intermediate keyframes with ' +
-    'non-null offsets in the keyframes sequence');
+}, 'Test spacing keyframes sets computedOffset according to procedure for evenly ' +
+    'distributing a keyframe for frames in the range (A, paced A] and [paced B, B). ' +
+    'There are no frames between A and pacedA');
 
 test(function() {
-    var keyframes = [{top: '10px', offset: 0.3},
+    var keyframes = [
+        {top: '0px', width: '10px'}, // A, pacedA
+        {top: '10px'},
         {top: '20px'},
-        {top: '30px', offset: 0.5},
+        {top: '30px', width: '30px'},
         {top: '40px'},
         {top: '50px'},
-        {top: '60px', offset: 0.7},
+        {top: '60px', width: '50px'},
         {top: '70px'},
         {top: '80px'},
-        {top: '90px'}];
-    var effectsToTest = createEffectsToTest(keyframes, 'distribute');
-    var expected = computeOffset(keyframes, 'distribute', 'top');
+        {top: '90px', width: '100px'}, // pacedB
+        {top: '100px'},
+        {top: '110px'},
+        {top: '120px'}]; //B
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var expectedFrames = computeOffset(expected(keyframes), 'paced', 'width');
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test spacing in \'distribute\' mode when there are intermediate keyframes with ' +
-    'non-null offsets including the first one in the keyframes sequence');
+}, 'Test spacing keyframes sets computedOffset according to procedure for evenly ' +
+    'distributing a keyframe for frames in the range (A, paced A] and [paced B, B). ' +
+    'A and pacedA are the same keyframe');
 
 test(function() {
-    var keyframes = [{top: '10px'},
+    var keyframes = [{top: '0px'}, // A
+        {top: '10px'},
         {top: '20px'},
-        {top: '30px', offset: 0.5},
+        {top: '30px', width: '30px'}, // pacedA
         {top: '40px'},
         {top: '50px'},
-        {top: '60px', offset: 0.7},
+        {top: '60px', width: '50px'},
         {top: '70px'},
         {top: '80px'},
-        {top: '90px', offset: 0.9}];
-    var effectsToTest = createEffectsToTest(keyframes, 'distribute');
-    var expected = computeOffset(keyframes, 'distribute', 'top');
+        {top: '90px', width: '100px'}, // pacedB
+        {top: '100px'}]; //B
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var expectedFrames = computeOffset(expected(keyframes), 'paced', 'width');
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test spacing in \'distribute\' mode when there are intermediate keyframes with ' +
-    'non-null offsets including the first and the last ones in the keyframes sequence');
+}, 'Test spacing keyframes sets computedOffset according to procedure for evenly ' +
+    'distributing a keyframe for frames in the range (A, paced A] and [paced B, B). ' +
+    'There are no frames between B and pacedB');
 
 test(function() {
-    var keyframes = [{top: '10px'},
+    var keyframes = [
+        {top: '0px'}, // A
+        {top: '10px'},
         {top: '20px'},
-        {top: '30px', offset: 0.5},
+        {top: '30px', width: '30px'}, // pacedA
         {top: '40px'},
         {top: '50px'},
-        {top: '60px', offset: 0.7},
+        {top: '60px', width: '50px'},
         {top: '70px'},
         {top: '80px'},
-        {top: '90px', offset: 0.9}];
-    var effectsToTest = createEffectsToTest(keyframes, 'distribute');
-    var expected = computeOffset(keyframes, 'distribute', 'top');
+        {top: '90px'},
+        {top: '100px', width: '100px'} //B, pacedB
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var expectedFrames = computeOffset(expected(keyframes), 'paced', 'width');
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test spacing in \'distribute\' mode when there are intermediate keyframes with ' +
-    'non-null offsets including the last one in the keyframes sequence');
+}, 'Test spacing keyframes sets computedOffset according to procedure for evenly ' +
+    'distributing a keyframe for frames in the range (A, paced A] and [paced B, B). ' +
+    'B and pacedB are the same keyframe');
+
+// 6) For each keyframe in the range (paced A, paced B) that is paceable:
+//    1) Let distk represent the cumulative distance to a keyframe k from paced A
+// as calculated by applying the distance computation defined by the animation
+// behavior of the paced property to the values of the paced property on each
+// pair of successive paceable keyframes in the range [paced A, k].
+//    2) Set the offset of k to offsetpaced A + (offsetpaced B − offsetpaced A) × distk / distpaced B
+test(function() {
+    var offsetPacedA = 0.2;
+    var offsetPacedB = 0.8;
+    var keyframes = [
+        {width: '10px', offset: offsetPacedA}, // A, pacedA
+        {width: '30px'},
+        {width: '50px'},
+        {width: '70px'},
+        {width: '90px'},
+        {width: '110px', offset: offsetPacedB} // B, pacedB
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var expectedFrames = expected(
+        {width: '10px', offset: offsetPacedA}, // A, pacedA
+        {width: '30px', computedOffset: offsetPacedA+(offsetPacedB-offsetPacedA)*20/100},
+        {width: '50px', computedOffset: offsetPacedA+(offsetPacedB-offsetPacedA)*40/100},
+        {width: '70px', computedOffset: offsetPacedA+(offsetPacedB-offsetPacedA)*60/100},
+        {width: '90px', computedOffset: offsetPacedA+(offsetPacedB-offsetPacedA)*80/100},
+        {width: '110px', offset: offsetPacedB} // B, pacedB
+    );
+
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
+    });
+}, 'Test spacing keyframes sets computedOffset according to keyframe cumulative distance ' +
+    'in the range (paced A, paced B) for paceable keyframes');
 
 test(function() {
-    var keyframes = [{top: '10px'},
+    var keyframes = [
+        {top: '10px'},
+        {top: '20px'},
+        {top: '50px'}
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(top)');
+    var expectedFrames = expected(
+        {top: '10px', computedOffset: 0},
+        {top: '20px', computedOffset: 0+(1.0-0)*10/40},
+        {top: '50px', computedOffset: 1.0}
+    );
+
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
+    });
+}, 'Test spacing keyframes sets computedOffset according to keyframe cumulative distance ' +
+    'in the range (paced A, paced B) for paceable keyframes. All input keyframes have null offset');
+
+test(function() {
+    var keyframes = [
+        {top: '0px', offset: 0.2}, // A
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px', width: '30px'}, // pacedA
+        {top: '30px', width: '50px'},
+        {top: '30px', width: '70px'},
+        {top: '30px', width: '90px'},
+        {top: '90px', width: '110px'}, // pacedB
+        {top: '100px'},
+        {top: '110px'},
+        {top: '120px', offset: 0.8}  //B
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var offsetPacedA = 0.2+(0.8-0.2)*3/10;
+    var offsetPacedB = 0.2+(0.8-0.2)*7/10;
+    var expectedFrames = expected(
+        {top: '0px', offset: 0.2}, // A
+        {top: '10px', computedOffset: 0.2+(0.8-0.2)*1/10},
+        {top: '20px', computedOffset: 0.2+(0.8-0.2)*2/10},
+        {top: '30px', width: '30px', computedOffset: offsetPacedA}, // pacedA
+        {top: '30px', width: '50px', computedOffset: offsetPacedA + (offsetPacedB-offsetPacedA)*20/80},
+        {top: '30px', width: '70px', computedOffset: offsetPacedA + (offsetPacedB-offsetPacedA)*40/80},
+        {top: '30px', width: '90px', computedOffset: offsetPacedA + (offsetPacedB-offsetPacedA)*60/80},
+        {top: '90px', width: '110px', computedOffset: offsetPacedB}, // pacedB
+        {top: '100px', computedOffset: 0.2+(0.8-0.2)*8/10},
+        {top: '110px', computedOffset: 0.2+(0.8-0.2)*9/10},
+        {top: '120px', offset: 0.8}  //B
+    );
+
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
+    });
+}, 'Test spacing keyframes sets computedOffset according to keyframe cumulative distance ' +
+    'in the range (paced A, paced B) for paceable keyframes. There are some ' +
+    'not paceable input keyframes outside the range (paced A, paced B)');
+
+// 7) For each keyframe in the range (paced A, paced B) that still has a null
+// keyframe offset (because it is not paceable), apply the procedure for evenly
+// distributing a keyframe using the nearest keyframe before and after the keyframe
+// in question in keyframes that has a keyframe offset that is not null,
+// as the start and end keyframes respectively.
+test(function() {
+    var keyframes = [
+        {top: '0px', width: '40px', offset: 0.2}, // A, pacedA
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px'},
+        {top: '40px'},
+        {top: '50px', width: '80px', offset: 1.0} // B, pacedB
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var expectedFrames = expected(
+        {top: '0px', width: '40px', offset: 0.2},
+        {top: '10px', computedOffset: 0.2+(1.0-0.2)*1/5},
+        {top: '20px', computedOffset: 0.2+(1.0-0.2)*2/5},
+        {top: '30px', computedOffset: 0.2+(1.0-0.2)*3/5},
+        {top: '40px', computedOffset: 0.2+(1.0-0.2)*4/5},
+        {top: '50px', width: '80px', offset: 1.0}
+    );
+
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' + index +
+            ', keyframes do not match');
+    });
+}, 'Test spacing keyframes sets computedOffset according to procedure for evenly ' +
+    'distributing a keyframe for nodes in range (paced A, paced B), that are not paceable');
+
+test(function() {
+    var keyframes = [
+        {top: '0px', offset: 0.2}, // A
+        {top: '10px'},
+        {top: '20px'},
+        {top: '30px', width: '30px'}, // pacedA
+        {top: '35px'},
+        {top: '40px', width: '50px'},
+        {top: '45px'},
+        {top: '50px'},
+        {top: '55px'},
+        {top: '60px', width: '70px'},
+        {top: '70px', width: '90px'},
+        {top: '90px', width: '110px'}, // pacedB
+        {top: '100px'},
+        {top: '110px'},
+        {top: '120px', offset: 0.8}  //B
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var offsetPacedA = 0.2+(0.8-0.2)*3/14;
+    var offsetPacedB = 0.2+(0.8-0.2)*11/14;
+    var offsetWidth50px = offsetPacedA + (offsetPacedB-offsetPacedA)*20/80;
+    var offsetWidth70px = offsetPacedA + (offsetPacedB-offsetPacedA)*40/80;
+    var expectedFrames = expected(
+        {top: '0px', offset: 0.2}, // A
+        {top: '10px', computedOffset: 0.2+(0.8-0.2)*1/14},
+        {top: '20px', computedOffset: 0.2+(0.8-0.2)*2/14},
+        {top: '30px', width: '30px', computedOffset: offsetPacedA}, // pacedA
+        {top: '35px', computedOffset: offsetPacedA + (offsetWidth50px-offsetPacedA)*1/2},
+        {top: '30px', width: '50px', computedOffset: offsetWidth50px},
+        {top: '45px', computedOffset: offsetWidth50px + (offsetWidth70px-offsetWidth50px)*1/4},
+        {top: '50px', computedOffset: offsetWidth50px + (offsetWidth70px-offsetWidth50px)*2/4},
+        {top: '55px', computedOffset: offsetWidth50px + (offsetWidth70px-offsetWidth50px)*3/4},
+        {top: '30px', width: '70px', computedOffset: offsetWidth70px},
+        {top: '30px', width: '90px', computedOffset: offsetPacedA + (offsetPacedB-offsetPacedA)*60/80},
+        {top: '90px', width: '110px', computedOffset: offsetPacedB}, // pacedB
+        {top: '100px', computedOffset: 0.2+(0.8-0.2)*12/14},
+        {top: '110px', computedOffset: 0.2+(0.8-0.2)*13/14},
+        {top: '120px', offset: 0.8}  //B
+    );
+
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
+    });
+}, 'Test spacing keyframes sets computedOffset according to keyframe cumulative distance ' +
+    'in the range (paced A, paced B) for paceable keyframes. There are some ' +
+    'not paceable input keyframes everywhere');
+
+// test several ranges [A, B]
+test(function() {
+    var keyframes = [
+        {top: '10px'},
         {top: '20px'},
         {top: '30px', offset: 0.5},
         {top: '40px'},
         {top: '50px'},
         {top: '160px'},
-        {top: '170px'}];
-    var effectsToTest = createEffectsToTest(keyframes, 'paced');
-    var expected = computeOffset(keyframes, 'paced', 'top');
+        {top: '170px'}
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(top)');
+    var expectedFrames = computeOffset(expected(keyframes), 'paced', 'top');
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test spacing in \'paced\' mode when there are intermediate keyframes with ' +
-    'non-null offsets in the keyframes sequence');
+}, 'Test spacing keyframes in paced({ident}) mode with keyframe sequence containing ' +
+    'intermediate keyframe with non-null offset');
 
 test(function() {
-    var keyframes = [{top: '10px', offset: 0.3},
+    var keyframes = [
+        {top: '10px', offset: 0.3},
         {top: '20px'},
         {top: '30px', offset: 0.5},
         {top: '40px'},
@@ -223,20 +533,21 @@ test(function() {
         {top: '60px', offset: 0.7},
         {top: '70px'},
         {top: '180px'},
-        {top: '190px'}];
-    var effectsToTest = createEffectsToTest(keyframes, 'paced');
-    var expected = computeOffset(keyframes, 'paced', 'top');
+        {top: '190px'}
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(top)');
+    var expectedFrames = computeOffset(expected(keyframes), 'paced', 'top');
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test spacing in \'paced\' mode when there are intermediate keyframes with ' +
-    'non-null offsets including the first one in the keyframes sequence');
+}, 'Test spacing keyframes in paced({ident}) mode with keyframe sequence containing ' +
+    'intermediate keyframes with non-null offset including the first one in the sequence');
 
 test(function() {
-    var keyframes = [{top: '10px'},
+    var keyframes = [
+        {top: '10px', offset: 0.2},
         {top: '20px'},
         {top: '30px', offset: 0.5},
         {top: '40px'},
@@ -244,20 +555,22 @@ test(function() {
         {top: '60px', offset: 0.7},
         {top: '70px'},
         {top: '180px'},
-        {top: '190px', offset: 0.9}];
-    var effectsToTest = createEffectsToTest(keyframes, 'paced');
-    var expected = computeOffset(keyframes, 'paced', 'top');
+        {top: '190px', offset: 0.9}
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(top)');
+    var expectedFrames = computeOffset(expected(keyframes), 'paced', 'top');
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test spacing in \'paced\' mode when there are intermediate keyframes with ' +
-    'non-null offsets including the first and the last ones in the keyframes sequence');
+}, 'Test spacing keyframes in paced({ident}) mode with keyframe sequence containing ' +
+    'intermediate keyframes with non-null offsets including the first and ' +
+    'the last ones in the sequence');
 
 test(function() {
-    var keyframes = [{top: '10px'},
+    var keyframes = [
+        {top: '10px'},
         {top: '20px'},
         {top: '30px', offset: 0.5},
         {top: '40px'},
@@ -265,60 +578,21 @@ test(function() {
         {top: '60px', offset: 0.7},
         {top: '70px'},
         {top: '180px'},
-        {top: '190px', offset: 0.9}];
-    var effectsToTest = createEffectsToTest(keyframes, 'paced');
-    var expected = computeOffset(keyframes, 'paced', 'top');
+        {top: '190px', offset: 0.9}
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(top)');
+    var expectedFrames = computeOffset(expected(keyframes), 'paced', 'top');
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test spacing in \'paced\' mode when there are intermediate keyframes with ' +
-    'non-null offsets including the last one in the keyframes sequence');
+}, 'Test spacing keyframes in paced({ident}) mode with keyframe sequence containing ' +
+    'intermediate keyframes with non-null offsets including the last one in the sequence');
 
 test(function() {
-    var keyframes = [{width: '20px', top: '10px'},
-        {top: '20px'},
-        {top: '30px', offset: 0.5},
-        {top: '40px'},
-        {top: '50px', width: '100px', offset: 0.7},
-        {top: '160px', width: '200px'},
-        {top: '170px'}];
-    var effectsToTest = createEffectsToTest(keyframes, 'paced');
-    var expected = computeOffset(keyframes, 'paced', 'top');
-
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
-    });
-}, 'Test that the paced property to use is the first property specified ' +
-    'in the first keyframe in the list of keyframes associated with this ' +
-    'animation effect when sorting the CSS property names in ascending ' +
-    'order by Unicode codepoint');
-
-test(function() {
-    var keyframes = [{width: '20px', top: '10px'},
-        {top: '20px'},
-        {top: '30px', offset: 0.5},
-        {top: '40px'},
-        {top: '50px', width: '100px', offset: 0.7},
-        {top: '160px', width: '200px'},
-        {top: '170px'}];
-    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
-    var expected = computeOffset(keyframes, 'paced', 'width');
-
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
-    });
-}, 'Test that spacing in paced({ident}) mode uses the paced keyframe ' +
-    'spacing mode with the property name indicated by {ident} as the paced property');
-
-test(function() {
-    var keyframes = [{top: '10px', width: '20px'},
+    var keyframes = [
+        {top: '10px', width: '20px'},
         {top: '20px'},
         {top: '30px'},
         {top: '40px'},
@@ -339,208 +613,194 @@ test(function() {
         {top: '190px', width: '470px'},
         {top: '200px'},
         {top: '210px', width: '480px'},
-        {top: '220px'}];
-    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
-    var expected = computeOffset(keyframes, 'paced', 'width');
+        {top: '220px'}
+    ];
+    var effects = createEffectsToTest(keyframes, 'paced(width)');
+    var expectedFrames = computeOffset(expected(keyframes), 'paced', 'width');
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' + index +
+            ', keyframes do not match');
     });
-}, 'Test that spacing in paced({ident}) mode when there are different combinations of ' +
-    'paceble and not paceble keyframes');
+}, 'Test spacing keyframes in paced({ident}) mode with complex input keyframe sequence: ' +
+    'different combinations of paceble and not paceble keyframes');
 
+//Otherwise,
+// Apply the procedure for evenly distributing a keyframe to each keyframe
+// in the range (A, B) using A and B as the start and end keyframes respectively.
 test(function() {
-    var keyframes = [{top: '0px'}, // A
+    var keyframes = [
         {top: '10px'},
         {top: '20px'},
-        {top: '30px', width: '30px'}, // pacedA
-        {top: '40px'},
-        {top: '50px'},
-        {top: '60px', width: '50px'},
-        {top: '70px'},
-        {top: '80px'},
-        {top: '90px', width: '100px'}, // pacedB
-        {top: '100px'},
-        {top: '110px'},
-        {top: '120px'}]; //B
-    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
-    var expected = computeOffset(keyframes, 'paced', 'width');
+        {top: '50px'}
+    ];
+    var effects = createEffectsToTest(keyframes, 'distribute');
+    var expectedFrames = expected(
+        {top: '10px', computedOffset: 0},
+        {top: '20px', computedOffset: 0+(1.0-0)*1/2},
+        {top: '50px', computedOffset: 1.0}
+    );
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+   effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test that spacing in paced mode algorithm: there are frames between A, pacedA, pacedB ' +
-    'and B');
+}, 'Test procedure for evenly distributing a keyframe for a sequence ' +
+    'of keyframes with null offset');
 
 test(function() {
-    var keyframes = [{top: '0px'}, // A
-        {top: '10px', width: '30px'}, // pacedA
+    var keyframes = [
+        {top: '10px'},
         {top: '20px'},
-        {top: '30px'},
-        {top: '40px', width: '50px'},
+        {top: '30px', offset: 0.5},
+        {top: '40px'},
         {top: '50px'},
         {top: '60px'},
-        {top: '70px', width: '100px'}, // pacedB
-        {top: '80px'},
-        {top: '90px'},
-        {top: '100px'}]; //B
-    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
-    var expected = computeOffset(keyframes, 'paced', 'width');
-
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+        {top: '70px'}
+    ];
+    var effects = createEffectsToTest(keyframes, 'distribute');
+    var expectedFrames = expected(
+        {top: '10px', computedOffset: 0},
+        {top: '20px', computedOffset: 0+(0.5-0)*1/2},
+        {top: '30px', offset: 0.5},
+        {top: '40px', computedOffset: 0.5+(1.0-0.5)*1/4},
+        {top: '50px', computedOffset: 0.5+(1.0-0.5)*2/4},
+        {top: '60px', computedOffset: 0.5+(1.0-0.5)*3/4},
+        {top: '70px', computedOffset: 1.0}
+    );
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test that spacing in paced mode algorithm: no frames between A and pacedA');
+}, 'Test procedure for evenly distributing a keyframe for a sequence ' +
+    'of keyframes with null offset and intermediate keyframe with non null offset');
 
 test(function() {
-    var keyframes = [{top: '0px', width: '10px'}, // A, pacedA
-        {top: '10px'},
+    var keyframes = [
+        {top: '10px', offset: 0.3},
         {top: '20px'},
-        {top: '30px', width: '30px'},
+        {top: '30px', offset: 0.5},
         {top: '40px'},
         {top: '50px'},
-        {top: '60px', width: '50px'},
+        {top: '60px', offset: 0.7},
         {top: '70px'},
         {top: '80px'},
-        {top: '90px', width: '100px'}, // pacedB
-        {top: '100px'},
-        {top: '110px'},
-        {top: '120px'}]; //B
-    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
-    var expected = computeOffset(keyframes, 'paced', 'width');
+        {top: '90px'}
+    ];
+    var effects = createEffectsToTest(keyframes, 'distribute');
+    var expectedFrames = expected(
+        {top: '10px', offset: 0.3},
+        {top: '20px', computedOffset: 0.3+(0.5-0.3)*1/2},
+        {top: '30px', offset: 0.5},
+        {top: '40px', computedOffset: 0.5+(0.7-0.5)*1/3},
+        {top: '50px', computedOffset: 0.5+(0.7-0.5)*2/3},
+        {top: '60px', offset: 0.7},
+        {top: '70px', computedOffset: 0.7+(1.0-0.7)*1/3},
+        {top: '80px', computedOffset: 0.7+(1.0-0.7)*2/3},
+        {top: '90px', computedOffset: 1.0}
+    );
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test that spacing in paced mode algorithm: A == pacedA');
+}, 'Test procedure for evenly distributing a keyframe for a sequence ' +
+    'of keyframes with null offset and intermediate keyframes with non null offset ' +
+    'including the first one in the keyframes sequence');
 
 test(function() {
-    var keyframes = [{top: '0px'}, // A
-        {top: '10px'},
+    var keyframes = [
+        {top: '10px', offset: 0.3},
         {top: '20px'},
-        {top: '30px', width: '30px'}, // pacedA
-        {top: '40px', width: '100px'}, // pacedB
-        {top: '50px'},
-        {top: '60px'},
-        {top: '70px'}]; //B
-    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
-    var expected = computeOffset(keyframes, 'paced', 'width');
-
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
-    });
-}, 'Test that spacing in paced mode algorithm: there are no frames between pacedA and pacedB');
-
-test(function() {
-    var keyframes = [{top: '0px'}, // A
-        {top: '10px'},
-        {top: '20px'},
-        {top: '30px', width: '100px'},
+        {top: '30px', offset: 0.5},
         {top: '40px'},
         {top: '50px'},
-        {top: '60px'}]; //pacedA, pacedB, B
-    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
-    var expected = computeOffset(keyframes, 'paced', 'width');
-
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
-    });
-}, 'Test that spacing in paced mode algorithm: only one paceble frame ' +
-    'between A and B - spacing behavior degenerates to distribute spacing');
-
-test(function() {
-    var keyframes = [{top: '0px'}, // A
-        {top: '10px'},
-        {top: '20px'},
-        {top: '30px', width: '30px'}, // pacedA
-        {top: '40px'},
-        {top: '50px'},
-        {top: '60px', width: '50px'},
+        {top: '60px', offset: 0.7},
         {top: '70px'},
         {top: '80px'},
-        {top: '90px', width: '100px'}, // pacedB
-        {top: '100px'}]; //B
-    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
-    var expected = computeOffset(keyframes, 'paced', 'width');
-
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+        {top: '90px', offset: 0.9}
+    ];
+    var effects = createEffectsToTest(keyframes, 'distribute');
+    var expectedFrames = expected(
+        {top: '10px', offset: 0.3},
+        {top: '20px', computedOffset: 0.3+(0.5-0.3)*1/2},
+        {top: '30px', offset: 0.5},
+        {top: '40px', computedOffset: 0.5+(0.7-0.5)*1/3},
+        {top: '50px', computedOffset: 0.5+(0.7-0.5)*2/3},
+        {top: '60px', offset: 0.7},
+        {top: '70px', computedOffset: 0.7+(0.9-0.7)*1/3},
+        {top: '80px', computedOffset: 0.7+(0.9-0.7)*2/3},
+        {top: '90px', offset: 0.9}
+    );
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test that spacing in paced mode algorithm: there are no frames between pacedB and B');
+}, 'Test procedure for evenly distributing a keyframe for a sequence ' +
+    'of keyframes with null offset and intermediate keyframes with non null offset ' +
+    'including the first and the last ones in the keyframes sequence');
 
 test(function() {
-    var keyframes = [{top: '0px'}, // A
+    var keyframes = [
         {top: '10px'},
         {top: '20px'},
-        {top: '30px', width: '30px'}, // pacedA
+        {top: '30px', offset: 0.5},
         {top: '40px'},
         {top: '50px'},
-        {top: '60px', width: '50px'},
+        {top: '60px', offset: 0.7},
         {top: '70px'},
         {top: '80px'},
-        {top: '90px'},
-        {top: '100px', width: '100px'}]; //B, pacedB
-    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
-    var expected = computeOffset(keyframes, 'paced', 'width');
+        {top: '90px', offset: 0.9}
+    ];
+    var effects = createEffectsToTest(keyframes, 'distribute');
+    var expectedFrames = expected(
+        {top: '10px', computedOffset: 0},
+        {top: '20px', computedOffset: 0+(0.5-0.0)*1/2},
+        {top: '30px', offset: 0.5},
+        {top: '40px', computedOffset: 0.5+(0.7-0.5)*1/3},
+        {top: '50px', computedOffset: 0.5+(0.7-0.5)*2/3},
+        {top: '60px', offset: 0.7},
+        {top: '70px', computedOffset: 0.7+(0.9-0.7)*1/3},
+        {top: '80px', computedOffset: 0.7+(0.9-0.7)*2/3},
+        {top: '90px', offset: 0.9}
+    );
 
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+    effects.forEach(function(effect, index) {
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test that spacing in paced mode algorithm: pacedB == B');
+}, 'Test procedure for evenly distributing a keyframe for a sequence ' +
+    'of keyframes with null offset and intermediate keyframes with non null offset ' +
+    'including the last one in the keyframes sequence');
 
 test(function() {
-    var keyframes = [{top: '0px', width: '10px'}, // A, pacedA
+    var keyframes = [
+        {top: '0px'},
         {top: '10px'},
         {top: '20px'},
         {top: '30px'},
         {top: '40px'},
-        {top: '50px', width: '100px'}]; //B, pacedB
-    var effectsToTest = createEffectsToTest(keyframes, 'paced(width)');
-    var expected = computeOffset(keyframes, 'paced', 'width');
-
-    effectsToTest.forEach(function(effect, index) {
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
-    });
-}, 'Test that spacing in paced mode algorithm: pacedA == A and pacedB == B');
-
-
-test(function() {
-    var keyframes = [{top: '0px'},
-        {top: '10px'},
-        {top: '20px'},
-        {top: '30px'},
-        {top: '40px'},
-        {top: '100px'}];
-    var spacing = 'unsupportedValue';
-    var effectsToTest = createEffectsToTest(keyframes, spacing);
-    var expected = computeOffset(keyframes, spacing);
-
-    effectsToTest.forEach(function(effect, index) {
+        {top: '100px'}
+    ];
+    var spacing = 'super spacing mode';
+    var effects = createEffectsToTest(keyframes, spacing);
+    var expectedFrames = expected(
+        {top: '0px', computedOffset: 0},
+        {top: '10px', computedOffset: 0+(1.0-0)*1/5},
+        {top: '20px', computedOffset: 0+(1.0-0)*2/5},
+        {top: '30px', computedOffset: 0+(1.0-0)*3/5},
+        {top: '40px', computedOffset: 0+(1.0-0)*4/5},
+        {top: '100px', computedOffset: 1.0}
+    );
+    effects.forEach(function(effect, index) {
         assert_equals(effect.spacing, spacing,
             'Wrong value of KeyframeEffect.spacing attribute');
-        expected.forEach(function(keyframe, i) {
-            testKeyframe(effect.getFrames()[i], keyframe, 'Effect ' + index + ', frame ' + i);
-        });
+        assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Effect ' +
+            index + ', keyframes do not match');
     });
-}, 'Test that all other spacing values are treated as \'distribute\' for ' +
-    'the purpose of animation model calculations.');
+}, 'Test spacing keyframes applies the procedure for evenly distributing a keyframe ' +
+    'for any spacing mode, other than \'paced\'');
+
+// TODO change spacing mode and call getFrames() again
 </script>
 </body>
