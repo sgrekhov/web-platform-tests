@@ -196,7 +196,7 @@ function computeOffset(keyframes, spacing, pacedProperty) {
     }
     // Set computedOffset to offset. Further check computedOffset only
     keyframes.forEach(function(keyframe) {
-        // If computedOffset not null - don't toch it
+        // If computedOffset not null - don't touch it
         // (it could be calculated earlier in paced mode for example)
         if (!keyframe.computedOffset) {
             keyframe.computedOffset = keyframe.offset;
@@ -229,7 +229,7 @@ function computeOffset(keyframes, spacing, pacedProperty) {
                             pacedProperty);
                 } else {
                     // Treat all other vaues as 'distribute'
-                    eventlyDistributeKeyframes(keyframes, startFrame, endFrame);
+                    evenlyDistributeKeyframes(keyframes, startFrame, endFrame);
                 }
                 startFrame = i;
             } else {
@@ -240,7 +240,7 @@ function computeOffset(keyframes, spacing, pacedProperty) {
     return keyframes;
 }
 
-function eventlyDistributeKeyframes(keyframes, start, end) {
+function evenlyDistributeKeyframes(keyframes, start, end) {
     for (var i = start + 1; i < end; i++) {
         keyframes[i].computedOffset = keyframes[start].computedOffset
             + (keyframes[end].computedOffset - keyframes[start].computedOffset)
@@ -286,7 +286,7 @@ function distributeKeyframesPaced(keyframes, start, end, pacedProperty) {
             keyframesToDistributeEvently = keyframesToDistributeEvently
                     .concat(keyframes[end]);
         }
-        var distributed = eventlyDistributeKeyframes(
+        var distributed = evenlyDistributeKeyframes(
                 keyframesToDistributeEvently, 0,
                 keyframesToDistributeEvently.length - 1);
 
@@ -326,7 +326,7 @@ function distributeKeyframesPaced(keyframes, start, end, pacedProperty) {
     } else {
         // There's only one keyframe with paced property or none.
         // Spacing behavior degenerates to distribute spacing
-        eventlyDistributeKeyframes(keyframes, start, end);
+        evenlyDistributeKeyframes(keyframes, start, end);
     }
     return keyframes;
 }
@@ -494,11 +494,16 @@ AnimationEffect.prototype.clone = function() {
 
 // KeyframeEffect stub
 function KeyframeEffect(frames, options) {
-    this.spacing = null;
-    if (options && options.name){
+    if (options){
         this.name = options.name;
+        this.iterationComposite = options.iterationComposite;
+        this.composite = options.composite;
+        this.spacing = options.spacing;
     } else {
         this.name = '';
+        this.iterationComposite='replace';
+        this.composite = 'replace';
+        this.spacing = 'distribute';
     }
 }
 

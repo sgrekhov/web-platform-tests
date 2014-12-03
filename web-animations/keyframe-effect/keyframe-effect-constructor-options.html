@@ -11,7 +11,7 @@
 <body>
 <div id="log"></div>
 <script>
-// Tests below tests setting of KeyframeEffectOptions by the constructor and default
+// Tests below check setting of KeyframeEffectOptions by the constructor and default
 // values of appropriate properties if options were not set. More detailed tests
 // of appropriate options can be found in the following files:
 // animation-effect/animation-effect-composite.html
@@ -27,27 +27,29 @@ test(function() {
         'attribute value should be default');
     assert_equals(effect.composite, 'replace', 'KeyframeEffect.composite attribute value ' +
         'should be default');
-    assert_equals(effect.spacing, 'spacing', 'KeyframeEffect.spacing attribute value ' +
+    assert_equals(effect.spacing, 'distribute', 'KeyframeEffect.spacing attribute value ' +
         'should be default');
-}, 'Test that KeyframeEffect constructor without specifying of options creates ' +
-    'KeyframeEffect instance with default options values');
+}, 'Test KeyframeEffect constructor initialize KeyframeEffect attributes with ' +
+    'default values, if options are not provided');
 
 test(function() {
-    var effect = new KeyframeEffect({top: '10px'}, {
-        name: 'someName',
+    var options = {
+        name: 'Some Name',
         iterationComposite: 'accumulate',
         composite: 'add',
-        spacing: 'paced'});
+        spacing: 'paced(top)'
+    };
+    var effect = new KeyframeEffect({top: '10px'}, options);
 
-    assert_equals(effect.name, 'someName', 'KeyframeEffect.name attribute value should be ' +
+    assert_equals(effect.name, 'Some Name', 'KeyframeEffect.name attribute value should be ' +
         'set by the constructor');
     assert_equals(effect.iterationComposite, 'accumulate', 'KeyframeEffect.iterationComposite ' +
         'attribute value should be set by the constructor');
     assert_equals(effect.composite, 'add', 'KeyframeEffect.composite attribute value ' +
         'should be set by the constructor');
-    assert_equals(effect.spacing, 'paced', 'KeyframeEffect.spacing attribute value ' +
+    assert_equals(effect.spacing, 'paced(top)', 'KeyframeEffect.spacing attribute value ' +
         'should be set by the constructor');
-}, 'Test that KeyframeEffect constructor with options specified creates ' +
-    'KeyframeEffect instance with options values specified by the constructor');
+}, 'Test KeyframeEffect constructor initialize KeyframeEffect attributes with ' +
+    'values, specified in provided options dictionary');
 </script>
 </body>
