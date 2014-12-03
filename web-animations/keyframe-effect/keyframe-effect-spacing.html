@@ -39,15 +39,15 @@ function expected() {
     var result = [];
     for (var i = 0; i < arguments.length; i++){
         var a = arguments[i];
-        if (!Array.isArray(a)){
+        if (!Array.isArray(a)) {
             a = [a];
         }
         for (var k = 0; k < a.length; k++) {
             var keyframe = {offset: null, easing: 'linear', composite: null};
-            for (var propertyName in a[k]){
+            for (var propertyName in a[k]) {
                 keyframe[propertyName] = a[k][propertyName];
             }
-            if (keyframe.offset !== null){
+            if (keyframe.offset !== null) {
                 keyframe.computedOffset = keyframe.offset;
             }
             result.push(keyframe);
