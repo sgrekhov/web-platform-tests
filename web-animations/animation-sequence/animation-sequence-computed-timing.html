@@ -164,9 +164,9 @@ test(function() {
     var timing = {fill: 'auto'};
     var node = new AnimationSequence([], timing);
 
-    assert_equals(node.computedTiming.fill, 'both',
-        'AnimationSequence.computedTiming.fill should return \'both\'');
-}, 'Test AnimationSequence.computedTiming.fill returns \'both\' ' +
+    assert_equals(node.computedTiming.fill, 'auto',
+        'AnimationSequence.computedTiming.fill should return \'auto\'');
+}, 'Test AnimationSequence.computedTiming.fill returns \'auto\' ' +
     'if sequence timing.fill value is \'auto\'');
 </script>
 </body>
