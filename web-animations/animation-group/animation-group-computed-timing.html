@@ -136,9 +136,9 @@ test(function() {
     var timing = {fill: 'auto'};
     var node = new AnimationGroup([], timing);
 
-    assert_equals(node.computedTiming.fill, 'both',
-        'AnimationGroup.computedTiming.fill should return \'both\'');
-}, 'Test AnimationGroup.computedTiming.fill returns \'both\' ' +
+    assert_equals(node.computedTiming.fill, 'auto',
+        'AnimationGroup.computedTiming.fill should return \'auto\'');
+}, 'Test AnimationGroup.computedTiming.fill returns \'auto\' ' +
     'if group timing.fill value is \'auto\'');
 </script>
 </body>

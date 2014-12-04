@@ -34,10 +34,9 @@ test(function() {
     var timing = {fill: 'auto'};
     var node = new Animation(createDiv(this), [], timing);
 
-    assert_equals(node.computedTiming.fill, 'none',
-        'AnimationNode.computedTiming.fill should return \'none\'');
-
-}, 'Test Animation.computedTiming.fill returns \'none\' for nodes ' +
+    assert_equals(node.computedTiming.fill, 'auto',
+        'AnimationNode.computedTiming.fill should return \'auto\'');
+}, 'Test Animation.computedTiming.fill returns \'auto\' for nodes ' +
     'with timing.fill equal to \'auto\'');
 </script>
 </body>
