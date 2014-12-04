@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationTiming fill attribute test</title>
+<meta name="assert" content="The fill mode as specified by one of the FillMode enumeration values">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationtiming-fill">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+function createAnimationsToTest(test, timing) {
+    var animation1 = new Animation(createDiv(test), KEYFRAMES, timing);
+    var animation2 = new Animation(createDiv(test), KEYFRAMES, timing);
+    var animation3 = new Animation(createDiv(test), KEYFRAMES, timing);
+    var animationGroup = new AnimationGroup([animation2], timing);
+    var animationSequence = new AnimationSequence([animation3], timing);
+    return [animation1, animation2, animation3];
+}
+
+async_test(function(t) {
+    var timing = {
+        fill: 'none',
+        duration: ANIMATION_END_TIME
+    };
+    var animations = createAnimationsToTest(t, timing);
+    animations.forEach(function(animation, index) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = -10;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+                'Animation ' + type(node) + ' should not be running in before phase');
+            player.currentTime = 100;
+            assert_approx_equals(window.getComputedStyle(animation.target).top, getExpectedTop(100),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be running');
+            player.currentTime = ANIMATION_END_TIME + 10;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+                'Animation ' + type(node) + ' should not be running in after phase');
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that setting AnimationTiming.fill to \'none\' removes animation effects in before and ' +
+    'after phases');
+
+async_test(function(t) {
+    var timing = {
+        fill: 'forwards',
+        duration: ANIMATION_END_TIME
+    };
+    var animations = createAnimationsToTest(t, timing);
+    animations.forEach(function(animation, index) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = -10;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+                'Animation ' + type(node) + ' should not be running in before phase');
+            player.currentTime = 100;
+            assert_approx_equals(window.getComputedStyle(animation.target).top, getExpectedTop(100),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be running');
+            player.currentTime = ANIMATION_END_TIME + 10;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                'Animation ' + type(node) + ' should hung on end in after phase');
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that setting AnimationTiming.fill to \'forwards\' removes animation effects in before phase ' +
+    'and animation hungs on end');
+
+async_test(function(t) {
+    var timing = {
+        fill: 'backwards',
+        duration: ANIMATION_END_TIME
+    };
+    var animations = createAnimationsToTest(t, timing);
+    animations.forEach(function(animation, index) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = -10;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0,
+                'Animation ' + type(node) + ' should be on 0 time');
+            player.currentTime = 100;
+            assert_approx_equals(window.getComputedStyle(animation.target).top, getExpectedTop(100),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be running');
+            player.currentTime = ANIMATION_END_TIME + 10;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+                'Animation ' + type(node) + ' effect should be removed');
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that setting AnimationTiming.fill to \'backwards\' removes animation effects in after phase ' +
+    'and animation hungs on 0 in before phase');
+
+async_test(function(t) {
+    var timing = {
+        fill: 'both',
+        duration: ANIMATION_END_TIME
+    };
+    var animations = createAnimationsToTest(t, timing);
+    animations.forEach(function(animation, index) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = -10;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0,
+                'Animation ' + type(node) + ' effect should be on 0 time');
+            player.currentTime = 100;
+            assert_approx_equals(window.getComputedStyle(animation.target).top, getExpectedTop(100),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be running');
+            player.currentTime = ANIMATION_END_TIME + 10;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                'Animation ' + type(node) + ' effect should be on end time');
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that setting AnimationTiming.fill to \'both\' hungs animation effects on zero and ' +
+    'end time in before and after phases');
+
+async_test(function(t) {
+    var target = createDiv(t);
+    var animation = new Animation(target, KEYFRAMES, ANIMATION_END_TIME);
+    var player = document.timeline.play(animation);
+
+    assert_equals(animation.computedTiming.fill, 'auto',
+        'AnimationNode.computedTiming.fill should return \'auto\'');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -10;
+        assert_equals(window.getComputedStyle(target), ANIMATION_TOP_DEFAULT,
+            'Animation effect should not be in effect in before phase');
+        player.currentTime = 100;
+        assert_approx_equals(window.getComputedStyle(target).top, getExpectedTop(100),
+            COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be running');
+        player.currentTime = ANIMATION_END_TIME + 10;
+        assert_equals(window.getComputedStyle(target), ANIMATION_TOP_DEFAULT,
+            'Animation effect should not be in effect in after phase');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that default fill value of the Animation is \'auto\' and ' +
+    'it is treated as \'none\' for animation purposes');
+</script>
+</body>
