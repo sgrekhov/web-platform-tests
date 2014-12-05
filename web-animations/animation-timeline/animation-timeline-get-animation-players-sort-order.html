@@ -4,6 +4,7 @@
 <meta name="assert" content="The list returned by AnimationTimeline.getAnimationPlayers() is sorted in increasing order by player sequence number">
 <link rel="help" href="http://w3c.github.io/web-animations/#dom-animationtimeline-getanimationplayers">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -21,8 +22,8 @@ test(function() {
     assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
         'should be ordered by player sequence number');
-}, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-    'is ordered by player sequence number');
+}, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
+    'ordered by player sequence number');
 
 test(function() {
     var doc = newHTMLDocument();
@@ -34,8 +35,8 @@ test(function() {
     assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
         'should be ordered by player sequence number');
-}, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-    'is ordered by player sequence number. Players created by AnimationPlayer constructor');
+}, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
+    'ordered by player sequence number. Players are created by AnimationPlayer constructor');
 
 test(function() {
     var doc1 = newHTMLDocument();
@@ -52,8 +53,26 @@ test(function() {
     assert_array_equals(doc2.timeline.getAnimationPlayers(), [player3, player4],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
         'should be ordered by player sequence number');
-}, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-    'of different timelines is ordered by player sequence number');
+}, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
+    'ordered by player sequence number. Check different timelines');
+
+test(function() {
+    var doc = newHTMLDocument();
+    var player1 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
+    var player4 = new AnimationPlayer(newAnimation(createDiv(this, doc)), document.timeline);
+    var player2 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
+    var player3 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
+
+    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
+        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+        'should be ordered by player sequence number');
+    player4.timeline = doc.timeline;
+    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player4, player2, player3],
+        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+        'should be ordered by player sequence number');
+}, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
+    'ordered by player sequence number. Players, associated via assigning ' +
+    'timeline attribute, also included in the list');
 
 test(function() {
     var doc1 = newHTMLDocument();
@@ -78,9 +97,9 @@ test(function() {
     assert_array_equals(doc2.timeline.getAnimationPlayers(), [player4],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
         'should be ordered by player sequence number');
-}, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-    'of different timelines is ordered by player sequence number. Players are created by ' +
-    'AnimationPlayer constructor');
+}, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
+    'ordered by player sequence number. Newly associated players are also ' +
+    'included into the list');
 
 test(function() {
     var doc = newHTMLDocument();
@@ -95,8 +114,7 @@ test(function() {
     assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player3],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
         'should be ordered by player sequence number');
-}, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-    'is ordered by player sequence number and if player is disassociated with the timeline ' +
-    'it is removed from the sequence');
+}, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
+    'ordered by player sequence number. Disassociated players are not included in the list');
 </script>
 </body>

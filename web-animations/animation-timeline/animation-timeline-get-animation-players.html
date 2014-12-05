@@ -17,8 +17,8 @@ test(function() {
     assert_true(players === null || players.length === 0,
         'AnimationTimeline.getAnimationPlayers() method should return either null ' +
         'or empty set if there are no players');
-}, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-    'if there are no players associated');
+}, 'Test AnimationTimeline.getAnimationPlayers() returns null or empty sequence, ' +
+    'if there are no players associated with timeline');
 
 test(function() {
     var doc = newHTMLDocument();
@@ -26,11 +26,11 @@ test(function() {
 
     assert_not_equals(doc.timeline.getAnimationPlayers(), null,
         'AnimationTimeline.getAnimationPlayers() method should not return null');
-    assert_equals(doc.timeline.getAnimationPlayers(), [player],
+    assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
         'should contain one element');
-}, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-    'if there is one associated player');
+}, 'Test AnimationTimeline.getAnimationPlayers() returns sequence of single player, ' +
+    'if there is only one associated player');
 
 test(function() {
     var doc = newHTMLDocument();
@@ -40,7 +40,7 @@ test(function() {
     assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
         'should contain two elements');
-}, 'Test set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+}, 'Test AnimationTimeline.getAnimationPlayers() returns sequence of players, ' +
     'if there are several associated players');
 
 test(function() {
@@ -48,7 +48,6 @@ test(function() {
     var player1 = doc.timeline.play(newAnimation(createDiv(this, doc)));
     var player2 = doc.timeline.play(newAnimation(createDiv(this, doc)));
     var player3 = doc.timeline.play(null);
-    var players = doc.timeline.getAnimationPlayers();
 
     assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
