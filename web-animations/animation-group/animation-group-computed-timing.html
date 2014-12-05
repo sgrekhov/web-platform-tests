@@ -131,14 +131,5 @@ test(function() {
 }, 'Test AnimationGroup.computedTiming.duration returns intrinsic ' +
     'iteration duration, which is max(0, maximum end time of children) ' +
     'for group with children with negative end time and group timing.duration value is unsupported');
-
-test(function() {
-    var timing = {fill: 'auto'};
-    var node = new AnimationGroup([], timing);
-
-    assert_equals(node.computedTiming.fill, 'auto',
-        'AnimationGroup.computedTiming.fill should return \'auto\'');
-}, 'Test AnimationGroup.computedTiming.fill returns \'auto\' ' +
-    'if group timing.fill value is \'auto\'');
 </script>
 </body>

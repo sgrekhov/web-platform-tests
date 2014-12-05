@@ -29,14 +29,5 @@ test(function() {
         'Animation.computedTiming.duration should return zero');
 }, 'Test Animation.computedTiming.duration returns intrinsic iteration duration (zero) ' +
     'for nodes with timing.duration value \'auto\'');
-
-test(function() {
-    var timing = {fill: 'auto'};
-    var node = new Animation(createDiv(this), [], timing);
-
-    assert_equals(node.computedTiming.fill, 'auto',
-        'AnimationNode.computedTiming.fill should return \'auto\'');
-}, 'Test Animation.computedTiming.fill returns \'auto\' for nodes ' +
-    'with timing.fill equal to \'auto\'');
 </script>
 </body>

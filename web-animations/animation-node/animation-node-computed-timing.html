@@ -24,6 +24,8 @@ test(function() {
             type(node) + '.computedTiming.delay should be 0');
         assert_equals(node.computedTiming.endDelay, 0, 'Default value of ' +
             type(node) + '.computedTiming.endDelay should be 0');
+        assert_equals(node.computedTiming.fill, 'auto', 'Default value of ' +
+            type(node) + '.computedTiming.fill should be \'auto\'');
         assert_equals(node.computedTiming.iterationStart, 0, 'Default value of ' +
             type(node) + '.computedTiming.iterationStart should be 0.0');
         assert_equals(node.computedTiming.iterations, 1, 'Default value of ' +
@@ -125,6 +127,8 @@ test(function() {
             type(node) + '.computedTiming.delay should be 0');
         assert_equals(node.computedTiming.endDelay, 0, 'Default value of ' +
             type(node) + '.computedTiming.endDelay should be 0');
+        assert_equals(node.computedTiming.fill, 'auto', 'Default value of ' +
+            type(node) + '.computedTiming.fill should be \'auto\'');
         assert_equals(node.computedTiming.iterationStart, 0, 'Default value of ' +
             type(node) + '.computedTiming.iterationStart should be 0.0');
         assert_equals(node.computedTiming.iterations, 1, 'Default value of ' +
