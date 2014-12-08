@@ -59,15 +59,15 @@ test(function() {
 test(function() {
     var doc = newHTMLDocument();
     var player1 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
-    var player4 = new AnimationPlayer(newAnimation(createDiv(this, doc)), document.timeline);
-    var player2 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
+    var player2 = new AnimationPlayer(newAnimation(createDiv(this, doc)), document.timeline);
     var player3 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
+    var player4 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
 
-    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
+    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player3, player4],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
         'should be ordered by player sequence number');
-    player4.timeline = doc.timeline;
-    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player4, player2, player3],
+    player2.timeline = doc.timeline;
+    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3, player4],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
         'should be ordered by player sequence number');
 }, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
