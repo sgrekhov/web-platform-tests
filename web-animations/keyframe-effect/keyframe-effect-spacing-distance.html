@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Tests for specific procedures for distance computation</title>
+<meta name="assert" content="distance computation — given two target property values Vstart and Vend, calculates some notion of scalar distance between the values, distance.">
+<link rel="help" href="http://w3c.github.io/web-animations/#paced-keyframe-spacing-mode">
+<link rel="help" href="http://w3c.github.io/web-animations/#distance-computation">
+<link rel="help" href="http://w3c.github.io/web-animations/#specific-animation-behaviors">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+// produces expected keyframe sequence from given single input keyframe
+// or input sequence of keyframes
+function expected() {
+    var result = [];
+    for (var i = 0; i < arguments.length; i++){
+        var a = arguments[i];
+        if (!Array.isArray(a)) {
+            a = [a];
+        }
+        for (var k = 0; k < a.length; k++) {
+            var keyframe = {offset: null, easing: 'linear', composite: null};
+            for (var propertyName in a[k]) {
+                keyframe[propertyName] = a[k][propertyName];
+            }
+            if (keyframe.offset !== null) {
+                keyframe.computedOffset = keyframe.offset;
+            }
+            result.push(keyframe);
+        }
+    }
+    return result;
+}
+
+// For animation behaviors that do not define a specific procedure for distance
+// computation or which are defined as not paceable, the distance computation
+// procedure is simply distance = 1.
+// Animatable as string
+test(function(){
+     var keyframes = [
+        {content: 'one'},
+        {content: 'two'},
+        {content: 'three'},
+        {content: 'four'}
+     ];
+    var effect = new KeyframeEffect(keyframes, 'paced(content)');
+    var expectedFrames = expected(
+        {content: 'one', computedOffset: 0},
+        {content: 'two', computedOffset: 0+(1.0-0)*1/1},
+        {content: 'three', computedOffset: 0+(1.0-0)*1/1},
+        {content: 'four', computedOffset: 1.0}
+    );
+    assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Spacing procedure ' +
+        'should consider distance = 1 for animatable as string target property');
+
+}, 'Test distance = 1 for animatable as string target property');
+
+// Animatable as real number
+// distance computation: distance = |Vend - Vstart|
+test(function(){
+     var keyframes = [
+        {order: 0},
+        {order: 10},
+        {order: 100},
+        {order: 1000}
+     ];
+    var effect = new KeyframeEffect(keyframes, 'paced(order)');
+    var expectedFrames = expected(
+        {order: 0, computedOffset: 0},
+        {order: 10, computedOffset: 0+(1.0-0)*10/1000},
+        {order: 100, computedOffset: 0+(1.0-0)*100/1000},
+        {order: 1000, computedOffset: 1.0}
+    );
+    assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Spacing procedure ' +
+        'should consider distance = |Vend - Vstart| for animatable as real number ' +
+        'target property');
+
+}, 'Test distance = |Vend - Vstart| for animatable as real number target property');
+
+// Animatable as length, percentage, or calc
+// distance computation: as with animatable as real number but using the used
+// value [CSS21] for Vstart and Vend.
+test(function() {
+    var keyframes = [
+        {top: '10px'},
+        {top: '20px'},
+        {top: '50px'}
+    ];
+    var effect = new KeyframeEffect(keyframes, 'paced(top)');
+    var expectedFrames = expected(
+        {top: '10px', computedOffset: 0},
+        {top: '20px', computedOffset: 0+(1.0-0)*10/40},
+        {top: '50px', computedOffset: 1.0}
+    );
+
+    assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Spacing procedure ' +
+        'should consider distance = |Vend - Vstart| for animatable as length ' +
+        'target property');
+}, 'Test distance = |Vend - Vstart| for animatable as length target property');
+
+// TODO resolve issue with animatable as percentage target property
+
+// Animatable as color
+// distance computation:
+// distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + (Bend - Bstart)^2 + (Aend - Astart)^2)
+// where <R|G|B|Astart|end> represents the red, green, blue, or alpha channel
+// of Vstart or Vend respectively. Each value is normalized to the [0.0, 1.0]
+// range and expressed in premultiplied color space.
+test(function(){
+     var keyframes = [
+        {color: 'AliceBlue'}, // RGB: 240,248,255
+        {color: 'Aqua'},      // RGB: 0,255,255 distance = sqrt(57649)
+        {color: 'Blue'},      // RGB: 0,0,255 distance = sqrt(119104)
+        {color: 'DarkBlue'}   // RGB: 0,0,139 distance = sqrt(132560)
+     ];
+    var effect = new KeyframeEffect(keyframes, 'paced(color)');
+    var expectedFrames = expected(
+        {color: 0, computedOffset: 0},
+        {color: 10, computedOffset: 0+(1.0-0)*Math.sqrt(57649)/Math.sqrt(132560)},
+        {color: 100, computedOffset: 0+(1.0-0)*Math.sqrt(119104)/Math.sqrt(132560)},
+        {color: 1000, computedOffset: 1.0}
+    );
+    assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Spacing procedure ' +
+        'should consider distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + ' +
+        '(Bend - Bstart)^2 + (Aend - Astart)^2) for animatable as color ' +
+        'target property');
+}, 'Test distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + (Bend - Bstart)^2 + (Aend - Astart)^2) ' +
+    'for animatable as color target property. Color values are predefined color names');
+
+// TODO add more tests for color values like rgb(0,1,2), #FF00AA, rgba(255,0,0,0.3) hsl(120,100%,50%) hsla(120,100%,50%,0.3)
+</script>
+</body>
