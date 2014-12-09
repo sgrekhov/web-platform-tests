@@ -187,6 +187,10 @@ async_test(function(t) {
     var animationGroup = new AnimationGroup([animation1, animation2], {delay: 50, duration: ANIMATION_END_TIME});
     var player = document.timeline.play(animationGroup);
 
+    assert_equals(animation1.computedTiming.fill, 'auto',
+        'animation1.computedTiming.fill should return \'auto\'');
+    assert_equals(animation2.computedTiming.fill, 'auto',
+        'animation2.computedTiming.fill should return \'auto\'');
     assert_equals(animationGroup.computedTiming.fill, 'auto',
         'AnimationNode.computedTiming.fill should return \'auto\'');
 
@@ -197,28 +201,33 @@ async_test(function(t) {
             'Animation1 should be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 10;
         // animationGroup active time should still be 0 because of start delay
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
             'Animation1 should be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 80;
         // animation1 should in active phase, animation2 still not in effect because of start delay
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 150;
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
         assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
             COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
         player.currentTime = ANIMATION_END_TIME + 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
             'Animation1 should be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(ANIMATION_END_TIME - 40),
             COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect in after phase');
+
         player.currentTime = ANIMATION_END_TIME + 200;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
             'Animation1 should be in effect in after phase');
@@ -237,6 +246,10 @@ async_test(function(t) {
         {delay: 50, duration: 2 * ANIMATION_END_TIME});
     var player = document.timeline.play(animationSequence);
 
+    assert_equals(animation1.computedTiming.fill, 'auto',
+        'animation1.computedTiming.fill should return \'auto\'');
+    assert_equals(animation2.computedTiming.fill, 'auto',
+        'animation2.computedTiming.fill should return \'auto\'');
     assert_equals(animationSequence.computedTiming.fill, 'auto',
         'AnimationNode.computedTiming.fill should return \'auto\'');
 
@@ -246,31 +259,37 @@ async_test(function(t) {
             'Animation1 should be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
             'Animation1 should be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 still should not be in effect in before phase');
+
         player.currentTime = 100;
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(50),
             COMPUTED_STYLE_EPSILON, 'Animation should be in effect in active phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 still should not be in effect in sequence active phase');
+
         player.currentTime = ANIMATION_END_TIME + 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
             'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 still should not be in effect in sequence active phase');
+
         player.currentTime = ANIMATION_END_TIME + 100;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
             'Animation1 should not be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
             COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
         player.currentTime = 2 * ANIMATION_END_TIME + 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
             'Animation1 should not be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(ANIMATION_END_TIME - 50),
             COMPUTED_STYLE_EPSILON, 'Animation2 should be clipped and hold');
+
         player.currentTime = 2 * ANIMATION_END_TIME + 100;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
             'Animation1 should not be in effect in after phase');
@@ -291,11 +310,11 @@ async_test(function(t) {
     var animationGroup = new AnimationGroup([animation1, animation2], {fill: 'none', delay: 50});
     var player = document.timeline.play(animationGroup);
 
-    assert_equals(animationGroup.computedTiming.fill, 'none',
-        'AnimationNode.computedTiming.fill should return \'none\'');
     assert_equals(animation1.computedTiming.fill, 'none',
         'AnimationNode.computedTiming.fill should return \'none\'');
     assert_equals(animation2.computedTiming.fill, 'none',
+        'AnimationNode.computedTiming.fill should return \'none\'');
+    assert_equals(animationGroup.computedTiming.fill, 'none',
         'AnimationNode.computedTiming.fill should return \'none\'');
 
     player.ready.then(t.step_func(function() {
@@ -304,33 +323,38 @@ async_test(function(t) {
             'Animation1 should not be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in before phase');
+            'Animation1 should not be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 80;
         // animation1 should in active phase, animation2 still not in effect because of start delay
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 150;
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
         assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
             COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
         player.currentTime = ANIMATION_END_TIME / 2 + 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in after phase');
+            'Animation1 should not be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+
         player.currentTime = ANIMATION_END_TIME + 100;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in after phase');
+            'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
-            'Animation2 should be in effect in after phase');
+            'Animation2 should not be in effect in after phase');
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'none\' for both animations and the group. Test that animation is in ' +
@@ -348,12 +372,12 @@ async_test(function(t) {
         {fill: 'none', delay: 50, duration: 2 * ANIMATION_END_TIME});
     var player = document.timeline.play(animationGroup);
 
-    assert_equals(animationGroup.computedTiming.fill, 'none',
-        'AnimationNode.computedTiming.fill should return \'none\'');
     assert_equals(animation1.computedTiming.fill, 'forwards',
         'AnimationNode.computedTiming.fill should return \'forwards\'');
     assert_equals(animation2.computedTiming.fill, 'forwards',
         'AnimationNode.computedTiming.fill should return \'forwards\'');
+    assert_equals(animationGroup.computedTiming.fill, 'none',
+        'AnimationNode.computedTiming.fill should return \'none\'');
 
     player.ready.then(t.step_func(function() {
         player.currentTime = -10;
@@ -361,39 +385,45 @@ async_test(function(t) {
             'Animation1 should not be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in before phase');
+            'Animation1 should not be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 80;
         // animation1 should in active phase, animation2 still not in effect because of start delay
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 150;
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
         assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
             COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
         player.currentTime = ANIMATION_END_TIME / 2 + 10;
-        // Animation1 should hang on end
+        // Animation1 should hung on end
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
             'Animation1 should be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+
         player.currentTime = ANIMATION_END_TIME + 100;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
             'Animation1 should be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_1,
             'Animation2 should be in effect in after phase');
+
         player.currentTime = 2 * ANIMATION_END_TIME + 100;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in after phase');
+            'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
-            'Animation2 should be in effect in after phase');
+            'Animation2 should not be in effect in after phase');
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'forwards\' for animations and \'none\ for the group. Test that animation is in ' +
@@ -411,12 +441,12 @@ async_test(function(t) {
         {fill: 'none', delay: 50, duration: 2 * ANIMATION_END_TIME});
     var player = document.timeline.play(animationGroup);
 
-    assert_equals(animationGroup.computedTiming.fill, 'none',
-        'AnimationNode.computedTiming.fill should return \'none\'');
     assert_equals(animation1.computedTiming.fill, 'backwards',
         'AnimationNode.computedTiming.fill should return \'backwards\'');
     assert_equals(animation2.computedTiming.fill, 'backwards',
         'AnimationNode.computedTiming.fill should return \'backwards\'');
+    assert_equals(animationGroup.computedTiming.fill, 'none',
+        'AnimationNode.computedTiming.fill should return \'none\'');
 
     player.ready.then(t.step_func(function() {
         player.currentTime = -10;
@@ -424,37 +454,43 @@ async_test(function(t) {
             'Animation1 should not be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in before phase');
+            'Animation1 should not be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 80;
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
             'Animation2 should be in effect in before phase');
+
         player.currentTime = 150;
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
         assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
             COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
         player.currentTime = ANIMATION_END_TIME / 2 + 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in after phase');
+            'Animation1 should not be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+
         player.currentTime = ANIMATION_END_TIME + 100;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in after phase');
+            'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
-            'Animation2 should be in effect in after phase');
+            'Animation2 should not be in effect in after phase');
+
         player.currentTime = 2 * ANIMATION_END_TIME + 100;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in after phase');
+            'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
-            'Animation2 should be in effect in after phase');
+            'Animation2 should not be in effect in after phase');
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'backwards\' for animations and \'none\ for the group. Test that animation is in ' +
@@ -472,12 +508,12 @@ async_test(function(t) {
         {fill: 'none', delay: 50, duration: 2 * ANIMATION_END_TIME});
     var player = document.timeline.play(animationGroup);
 
-    assert_equals(animationGroup.computedTiming.fill, 'none',
-        'AnimationNode.computedTiming.fill should return \'none\'');
     assert_equals(animation1.computedTiming.fill, 'both',
         'AnimationNode.computedTiming.fill should return \'both\'');
     assert_equals(animation2.computedTiming.fill, 'both',
         'AnimationNode.computedTiming.fill should return \'both\'');
+    assert_equals(animationGroup.computedTiming.fill, 'none',
+        'AnimationNode.computedTiming.fill should return \'none\'');
 
     player.ready.then(t.step_func(function() {
         player.currentTime = -10;
@@ -485,37 +521,43 @@ async_test(function(t) {
             'Animation1 should not be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
-        player.currentTime = 10;
+
+        player.currentTime = 10; // animation group start delay
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in before phase');
+            'Animation1 should not be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
-        player.currentTime = 80;
+
+        player.currentTime = 80; // animation2 atart delay
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
             'Animation2 should be in effect in before phase');
+
         player.currentTime = 150;
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
         assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
             COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
         player.currentTime = ANIMATION_END_TIME / 2 + 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
             'Animation1 should be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+
         player.currentTime = ANIMATION_END_TIME + 100;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
             'Animation1 should be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_1,
             'Animation2 should be in effect in after phase');
+
         player.currentTime = 2 * ANIMATION_END_TIME + 100;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in after phase');
+            'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
-            'Animation2 should be in effect in after phase');
+            'Animation2 should not be in effect in after phase');
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'both\' for animations and \'none\ for the group. Test that animation is in ' +
@@ -533,12 +575,12 @@ async_test(function(t) {
         {fill: 'forwards', delay: 50, duration: ANIMATION_END_TIME});
     var player = document.timeline.play(animationGroup);
 
-    assert_equals(animationGroup.computedTiming.fill, 'forwards',
-        'AnimationNode.computedTiming.fill should return \'forwards\'');
     assert_equals(animation1.computedTiming.fill, 'none',
         'AnimationNode.computedTiming.fill should return \'none\'');
     assert_equals(animation2.computedTiming.fill, 'none',
         'AnimationNode.computedTiming.fill should return \'none\'');
+    assert_equals(animationGroup.computedTiming.fill, 'forwards',
+        'AnimationNode.computedTiming.fill should return \'forwards\'');
 
     player.ready.then(t.step_func(function() {
         player.currentTime = -10;
@@ -546,42 +588,754 @@ async_test(function(t) {
             'Animation1 should not be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in before phase');
+            'Animation1 should not be in effect in before phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in before phase');
+
         player.currentTime = 80;
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
-        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
-            'Animation2 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
         player.currentTime = 150;
         assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
             COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
         assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
             COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
         player.currentTime = ANIMATION_END_TIME / 2 + 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in after phase');
+            'Animation1 should not be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+
         player.currentTime = ANIMATION_END_TIME + 10;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in after phase');
+            'Animation1 should not be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top,
-            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+
         player.currentTime = 2 * ANIMATION_END_TIME + 100;
         assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
-            'Animation1 should be in effect in after phase');
+            'Animation1 should not be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top,
-            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'none\' for animations and \'forwards\ for the group. Test that animation is in ' +
     'effect in active and after phases');
+
+async_test(function(t) {
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+
+    var animation1 = new Animation(target1, KEYFRAMES,
+        {fill: 'forwards', duration: ANIMATION_END_TIME / 2});
+    var animation2 = new Animation(target2, KEYFRAMES,
+        {fill: 'forwards', delay: 50, duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+        {fill: 'forwards', delay: 50, duration: ANIMATION_END_TIME});
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.fill, 'forwards',
+        'AnimationNode.computedTiming.fill should return \'forwards\'');
+    assert_equals(animation2.computedTiming.fill, 'forwards',
+        'AnimationNode.computedTiming.fill should return \'forwards\'');
+    assert_equals(animationGroup.computedTiming.fill, 'forwards',
+        'AnimationNode.computedTiming.fill should return \'forwards\'');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 10; // animation group start delay
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 80; // animation2 start delay
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 150;
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME / 2 + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Animation group containing two animations, short and long one. Fill mode is ' +
+    '\'forwards\' for animations and \'forwards\ for the group. Test that animation is in ' +
+    'effect in active and after phases');
+
+async_test(function(t) {
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+
+    var animation1 = new Animation(target1, KEYFRAMES,
+        {fill: 'backwards', duration: ANIMATION_END_TIME / 2});
+    var animation2 = new Animation(target2, KEYFRAMES,
+        {fill: 'backwards', delay: 50, duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+        {fill: 'forwards', delay: 50, duration: ANIMATION_END_TIME});
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.fill, 'backwards',
+        'AnimationNode.computedTiming.fill should return \'backwards\'');
+    assert_equals(animation2.computedTiming.fill, 'backwards',
+        'AnimationNode.computedTiming.fill should return \'backwards\'');
+    assert_equals(animationGroup.computedTiming.fill, 'forwards',
+        'AnimationNode.computedTiming.fill should return \'forwards\'');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 10; // animation group start delay
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 80; // animation2 start delay
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 150;
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME / 2 + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Animation group containing two animations, short and long one. Fill mode is ' +
+    '\'backwards\' for animations and \'forwards\ for the group. Test that animation is in ' +
+    'effect in active and after phases');
+
+async_test(function(t) {
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+
+    var animation1 = new Animation(target1, KEYFRAMES,
+        {fill: 'both', duration: ANIMATION_END_TIME / 2});
+    var animation2 = new Animation(target2, KEYFRAMES,
+        {fill: 'both', delay: 50, duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+        {fill: 'forwards', delay: 50, duration: ANIMATION_END_TIME});
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
+    assert_equals(animation2.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
+    assert_equals(animationGroup.computedTiming.fill, 'forwards',
+        'AnimationNode.computedTiming.fill should return \'forwards\'');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 10; // animation group start delay
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 80; // animation2 start delay
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 150;
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME / 2 + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Animation group containing two animations, short and long one. Fill mode is ' +
+    '\'both\' for animations and \'forwards\ for the group. Test that animation is in ' +
+    'effect in before, active and after phases');
+
+async_test(function(t) {
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+
+    var animation1 = new Animation(target1, KEYFRAMES,
+        {fill: 'none', duration: ANIMATION_END_TIME / 2});
+    var animation2 = new Animation(target2, KEYFRAMES,
+        {fill: 'none', delay: 50, duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+        {fill: 'backwards', delay: 50, duration: 2 * ANIMATION_END_TIME});
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.fill, 'none',
+        'AnimationNode.computedTiming.fill should return \'none\'');
+    assert_equals(animation2.computedTiming.fill, 'none',
+        'AnimationNode.computedTiming.fill should return \'none\'');
+    assert_equals(animationGroup.computedTiming.fill, 'backwards',
+        'AnimationNode.computedTiming.fill should return \'backwards\'');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 10; // animation group start delay
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 80; // animation2 start delay
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 150;
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME / 2 + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in after phase');
+
+        player.currentTime = 2 * ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in after phase');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Animation group containing two animations, short and long one. Fill mode is ' +
+    '\'none\' for animations and \'backwards\ for the group. Test that animation is in ' +
+    'effect in active and before phases');
+
+async_test(function(t) {
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+
+    var animation1 = new Animation(target1, KEYFRAMES,
+        {fill: 'forwards', duration: ANIMATION_END_TIME / 2});
+    var animation2 = new Animation(target2, KEYFRAMES,
+        {fill: 'forwards', delay: 50, duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+        {fill: 'backwards', delay: 50, duration: 2 * ANIMATION_END_TIME});
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.fill, 'forwards',
+        'AnimationNode.computedTiming.fill should return \'forwards\'');
+    assert_equals(animation2.computedTiming.fill, 'forwards',
+        'AnimationNode.computedTiming.fill should return \'forwards\'');
+    assert_equals(animationGroup.computedTiming.fill, 'backwards',
+        'AnimationNode.computedTiming.fill should return \'backwards\'');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 10; // animation group start delay
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 80; // animation2 start delay
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 150;
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME / 2 + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_1,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = 2 * ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in after phase');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Animation group containing two animations, short and long one. Fill mode is ' +
+    '\'forwards\' for animations and \'backwards\ for the group. Test that animation is in ' +
+    'effect in active and after phases');
+
+async_test(function(t) {
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+
+    var animation1 = new Animation(target1, KEYFRAMES,
+        {fill: 'both', duration: ANIMATION_END_TIME / 2});
+    var animation2 = new Animation(target2, KEYFRAMES,
+        {fill: 'both', delay: 50, duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+        {fill: 'backwards', delay: 50, duration: 2 * ANIMATION_END_TIME});
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
+    assert_equals(animation2.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
+    assert_equals(animationGroup.computedTiming.fill, 'backwards',
+        'AnimationNode.computedTiming.fill should return \'backwards\'');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 10; // animation group start delay
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 80; // animation2 start delay
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 150;
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME / 2 + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in active phase');
+
+        player.currentTime = ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_1,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = 2 * ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in after phase');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Animation group containing two animations, short and long one. Fill mode is ' +
+    '\'both\' for animations and \'backwards\ for the group. Test that animation is in ' +
+    'effect in before, active and after phases');
+
+async_test(function(t) {
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+
+    var animation1 = new Animation(target1, KEYFRAMES,
+        {fill: 'none', duration: ANIMATION_END_TIME / 2});
+    var animation2 = new Animation(target2, KEYFRAMES,
+        {fill: 'none', delay: 50, duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+        {fill: 'both', delay: 50, duration: ANIMATION_END_TIME});
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.fill, 'none',
+        'AnimationNode.computedTiming.fill should return \'none\'');
+    assert_equals(animation2.computedTiming.fill, 'none',
+        'AnimationNode.computedTiming.fill should return \'none\'');
+    assert_equals(animationGroup.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 10; // animation group start delay
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 80; //animation2 start delay
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 150;
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME / 2 + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Animation group containing two animations, short and long one. Fill mode is ' +
+    '\'none\' for animations and \'both\ for the group. Test that animation is in ' +
+    'effect in before, active and after phases');
+
+async_test(function(t) {
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+
+    var animation1 = new Animation(target1, KEYFRAMES,
+        {fill: 'forwards', duration: ANIMATION_END_TIME / 2});
+    var animation2 = new Animation(target2, KEYFRAMES,
+        {fill: 'forwards', delay: 50, duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+        {fill: 'both', delay: 50, duration: ANIMATION_END_TIME});
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.fill, 'forwards',
+        'AnimationNode.computedTiming.fill should return \'forwards\'');
+    assert_equals(animation2.computedTiming.fill, 'forwards',
+        'AnimationNode.computedTiming.fill should return \'forwards\'');
+    assert_equals(animationGroup.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 10; // animation group start delay
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 80; //animation2 start delay
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect in before phase');
+
+        player.currentTime = 150;
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME / 2 + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Animation group containing two animations, short and long one. Fill mode is ' +
+    '\'forwards\' for animations and \'both\ for the group. Test that animation is in ' +
+    'effect in after and active phases');
+
+async_test(function(t) {
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+
+    var animation1 = new Animation(target1, KEYFRAMES,
+        {fill: 'backwards', duration: ANIMATION_END_TIME / 2});
+    var animation2 = new Animation(target2, KEYFRAMES,
+        {fill: 'backwards', delay: 50, duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+        {fill: 'both', delay: 50, duration: ANIMATION_END_TIME});
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.fill, 'backwards',
+        'AnimationNode.computedTiming.fill should return \'backwards\'');
+    assert_equals(animation2.computedTiming.fill, 'backwards',
+        'AnimationNode.computedTiming.fill should return \'backwards\'');
+    assert_equals(animationGroup.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 10; // animation group start delay
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 80; //animation2 start delay
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 150;
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME / 2 + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Animation group containing two animations, short and long one. Fill mode is ' +
+    '\'backwards\' for animations and \'both\ for the group. Test that animation is in ' +
+    'effect in before and active phases');
+
+
+async_test(function(t) {
+    var target1 = createDiv(t);
+    var target2 = createDiv(t);
+
+    var animation1 = new Animation(target1, KEYFRAMES,
+        {fill: 'both', duration: ANIMATION_END_TIME / 2});
+    var animation2 = new Animation(target2, KEYFRAMES,
+        {fill: 'both', delay: 50, duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+        {fill: 'both', delay: 50, duration: ANIMATION_END_TIME});
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
+    assert_equals(animation2.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
+    assert_equals(animationGroup.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = -10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 10; // animation group start delay
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_0,
+            'Animation1 should be in effect in before phase');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 80; //animation2 start delay
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(30),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_0,
+            'Animation2 should be in effect in before phase');
+
+        player.currentTime = 150;
+        assert_approx_equals(window.getComputedStyle(target1).top, getExpectedTop(100),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(50),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME / 2 + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME / 2 - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+
+        player.currentTime = ANIMATION_END_TIME + 10;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect');
+
+        player.currentTime = ANIMATION_END_TIME + 100;
+        assert_equals(window.getComputedStyle(target1), ANIMATION_TOP_1,
+            'Animation1 should be in effect in after phase');
+        assert_approx_equals(window.getComputedStyle(target2).top,
+            getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
+            'Animation2 should be in effect in after phase');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Animation group containing two animations, short and long one. Fill mode is ' +
+    '\'both\' for animations and \'both\ for the group. Test that animation is in ' +
+    'effect in before, active and after phases');
 </script>
 </body>
