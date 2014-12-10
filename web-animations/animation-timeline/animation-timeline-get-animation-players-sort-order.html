@@ -17,7 +17,6 @@ test(function() {
     var player1 = doc.timeline.play(newAnimation(createDiv(this, doc)));
     var player2 = doc.timeline.play(newAnimation(createDiv(this, doc)));
     var player3 = doc.timeline.play(newAnimation(createDiv(this, doc)));
-    var player4 = document.timeline.play(newAnimation(createDiv(this, doc)));
 
     assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
@@ -30,7 +29,6 @@ test(function() {
     var player1 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
     var player2 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
     var player3 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
-    var player4 = new AnimationPlayer(newAnimation(createDiv(this, doc)), document.timeline);
 
     assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
         'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
