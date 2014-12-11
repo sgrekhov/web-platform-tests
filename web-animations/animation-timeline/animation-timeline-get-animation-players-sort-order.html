@@ -18,15 +18,11 @@ async_test(function(t) {
     var player2 = doc.timeline.play(newAnimation(createDiv(this, doc)));
     var player3 = doc.timeline.play(newAnimation(createDiv(this, doc)));
 
-    player1.ready.then(t.step_func(function() {
-        player2.ready.then(t.step_func(function() {
-            player3.ready.then(t.step_func(function() {
-                assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
-                    'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                    'should be ordered by player sequence number');
-                t.done();
-            }), t.unreached_func('Player ready promise should not be rejected'));
-        }), t.unreached_func('Player ready promise should not be rejected'));
+    Promise.all([player1.ready, player2.ready, player3.ready]).then(t.step_func(function() {
+        assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
+        t.done();
     }), t.unreached_func('Player ready promise should not be rejected'));
 }, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
     'ordered by player sequence number');
@@ -37,15 +33,11 @@ async_test(function(t) {
     var player2 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
     var player3 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
 
-    player1.ready.then(t.step_func(function() {
-        player2.ready.then(t.step_func(function() {
-            player3.ready.then(t.step_func(function() {
-                assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
-                    'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                    'should be ordered by player sequence number');
-                t.done();
-            }), t.unreached_func('Player ready promise should not be rejected'));
-        }), t.unreached_func('Player ready promise should not be rejected'));
+    Promise.all([player1.ready, player2.ready, player3.ready]).then(t.step_func(function() {
+        assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
+        t.done();
     }), t.unreached_func('Player ready promise should not be rejected'));
 }, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
     'ordered by player sequence number. Players are created by AnimationPlayer constructor');
@@ -59,20 +51,14 @@ async_test(function(t) {
     var player3 = doc2.timeline.play(newAnimation(createDiv(this, doc2)));
     var player4 = doc2.timeline.play(newAnimation(createDiv(this, doc2)));
 
-    player1.ready.then(t.step_func(function() {
-        player2.ready.then(t.step_func(function() {
-            player3.ready.then(t.step_func(function() {
-                player4.ready.then(t.step_func(function() {
-                    assert_array_equals(doc1.timeline.getAnimationPlayers(), [player1, player2],
-                        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                        'should be ordered by player sequence number');
-                    assert_array_equals(doc2.timeline.getAnimationPlayers(), [player3, player4],
-                        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                        'should be ordered by player sequence number');
-                    t.done();
-                }), t.unreached_func('Player ready promise should not be rejected'));
-            }), t.unreached_func('Player ready promise should not be rejected'));
-        }), t.unreached_func('Player ready promise should not be rejected'));
+    Promise.all([player1.ready, player2.ready, player3.ready, player4.ready]).then(t.step_func(function() {
+        assert_array_equals(doc1.timeline.getAnimationPlayers(), [player1, player2],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
+        assert_array_equals(doc2.timeline.getAnimationPlayers(), [player3, player4],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
+        t.done();
     }), t.unreached_func('Player ready promise should not be rejected'));
 }, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
     'ordered by player sequence number. Check different timelines');
@@ -84,21 +70,15 @@ async_test(function(t) {
     var player3 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
     var player4 = new AnimationPlayer(newAnimation(createDiv(this, doc)), doc.timeline);
 
-    player1.ready.then(t.step_func(function() {
-        player2.ready.then(t.step_func(function() {
-            player3.ready.then(t.step_func(function() {
-                player4.ready.then(t.step_func(function() {
-                    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player3, player4],
-                        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                        'should be ordered by player sequence number');
-                    player2.timeline = doc.timeline;
-                    assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3, player4],
-                        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                        'should be ordered by player sequence number');
-                    t.done();
-                }), t.unreached_func('Player ready promise should not be rejected'));
-            }), t.unreached_func('Player ready promise should not be rejected'));
-        }), t.unreached_func('Player ready promise should not be rejected'));
+    Promise.all([player1.ready, player2.ready, player3.ready, player4.ready]).then(t.step_func(function() {
+        assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player3, player4],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
+        player2.timeline = doc.timeline;
+        assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3, player4],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
+        t.done();
     }), t.unreached_func('Player ready promise should not be rejected'));
 }, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
     'ordered by player sequence number. Players, associated via assigning ' +
@@ -113,28 +93,22 @@ async_test(function(t) {
     var player3 = new AnimationPlayer(newAnimation(createDiv(this, doc2)), doc2.timeline);
     var player4 = new AnimationPlayer(newAnimation(createDiv(this, doc2)), doc2.timeline);
 
-    player1.ready.then(t.step_func(function() {
-        player2.ready.then(t.step_func(function() {
-            player3.ready.then(t.step_func(function() {
-                player4.ready.then(t.step_func(function() {
-                    assert_array_equals(doc1.timeline.getAnimationPlayers(), [player1, player2],
-                        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                        'should be ordered by player sequence number');
-                    assert_array_equals(doc2.timeline.getAnimationPlayers(), [player3, player4],
-                        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                        'should be ordered by player sequence number');
+    Promise.all([player1.ready, player2.ready, player3.ready, player4.ready]).then(t.step_func(function() {
+        assert_array_equals(doc1.timeline.getAnimationPlayers(), [player1, player2],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
+        assert_array_equals(doc2.timeline.getAnimationPlayers(), [player3, player4],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
 
-                    player3.timeline = doc1.timeline;
-                    assert_array_equals(doc1.timeline.getAnimationPlayers(), [player1, player2, player3],
-                        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                        'should be ordered by player sequence number');
-                    assert_array_equals(doc2.timeline.getAnimationPlayers(), [player4],
-                        'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                        'should be ordered by player sequence number');
-                    t.done();
-                }), t.unreached_func('Player ready promise should not be rejected'));
-            }), t.unreached_func('Player ready promise should not be rejected'));
-        }), t.unreached_func('Player ready promise should not be rejected'));
+        player3.timeline = doc1.timeline;
+        assert_array_equals(doc1.timeline.getAnimationPlayers(), [player1, player2, player3],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
+        assert_array_equals(doc2.timeline.getAnimationPlayers(), [player4],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
+        t.done();
     }), t.unreached_func('Player ready promise should not be rejected'));
 }, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
     'ordered by player sequence number. Newly associated players are also ' +
@@ -146,19 +120,15 @@ async_test(function(t) {
     var player2 = doc.timeline.play(newAnimation(createDiv(this, doc)));
     var player3 = doc.timeline.play(newAnimation(createDiv(this, doc)));
 
-    player1.ready.then(t.step_func(function() {
-        player2.ready.then(t.step_func(function() {
-            player3.ready.then(t.step_func(function() {
-                assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
-                    'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                    'should be ordered by player sequence number');
-                player2.timeline = null;
-                assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player3],
-                    'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
-                    'should be ordered by player sequence number');
-                t.done();
-            }), t.unreached_func('Player ready promise should not be rejected'));
-        }), t.unreached_func('Player ready promise should not be rejected'));
+    Promise.all([player1.ready, player2.ready, player3.ready]).then(t.step_func(function() {
+        assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player2, player3],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
+        player2.timeline = null;
+        assert_array_equals(doc.timeline.getAnimationPlayers(), [player1, player3],
+            'Set of objects returned by AnimationTimeline.getAnimationPlayers() method ' +
+            'should be ordered by player sequence number');
+        t.done();
     }), t.unreached_func('Player ready promise should not be rejected'));
 }, 'Test AnimationTimeline.getAnimationPlayers() returns list of players ' +
     'ordered by player sequence number. Disassociated players are not included in the list');
