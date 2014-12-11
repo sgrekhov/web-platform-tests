@@ -124,7 +124,7 @@ function type(object) {
     return Object.prototype.toString.call(object).slice(8, -1);
 }
 
-// Returns expected top of the target element width at currentTime
+// Returns expected top of the target element at currentTime
 function getExpectedTop(currentTime, endTime) {
     if (!endTime) {
         endTime = ANIMATION_END_TIME;

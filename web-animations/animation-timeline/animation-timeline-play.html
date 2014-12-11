@@ -148,17 +148,14 @@ async_test(function(t) {
 
 async_test(function(t) {
     var doc = newHTMLDocument();
-    var target1 = createDiv(t);
-    var target2 = createDiv(t);
+    var target1 = createDiv(t, doc);
+    var target2 = createDiv(t, doc);
     var animationGroup = new AnimationGroup(
         [newAnimation(target1), newAnimation(target2)]);
 	var player = doc.timeline.play(animationGroup);
 
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
-            assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
-                'AnimationTimeline.getAnimationPlayers() method should ' +
-                'return only one player');
             assert_approx_equals(window.getComputedStyle(target1).top,
                 getExpectedTop(50), COMPUTED_STYLE_EPSILON,
                 'Animation 1 should be running');
@@ -168,22 +165,18 @@ async_test(function(t) {
             t.done();
         }), 50);
     }), t.unreached_func('Player ready promise should not be rejected'));
-}, 'Test AnimationTimeline.play() plays animation group and ' +
-    'AnimationTimeline.getAnimationPlayers() returns only one player');
+}, 'Test AnimationTimeline.play() plays animation group');
 
 async_test(function(t) {
     var doc = newHTMLDocument();
-    var target1 = createDiv(t);
-    var target2 = createDiv(t);
+    var target1 = createDiv(t, doc);
+    var target2 = createDiv(t, doc);
     var animationSequence = new AnimationSequence(
         [newAnimation(target1), newAnimation(target2)]);
 	var player = doc.timeline.play(animationSequence);
 
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
-            assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
-                'AnimationTimeline.getAnimationPlayers() method should ' +
-                'return only one player');
             assert_approx_equals(window.getComputedStyle(target1).top,
                 getExpectedTop(50), COMPUTED_STYLE_EPSILON,
                 'Animation 1 should be running');
@@ -192,7 +185,6 @@ async_test(function(t) {
             t.done();
         }), 50);
     }), t.unreached_func('Player ready promise should not be rejected'));
-}, 'Test AnimationTimeline.play() plays animation sequence and ' +
-    'AnimationTimeline.getAnimationPlayers() returns only one player');
+}, 'Test AnimationTimeline.play() plays animation sequence');
 </script>
 </body>

@@ -62,9 +62,9 @@ test(function() {
 
 async_test(function(t) {
 	var doc = newHTMLDocument();
-    var player1 = doc.timeline.play(newAnimation(createDiv(t)));
-    var player2 = doc.timeline.play(newAnimation(createDiv(t)));
-    var player3 = doc.timeline.play(newAnimation(createDiv(t)));
+    var player1 = doc.timeline.play(newAnimation(createDiv(t, doc)));
+    var player2 = doc.timeline.play(newAnimation(createDiv(t, doc)));
+    var player3 = doc.timeline.play(newAnimation(createDiv(t, doc)));
 
     player1.ready.then(t.step_func(function() {
         player2.ready.then(t.step_func(function() {
@@ -91,9 +91,9 @@ async_test(function(t) {
 async_test(function(t) {
 	var doc = newHTMLDocument();
 	var timing = {fill: 'forwards', duration: ANIMATION_END_TIME};
-    var player1 = doc.timeline.play(new Animation(createDiv(t), KEYFRAMES, timing));
-    var player2 = doc.timeline.play(new Animation(createDiv(t), KEYFRAMES, timing));
-    var player3 = doc.timeline.play(new Animation(createDiv(t), KEYFRAMES, timing));
+    var player1 = doc.timeline.play(new Animation(createDiv(t, doc), KEYFRAMES, timing));
+    var player2 = doc.timeline.play(new Animation(createDiv(t, doc), KEYFRAMES, timing));
+    var player3 = doc.timeline.play(new Animation(createDiv(t, doc), KEYFRAMES, timing));
 
     player1.ready.then(t.step_func(function() {
         player2.ready.then(t.step_func(function() {
@@ -121,9 +121,9 @@ async_test(function(t) {
 async_test(function(t) {
 	var doc = newHTMLDocument();
 	var timing = {fill: 'backwards', duration: ANIMATION_END_TIME};
-    var player1 = doc.timeline.play(new Animation(createDiv(t), KEYFRAMES, timing));
-    var player2 = doc.timeline.play(new Animation(createDiv(t), KEYFRAMES, timing));
-    var player3 = doc.timeline.play(new Animation(createDiv(t), KEYFRAMES, timing));
+    var player1 = doc.timeline.play(new Animation(createDiv(t, doc), KEYFRAMES, timing));
+    var player2 = doc.timeline.play(new Animation(createDiv(t, doc), KEYFRAMES, timing));
+    var player3 = doc.timeline.play(new Animation(createDiv(t, doc), KEYFRAMES, timing));
 
     player1.ready.then(t.step_func(function() {
         player2.ready.then(t.step_func(function() {
@@ -151,9 +151,9 @@ async_test(function(t) {
 async_test(function(t) {
 	var doc = newHTMLDocument();
 	var timing = {fill: 'both', duration: ANIMATION_END_TIME};
-    var player1 = doc.timeline.play(new Animation(createDiv(t), KEYFRAMES, timing));
-    var player2 = doc.timeline.play(new Animation(createDiv(t), KEYFRAMES, timing));
-    var player3 = doc.timeline.play(new Animation(createDiv(t), KEYFRAMES, timing));
+    var player1 = doc.timeline.play(new Animation(createDiv(t, doc), KEYFRAMES, timing));
+    var player2 = doc.timeline.play(new Animation(createDiv(t, doc), KEYFRAMES, timing));
+    var player3 = doc.timeline.play(new Animation(createDiv(t, doc), KEYFRAMES, timing));
 
     player1.ready.then(t.step_func(function() {
         player2.ready.then(t.step_func(function() {
@@ -180,7 +180,7 @@ async_test(function(t) {
 
 async_test(function(t) {
 	var doc = newHTMLDocument();
-    var animationGroup = new AnimationGroup([newAnimation(createDiv(t))],
+    var animationGroup = new AnimationGroup([newAnimation(createDiv(t, doc))],
         {delay: 50, duration: ANIMATION_END_TIME});
 	var player = doc.timeline.play(animationGroup);
 
@@ -209,7 +209,7 @@ async_test(function(t) {
 
 async_test(function(t) {
 	var doc = newHTMLDocument();
-    var animationGroup = new AnimationGroup([newAnimation(createDiv(t))],
+    var animationGroup = new AnimationGroup([newAnimation(createDiv(t, doc))],
         {delay: 50, duration: ANIMATION_END_TIME, fill: 'none'});
 	var player = doc.timeline.play(animationGroup);
 
@@ -238,7 +238,7 @@ async_test(function(t) {
 
 async_test(function(t) {
 	var doc = newHTMLDocument();
-    var animationGroup = new AnimationGroup([newAnimation(createDiv(t))],
+    var animationGroup = new AnimationGroup([newAnimation(createDiv(t, doc))],
         {delay: 50, duration: ANIMATION_END_TIME, fill: 'forwards'});
 	var player = doc.timeline.play(animationGroup);
 
@@ -267,7 +267,7 @@ async_test(function(t) {
 
 async_test(function(t) {
 	var doc = newHTMLDocument();
-    var animationGroup = new AnimationGroup([newAnimation(createDiv(t))],
+    var animationGroup = new AnimationGroup([newAnimation(createDiv(t, doc))],
         {delay: 50, duration: ANIMATION_END_TIME, fill: 'backwards'});
 	var player = doc.timeline.play(animationGroup);
 
@@ -293,5 +293,35 @@ async_test(function(t) {
 }, 'Test AnimationTimeline.getAnimationPlayers() returns players ' +
     'whose source content is current. Test player playing animation group ' +
     'in backwards fill mode in before, active and after phases');
+
+async_test(function(t) {
+    var doc = newHTMLDocument();
+    var animationGroup = new AnimationGroup(
+        [newAnimation(createDiv(t, doc)), newAnimation(createDiv(t, doc))]);
+	var player = doc.timeline.play(animationGroup);
+
+    player.ready.then(t.step_func(function() {
+        assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
+            'AnimationTimeline.getAnimationPlayers() method should ' +
+            'return only one player');
+        t.done();
+    }), t.unreached_func('Player ready promise should not be rejected'));
+}, 'Test that AnimationTimeline.getAnimationPlayers() returns only one player when ' +
+    'animation group containing more that one animation is played');
+
+async_test(function(t) {
+    var doc = newHTMLDocument();
+    var animationSequence = new AnimationSequence(
+        [newAnimation(createDiv(t, doc)), newAnimation(createDiv(t, doc))]);
+	var player = doc.timeline.play(animationSequence);
+
+    player.ready.then(t.step_func(function() {
+        assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
+            'AnimationTimeline.getAnimationPlayers() method should ' +
+            'return only one player');
+        t.done();
+    }), t.unreached_func('Player ready promise should not be rejected'));
+}, 'Test that AnimationTimeline.getAnimationPlayers() returns only one player when ' +
+    'animation sequence containing more that one animation is played');
 </script>
 </body>
