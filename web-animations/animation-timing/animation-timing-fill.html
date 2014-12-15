@@ -26,7 +26,8 @@ async_test(function(t) {
         duration: ANIMATION_END_TIME
     };
     var animations = createAnimationsToTest(t, timing);
-    animations.forEach(function(animation, index) {
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
         var node = animation;
         if (animation.parent !== null) {
             node = node.parent;
@@ -43,6 +44,10 @@ async_test(function(t) {
             player.currentTime = ANIMATION_END_TIME + 10;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
                 'Animation ' + type(node) + ' should not be in effect in after phase');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
         }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test that setting AnimationTiming.fill to \'none\' removes animation effects in before and ' +
@@ -54,7 +59,8 @@ async_test(function(t) {
         duration: ANIMATION_END_TIME
     };
     var animations = createAnimationsToTest(t, timing);
-    animations.forEach(function(animation, index) {
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
         var node = animation;
         if (animation.parent !== null) {
             node = node.parent;
@@ -71,6 +77,10 @@ async_test(function(t) {
             player.currentTime = ANIMATION_END_TIME + 10;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
                 'Animation ' + type(node) + ' should hung on end in after phase');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
         }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test that setting AnimationTiming.fill to \'forwards\' removes animation effects in before phase ' +
@@ -82,7 +92,8 @@ async_test(function(t) {
         duration: ANIMATION_END_TIME
     };
     var animations = createAnimationsToTest(t, timing);
-    animations.forEach(function(animation, index) {
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
         var node = animation;
         if (animation.parent !== null) {
             node = node.parent;
@@ -99,6 +110,10 @@ async_test(function(t) {
             player.currentTime = ANIMATION_END_TIME + 10;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
                 'Animation ' + type(node) + ' effect should be removed');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
         }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test that setting AnimationTiming.fill to \'backwards\' removes animation effects in after phase ' +
@@ -110,7 +125,8 @@ async_test(function(t) {
         duration: ANIMATION_END_TIME
     };
     var animations = createAnimationsToTest(t, timing);
-    animations.forEach(function(animation, index) {
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
         var node = animation;
         if (animation.parent !== null) {
             node = node.parent;
@@ -127,6 +143,10 @@ async_test(function(t) {
             player.currentTime = ANIMATION_END_TIME + 10;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
                 'Animation ' + type(node) + ' effect should be on end time');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
         }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test that setting AnimationTiming.fill to \'both\' hungs animation effects on zero and ' +
@@ -150,6 +170,7 @@ async_test(function(t) {
         player.currentTime = ANIMATION_END_TIME + 10;
         assert_equals(window.getComputedStyle(target), ANIMATION_TOP_DEFAULT,
             'Animation should not be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that default fill value of the Animation is \'auto\' and ' +
     'it is treated as \'none\' for animation purposes');
@@ -176,6 +197,7 @@ async_test(function(t) {
         player.currentTime = ANIMATION_END_TIME + 10;
         assert_equals(window.getComputedStyle(target), ANIMATION_TOP_DEFAULT,
             'Animation should not be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that fill value \'auto\' of the Animation is  treated as \'none\' for animation purposes');
 
@@ -233,6 +255,7 @@ async_test(function(t) {
             'Animation1 should be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(ANIMATION_END_TIME - 40),
             COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that default fill value of the AnimationGroup is \'auto\' and ' +
     'it is treated as \'both\' for animation purposes');
@@ -295,6 +318,7 @@ async_test(function(t) {
             'Animation1 should not be in effect in after phase');
         assert_approx_equals(window.getComputedStyle(target2).top, getExpectedTop(ANIMATION_END_TIME - 50),
             COMPUTED_STYLE_EPSILON, 'Animation2 should be clipped and hold');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that default fill value of the AnimationSequence is \'auto\' and ' +
     'it is treated as \'both\' for animation purposes');
@@ -355,6 +379,7 @@ async_test(function(t) {
             'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'none\' for both animations and the group. Test that animation is in ' +
@@ -424,6 +449,7 @@ async_test(function(t) {
             'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'forwards\' for animations and \'none\ for the group. Test that animation is in ' +
@@ -491,6 +517,7 @@ async_test(function(t) {
             'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'backwards\' for animations and \'none\ for the group. Test that animation is in ' +
@@ -558,6 +585,7 @@ async_test(function(t) {
             'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'both\' for animations and \'none\ for the group. Test that animation is in ' +
@@ -627,6 +655,7 @@ async_test(function(t) {
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'none\' for animations and \'forwards\ for the group. Test that animation is in ' +
@@ -696,6 +725,7 @@ async_test(function(t) {
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'forwards\' for animations and \'forwards\ for the group. Test that animation is in ' +
@@ -765,6 +795,7 @@ async_test(function(t) {
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'backwards\' for animations and \'forwards\ for the group. Test that animation is in ' +
@@ -834,6 +865,7 @@ async_test(function(t) {
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'both\' for animations and \'forwards\ for the group. Test that animation is in ' +
@@ -908,6 +940,7 @@ async_test(function(t) {
             'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'none\' for animations and \'backwards\ for the group. Test that animation is in ' +
@@ -982,6 +1015,7 @@ async_test(function(t) {
             'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'forwards\' for animations and \'backwards\ for the group. Test that animation is in ' +
@@ -1056,6 +1090,7 @@ async_test(function(t) {
             'Animation1 should not be in effect in after phase');
         assert_equals(window.getComputedStyle(target2), ANIMATION_TOP_DEFAULT,
             'Animation2 should not be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'both\' for animations and \'backwards\ for the group. Test that animation is in ' +
@@ -1125,6 +1160,7 @@ async_test(function(t) {
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'none\' for animations and \'both\ for the group. Test that animation is in ' +
@@ -1194,6 +1230,7 @@ async_test(function(t) {
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'forwards\' for animations and \'both\ for the group. Test that animation is in ' +
@@ -1263,11 +1300,11 @@ async_test(function(t) {
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'backwards\' for animations and \'both\ for the group. Test that animation is in ' +
     'effect in before and active phases');
-
 
 async_test(function(t) {
     var target1 = createDiv(t);
@@ -1333,6 +1370,7 @@ async_test(function(t) {
         assert_approx_equals(window.getComputedStyle(target2).top,
             getExpectedTop(ANIMATION_END_TIME - 40), COMPUTED_STYLE_EPSILON,
             'Animation2 should be in effect in after phase');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Animation group containing two animations, short and long one. Fill mode is ' +
     '\'both\' for animations and \'both\ for the group. Test that animation is in ' +
