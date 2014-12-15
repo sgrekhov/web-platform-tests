@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>AnimationTiming iterationStart attribute test</title>
+<meta name="assert" content="The animation node’s iteration start property. A finite real number greater than or equal to zero representing the number of iterations into the animation node at which to begin">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationtiming-iterationstart">
+<link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+function createAnimationsToTest(test, timing) {
+    var animation1 = new Animation(createDiv(test), KEYFRAMES, timing);
+    var animation2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_END_TIME);
+    var animation3 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_END_TIME);
+    var animationGroup = new AnimationGroup([animation2], timing);
+    var animationSequence = new AnimationSequence([animation3], timing);
+    return [animation1, animation2, animation3];
+}
+
+async_test(function(t) {
+    var timing = {
+        duration: ANIMATION_END_TIME
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        assert_equals(animation.computedTiming.iterationStart, 0,
+            'Wrong AnimationNode.computedTiming.iterationStart value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = 0;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0,
+                'Animation ' + type(node) + ' should start at 0');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that default value of AnimationTiming.iterationStart attribute is zero');
+
+async_test(function(t) {
+    var valuesToTest = [-1, -1000, -0.5, -Number.MAX_VALUE];
+    var doneCounter = 0;
+    valuesToTest.forEach(function(iterationStartValue) {
+        var timing = {
+            iterationStart: iterationStartValue,
+            duration: ANIMATION_END_TIME
+        };
+        var animations = createAnimationsToTest(t, timing);
+        animations.forEach(function(animation) {
+            var node = animation;
+            if (animation.parent !== null) {
+                node = node.parent;
+            }
+            var player = document.timeline.play(node);
+
+            assert_equals(animation.computedTiming.iterationStart, iterationStartValue,
+                'Wrong AnimationNode.computedTiming.iterationStart value');
+
+            player.ready.then(t.step_func(function() {
+                player.currentTime = 0;
+                assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0,
+                    'Animation ' + type(node) + ' should start at 0');
+                doneCounter++;
+                if (doneCounter === animations.length * valuesToTest.length) {
+                    t.done();
+                }
+            }), t.unreached_func('Current ready promise should not be rejected'));
+        });
+    });
+}, 'Test that negative values of AnimationTiming.iterationStart attribute are clamped to ' +
+    'zero for the purpose of timing model calculations');
+
+async_test(function(t) {
+    var timing = {
+        iterationStart: 0.5,
+        duration: ANIMATION_END_TIME
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        assert_equals(animation.computedTiming.iterationStart, 0,
+            'Wrong AnimationNode.computedTiming.iterationStart value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = 0;
+            assert_approx_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be started at 0.5');
+            player.currentTime = ANIMATION_END_TIME / 2;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                'Animation ' + type(node) + ' should be at 1');
+            player.currentTime = ANIMATION_END_TIME;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
+                'Animation ' + type(node) + ' should be at 0.5');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that value of AnimationTiming.iterationStart attribute is less than one ' +
+    'then iteration is started with specified position');
+</script>
+</body>
