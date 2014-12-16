@@ -29,5 +29,20 @@ test(function() {
         'Animation.computedTiming.duration should return zero');
 }, 'Test Animation.computedTiming.duration returns intrinsic iteration duration (zero) ' +
     'for nodes with timing.duration value \'auto\'');
+
+test(function() {
+    var node = new Animation(createDiv(this), []);
+    assert_equals(node.computedTiming.fill, 'none',
+        'Animation.computedTiming.fill should return \'none\'');
+}, 'Test Animation.computedTiming.fill default value is \'none\');
+
+test(function() {
+    var timing = {fill: 'auto'};
+    var node = new Animation(createDiv(this), [], timing);
+
+    assert_equals(node.computedTiming.fill, \'none\',
+        'Animation.computedTiming.fill should return \'none\'');
+}, 'Test Animation.computedTiming.fill returns \'none\' ' +
+    'for nodes with timing.fill value \'auto\'');
 </script>
 </body>

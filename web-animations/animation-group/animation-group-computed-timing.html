@@ -131,5 +131,20 @@ test(function() {
 }, 'Test AnimationGroup.computedTiming.duration returns intrinsic ' +
     'iteration duration, which is max(0, maximum end time of children) ' +
     'for group with children with negative end time and group timing.duration value is unsupported');
+
+test(function() {
+    var node = new AnimationGroup([]);
+    assert_equals(node.computedTiming.fill, 'both',
+        'AnimationGroup.computedTiming.fill should return \'both\'');
+}, 'Test AnimationGroup.computedTiming.fill default value is \'both\');
+
+test(function() {
+    var timing = {fill: 'auto'};
+    var node = new AnimationGroup([], timing);
+
+    assert_equals(node.computedTiming.fill, \'both\',
+        'AnimationGroup.computedTiming.fill should return \'both\'');
+}, 'Test AnimationGroup.computedTiming.fill returns \'both\' ' +
+    'for nodes with timing.fill value \'auto\'');
 </script>
 </body>

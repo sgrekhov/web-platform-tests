@@ -157,8 +157,8 @@ async_test(function(t) {
     var animation = new Animation(target, KEYFRAMES, ANIMATION_END_TIME);
     var player = document.timeline.play(animation);
 
-    assert_equals(animation.computedTiming.fill, 'auto',
-        'AnimationNode.computedTiming.fill should return \'auto\'');
+    assert_equals(animation.computedTiming.fill, 'none',
+        'AnimationNode.computedTiming.fill should return \'none\'');
 
     player.ready.then(t.step_func(function() {
         player.currentTime = -10;
@@ -177,15 +177,15 @@ async_test(function(t) {
 
 async_test(function(t) {
     var timing = {
-        fill: 'auto',
+        fill: 'none',
         duration: ANIMATION_END_TIME
     };
     var target = createDiv(t);
     var animation = new Animation(target, KEYFRAMES, timing);
     var player = document.timeline.play(animation);
 
-    assert_equals(animation.computedTiming.fill, 'auto',
-        'AnimationNode.computedTiming.fill should return \'auto\'');
+    assert_equals(animation.computedTiming.fill, 'none',
+        'AnimationNode.computedTiming.fill should return \'none\'');
 
     player.ready.then(t.step_func(function() {
         player.currentTime = -10;
@@ -199,22 +199,25 @@ async_test(function(t) {
             'Animation should not be in effect in after phase');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that fill value \'auto\' of the Animation is  treated as \'none\' for animation purposes');
+}, 'Test that fill value \'auto\' of the Animation is  treated as \'none\' ' +
+    'for animation purposes');
 
 async_test(function(t) {
     var target1 = createDiv(t);
     var target2 = createDiv(t);
     var animation1 = new Animation(target1, KEYFRAMES, ANIMATION_END_TIME);
-    var animation2 = new Animation(target2, KEYFRAMES, {delay: 50, duration: ANIMATION_END_TIME});
-    var animationGroup = new AnimationGroup([animation1, animation2], {delay: 50, duration: ANIMATION_END_TIME});
+    var animation2 = new Animation(target2, KEYFRAMES,
+    	{delay: 50, duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+    	{delay: 50, duration: ANIMATION_END_TIME});
     var player = document.timeline.play(animationGroup);
 
-    assert_equals(animation1.computedTiming.fill, 'auto',
-        'animation1.computedTiming.fill should return \'auto\'');
-    assert_equals(animation2.computedTiming.fill, 'auto',
-        'animation2.computedTiming.fill should return \'auto\'');
-    assert_equals(animationGroup.computedTiming.fill, 'auto',
-        'AnimationNode.computedTiming.fill should return \'auto\'');
+    assert_equals(animation1.computedTiming.fill, 'none',
+        'animation1.computedTiming.fill should return \'none\'');
+    assert_equals(animation2.computedTiming.fill, 'none',
+        'animation2.computedTiming.fill should return \'none\'');
+    assert_equals(animationGroup.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
 
     player.ready.then(t.step_func(function() {
         player.currentTime = -10;
@@ -264,17 +267,18 @@ async_test(function(t) {
     var target1 = createDiv(t);
     var target2 = createDiv(t);
     var animation1 = new Animation(target1, KEYFRAMES, ANIMATION_END_TIME);
-    var animation2 = new Animation(target2, KEYFRAMES, {delay: 50, duration: ANIMATION_END_TIME});
+    var animation2 = new Animation(target2, KEYFRAMES,
+    	{delay: 50, duration: ANIMATION_END_TIME});
     var animationSequence = new AnimationSequence([animation1, animation2],
         {delay: 50, duration: 2 * ANIMATION_END_TIME});
     var player = document.timeline.play(animationSequence);
 
-    assert_equals(animation1.computedTiming.fill, 'auto',
-        'animation1.computedTiming.fill should return \'auto\'');
-    assert_equals(animation2.computedTiming.fill, 'auto',
-        'animation2.computedTiming.fill should return \'auto\'');
-    assert_equals(animationSequence.computedTiming.fill, 'auto',
-        'AnimationNode.computedTiming.fill should return \'auto\'');
+    assert_equals(animation1.computedTiming.fill, 'none',
+        'animation1.computedTiming.fill should return \'none\'');
+    assert_equals(animation2.computedTiming.fill, 'none',
+        'animation2.computedTiming.fill should return \'none\'');
+    assert_equals(animationSequence.computedTiming.fill, 'both',
+        'AnimationNode.computedTiming.fill should return \'both\'');
 
     player.ready.then(t.step_func(function() {
         player.currentTime = -10;
@@ -331,7 +335,8 @@ async_test(function(t) {
         {fill: 'none', duration: ANIMATION_END_TIME / 2});
     var animation2 = new Animation(target2, KEYFRAMES,
         {fill: 'none', delay: 50, duration: ANIMATION_END_TIME});
-    var animationGroup = new AnimationGroup([animation1, animation2], {fill: 'none', delay: 50});
+    var animationGroup = new AnimationGroup([animation1, animation2],
+    	{fill: 'none', delay: 50});
     var player = document.timeline.play(animationGroup);
 
     assert_equals(animation1.computedTiming.fill, 'none',

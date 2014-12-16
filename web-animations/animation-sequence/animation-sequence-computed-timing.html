@@ -159,5 +159,20 @@ test(function() {
 }, 'Test AnimationSequence.computedTiming.duration returns intrinsic ' +
     'iteration duration, which is max(0, start time of next appended node) ' +
     'for sequence with children with negative end time and sequence timing.duration value is unsupported');
+
+test(function() {
+    var node = new AnimationSequence([]);
+    assert_equals(node.computedTiming.fill, 'both',
+        'AnimationSequence.computedTiming.fill should return \'both\'');
+}, 'Test AnimationSequence.computedTiming.fill default value is \'both\');
+
+test(function() {
+    var timing = {fill: 'auto'};
+    var node = new AnimationSequence([], timing);
+
+    assert_equals(node.computedTiming.fill, \'both\',
+        'AnimationSequence.computedTiming.fill should return \'both\'');
+}, 'Test AnimationSequence.computedTiming.fill returns \'both\' ' +
+    'for nodes with timing.fill value \'auto\'');
 </script>
 </body>
