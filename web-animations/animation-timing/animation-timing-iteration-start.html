@@ -64,7 +64,7 @@ async_test(function(t) {
             }
             var player = document.timeline.play(node);
 
-            assert_equals(animation.computedTiming.iterationStart, iterationStartValue,
+            assert_equals(animation.computedTiming.iterationStart, 0,
                 'Wrong AnimationNode.computedTiming.iterationStart value');
 
             player.ready.then(t.step_func(function() {
@@ -95,13 +95,13 @@ async_test(function(t) {
         }
         var player = document.timeline.play(node);
 
-        assert_equals(animation.computedTiming.iterationStart, 0,
+        assert_equals(animation.computedTiming.iterationStart, 0.5,
             'Wrong AnimationNode.computedTiming.iterationStart value');
 
         player.ready.then(t.step_func(function() {
             player.currentTime = 0;
-            assert_approx_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
-                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be started at 0.5');
+            assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
+                'Animation ' + type(node) + ' should be started at 0.5');
             player.currentTime = ANIMATION_END_TIME / 2;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
                 'Animation ' + type(node) + ' should be at 1');
@@ -114,6 +114,77 @@ async_test(function(t) {
             }
         }), t.unreached_func('Current ready promise should not be rejected'));
     });
+}, 'Test that value of AnimationTiming.iterationStart attribute is less than one ' +
+    'then iteration is started with specified position');
+
+async_test(function(t) {
+    var timing = {
+        iterationStart: 0.5,
+        iterations: 2,
+        duration: ANIMATION_END_TIME
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        assert_equals(animation.computedTiming.iterationStart, 0.5,
+            'Wrong AnimationNode.computedTiming.iterationStart value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = 0;
+            assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
+                'Animation ' + type(node) + ' should be started at 0.5');
+            player.currentTime = ANIMATION_END_TIME / 2;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                'Animation ' + type(node) + ' should be at 1');
+            player.currentTime = ANIMATION_END_TIME;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
+                'Animation ' + type(node) + ' should be at 0.5');
+            player.currentTime = 1.5 * ANIMATION_END_TIME;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                'Animation ' + type(node) + ' should be at 1');
+            player.currentTime = 2 * ANIMATION_END_TIME;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
+                'Animation ' + type(node) + ' should be at 0.5');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that value of AnimationTiming.iterationStart attribute is less than one ' +
+    'and iterations more than one then iteration is started with specified position');
+
+async_test(function(t) {
+    var timing = {
+        iterationStart: 1.5,
+        duration: ANIMATION_END_TIME
+    };
+    var effect = new KeyframeEffect(KEYFRAMES, {iterationComposite: 'accumulate'});
+    var animation = new Animation(createDiv(t), effect, timing);
+    var player = document.timeline.play(animation);
+
+    assert_equals(animation.computedTiming.iterationStart, 1.5,
+        'Wrong AnimationNode.computedTiming.iterationStart value');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 0;
+        assert_equals(window.getComputedStyle(animation.target).top,
+            ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
+            'Animation ' + type(node) + ' should be started at 1.5');
+        player.currentTime = ANIMATION_END_TIME / 2;
+        assert_equals(window.getComputedStyle(animation.target), 2 * ANIMATION_TOP_1,
+            'Animation ' + type(node) + ' should be at 2');
+        player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation.target),
+            2 * ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
+            'Animation ' + type(node) + ' should be at 2.5');
+    }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that value of AnimationTiming.iterationStart attribute is less than one ' +
     'then iteration is started with specified position');
 </script>
