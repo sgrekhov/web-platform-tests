@@ -40,9 +40,9 @@ function colorDistance(R1, G1, B1, A1, R2, G2, B2, A2) {
     var ar1 = A1 * R1 / 255;
     var ag1 = A1 * G1 / 255;
     var ab1 = A1 * B1 / 255;
-    var ar2 = A1 * R2 / 255;
-    var ag2 = A1 * G2 / 255;
-    var ab2 = A1 * B2 / 255;
+    var ar2 = A2 * R2 / 255;
+    var ag2 = A2 * G2 / 255;
+    var ab2 = A2 * B2 / 255;
 
     return Math.sqrt((ar2 - ar1)^2 + (ag2 - ag1)^2 + (ab2 - ab1)^2 + (A2 - A1)^2);
 }
