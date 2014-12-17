@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Tests color distance computation</title>
+<meta name="assert" content="distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + (Bend - Bstart)^2 + (Aend - Astart)^2) where <R|G|B|Astart|end> represents the red, green, blue, or alpha channel of Vstart or Vend respectively. Each value is normalized to the [0.0, 1.0] range and expressed in premultiplied color space.">
+<link rel="help" href="http://w3c.github.io/web-animations/#animatable-as-color-section">
+<link rel="help" href="http://w3c.github.io/web-animations/#distance-computation">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="../testcommon.js"></script>
+<link rel="stylesheet" href="/resources/testharness.css">
+<body>
+<div id="log"></div>
+<script>
+// produces expected keyframe sequence from given single input keyframe
+// or input sequence of keyframes
+function expected() {
+    var result = [];
+    for (var i = 0; i < arguments.length; i++){
+        var a = arguments[i];
+        if (!Array.isArray(a)) {
+            a = [a];
+        }
+        for (var k = 0; k < a.length; k++) {
+            var keyframe = {offset: null, easing: 'linear', composite: null};
+            for (var propertyName in a[k]) {
+                keyframe[propertyName] = a[k][propertyName];
+            }
+            if (keyframe.offset !== null) {
+                keyframe.computedOffset = keyframe.offset;
+            }
+            result.push(keyframe);
+        }
+    }
+    return result;
+}
+// Simple class to keep relation between color name, RGB and HSL
+function Color(name, R,G,B, H,S,L, A){
+    this.name = name;
+    this.red = R;
+    this.green = G;
+    this.blue = B;
+    this.hue = H;
+    this.saturation = S;
+    this.lightness = L;
+    this.alpha = A;
+};
+
+Color.prototype.rgb = function() {
+    return 'rgb(' + this.red + ', ' + this.green + ', ' + this.blue + ')';
+};
+
+Color.prototype.rgba = function() {
+    return 'rgb(' + this.red + ', ' + this.green + ', ' + this.blue + ', ' +this.alpha + ')';
+};
+
+Color.prototype.hsl = function() {
+    return 'hsl(' + this.hue + ', ' + this.saturation + '%, ' + this.lightness + '%)';
+};
+
+Color.prototype.hsla = function() {
+    return 'hsla(' + this.hue + ', ' + this.saturation + '%, ' + this.lightness + '%, ' +this.alpha + ')';
+};
+
+Color.prototype.hex = function() {
+    var r = this.red.toString(16);
+    if (r.length === 1){
+        r = '0' + r;
+    }
+    var g = this.green.toString(16);
+    if (g.length === 1){
+        g = '0' + g;
+    }
+    var b = this.blue.toString(16);
+    if (b.length === 1){
+        b = '0' + b;
+    }
+    return ('#' + r + g + b).toUpperCase();
+};
+
+Color.prototype.distanceTo = function(color){
+    // normalize to the [0.0, 1.0] and premultiply
+    var ar1 = this.alpha * this.red / 255;
+    var ag1 = this.alpha * this.green / 255;
+    var ab1 = this.alpha * this.blue / 255;
+    var ar2 = color.alpha * color.red / 255;
+    var ag2 = color.alpha * color.green / 255;
+    var ab2 = color.alpha * color.blue / 255;
+    // calculate the distance
+    return Math.sqrt((ar2 - ar1)^2 + (ag2 - ag1)^2 + (ab2 - ab1)^2 + (color.alpha - this.alpha)^2);
+};
+
+// Color constants
+var AliceBlue = new Color('AliceBlue', 240,248,255, 208,100,97, 1.0);
+var Aqua = new Color('Aqua', 0,255,255, 180,100,50, 1.0);
+var Blue = new Color('Blue', 0,0,255, 240,100,50, 1.0);
+var DarkBlue = new Color('DarkBlue', 0,0,139, 240,100,27, 1.0);
+
+var Aquamarine = new Color('Aquamarine', 127,255,212, 160,100,75, 1.0);
+var Chartreuse = new Color('Chartreuse', 127,255,0, 90,100,50, 1.0);
+var LightGreen = new Color('LightGreen', 144,238,144, 120,73,75, 1.0);
+var LimeGreen = new Color('LimeGreen', 50,205,50, 120,60,50, 1.0);
+
+var AquamarineA01 = new Color('Aquamarine', 127,255,212, 160,100,75, 0.1);
+var ChartreuseA02 = new Color('Chartreuse', 127,255,0, 90,100,50, 0.2);
+var LightGreenA05 = new Color('LightGreen', 144,238,144, 120,73,75, 0.5);
+var LimeGreenA07 = new Color('LimeGreen', 50,205,50, 120,60,50, 0.7);
+
+var CornflowerBlue = new Color('CornflowerBlue', 100,149,237, 218,79,66, 1.0);
+var DodgerBlue = new Color('DodgerBlue', 30,144,255, 210,100,56, 1.0);
+var DeepSkyBlue = new Color('DeepSkyBlue', 0,191,255, 195,100,50, 1.0);
+
+var PaleGreen = new Color('PaleGreen', 152,251,152, 120,93,79, 1.0);
+var Green = new Color('Green', 0,255,0, 120,100,50, 1.0);
+var PastelGreen = new Color('PastelGreen', 132,224,132, 120,60,70, 1.0);
+var DarkGreen = new Color('DarkGreen', 	0,127,0, 120,100,25, 1.0);
+
+var PaleGreenA01 = new Color('PaleGreen', 152,251,152, 120,93,79, 0.1);
+var GreenA02 = new Color('Green', 0,255,0, 120,100,50, 0.2);
+var PastelGreenA05 = new Color('PastelGreen', 132,224,132, 120,60,70, 0.5);
+var DarkGreenA08 = new Color('DarkGreen', 	0,127,0, 120,100,25, 0.8);
+
+// Animatable as color
+// distance computation:
+// distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + (Bend - Bstart)^2 + (Aend - Astart)^2)
+// where <R|G|B|Astart|end> represents the red, green, blue, or alpha channel
+// of Vstart or Vend respectively. Each value is normalized to the [0.0, 1.0]
+// range and expressed in premultiplied color space.
+test(function(){
+     var keyframes = [
+        {color: AliceBlue.name},
+        {color: Aqua.name},
+        {color: Blue.name},
+        {color: DarkBlue.name}
+     ];
+    var effect = new KeyframeEffect(keyframes, 'paced(color)');
+    var d = AliceBlue.distanceTo(DarkBlue);
+    var expectedFrames = expected(
+        {color: AliceBlue.name, computedOffset: 0},
+        {color: Aqua.name, computedOffset: AliceBlue.distanceTo(Aqua) / d},
+        {color: Blue.name, computedOffset: AliceBlue.distanceTo(Blue) / d},
+        {color: DarkBlue.name, computedOffset: 1.0}
+    );
+    assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Spacing procedure ' +
+        'should consider distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + ' +
+        '(Bend - Bstart)^2 + (Aend - Astart)^2) for animatable as color ' +
+        'target property');
+}, 'Test distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + (Bend - Bstart)^2 + (Aend - Astart)^2) ' +
+    'for animatable as color target property. Color values are predefined color names');
+
+test(function(){
+    var keyframes = [
+        {color: Aquamarine.rgb()},
+        {color: Chartreuse.rgb()},
+        {color: LightGreen.rgb()},
+        {color: LimeGreen.rgb()}
+    ];
+    var effect = new KeyframeEffect(keyframes, 'paced(color)');
+    var d = Aquamarine.distanceTo(LimeGreen);
+    var expectedFrames = expected(
+        {color: Aquamarine.rgb(), computedOffset: 0},
+        {color: Chartreuse.rgb(), computedOffset: Aquamarine.distanceTo(Chartreuse) / d},
+        {color: LightGreen.rgb(), computedOffset: Aquamarine.distanceTo(LightGreen) / d},
+        {color: LimeGreen.rgb(), computedOffset: 1.0}
+    );
+    assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Spacing procedure ' +
+        'should consider distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + ' +
+        '(Bend - Bstart)^2 + (Aend - Astart)^2) for animatable as color ' +
+        'target property');
+}, 'Test distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + (Bend - Bstart)^2 + (Aend - Astart)^2) ' +
+    'for animatable as color target property. Color values are defined as rgb(R,G,B)');
+
+test(function(){
+    var keyframes = [
+        {color: Blue.hex()},
+        {color: CornflowerBlue.hex()},
+        {color: DodgerBlue.hex()},
+        {color: DeepSkyBlue.hex()}
+    ];
+    var effect = new KeyframeEffect(keyframes, 'paced(color)');
+    var d = Blue.distanceTo(DeepSkyBlue);
+    var expectedFrames = expected(
+        {color: Blue.hex(), computedOffset: 0},
+        {color: CornflowerBlue.hex(), computedOffset: Blue.distanceTo(CornflowerBlue) / d},
+        {color: DodgerBlue.hex(), computedOffset: Blue.distanceTo(DodgerBlue) / d},
+        {color: DeepSkyBlue.hex(), computedOffset: 1.0}
+    );
+    assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Spacing procedure ' +
+        'should consider distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + ' +
+        '(Bend - Bstart)^2 + (Aend - Astart)^2) for animatable as color ' +
+        'target property');
+}, 'Test distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + (Bend - Bstart)^2 + (Aend - Astart)^2) ' +
+    'for animatable as color target property. Color values are defined in hex form');
+
+test(function(){
+    var keyframes = [
+        {color: AquamarineA01.rgba()},
+        {color: ChartreuseA02.rgba()},
+        {color: LightGreenA05.rgba()},
+        {color: LimeGreenA07.rgba()}
+    ];
+    var effect = new KeyframeEffect(keyframes, 'paced(color)');
+    var d = AquamarineA01.distanceTo(LimeGreenA07);
+    var expectedFrames = expected(
+        {color: AquamarineA01.rgba(), computedOffset: 0},
+        {color: ChartreuseA02.rgba(), computedOffset: AquamarineA01.distanceTo(ChartreuseA02) / d},
+        {color: LightGreenA05.rgba(), computedOffset: AquamarineA01.distanceTo(LightGreenA05) / d},
+        {color: LimeGreenA07.rgba(), computedOffset: 1.0}
+    );
+    assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Spacing procedure ' +
+        'should consider distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + ' +
+        '(Bend - Bstart)^2 + (Aend - Astart)^2) for animatable as color ' +
+        'target property');
+}, 'Test distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + (Bend - Bstart)^2 + (Aend - Astart)^2) ' +
+    'for animatable as color target property. Color values are defined as rgba(R,G,B,A)');
+
+test(function(){
+    var keyframes = [
+        {color: PaleGreen.hsl()},
+        {color: Green.hsl()},
+        {color: PastelGreen.hsl()},
+        {color: DarkGreen.hsl()}
+    ];
+    var effect = new KeyframeEffect(keyframes, 'paced(color)');
+    var d = PaleGreen.distanceTo(DarkGreen);
+    var expectedFrames = expected(
+        {color: PaleGreen.hsl(), computedOffset: 0},
+        {color: Green.hsl(),  computedOffset: PaleGreen.distanceTo(Green) / d},
+        {color: PastelGreen.hsl(), computedOffset: PaleGreen.distanceTo(PastelGreen) / d},
+        {color: DarkGreen.hsl(), computedOffset: 1.0}
+    );
+    assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Spacing procedure ' +
+        'should consider distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + ' +
+        '(Bend - Bstart)^2 + (Aend - Astart)^2) for animatable as color ' +
+        'target property');
+}, 'Test distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + (Bend - Bstart)^2 + (Aend - Astart)^2) ' +
+    'for animatable as color target property. Color values are defined as hsl(H,S,L)');
+
+test(function(){
+    var keyframes = [
+        {color: PaleGreenA01.hsla()},
+        {color: GreenA02.hsla()},
+        {color: PastelGreenA05.hsla()},
+        {color: DarkGreenA08.hsla()}
+    ];
+    var effect = new KeyframeEffect(keyframes, 'paced(color)');
+    var d = PaleGreenA01.distanceTo(DarkGreenA08);
+    var expectedFrames = expected(
+        {color: PaleGreenA01.hsla(), computedOffset: 0},
+        {color: GreenA02.hsla(), computedOffset: PaleGreenA01.distanceTo(GreenA02) / d},
+        {color: PastelGreenA05.hsla(), computedOffset: PaleGreenA01.distanceTo(PastelGreenA05) / d},
+        {color: DarkGreenA08.hsla(), computedOffset: 1.0}
+    );
+    assert_keyframes_equals(effect.getFrames(), expectedFrames, 'Spacing procedure ' +
+        'should consider distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + ' +
+        '(Bend - Bstart)^2 + (Aend - Astart)^2) for animatable as color ' +
+        'target property');
+}, 'Test distance = sqrt((Rend - Rstart)^2 + (Gend - Gstart)^2 + (Bend - Bstart)^2 + (Aend - Astart)^2) ' +
+    'for animatable as color target property. Color values are defined as hsl(H,S,L,A)');
+</script>
+</body>
