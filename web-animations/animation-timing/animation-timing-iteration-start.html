@@ -170,22 +170,317 @@ async_test(function(t) {
     var player = document.timeline.play(animation);
 
     assert_equals(animation.computedTiming.iterationStart, 1.5,
-        'Wrong AnimationNode.computedTiming.iterationStart value');
+        'Wrong Animation.computedTiming.iterationStart value');
 
     player.ready.then(t.step_func(function() {
         player.currentTime = 0;
         assert_equals(window.getComputedStyle(animation.target).top,
             ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
-            'Animation ' + type(node) + ' should be started at 1.5');
+            'Animation should be started at 1.5');
         player.currentTime = ANIMATION_END_TIME / 2;
         assert_equals(window.getComputedStyle(animation.target), 2 * ANIMATION_TOP_1,
-            'Animation ' + type(node) + ' should be at 2');
+            'Animation should be at 2');
         player.currentTime = ANIMATION_END_TIME;
         assert_equals(window.getComputedStyle(animation.target),
             2 * ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
-            'Animation ' + type(node) + ' should be at 2.5');
+            'Animation should be at 2.5');
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that value of AnimationTiming.iterationStart attribute is less than one ' +
-    'then iteration is started with specified position');
+}, 'Test that value of AnimationTiming.iterationStart attribute is more than one ' +
+    'and iteration composite is \'accumulate\' then iteration is started with accumulated position');
+
+async_test(function(t) {
+    var timing = {
+        iterationStart: 1.5,
+        duration: ANIMATION_END_TIME
+    };
+    var effect = new KeyframeEffect(KEYFRAMES, {iterationComposite: 'accumulate'});
+    var animation = new Animation(createDiv(t), effect, {duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation], timing);
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animationGroup.computedTiming.iterationStart, 1.5,
+        'Wrong AnimationGroup.computedTiming.iterationStart value');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 0;
+        assert_equals(window.getComputedStyle(animation.target).top,
+            ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
+            'Animation should be started at 1.5');
+        player.currentTime = ANIMATION_END_TIME / 2;
+        assert_equals(window.getComputedStyle(animation.target), 2 * ANIMATION_TOP_1,
+            'Animation should be at 2');
+        player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation.target),
+            2 * ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
+            'Animation should be at 2.5');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationGroup with AnimationTiming.iterationStart attribute more than one, ' +
+    'containing Animation with iteration composite \'accumulate\'. Test that iteration is ' +
+    'started with accumulated position');
+
+async_test(function(t) {
+    var timing = {
+        iterationStart: 1.5,
+        duration: ANIMATION_END_TIME
+    };
+    var effect = new KeyframeEffect(KEYFRAMES, {iterationComposite: 'accumulate'});
+    var animation = new Animation(createDiv(t), effect, {duration: ANIMATION_END_TIME});
+    var animationSequence = new AnimationSequence([animation], timing);
+    var player = document.timeline.play(animationSequence);
+
+    assert_equals(animationSequence.computedTiming.iterationStart, 1.5,
+        'Wrong AnimationSequence.computedTiming.iterationStart value');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 0;
+        assert_equals(window.getComputedStyle(animation.target).top,
+            ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
+            'Animation should be started at 1.5');
+        player.currentTime = ANIMATION_END_TIME / 2;
+        assert_equals(window.getComputedStyle(animation.target), 2 * ANIMATION_TOP_1,
+            'Animation should be at 2');
+        player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation.target),
+            2 * ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
+            'Animation should be at 2.5');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationSequence with AnimationTiming.iterationStart attribute more than one, ' +
+    'containing Animation with iteration composite \'accumulate\'. Test that iteration is ' +
+    'started with accumulated position');
+
+async_test(function(t) {
+    var animationTiming = {
+        iterationStart: 0.2,
+        duration: ANIMATION_END_TIME
+    };
+    var groupTiming = {
+            iterationStart: 0.3
+    };
+    var animation = new Animation(createDiv(t), KEYFRAMES, animationTiming);
+    var animationGroup = new AnimationGroup([animation], groupTiming);
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation.computedTiming.iterationStart, 0.2,
+        'Wrong Animation.computedTiming.iterationStart value');
+    assert_equals(animationGroup.computedTiming.iterationStart, 0.3,
+        'Wrong AnimationGroup.computedTiming.iterationStart value');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 0;
+        assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
+            'Animation should be started at 0.5');
+        player.currentTime = ANIMATION_END_TIME / 2;
+        assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+            'Animation should be at 1');
+        player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
+            'Animation should be at 0.5');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationGroup with AnimationTiming.iterationStart attribute less than one, ' +
+    'containing Animation with AnimationTiming.iterationStart attribute less than on, starts ' +
+    'animation from position that is sum of animation\'s and group\'s iteration start values');
+
+async_test(function(t) {
+    var animation1 = new Animation(createDiv(t), KEYFRAMES, {
+        iterationStart: 0.2,
+        duration: ANIMATION_END_TIME
+    });
+    var animation2 = new Animation(createDiv(t), KEYFRAMES, {duration: 0.1 * ANIMATION_END_TIME});
+    var animation3 = new Animation(createDiv(t), KEYFRAMES, {duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2, animation3], {
+        iterationStart: 0.3
+    });
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.iterationStart, 0.2,
+        'Wrong animation1.computedTiming.iterationStart value');
+    assert_equals(animation2.computedTiming.iterationStart, 0,
+        'Wrong animation2.computedTiming.iterationStart value');
+    assert_equals(animation3.computedTiming.iterationStart, 0,
+        'Wrong animation3.computedTiming.iterationStart value');
+    assert_equals(animationGroup.computedTiming.iterationStart, 0.3,
+        'Wrong AnimationGroup.computedTiming.iterationStart value');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 0;
+        assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_0_5,
+            'animation1 should be started at 0.5');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
+            'animation2 should not be started');
+        assert_approx_equals(window.getComputedStyle(animation3.target).top,
+            getExpectedTop(0.3 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            'animation3 should be started at 0.3');
+
+        player.currentTime = ANIMATION_END_TIME / 2;
+        assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_1,
+            'animation1 should be at 1');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
+            'animation2 should not be started');
+        assert_approx_equals(window.getComputedStyle(animation3.target).top,
+            getExpectedTop(0.8 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            'animation3 should be started at 0.8');
+
+        player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
+            'Animation should be at 0.5');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
+            'animation2 should not be started');
+        assert_approx_equals(window.getComputedStyle(animation3.target).top,
+            getExpectedTop(0.3 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            'animation3 should be started at 0.3');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationGroup with AnimationTiming.iterationStart attribute less than one, ' +
+    'containing different Animations with AnimationTiming.iterationStart attribute less than one, ' +
+    'starts animation from position that is sum of animation\'s and group\'s iteration start values');
+
+async_test(function(t) {
+    var animation1 = new Animation(createDiv(t), KEYFRAMES, {
+        iterationStart: 0.2,
+        duration: ANIMATION_END_TIME
+    });
+    var animation2 = new Animation(createDiv(t), KEYFRAMES, {
+        duration: 0.1 * ANIMATION_END_TIME,
+        fill: 'forwards'
+    });
+    var animation3 = new Animation(createDiv(t), KEYFRAMES, {duration: ANIMATION_END_TIME});
+    var animationGroup = new AnimationGroup([animation1, animation2, animation3],
+        {iterationStart: 0.3});
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animation1.computedTiming.iterationStart, 0.2,
+        'Wrong animation1.computedTiming.iterationStart value');
+    assert_equals(animation2.computedTiming.iterationStart, 0,
+        'Wrong animation2.computedTiming.iterationStart value');
+    assert_equals(animation3.computedTiming.iterationStart, 0,
+        'Wrong animation3.computedTiming.iterationStart value');
+    assert_equals(animationGroup.computedTiming.iterationStart, 0.3,
+        'Wrong AnimationGroup.computedTiming.iterationStart value');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 0;
+        assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_0_5,
+            'animation1 should be started at 0.5');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_1,
+            'animation2 should be finished');
+        assert_approx_equals(window.getComputedStyle(animation3.target).top,
+            getExpectedTop(0.3 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            'animation3 should be started at 0.3');
+
+        player.currentTime = ANIMATION_END_TIME / 2;
+        assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_1,
+            'animation1 should be at 1');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_1,
+            'animation2 should be finished');
+        assert_approx_equals(window.getComputedStyle(animation3.target).top,
+            getExpectedTop(0.8 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            'animation3 should be started at 0.8');
+
+        player.currentTime = ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
+            'Animation should be at 0.5');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_1,
+            'animation2 should be finished');
+        assert_approx_equals(window.getComputedStyle(animation3.target).top,
+            getExpectedTop(0.3 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            'animation3 should be started at 0.3');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationGroup with AnimationTiming.iterationStart attribute less than one, ' +
+    'containing different Animations with AnimationTiming.iterationStart attribute less than one, ' +
+    'starts animation from position that is sum of animation\'s and group\'s iteration start values. ' +
+    'Animation whose direction is less that iterationStart should be finished');
+
+// FIXME test below is not finished yet
+
+async_test(function(t) {
+    var animation1 = new Animation(createDiv(t), KEYFRAMES, {
+        duration: 0.1 * ANIMATION_END_TIME,
+        fill: 'forwards'
+    });
+    var animation2 = new Animation(createDiv(t), KEYFRAMES, {
+        iterationStart: 0.3,
+        duration: ANIMATION_END_TIME
+    });
+    var animation3 = new Animation(createDiv(t), KEYFRAMES, {
+        iterationStart: 0.5,
+        duration: ANIMATION_END_TIME
+    });
+    var animationSequence = new AnimationSequence([animation1, animation2, animation3], {
+        iterationStart: 0.3
+    });
+    var player = document.timeline.play(animationSequence);
+
+    assert_equals(animation1.computedTiming.iterationStart, 0,
+        'Wrong animation1.computedTiming.iterationStart value');
+    assert_equals(animation2.computedTiming.iterationStart, 0.3,
+        'Wrong animation2.computedTiming.iterationStart value');
+    assert_equals(animation3.computedTiming.iterationStart, 0.5,
+        'Wrong animation3.computedTiming.iterationStart value');
+    assert_equals(animationGroup.computedTiming.iterationStart, 0.3,
+        'Wrong AnimationGroup.computedTiming.iterationStart value');
+
+    player.ready.then(t.step_func(function() {
+        // With iteration start = 0 expected:
+        // Let d be ANIMATION_DURATION
+        // 1 - starts at 0, finish at 0.1 * d
+        // 2 - starts at 0.1 * d from 0.3, reaches ANIMATION_TOP_1 at 0.8
+        //    since 0.8 goes from 0 and finishes at 1.1 * d at 0.3
+        // 3 - starts at 1.1 * d from 0.5, reaches ANIMATION_TOP_1 at 1.6
+        //    since 1.6 * d goes to 0.5 and finishes at 2.1 * d
+        // But because of sequence start delay of 0.3, 0.3 must be substracted
+        // from all of these time values. Therefore
+
+        player.currentTime = 0;
+        assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_1,
+            'animation1 should be finished');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_0_5,
+            'animation2 should not be started');
+        assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_DEFAULT,
+            'animation3 should not be started');
+
+        player.currentTime = ANIMATION_END_TIME / 2;
+        assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_1,
+            'animation1 should be finished');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_1,
+            'animation2 should not be started');
+        assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_DEFAULT,
+            'animation3 should not be started');
+
+        player.currentTime = 0.6 * ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_1,
+            'animation1 should be finished');
+        assert_approx_equals(window.getComputedStyle(animation2.target).top,
+            getExpectedTop(0.1 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            'animation3 should be at 0.1');
+        assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_DEFAULT,
+            'animation3 should not be started');
+
+        player.currentTime = 0.9 * ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+            'Animation should be finished');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_0_5,
+            'animation2 should be at 0.5');
+        assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_0_5,
+            'animation3 should be at 0.5');
+
+        player.currentTime = 1.5 * ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+            'Animation should be finished');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
+            'animation2 should be finished');
+        assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_1,
+            'animation3 should be at 1');
+
+        player.currentTime = 2 * ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+            'Animation should be finished');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
+            'animation2 should be finished');
+        assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_1,
+            'animation3 should be at 1');
+
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that AnimationGroup with AnimationTiming.iterationStart attribute less than one, ' +
+    'containing different Animations with AnimationTiming.iterationStart attribute less than one, ' +
+    'starts animation from position that is sum of animation\'s and group\'s iteration start values');
 </script>
 </body>
