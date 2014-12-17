@@ -80,6 +80,18 @@ test(function() {
         'should not be changed');
 }, 'Test that setting value of source attribute to the same value as old one does nothing');
 
+test(function() {
+    var source1 = newAnimation(createDiv(this));
+    var source2 = newAnimation(createDiv(this));
+    var player1 = document.timeline.play(source1);
+    var player2 = document.timeline.play(source2);
+
+    player1.source = source2;
+
+    assert_equals(player2.source, null, 'New source content should be unbind from previous plsyer');
+}, 'Test that if new content is not null and if new content is the source content of another player ' +
+    'then source content of the previous player should be set to null');
+
 async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(this)));
     var readyPromise = player.ready;
