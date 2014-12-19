@@ -422,12 +422,18 @@ async_test(function(t) {
         // With iteration start = 0 expected:
         // Let d be ANIMATION_DURATION
         // 1 - starts at 0, finish at 0.1 * d
-        // 2 - starts at 0.1 * d from 0.3, reaches ANIMATION_TOP_1 at 0.8
+        // 2 - starts at 0.1 * d from 0.3, reaches ANIMATION_TOP_1 at 0.8 * d
         //    since 0.8 goes from 0 and finishes at 1.1 * d at 0.3
-        // 3 - starts at 1.1 * d from 0.5, reaches ANIMATION_TOP_1 at 1.6
+        // 3 - starts at 1.1 * d from 0.5, reaches ANIMATION_TOP_1 at 1.6 * d
         //    since 1.6 * d goes to 0.5 and finishes at 2.1 * d
-        // But because of sequence start delay of 0.3, 0.3 must be substracted
-        // from all of these time values. Therefore
+        // But because of sequence iteration start 0.3, 0.3 must be substracted
+        // from all of these time values. Therefore:
+        // 2 - starts at 0 from 0.5, reaches ANIMATION_TOP_1 at 0.5 * d
+        //    since 0.5 * d goes from 0 and finishes at 0.8 * d at 0.3
+        // 3 - starts at 0.8 * d from 0.5, reaches ANIMATION_TOP_1 at 1.3 * d
+        //    since 1.3 * d goes to 0.5 and finishes at 1.8 * d
+        // 1 - starts at 1.8 * d and finishes at 1.9 * d
+        // 2 - starts at 1.9 * d from 0.3 and finished at 2.1 * d with animation value 0.5
 
         player.currentTime = 0;
         assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_1,
@@ -450,37 +456,63 @@ async_test(function(t) {
             'animation1 should be finished');
         assert_approx_equals(window.getComputedStyle(animation2.target).top,
             getExpectedTop(0.1 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
-            'animation3 should be at 0.1');
+            'animation2 should be at 0.1');
         assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_DEFAULT,
             'animation3 should not be started');
 
         player.currentTime = 0.9 * ANIMATION_END_TIME;
-        assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+        assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_1,
             'Animation should be finished');
-        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_0_5,
-            'animation2 should be at 0.5');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
+            'animation2 should be finished');
+        assert_approx_equals(window.getComputedStyle(animation3.target).top,
+            getExpectedTop(0.6 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            'animation3 should be at 0.6');
+
+        player.currentTime = 1.8 * ANIMATION_END_TIME;
+        assert_approx_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_0,
+            COMPUTED_STYLE_EPSILON, 'Animation should be at the beginning');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
+            'animation2 should be finished');
+        assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_1,
+            'animation3 should be at 1');
+
+        player.currentTime = 1.85 * ANIMATION_END_TIME;
+        assert_approx_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_0_5,
+            COMPUTED_STYLE_EPSILON, 'Animation should be at 0.5');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
+            'animation2 should be finished');
+        assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_DEFAULT,
+            'animation3 should be finished');
+
+        player.currentTime = 1.9 * ANIMATION_END_TIME;
+        assert_approx_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_1,
+            COMPUTED_STYLE_EPSILON, 'Animation should be at 1');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
+            'animation2 should be finished');
+        assert_approx_equals(window.getComputedStyle(animation3.target).top,
+            getExpectedTop(0.3 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            'animation3 should be at 0.3');
+
+        player.currentTime = 2.1 * ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_1,
+            'animation1 should be finished');
+        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
+            'animation2 should be finished');
         assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_0_5,
             'animation3 should be at 0.5');
 
-        player.currentTime = 1.5 * ANIMATION_END_TIME;
-        assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
-            'Animation should be finished');
+        player.currentTime = 2.2 * ANIMATION_END_TIME;
+        assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_1,
+            'animation1 should be finished');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
             'animation2 should be finished');
-        assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_1,
-            'animation3 should be at 1');
-
-        player.currentTime = 2 * ANIMATION_END_TIME;
-        assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
-            'Animation should be finished');
-        assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
-            'animation2 should be finished');
-        assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_1,
-            'animation3 should be at 1');
-
+        assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_DEFAULT,
+            'animation3 should be finished');
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that AnimationGroup with AnimationTiming.iterationStart attribute less than one, ' +
+}, 'Test that AnimationSequence with AnimationTiming.iterationStart attribute less than one, ' +
     'containing different Animations with AnimationTiming.iterationStart attribute less than one, ' +
-    'starts animation from position that is sum of animation\'s and group\'s iteration start values');
+    'starts animations from positions that corresponds sequence and animations iteration start ' +
+    'properties');
 </script>
 </body>
