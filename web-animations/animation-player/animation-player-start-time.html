@@ -88,9 +88,9 @@ async_test(function(t) {
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
     player.ready.then(t.step_func(function() {
-        var newStartTime = document.timeline.currentTime - ANIMATION_END_TIME - 100;
+        var newStartTime = document.timeline.currentTime - ANIMATION_DURATION - 100;
         player.startTime = newStartTime;
-        assert_equals(player.currentTime, ANIMATION_END_TIME, 'The value of ' +
+        assert_equals(player.currentTime, ANIMATION_DURATION, 'The value of ' +
             'AnimationPlayer.currentTime should correspond updated startTime');
         assert_equals(player.playState, 'finished', 'Player should be finished');
         t.done();

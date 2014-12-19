@@ -13,7 +13,7 @@
 <script>
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
-    var times = [-100, 0, 100, ANIMATION_END_TIME, ANIMATION_END_TIME + 100];
+    var times = [-100, 0, 100, ANIMATION_DURATION, ANIMATION_DURATION + 100];
 
     player.ready.then(t.step_func(function() {
         times.forEach(function(time) {
@@ -33,7 +33,7 @@ async_test(function(t) {
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
     player.playbackRate = -1;
-    var times = [-100, 0, 100, ANIMATION_END_TIME, ANIMATION_END_TIME + 100];
+    var times = [-100, 0, 100, ANIMATION_DURATION, ANIMATION_DURATION + 100];
 
     player.ready.then(t.step_func(function() {
         times.forEach(function(time) {
@@ -73,7 +73,7 @@ async_test(function(t) {
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
     player.playbackRate = -1;
-    player.currentTime = ANIMATION_END_TIME / 2;
+    player.currentTime = ANIMATION_DURATION / 2;
 
     player.ready.then(t.step_func(function() {
         // wait for 50 ms
@@ -81,7 +81,7 @@ async_test(function(t) {
             player.pause();
             // wait for 50 ms
             setTimeout(t.step_func(function() {
-                assert_approx_equals(player.currentTime, ANIMATION_END_TIME / 2 - 50,
+                assert_approx_equals(player.currentTime, ANIMATION_DURATION / 2 - 50,
                     TIME_EPSILON, 'Current time should be paused');
                 assert_equals(player.startTime, null, 'Start time should be unresolved');
                 assert_equals(player.playState, 'paused', 'AnimationPlayer should be paused');                

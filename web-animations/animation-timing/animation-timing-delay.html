@@ -14,7 +14,7 @@
 async_test(function(t) {
     var timing = {
         delay: 100,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var target = createDiv(t);
     var animation = new Animation(target, KEYFRAMES, timing);
@@ -41,7 +41,7 @@ async_test(function(t) {
 async_test(function(t) {
     var timing = {
         delay: -50,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var target = createDiv(t);
     var animation = new Animation(target, KEYFRAMES, timing);
@@ -64,11 +64,11 @@ async_test(function(t) {
 async_test(function(t) {
     var timing1 = {
         delay: 25,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var timing2 = {
         delay: 50,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var target1 = createDiv(t);
     var target2 = createDiv(t);
@@ -114,11 +114,11 @@ async_test(function(t) {
 async_test(function(t) {
     var timing1 = {
         delay: 25,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var timing2 = {
         delay: -10,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var group1Timing = {
         delay: 20

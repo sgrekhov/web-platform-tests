@@ -32,9 +32,9 @@ async_test(function(t) {
 
     var target = createDiv(t);
     var animation = new Animation(target, effect,
-        {iterations: 3, duration: ANIMATION_END_TIME});
+        {iterations: 3, duration: ANIMATION_DURATION});
     var player = document.timeline.play(animation);
-    player.currentTime = ANIMATION_END_TIME - 10;
+    player.currentTime = ANIMATION_DURATION - 10;
 
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
@@ -55,9 +55,9 @@ async_test(function(t) {
     var effect = newKeyframeEffect({iterationComposite: 'repace'});
     var target = createDiv(t);
     var animation = new Animation(target, effect,
-        {iterations: 3, duration: ANIMATION_END_TIME});
+        {iterations: 3, duration: ANIMATION_DURATION});
     var player = document.timeline.play(animation);
-    player.currentTime = ANIMATION_END_TIME - 10;
+    player.currentTime = ANIMATION_DURATION - 10;
 
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
@@ -76,9 +76,9 @@ async_test(function(t) {
     effect.iterationComposite = 'accumulate';
     var target = createDiv(t);
     var animation = new Animation(target, effect,
-        {iterations: 3, duration: ANIMATION_END_TIME});
+        {iterations: 3, duration: ANIMATION_DURATION});
     var player = document.timeline.play(animation);
-    player.currentTime = ANIMATION_END_TIME - 10;
+    player.currentTime = ANIMATION_DURATION - 10;
 
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
@@ -92,7 +92,7 @@ async_test(function(t) {
 
             // Now seek to the end, change iteration composition
             // to 'replace' and check
-            player.currentTime = 2 * ANIMATION_END_TIME - 10;
+            player.currentTime = 2 * ANIMATION_DURATION - 10;
             effect.iterationComposite = 'replace';
             setTimeout(t.step_func(function() {
                 assert_approx_equals(window.getComputedStyle(target).top,

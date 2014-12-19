@@ -32,12 +32,12 @@ async_test(function(t) {
         0,
         1,
         100,
-        ANIMATION_END_TIME / 2,
-        ANIMATION_END_TIME - 100,
-        ANIMATION_END_TIME - 1,
-        ANIMATION_END_TIME,
-        ANIMATION_END_TIME + 1,
-        ANIMATION_END_TIME + 100];
+        ANIMATION_DURATION / 2,
+        ANIMATION_DURATION - 100,
+        ANIMATION_DURATION - 1,
+        ANIMATION_DURATION,
+        ANIMATION_DURATION + 1,
+        ANIMATION_DURATION + 100];
 
     player.ready.then(t.step_func(function() {
         timesToTest.forEach(function(time) {
@@ -61,12 +61,12 @@ async_test(function(t) {
         0,
         1,
         100,
-        ANIMATION_END_TIME / 2,
-        ANIMATION_END_TIME - 100,
-        ANIMATION_END_TIME - 1,
-        ANIMATION_END_TIME,
-        ANIMATION_END_TIME + 1,
-        ANIMATION_END_TIME + 100];
+        ANIMATION_DURATION / 2,
+        ANIMATION_DURATION - 100,
+        ANIMATION_DURATION - 1,
+        ANIMATION_DURATION,
+        ANIMATION_DURATION + 1,
+        ANIMATION_DURATION + 100];
 
     player.ready.then(t.step_func(function() {
         timesToTest.forEach(function(time) {
@@ -113,7 +113,7 @@ async_test(function(t) {
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
     player.playbackRate = -1;
-    player.currentTime = ANIMATION_END_TIME / 2;
+    player.currentTime = ANIMATION_DURATION / 2;
 
     player.ready.then(t.step_func(function() {
         // wait for 50 ms
@@ -127,7 +127,7 @@ async_test(function(t) {
                         // wait for 50 ms
                         setTimeout(function() {
                             t.step(function() {
-                                var expectedTime = ANIMATION_END_TIME / 2 - 100;
+                                var expectedTime = ANIMATION_DURATION / 2 - 100;
                                 assert_approx_equals(player.currentTime, expectedTime, TIME_EPSILON,
                                     'After player is unpaused by AnimationPlayer.play() ' +
                                     'current time should go on decreasing');
@@ -183,10 +183,10 @@ async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         player.play();
 
-        assert_equals(player.currentTime, ANIMATION_END_TIME / 2,
+        assert_equals(player.currentTime, ANIMATION_DURATION / 2,
             'AnimationPlayer.play() call should not change current time');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
@@ -198,10 +198,10 @@ async_test(function(t) {
     player.playbackRate = -1;
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         player.play();
 
-        assert_equals(player.currentTime, ANIMATION_END_TIME / 2,
+        assert_equals(player.currentTime, ANIMATION_DURATION / 2,
             'AnimationPlayer.play() call should not change current time');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
@@ -265,13 +265,13 @@ async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         player.playbackRate = 1.1;
         player.pause();
         setTimeout(t.step_func(function() {
             player.play();
             var expectedStartTime = player.timeline.currentTime -
-                (ANIMATION_END_TIME / 2) / player.playbackRate;
+                (ANIMATION_DURATION / 2) / player.playbackRate;
             assert_equals(player.startTime, expectedStartTime,
                 'AnimationPlayer.play() should update start time when player is unpaused');
             t.done();
@@ -285,7 +285,7 @@ async_test(function(t) {
     var resolveCounter = 0;
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         player.pause();
         player.ready.then(function(plr) {
             resolveCounter++;

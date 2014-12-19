@@ -28,8 +28,8 @@ test(function() {
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
-    var times = [-100, -1, 0, 100, ANIMATION_END_TIME / 2, ANIMATION_END_TIME - 100,
-                 ANIMATION_END_TIME, ANIMATION_END_TIME + 100];
+    var times = [-100, -1, 0, 100, ANIMATION_DURATION / 2, ANIMATION_DURATION - 100,
+                 ANIMATION_DURATION, ANIMATION_DURATION + 100];
     var playbackRates = [-2, -0.4, 0, 0.4, 2, -1];
 
     player.ready.then(t.step_func(function() {

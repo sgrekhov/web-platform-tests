@@ -16,11 +16,11 @@ var timesToTest = [-100,
     0,
     1,
     100,
-    ANIMATION_END_TIME / 2,
-    ANIMATION_END_TIME - 100,
-    ANIMATION_END_TIME,
-    ANIMATION_END_TIME + 1,
-    ANIMATION_END_TIME + 100];
+    ANIMATION_DURATION / 2,
+    ANIMATION_DURATION - 100,
+    ANIMATION_DURATION,
+    ANIMATION_DURATION + 1,
+    ANIMATION_DURATION + 100];
 
 function calculateCurrentTime(timelineTime, startTime, playbackRate) {
     return (timelineTime - startTime) * playbackRate;
@@ -96,7 +96,7 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
-    player.currentTime = ANIMATION_END_TIME / 2;
+    player.currentTime = ANIMATION_DURATION / 2;
     player.playbackRate = -1.5;
 
     player.ready.then(t.step_func(function() {
@@ -208,7 +208,7 @@ async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME + 1;
+        player.currentTime = ANIMATION_DURATION + 1;
         assert_equals(player.playState, 'finished', 'Player state should be finished');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
@@ -245,7 +245,7 @@ async_test(function(t) {
     var player = document.timeline.play(animation);
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
             'Animation effect should take place');
         t.done();
@@ -258,7 +258,7 @@ async_test(function(t) {
     var player = document.timeline.play(animation);
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
             'Animation effect should take place');
         t.done();

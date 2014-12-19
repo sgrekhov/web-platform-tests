@@ -108,11 +108,11 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(t)));
-    player.currentTime = ANIMATION_END_TIME / 2;
+    player.currentTime = ANIMATION_DURATION / 2;
     player.pause();
 
     player.ready.then(t.step_func(function() {
-        player.source.timing.duration = ANIMATION_END_TIME / 4;
+        player.source.timing.duration = ANIMATION_DURATION / 4;
         assert_equals(player.playState, 'paused', 'Wrong playState');
         player.play();
         return player.ready;
@@ -128,7 +128,7 @@ async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(t)));
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(player.playState, 'finished', 'Wrong playState');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
@@ -149,7 +149,7 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(t)));
-    player.currentTime = ANIMATION_END_TIME / 2;
+    player.currentTime = ANIMATION_DURATION / 2;
 
     player.ready.then(t.step_func(function() {
         player.playbackRate = 4;

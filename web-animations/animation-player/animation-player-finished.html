@@ -261,7 +261,7 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
-    var shortAnimation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_END_TIME / 4);
+    var shortAnimation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION / 4);
     var finishedPromise = player.ready;
     var finishedCounter = 0;
 
@@ -270,7 +270,7 @@ async_test(function(t) {
     }), t.unreached_func('Current finished promise should not be rejected'));
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         player.source = shortAnimation;
         assert_equals(finishedCounter, 1, 'Curent finished promise should be fulfilled');
         assert_equals(player.finished, finishedPromise, 'The current finished ' +
@@ -309,7 +309,7 @@ async_test(function(t) {
     }), t.unreached_func('Current finished promise should not be rejected'));
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         // Changing animation playback rate to 4 makes animation length 4 times shorter
         player.source.timing.playbackRate = 4;
         assert_equals(finishedCounter, 1, 'Curent finished promise should be fulfilled');

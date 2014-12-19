@@ -24,13 +24,13 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_0,
             'Animation should be at the start point for the second node in the group');
 
-        player.currentTime = ANIMATION_END_TIME/2;
+        player.currentTime = ANIMATION_DURATION/2;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the first node in the group');
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the second node in the group');
 
-        player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_1,
             'Animation should be at the end point for the first node in the group');
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_1,
@@ -59,7 +59,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node4.target).top, ANIMATION_TOP_0,
             'Animation should be at the start point for the second node in the group');
 
-        player.currentTime = ANIMATION_END_TIME/2;
+        player.currentTime = ANIMATION_DURATION/2;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the first node in ' +
             'the first group in the group');
@@ -69,7 +69,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node4.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the second node in the sequence');
 
-        player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_1,
             'Animation should be at the end point for the first node in ' +
             'the first group in the group');
@@ -101,7 +101,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_0,
             'Animation should be at the start point for nodes in the nested group');
 
-        player.currentTime = ANIMATION_END_TIME/2;
+        player.currentTime = ANIMATION_DURATION/2;
         assert_equals(window.getComputedStyle(node3.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for the first node in the sequence');
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_0_5,
@@ -109,7 +109,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(node2.target).top, ANIMATION_TOP_0_5,
             'Animation should take place for nodes in the nested group');
 
-        player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(node3.target).top, ANIMATION_TOP_1,
             'Animation should be at the end point for the first node in the sequence');
         assert_equals(window.getComputedStyle(node1.target).top, ANIMATION_TOP_1,

@@ -188,26 +188,26 @@ test(function() {
     animatableElements.forEach(function(animatable, index) {
         var animation1 = newAnimation(animatable);
         var animation2 = new Animation(animatable, [], {
-            duration: ANIMATION_END_TIME,
+            duration: ANIMATION_DURATION,
             fill: 'forwards'});
         var player1 = document.timeline.play(animation1);
         var player2 = document.timeline.play(animation2);
 
         player1.ready.then(t.step_func(function() {
             player2.ready.then(t.step_func(function() {
-                player2.currentTime = ANIMATION_END_TIME / 2;
+                player2.currentTime = ANIMATION_DURATION / 2;
                 var players = aniatable.getAnimationPlayers();
                 assert_array_equals(players, [player1, player2], 'Element ' + index + ': ' +
                     'Animatable.getAnimationPlayers() method should include those players ' +
                     'whose source content is current');
 
-                player2.currentTime = ANIMATION_END_TIME;
+                player2.currentTime = ANIMATION_DURATION;
                 players = aniatable.getAnimationPlayers();
                 assert_array_equals(players, [player1], 'Element ' + index + ': ' +
                     'Animatable.getAnimationPlayers() method should not include those players ' +
                     'whose source content is not current');
 
-                player2.currentTime = ANIMATION_END_TIME + 100;
+                player2.currentTime = ANIMATION_DURATION + 100;
                 players = aniatable.getAnimationPlayers();
                 assert_array_equals(players, [player1], 'Element ' + index + ': ' +
                     'Animatable.getAnimationPlayers() method should not include those players ' +
@@ -234,13 +234,13 @@ test(function() {
                     'Animatable.getAnimationPlayers() method should include those players ' +
                     'whose source content is current');
 
-                player2.currentTime = ANIMATION_END_TIME;
+                player2.currentTime = ANIMATION_DURATION;
                 players = aniatable.getAnimationPlayers();
                 assert_array_equals(players, [player1],  'Element ' + index + ': ' +
                     'Animatable.getAnimationPlayers() method should not include those players ' +
                     'whose source content is not current');
 
-                player2.currentTime = ANIMATION_END_TIME + 100;
+                player2.currentTime = ANIMATION_DURATION + 100;
                 players = aniatable.getAnimationPlayers();
                 assert_array_equals(players, [player1],  'Element ' + index + ': ' +
                     'Animatable.getAnimationPlayers() method should not include those players ' +

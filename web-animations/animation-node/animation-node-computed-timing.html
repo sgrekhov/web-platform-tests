@@ -117,9 +117,9 @@ test(function() {
 
 test(function() {
     var nodes = [
-        new Animation(createDiv(this), [], ANIMATION_END_TIME),
-        new AnimationGroup([], ANIMATION_END_TIME),
-        new AnimationSequence([], ANIMATION_END_TIME)
+        new Animation(createDiv(this), [], ANIMATION_DURATION),
+        new AnimationGroup([], ANIMATION_DURATION),
+        new AnimationSequence([], ANIMATION_DURATION)
     ];
 
     nodes.forEach(function(node) {
@@ -133,7 +133,7 @@ test(function() {
             type(node) + '.computedTiming.iterationStart should be 0.0');
         assert_equals(node.computedTiming.iterations, 1, 'Default value of ' +
             type(node) + '.computedTiming.iterations should be 1.0');
-        assert_equals(node.computedTiming.duration, ANIMATION_END_TIME, 'Value of ' +
+        assert_equals(node.computedTiming.duration, ANIMATION_DURATION, 'Value of ' +
             type(node) + '.computedTiming.duration should be set by constructor');
         assert_equals(node.computedTiming.playbackRate, 1, 'Default value of ' +
             type(node) + '.computedTiming.playbackRate should be 1.0');

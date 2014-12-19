@@ -29,11 +29,11 @@ async_test(function(t) {
     var effect2 = newKeyframeEffect(options);
     var target = createDiv(t);
 
-    var animation1 = new Animation(target, effect1, ANIMATION_END_TIME);
+    var animation1 = new Animation(target, effect1, ANIMATION_DURATION);
     var player1 = document.timeline.play(animation1);
-    player1.currentTime = ANIMATION_END_TIME / 2 - 10;
+    player1.currentTime = ANIMATION_DURATION / 2 - 10;
 
-    var animation2 = new Animation(target, effect2, ANIMATION_END_TIME);
+    var animation2 = new Animation(target, effect2, ANIMATION_DURATION);
     var player2 = document.timeline.play(animation2);
     player2.currentTime = 0;
 
@@ -58,21 +58,21 @@ async_test(function(t) {
     var effect2 = newKeyframeEffect(options);
     var target = createDiv(t);
 
-    var animation1 = new Animation(target, effect1, ANIMATION_END_TIME);
+    var animation1 = new Animation(target, effect1, ANIMATION_DURATION);
     var player1 = document.timeline.play(animation1);
-    player1.currentTime = ANIMATION_END_TIME / 2 - 10;
+    player1.currentTime = ANIMATION_DURATION / 2 - 10;
 
-    var animation2 = new Animation(target, effect2, ANIMATION_END_TIME);
+    var animation2 = new Animation(target, effect2, ANIMATION_DURATION);
     var player2 = document.timeline.play(animation2);
-    player2.currentTime = ANIMATION_END_TIME / 2 - 10;
+    player2.currentTime = ANIMATION_DURATION / 2 - 10;
 
     player1.ready.then(t.step_func(function() {
         player2.ready.then(t.step_func(function() {
             setTimeout(t.step_func(function() {
                 // Expected top property value is
-                // 2 * (Animation top at the moment ANIMATION_END_TIME / 2 + 100)
+                // 2 * (Animation top at the moment ANIMATION_DURATION / 2 + 100)
                 assert_approx_equals(window.getComputedStyle(target).top,
-                    2 * getExpectedTop(ANIMATION_END_TIME / 2 + 100), 10,
+                    2 * getExpectedTop(ANIMATION_DURATION / 2 + 100), 10,
                     'Animation effect should add its intermediate animation value ' +
                     'to an underlying value in the animation stack');
                 t.done();

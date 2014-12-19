@@ -43,7 +43,7 @@ async_test(function(t) {
 
     player.ready.then(t.step_func(function() {
         player.finish();
-        assert_equals(player.currentTime, ANIMATION_END_TIME,
+        assert_equals(player.currentTime, ANIMATION_DURATION,
             'AnimationPlayer.finish() should seek current time to the end time');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
@@ -51,7 +51,7 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
-    player.currentTime = ANIMATION_END_TIME / 2;
+    player.currentTime = ANIMATION_DURATION / 2;
     player.playbackRate = -1;
 
     player.ready.then(t.step_func(function() {
@@ -80,7 +80,7 @@ async_test(function(t) {
         player.playbackRate = 2;
         player.finish();
         var expectedStartTime = player.timeline.currentTime -
-            ANIMATION_END_TIME / player.playbackRate;
+            ANIMATION_DURATION / player.playbackRate;
         assert_equals(player.startTime, expectedStartTime,  'AnimationPlayer.finish() should ' +
             'update player\'s start time'');
         t.done();

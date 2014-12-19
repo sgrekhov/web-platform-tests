@@ -18,12 +18,12 @@ async_test(function(t) {
         {time: -1, finished: false},
         {time: 0, finished: false},
         {time: 1, finished: false},
-        {time: ANIMATION_END_TIME / 2, finished: false},
-        {time: ANIMATION_END_TIME - 1, finished: false},
-        {time: ANIMATION_END_TIME, finished: true},
-        {time: ANIMATION_END_TIME + 1, finished: true},
-        {time: ANIMATION_END_TIME + 100, finished: true},
-        {time: ANIMATION_END_TIME / 3, finished: false}];
+        {time: ANIMATION_DURATION / 2, finished: false},
+        {time: ANIMATION_DURATION - 1, finished: false},
+        {time: ANIMATION_DURATION, finished: true},
+        {time: ANIMATION_DURATION + 1, finished: true},
+        {time: ANIMATION_DURATION + 100, finished: true},
+        {time: ANIMATION_DURATION / 3, finished: false}];
 
     player.ready.then(t.step_func(function() {
         pointsToTest.forEach(function(pointToTest) {
@@ -49,11 +49,11 @@ async_test(function(t) {
         {time: -1, finished: true},
         {time: 0, finished: true},
         {time: 1, finished: false},
-        {time: ANIMATION_END_TIME / 2, finished: false},
-        {time: ANIMATION_END_TIME - 1, finished: false},
-        {time: ANIMATION_END_TIME, finished: false},
-        {time: ANIMATION_END_TIME + 1, finished: false},
-        {time: ANIMATION_END_TIME + 100, finished: false},
+        {time: ANIMATION_DURATION / 2, finished: false},
+        {time: ANIMATION_DURATION - 1, finished: false},
+        {time: ANIMATION_DURATION, finished: false},
+        {time: ANIMATION_DURATION + 1, finished: false},
+        {time: ANIMATION_DURATION + 100, finished: false},
         {time: -200, finished: true}];
 
     player.ready.then(t.step_func(function() {
@@ -74,7 +74,7 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(t)));
-    player.currentTime = ANIMATION_END_TIME - 10;
+    player.currentTime = ANIMATION_DURATION - 10;
 
     player.ready.then(t.step_func(function() {
         setTimeout(function() {
@@ -111,12 +111,12 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = document.timeline.play(newAnimation(createDiv(t)));
-    player.currentTime = ANIMATION_END_TIME / 2;
+    player.currentTime = ANIMATION_DURATION / 2;
 
     player.ready.then(t.step_func(function() {
-        player.source.timing.duration = ANIMATION_END_TIME / 4;
+        player.source.timing.duration = ANIMATION_DURATION / 4;
 
-        assert_equals(player.currentTime, ANIMATION_END_TIME / 4,
+        assert_equals(player.currentTime, ANIMATION_DURATION / 4,
             'The value of AnimationPlayer.currentTime attribute should be ' +
             'hold on source content end time after changing duration');
         assert_equals(player.playState, 'finished', 'AnimationPlayer ' +

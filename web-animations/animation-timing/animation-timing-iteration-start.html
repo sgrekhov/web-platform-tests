@@ -13,8 +13,8 @@
 <script>
 function createAnimationsToTest(test, timing) {
     var animation1 = new Animation(createDiv(test), KEYFRAMES, timing);
-    var animation2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_END_TIME);
-    var animation3 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_END_TIME);
+    var animation2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+    var animation3 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
     var animationGroup = new AnimationGroup([animation2], timing);
     var animationSequence = new AnimationSequence([animation3], timing);
     return [animation1, animation2, animation3];
@@ -22,7 +22,7 @@ function createAnimationsToTest(test, timing) {
 
 async_test(function(t) {
     var timing = {
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var animations = createAnimationsToTest(t, timing);
     var doneCounter = 0;
@@ -54,7 +54,7 @@ async_test(function(t) {
     valuesToTest.forEach(function(iterationStartValue) {
         var timing = {
             iterationStart: iterationStartValue,
-            duration: ANIMATION_END_TIME
+            duration: ANIMATION_DURATION
         };
         var animations = createAnimationsToTest(t, timing);
         animations.forEach(function(animation) {
@@ -84,7 +84,7 @@ async_test(function(t) {
 async_test(function(t) {
     var timing = {
         iterationStart: 0.5,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var animations = createAnimationsToTest(t, timing);
     var doneCounter = 0;
@@ -102,10 +102,10 @@ async_test(function(t) {
             player.currentTime = 0;
             assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
                 'Animation ' + type(node) + ' should be started at 0.5');
-            player.currentTime = ANIMATION_END_TIME / 2;
+            player.currentTime = ANIMATION_DURATION / 2;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
                 'Animation ' + type(node) + ' should be at 1');
-            player.currentTime = ANIMATION_END_TIME;
+            player.currentTime = ANIMATION_DURATION;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
                 'Animation ' + type(node) + ' should be at 0.5');
             doneCounter++;
@@ -121,7 +121,7 @@ async_test(function(t) {
     var timing = {
         iterationStart: 0.5,
         iterations: 2,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var animations = createAnimationsToTest(t, timing);
     var doneCounter = 0;
@@ -139,16 +139,16 @@ async_test(function(t) {
             player.currentTime = 0;
             assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
                 'Animation ' + type(node) + ' should be started at 0.5');
-            player.currentTime = ANIMATION_END_TIME / 2;
+            player.currentTime = ANIMATION_DURATION / 2;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
                 'Animation ' + type(node) + ' should be at 1');
-            player.currentTime = ANIMATION_END_TIME;
+            player.currentTime = ANIMATION_DURATION;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
                 'Animation ' + type(node) + ' should be at 0.5');
-            player.currentTime = 1.5 * ANIMATION_END_TIME;
+            player.currentTime = 1.5 * ANIMATION_DURATION;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
                 'Animation ' + type(node) + ' should be at 1');
-            player.currentTime = 2 * ANIMATION_END_TIME;
+            player.currentTime = 2 * ANIMATION_DURATION;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
                 'Animation ' + type(node) + ' should be at 0.5');
             doneCounter++;
@@ -163,7 +163,7 @@ async_test(function(t) {
 async_test(function(t) {
     var timing = {
         iterationStart: 1.5,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var effect = new KeyframeEffect(KEYFRAMES, {iterationComposite: 'accumulate'});
     var animation = new Animation(createDiv(t), effect, timing);
@@ -177,10 +177,10 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(animation.target).top,
             ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
             'Animation should be started at 1.5');
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_equals(window.getComputedStyle(animation.target), 2 * ANIMATION_TOP_1,
             'Animation should be at 2');
-        player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(animation.target),
             2 * ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
             'Animation should be at 2.5');
@@ -191,10 +191,10 @@ async_test(function(t) {
 async_test(function(t) {
     var timing = {
         iterationStart: 1.5,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var effect = new KeyframeEffect(KEYFRAMES, {iterationComposite: 'accumulate'});
-    var animation = new Animation(createDiv(t), effect, {duration: ANIMATION_END_TIME});
+    var animation = new Animation(createDiv(t), effect, {duration: ANIMATION_DURATION});
     var animationGroup = new AnimationGroup([animation], timing);
     var player = document.timeline.play(animationGroup);
 
@@ -206,10 +206,10 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(animation.target).top,
             ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
             'Animation should be started at 1.5');
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_equals(window.getComputedStyle(animation.target), 2 * ANIMATION_TOP_1,
             'Animation should be at 2');
-        player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(animation.target),
             2 * ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
             'Animation should be at 2.5');
@@ -221,10 +221,10 @@ async_test(function(t) {
 async_test(function(t) {
     var timing = {
         iterationStart: 1.5,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var effect = new KeyframeEffect(KEYFRAMES, {iterationComposite: 'accumulate'});
-    var animation = new Animation(createDiv(t), effect, {duration: ANIMATION_END_TIME});
+    var animation = new Animation(createDiv(t), effect, {duration: ANIMATION_DURATION});
     var animationSequence = new AnimationSequence([animation], timing);
     var player = document.timeline.play(animationSequence);
 
@@ -236,10 +236,10 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(animation.target).top,
             ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
             'Animation should be started at 1.5');
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_equals(window.getComputedStyle(animation.target), 2 * ANIMATION_TOP_1,
             'Animation should be at 2');
-        player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(animation.target),
             2 * ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
             'Animation should be at 2.5');
@@ -251,7 +251,7 @@ async_test(function(t) {
 async_test(function(t) {
     var animationTiming = {
         iterationStart: 0.2,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     };
     var groupTiming = {
             iterationStart: 0.3
@@ -269,10 +269,10 @@ async_test(function(t) {
         player.currentTime = 0;
         assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0_5,
             'Animation should be started at 0.5');
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
             'Animation should be at 1');
-        player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
             'Animation should be at 0.5');
     }), t.unreached_func('Current ready promise should not be rejected'));
@@ -283,10 +283,10 @@ async_test(function(t) {
 async_test(function(t) {
     var animation1 = new Animation(createDiv(t), KEYFRAMES, {
         iterationStart: 0.2,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     });
-    var animation2 = new Animation(createDiv(t), KEYFRAMES, {duration: 0.1 * ANIMATION_END_TIME});
-    var animation3 = new Animation(createDiv(t), KEYFRAMES, {duration: ANIMATION_END_TIME});
+    var animation2 = new Animation(createDiv(t), KEYFRAMES, {duration: 0.1 * ANIMATION_DURATION});
+    var animation3 = new Animation(createDiv(t), KEYFRAMES, {duration: ANIMATION_DURATION});
     var animationGroup = new AnimationGroup([animation1, animation2, animation3], {
         iterationStart: 0.3
     });
@@ -308,25 +308,25 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
             'animation2 should not be started');
         assert_approx_equals(window.getComputedStyle(animation3.target).top,
-            getExpectedTop(0.3 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            getExpectedTop(0.3 * ANIMATION_DURATION), COMPUTED_STYLE_EPSILON,
             'animation3 should be started at 0.3');
 
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_1,
             'animation1 should be at 1');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
             'animation2 should not be started');
         assert_approx_equals(window.getComputedStyle(animation3.target).top,
-            getExpectedTop(0.8 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            getExpectedTop(0.8 * ANIMATION_DURATION), COMPUTED_STYLE_EPSILON,
             'animation3 should be started at 0.8');
 
-        player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
             'Animation should be at 0.5');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
             'animation2 should not be started');
         assert_approx_equals(window.getComputedStyle(animation3.target).top,
-            getExpectedTop(0.3 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            getExpectedTop(0.3 * ANIMATION_DURATION), COMPUTED_STYLE_EPSILON,
             'animation3 should be started at 0.3');
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationGroup with AnimationTiming.iterationStart attribute less than one, ' +
@@ -336,13 +336,13 @@ async_test(function(t) {
 async_test(function(t) {
     var animation1 = new Animation(createDiv(t), KEYFRAMES, {
         iterationStart: 0.2,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     });
     var animation2 = new Animation(createDiv(t), KEYFRAMES, {
-        duration: 0.1 * ANIMATION_END_TIME,
+        duration: 0.1 * ANIMATION_DURATION,
         fill: 'forwards'
     });
-    var animation3 = new Animation(createDiv(t), KEYFRAMES, {duration: ANIMATION_END_TIME});
+    var animation3 = new Animation(createDiv(t), KEYFRAMES, {duration: ANIMATION_DURATION});
     var animationGroup = new AnimationGroup([animation1, animation2, animation3],
         {iterationStart: 0.3});
     var player = document.timeline.play(animationGroup);
@@ -363,25 +363,25 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_1,
             'animation2 should be finished');
         assert_approx_equals(window.getComputedStyle(animation3.target).top,
-            getExpectedTop(0.3 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            getExpectedTop(0.3 * ANIMATION_DURATION), COMPUTED_STYLE_EPSILON,
             'animation3 should be started at 0.3');
 
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_1,
             'animation1 should be at 1');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_1,
             'animation2 should be finished');
         assert_approx_equals(window.getComputedStyle(animation3.target).top,
-            getExpectedTop(0.8 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            getExpectedTop(0.8 * ANIMATION_DURATION), COMPUTED_STYLE_EPSILON,
             'animation3 should be started at 0.8');
 
-        player.currentTime = ANIMATION_END_TIME;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
             'Animation should be at 0.5');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_1,
             'animation2 should be finished');
         assert_approx_equals(window.getComputedStyle(animation3.target).top,
-            getExpectedTop(0.3 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            getExpectedTop(0.3 * ANIMATION_DURATION), COMPUTED_STYLE_EPSILON,
             'animation3 should be started at 0.3');
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationGroup with AnimationTiming.iterationStart attribute less than one, ' +
@@ -393,16 +393,16 @@ async_test(function(t) {
 
 async_test(function(t) {
     var animation1 = new Animation(createDiv(t), KEYFRAMES, {
-        duration: 0.1 * ANIMATION_END_TIME,
+        duration: 0.1 * ANIMATION_DURATION,
         fill: 'forwards'
     });
     var animation2 = new Animation(createDiv(t), KEYFRAMES, {
         iterationStart: 0.3,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     });
     var animation3 = new Animation(createDiv(t), KEYFRAMES, {
         iterationStart: 0.5,
-        duration: ANIMATION_END_TIME
+        duration: ANIMATION_DURATION
     });
     var animationSequence = new AnimationSequence([animation1, animation2, animation3], {
         iterationStart: 0.3
@@ -443,7 +443,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_DEFAULT,
             'animation3 should not be started');
 
-        player.currentTime = ANIMATION_END_TIME / 2;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_1,
             'animation1 should be finished');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_1,
@@ -451,25 +451,25 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_DEFAULT,
             'animation3 should not be started');
 
-        player.currentTime = 0.6 * ANIMATION_END_TIME;
+        player.currentTime = 0.6 * ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_1,
             'animation1 should be finished');
         assert_approx_equals(window.getComputedStyle(animation2.target).top,
-            getExpectedTop(0.1 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            getExpectedTop(0.1 * ANIMATION_DURATION), COMPUTED_STYLE_EPSILON,
             'animation2 should be at 0.1');
         assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_DEFAULT,
             'animation3 should not be started');
 
-        player.currentTime = 0.9 * ANIMATION_END_TIME;
+        player.currentTime = 0.9 * ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_1,
             'Animation should be finished');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
             'animation2 should be finished');
         assert_approx_equals(window.getComputedStyle(animation3.target).top,
-            getExpectedTop(0.6 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            getExpectedTop(0.6 * ANIMATION_DURATION), COMPUTED_STYLE_EPSILON,
             'animation3 should be at 0.6');
 
-        player.currentTime = 1.8 * ANIMATION_END_TIME;
+        player.currentTime = 1.8 * ANIMATION_DURATION;
         assert_approx_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_0,
             COMPUTED_STYLE_EPSILON, 'Animation should be at the beginning');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
@@ -477,7 +477,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_1,
             'animation3 should be at 1');
 
-        player.currentTime = 1.85 * ANIMATION_END_TIME;
+        player.currentTime = 1.85 * ANIMATION_DURATION;
         assert_approx_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_0_5,
             COMPUTED_STYLE_EPSILON, 'Animation should be at 0.5');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
@@ -485,16 +485,16 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_DEFAULT,
             'animation3 should be finished');
 
-        player.currentTime = 1.9 * ANIMATION_END_TIME;
+        player.currentTime = 1.9 * ANIMATION_DURATION;
         assert_approx_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_1,
             COMPUTED_STYLE_EPSILON, 'Animation should be at 1');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
             'animation2 should be finished');
         assert_approx_equals(window.getComputedStyle(animation3.target).top,
-            getExpectedTop(0.3 * ANIMATION_END_TIME), COMPUTED_STYLE_EPSILON,
+            getExpectedTop(0.3 * ANIMATION_DURATION), COMPUTED_STYLE_EPSILON,
             'animation3 should be at 0.3');
 
-        player.currentTime = 2.1 * ANIMATION_END_TIME;
+        player.currentTime = 2.1 * ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_1,
             'animation1 should be finished');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
@@ -502,7 +502,7 @@ async_test(function(t) {
         assert_equals(window.getComputedStyle(animation3.target).top, ANIMATION_TOP_0_5,
             'animation3 should be at 0.5');
 
-        player.currentTime = 2.2 * ANIMATION_END_TIME;
+        player.currentTime = 2.2 * ANIMATION_DURATION;
         assert_equals(window.getComputedStyle(animation1.target).top, ANIMATION_TOP_1,
             'animation1 should be finished');
         assert_equals(window.getComputedStyle(animation2.target).top, ANIMATION_TOP_DEFAULT,
