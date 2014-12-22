@@ -51,7 +51,7 @@ Color.prototype.rgb = function() {
 };
 
 Color.prototype.rgba = function() {
-    return 'rgb(' + this.red + ', ' + this.green + ', ' + this.blue + ', ' +this.alpha + ')';
+    return 'rgb(' + this.red + ', ' + this.green + ', ' + this.blue + ', ' + this.alpha + ')';
 };
 
 Color.prototype.hsl = function() {
@@ -59,26 +59,26 @@ Color.prototype.hsl = function() {
 };
 
 Color.prototype.hsla = function() {
-    return 'hsla(' + this.hue + ', ' + this.saturation + '%, ' + this.lightness + '%, ' +this.alpha + ')';
+    return 'hsla(' + this.hue + ', ' + this.saturation + '%, ' + this.lightness + '%, ' + this.alpha + ')';
 };
 
 Color.prototype.hex = function() {
     var r = this.red.toString(16);
-    if (r.length === 1){
+    if (r.length === 1) {
         r = '0' + r;
     }
     var g = this.green.toString(16);
-    if (g.length === 1){
+    if (g.length === 1) {
         g = '0' + g;
     }
     var b = this.blue.toString(16);
-    if (b.length === 1){
+    if (b.length === 1) {
         b = '0' + b;
     }
     return ('#' + r + g + b).toUpperCase();
 };
 
-Color.prototype.distanceTo = function(color){
+Color.prototype.distanceTo = function(color) {
     // normalize to the [0.0, 1.0] and premultiply
     var ar1 = this.alpha * this.red / 255;
     var ag1 = this.alpha * this.green / 255;
