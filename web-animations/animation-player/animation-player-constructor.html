@@ -19,7 +19,7 @@ test(function() {
         'then source attribute of newly created player should be null');
     assert_equals(player.timeline, null, 'If constructor timeline parameter is ommitted ' +
         'then timeline attribute of newly created player should be null');
-}, 'The AnimationPlayer constructor without parameters specified creates ' +
+}, 'The AnimationPlayer constructor without parameters creates ' +
     'AnimationPlayer instance with null source and null timeline');
 
 test(function() {
@@ -29,7 +29,7 @@ test(function() {
         'then source attribute of newly created player should be null');
     assert_equals(player.timeline, null, 'If constructor timeline parameter is ommitted ' +
         'then timeline attribute of newly created player should be null');
-}, 'The AnimationPlayer constructor with null source and no timeline specified creates ' +
+}, 'The AnimationPlayer constructor with null source and no timeline creates ' +
     'AnimationPlayer instance with null source and null timeline');
 
 test(function() {
@@ -49,8 +49,8 @@ test(function() {
 
         assert_equals(player.source, source, 'Wrong source for source type ' + type(source));
     });
-}, 'The AnimationPlayer constructor with source parameter specified creates ' +
-    'AnimationPlayer instance with source provided');
+}, 'The AnimationPlayer constructor with source parameter creates ' +
+    'AnimationPlayer instance with provided source');
 
 test(function() {
     var timeline = document.timeline;
@@ -58,14 +58,18 @@ test(function() {
 
     assert_equals(player.timeline, timeline, 'Timeline of newly created player ' +
         'should be specified by constructor timeline parameter');
-}, 'The AnimationPlayer constructor with timeline parameter specified creates ' +
-    'AnimationPlayer instance with timeline provided');
+}, 'The AnimationPlayer constructor with timeline parameter creates ' +
+    'AnimationPlayer instance with provided timeline');
 
 test (function() {
-    var parent = new AnimationGroup([newAnimation(createDiv(this)),
-        new AnimationGroup([]), new AnimationSequence([])]);
+    var parent = new AnimationGroup([
+        newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])
+    ]);
     for (var i = 0; i < parent.children.length; i++) {
-        var player = new AnimationPlayer(source);
+        var source = parent.children[i];
+        var player = new AnimationPlayer(parent.children[i]);
 
         assert_equals(player.source, parent.children[i], 'Source of newly created player ' +
             'should be specified by constructor source parameter');
@@ -74,7 +78,29 @@ test (function() {
     }
     assert_array_equals(parent.children, [], 'Source should be removed from the parent ' +
         'group\'s children');
-}, 'If source parameter of the AnimationPlayer constructor has a parent group ' +
-    'then it should be removed from the group');
+}, 'Test AnimationPlayer constructor removes the source content node from its parent group, ' +
+    'if any');
+
+test (function() {
+    var parent = new AnimationSequence([
+        newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])
+    ]);
+    for (var i = 0; i < parent.children.length; i++) {
+        var source = parent.children[i];
+        var player = new AnimationPlayer(source);
+
+        assert_equals(player.source, parent.children[i], 'Source of newly created player ' +
+            'should be specified by constructor source parameter');
+        assert_equals(source.parent, null, 'Source should be removed from its parent ' +
+            'animation sequence');
+    }
+    assert_array_equals(parent.children, [], 'Source should be removed from the parent ' +
+        'sequence\'s children');
+}, 'Test AnimationPlayer constructor removes the source content node from its parent ' +
+    'animation sequence, if any');
+
+// TODO test playing node that is already associated with player
 </script>
 </body>
