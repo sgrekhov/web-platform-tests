@@ -389,8 +389,6 @@ async_test(function(t) {
     'starts animation from position that is sum of animation\'s and group\'s iteration start values. ' +
     'Animation whose direction is less that iterationStart should be finished');
 
-// FIXME test below is not finished yet
-
 async_test(function(t) {
     var animation1 = new Animation(createDiv(t), KEYFRAMES, {
         duration: 0.1 * ANIMATION_DURATION,
@@ -514,5 +512,81 @@ async_test(function(t) {
     'containing different Animations with AnimationTiming.iterationStart attribute less than one, ' +
     'starts animations from positions that corresponds sequence and animations iteration start ' +
     'properties');
+
+async_test(function(t) {
+    var effect = new KeyframeEffect(KEYFRAMES, {iterationComposite: 'accumulate'});
+
+    var animation = new Animation(createDiv(t), effect, {
+        iterationStart: 1,
+        iterations: 2,
+        duration: ANIMATION_DURATION
+    });
+    var player = document.timeline.play(animation);
+
+    assert_equals(animation.computedTiming.iterationStart, 1,
+        'Wrong animation.computedTiming.iterationStart value');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 0;
+        assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
+            'animation should accumulate value of the previous iteration');
+
+        player.currentTime = ANIMATION_DURATION / 2;
+        assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
+            'animation should accumulate value of the previous iteration');
+
+        player.currentTime = ANIMATION_DURATION;
+        assert_equals(window.getComputedStyle(animation.target).top, 2 * ANIMATION_TOP_1,
+            'animation should accumulate value of the previous iteration');
+
+        player.currentTime = 1.5 * ANIMATION_DURATION;
+        assert_equals(window.getComputedStyle(animation.target).top, 2 * ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
+            'animation should accumulate value of the previous iteration');
+
+        player.currentTime = 2 * ANIMATION_DURATION;
+        assert_equals(window.getComputedStyle(animation.target).top, 3 * ANIMATION_TOP_1,
+            'animation should accumulate value of the previous iteration');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that Animation with AnimationTiming.iterationStart attribute set to one ' +
+    'and iteration composite operation set to  \'accumulate\' starts animation from ' +
+    'position where previous iteration should be finished');
+
+async_test(function(t) {
+    var effect = new KeyframeEffect(KEYFRAMES, {iterationComposite: 'accumulate'});
+
+    var animation = new Animation(createDiv(t), effect, {
+        iterationStart: 1.5,
+        iterations: 2,
+        duration: ANIMATION_DURATION
+    });
+    var player = document.timeline.play(animation);
+
+    assert_equals(animation.computedTiming.iterationStart, 1.5,
+        'Wrong animation.computedTiming.iterationStart value');
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 0;
+        assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
+            'animation should accumulate value of the previous iteration');
+
+        player.currentTime = ANIMATION_DURATION / 2;
+        assert_equals(window.getComputedStyle(animation.target) ,2 * ANIMATION_TOP_1,
+            'animation should accumulate value of the previous iteration');
+
+        player.currentTime = ANIMATION_DURATION;
+        assert_equals(window.getComputedStyle(animation.target).top, 2 * ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
+            'animation should accumulate value of the previous iteration');
+
+        player.currentTime = 1.5 * ANIMATION_DURATION;
+        assert_equals(window.getComputedStyle(animation.target).top, 3 * ANIMATION_TOP_1,
+            'animation should accumulate value of the previous iteration');
+
+        player.currentTime = 2 * ANIMATION_DURATION;
+        assert_equals(window.getComputedStyle(animation.target).top, 3 * ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
+            'animation should accumulate value of the previous iteration');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that Animation with AnimationTiming.iterationStart attribute set to more than one ' +
+    'and iteration composite operation set to  \'accumulate\' starts animation from ' +
+    'position where previous iteration should be finished');
 </script>
 </body>
