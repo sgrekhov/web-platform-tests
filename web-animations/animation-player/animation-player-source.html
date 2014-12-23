@@ -46,27 +46,52 @@ test(function() {
     var player = new AnimationPlayer(oldSource);
     player.source = newSource;
 
-    assert_equals(player.source, newsource, 'AnimationPlayer.source ' +
+    assert_equals(player.source, newSource, 'AnimationPlayer.source ' +
         'attribute value should be set');
 }, 'Test setting value of AnimationPlayer.source attribute. Previous value of ' +
     'the attribute is not null');
 
 test(function() {
-    var parent = new AnimationGroup([newAnimation(createDiv(this)),
-        new AnimationGroup([]), new AnimationSequence([])]);
-    for (var i = 0; i < parent.children.length; i++) {
+    var nodes = [
+        newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])
+    ];
+    var parent = new AnimationGroup(nodes);
+    nodes.forEach(function(node) {
         var player = new AnimationPlayer();
-        player.source = parent.children[i];
+        player.source = node;
 
-        assert_equals(player.source, parent.children[i], 'Source of newly created player ' +
-            'should be set for child ' + i);
-        assert_equals(parent.children[i].parent, null, 'Source should be removed from ' +
-            'its parent animation group for child ' + i);
-    }
+        assert_equals(player.source, node, 'Source of newly created player ' +
+            'should be set for node of type' + type(node));
+        assert_equals(node.parent, null, 'Source should be removed from ' +
+            'its parent animation group for node of type' + type(node));
+    });
     assert_array_equals(parent.children, [], 'Source should be removed from the parent ' +
         'group\'s children');
 }, 'Test that setting value of AnimationPlayer.source attribute removes new source ' +
     'from its parent group');
+
+test(function() {
+    var nodes = [
+        newAnimation(createDiv(this)),
+        new AnimationGroup([]),
+        new AnimationSequence([])
+    ];
+    var parent = new AnimationSequence(nodes);
+    nodes.forEach(function(node) {
+        var player = new AnimationPlayer();
+        player.source = node;
+
+        assert_equals(player.source, node, 'Source of newly created player ' +
+            'should be set for node of type' + type(node));
+        assert_equals(node, null, 'Source should be removed from ' +
+            'its parent animation sequence for node of type' + type(node));
+    });
+    assert_array_equals(parent.children, [], 'Source should be removed from the parent ' +
+        'sequence\'s children');
+}, 'Test that setting value of AnimationPlayer.source attribute removes new source ' +
+    'from its parent animation sequence');
 
 test(function() {
     var source = newAnimation(createDiv(this));
@@ -88,7 +113,7 @@ test(function() {
 
     player1.source = source2;
 
-    assert_equals(player2.source, null, 'New source content should be unbind from previous plsyer');
+    assert_equals(player2.source, null, 'New source content should be unbind from previous player');
 }, 'Test that if new content is not null and if new content is the source content of another player ' +
     'then source content of the previous player should be set to null');
 
@@ -105,7 +130,8 @@ async_test(function(t) {
             assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
                 'with a DOMException named \'AbortError\'');
             t.done();
-        }));
+        })
+    );
 
     player.source = null;
     assert_not_equals(player.ready, readyPromise, 'Player\'s current ready promise ' +
@@ -171,6 +197,7 @@ async_test(function(t) {
         }, 100);
     var newSource = newAnimation(createDiv(this));
     var player = document.timeline.play(oldSource);
+    player.source = newSource;
 
     player.ready.then(t.step_func(function() {
         setTimeout(function() {
@@ -199,7 +226,7 @@ async_test(function(t) {
         }), t.unreached_func('Current ready promise should not be rejected'));
     }));
 }, 'Test that after setting value of AnimationPlayer.source attribute to new value ' +
-    'goes on new animation from the same position');
+    'the new animation is played from the same position');
 
 async_test(function(t) {
     var oldSource = new Animation(createDiv(t), KEYFRAMES, 1000);
@@ -214,7 +241,7 @@ async_test(function(t) {
             t.done();
         }));
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that after setting value of AnimationPlayer.source attribute to new value ' +
+}, 'Test that setting value of AnimationPlayer.source attribute to new value ' +
     'finishes player if current time exceeds source duration');
 
 async_test(function(t) {
