@@ -3,6 +3,8 @@
 <title>AnimationPlayer constructor tests</title>
 <meta name="assert" content="Creates a new AnimationPlayer object">
 <link rel="help" href="http://w3c.github.io/web-animations/#the-animationplayer-interface">
+<link rel="help" href="http://w3c.github.io/web-animations/#set-the-timeline-of-a-player">
+<link rel="help" href="http://w3c.github.io/web-animations/#set-the-source-content-of-a-player">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -47,7 +49,8 @@ test(function() {
     sources.forEach(function(source) {
         var player = new AnimationPlayer(source);
 
-        assert_equals(player.source, source, 'Wrong source for source type ' + type(source));
+        assert_equals(player.source, source, 'Player should be associated ' +
+            'to source for source type ' + type(source));
     });
 }, 'The AnimationPlayer constructor with source parameter creates ' +
     'AnimationPlayer instance with provided source');
@@ -61,46 +64,63 @@ test(function() {
 }, 'The AnimationPlayer constructor with timeline parameter creates ' +
     'AnimationPlayer instance with provided timeline');
 
-test (function() {
-    var parent = new AnimationGroup([
+test(function() {
+    var nodes = [
         newAnimation(createDiv(this)),
         new AnimationGroup([]),
         new AnimationSequence([])
-    ]);
-    for (var i = 0; i < parent.children.length; i++) {
-        var source = parent.children[i];
-        var player = new AnimationPlayer(parent.children[i]);
+    ];
+    var parent = new AnimationGroup(nodes);
 
-        assert_equals(player.source, parent.children[i], 'Source of newly created player ' +
+    nodes.forEach(function(node){
+        var player = new AnimationPlayer(node);
+
+        assert_equals(player.source, node, 'Source of newly created player ' +
             'should be specified by constructor source parameter');
-        assert_equals(source.parent, null, 'Source should be removed from its parent ' +
+        assert_equals(node.parent, null, 'Source should be removed from its parent ' +
             'animation group');
-    }
+    });
     assert_array_equals(parent.children, [], 'Source should be removed from the parent ' +
         'group\'s children');
 }, 'Test AnimationPlayer constructor removes the source content node from its parent group, ' +
     'if any');
 
-test (function() {
-    var parent = new AnimationSequence([
+test(function() {
+    var nodes = [
         newAnimation(createDiv(this)),
         new AnimationGroup([]),
         new AnimationSequence([])
-    ]);
-    for (var i = 0; i < parent.children.length; i++) {
-        var source = parent.children[i];
-        var player = new AnimationPlayer(source);
+    ];
+    var parent = new AnimationSequence(nodes);
 
-        assert_equals(player.source, parent.children[i], 'Source of newly created player ' +
+    nodes.forEach(function(node){
+        var player = new AnimationPlayer(node);
+
+        assert_equals(player.source, node, 'Source of newly created player ' +
             'should be specified by constructor source parameter');
-        assert_equals(source.parent, null, 'Source should be removed from its parent ' +
+        assert_equals(node.parent, null, 'Source should be removed from its parent ' +
             'animation sequence');
-    }
+    });
     assert_array_equals(parent.children, [], 'Source should be removed from the parent ' +
         'sequence\'s children');
 }, 'Test AnimationPlayer constructor removes the source content node from its parent ' +
     'animation sequence, if any');
 
-// TODO test playing node that is already associated with player
+test(function() {
+    var sources = [newAnimation(createDiv(this)), new AnimationGroup([]), new AnimationSequence([])];
+    sources.forEach(function(source) {
+        var player1 = new AnimationPlayer(source);
+        assert_equals(player1.source, source, 'First player should be associated ' +
+            'to source for source type ' + type(source));
+
+        var player2 = new AnimationPlayer(source);
+        assert_equals(player1.source, null, 'Previous player should be ' +
+            'disassociated from source type ' + type(source));
+        assert_equals(player2.source, source, 'Second player should be associated ' +
+            'to source for source type ' + type(source));
+    });
+
+}, 'Test AnimationPlayer constructor sets source to null in player associated ' +
+    'with passed animateion node');
 </script>
 </body>

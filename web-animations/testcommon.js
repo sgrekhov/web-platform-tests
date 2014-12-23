@@ -515,3 +515,16 @@ KeyframeEffect.prototype.getFrames = function() {
 
 KeyframeEffect.prototype.setFrames = function(frames) {
 };
+
+function AnimationPlayer(source, timeline){
+    if (source){
+        this.source = source;
+    } else {
+        this.source = null;
+    }
+    if (timeline){
+        this.timeline = timeline;
+    } else {
+        this.timeline = null;
+    }
+}
