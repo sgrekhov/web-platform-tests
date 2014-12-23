@@ -114,7 +114,7 @@ async_test(function(t) {
             }
         }), t.unreached_func('Current ready promise should not be rejected'));
     });
-}, 'Test that value of AnimationTiming.iterationStart attribute is less than one ' +
+}, 'Test that if value of AnimationTiming.iterationStart attribute is less than one ' +
     'then iteration is started with specified position');
 
 async_test(function(t) {
@@ -157,7 +157,7 @@ async_test(function(t) {
             }
         }), t.unreached_func('Current ready promise should not be rejected'));
     });
-}, 'Test that value of AnimationTiming.iterationStart attribute is less than one ' +
+}, 'Test that if value of AnimationTiming.iterationStart attribute is less than one ' +
     'and iterations more than one then iteration is started with specified position');
 
 async_test(function(t) {
@@ -185,7 +185,7 @@ async_test(function(t) {
             2 * ANIMATION_TOP_1 + ANIMATION_TOP_0_5,
             'Animation should be at 2.5');
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that value of AnimationTiming.iterationStart attribute is more than one ' +
+}, 'Test that if value of AnimationTiming.iterationStart attribute is more than one ' +
     'and iteration composite is \'accumulate\' then iteration is started with accumulated position');
 
 async_test(function(t) {
