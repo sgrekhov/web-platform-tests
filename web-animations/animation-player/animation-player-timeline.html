@@ -45,7 +45,8 @@ async_test(function(t) {
             assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
                 'with a DOMException named \'AbortError\'');
             t.done();
-        }));
+        })
+    );
 
     player.timeline = null;
     assert_not_equals(player.ready, readyPromise, 'Player\'s current ready promise ' +
@@ -95,13 +96,11 @@ async_test(function(t) {
     player.timeline = doc.timeline;
 
     player.ready.then(t.step_func(function() {
-        setTimeout(function() {
-            t.step(function() {
-                assert_equals(numOfCallsNullTime, 1, 'AnimationEffect callback should ' +
-                    'be called with null timeFraction after changing of player source');
-                t.done();
-            });
-        }, 50);
+        setTimeout(t.step_func(function() {
+            assert_equals(numOfCallsNullTime, 1, 'AnimationEffect callback should ' +
+                'be called with null timeFraction after changing of player source');
+            t.done();
+        }), 50);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that EffectCallback is called with null timeFraction ' +
     'if player timeline is changed to new not null value');
