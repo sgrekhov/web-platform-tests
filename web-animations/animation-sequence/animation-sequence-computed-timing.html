@@ -161,6 +161,25 @@ test(function() {
     'for sequence with children with negative end time and sequence timing.duration value is unsupported');
 
 test(function() {
+    var valuesToTest = [-1, -1000, -0.5, -Number.MAX_VALUE, Number.NaN, -Infinity];
+    valuesToTest.forEach(function(durationValue) {
+        var timing = {duration: durationValue};
+        var node1 = newAnimation(createDiv(this));
+        var node2 = newAnimation(createDiv(this));
+        var sequence = new AnimationSequence([node1, node2]);
+
+        var duration = sequence.computedTiming.duration;
+        var probeNode = new AnimationGroup([]);
+        sequence.append(probeNode);
+
+        assert_equals(sequence.computedTiming.duration, probeNode.computedTiming.startTime,
+            'AnimationSequence.computedTiming.duration should return intrinsic iteration duration ' +
+            'for value ' + durationValue);
+    }
+}, 'Test AnimationGroup.computedTiming.duration returns intrinsic iteration duration ' +
+    'for nodes with negative and NaN values');
+
+test(function() {
     var node = new AnimationSequence([]);
     assert_equals(node.computedTiming.fill, 'both',
         'AnimationSequence.computedTiming.fill should return \'both\'');

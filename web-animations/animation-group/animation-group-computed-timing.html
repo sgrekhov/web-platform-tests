@@ -31,6 +31,20 @@ test(function() {
     'for group with single child');
 
 test(function() {
+    var valuesToTest = [-1, -1000, -0.5, -Number.MAX_VALUE, Number.NaN, -Infinity, 'one'];
+    valuesToTest.forEach(function(durationValue) {
+        var timing = {duration: durationValue};
+        var node = newAnimation(createDiv(this));
+        var group = new AnimationGroup([node]);
+
+        assert_equals(group.computedTiming.duration, node.computedTiming.endTime,
+            'AnimationGroup.computedTiming.duration should return ' +
+            ' max(0, maximum end time of children) for value ' + durationValue);
+    }
+}, 'Test AnimationGroup.computedTiming.duration returns intrinsic iteration duration ' +
+    'for nodes with negative, NaN and string values');
+
+test(function() {
     var node1 = new Animation(createDiv(this), [], 1000);
     var node2 = new Animation(createDiv(this), [], 500);
     var group = new AnimationGroup([node1, node2]);
