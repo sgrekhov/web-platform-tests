@@ -57,16 +57,14 @@ async_test(function(t) {
         var newStartTime = document.timeline.currentTime + 50;
         player.startTime = newStartTime;
         // New player start time is in 50ms.
-        // Wait for 100ms and chek that currentTime is about 50ms
-        setTimeout(function() {
-            t.step(function () {
-                assert_approx_equals(player.currentTime, 50, TIME_EPSILON, 'The value of ' +
-                    'AnimationPlayer.currentTime should correspond to startTime');
-                t.done();
-            });
-        }, 100);        
+        // Wait for 100ms and check that currentTime is about 50ms
+        setTimeout(t.step_func(function() {
+            assert_approx_equals(player.currentTime, 50, TIME_EPSILON, 'The value of ' +
+                'AnimationPlayer.currentTime should correspond to startTime');
+            t.done();
+        }), 100);
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test setting AnimationPlayer start time in the future delays moves beginning of play ' +
+}, 'Test setting AnimationPlayer start time in the future moves beginning of play ' +
     'accordingly');
 
 async_test(function(t) {
@@ -75,13 +73,11 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         var newStartTime = document.timeline.currentTime - 100;
         player.startTime = newStartTime;
-        setTimeout(function() {
-            t.step(function () {
-                assert_approx_equals(player.currentTime, 150, TIME_EPSILON, 'The value of ' +
-                    'AnimationPlayer.currentTime should correspond to startTime');
-                t.done();
-            });
-        }, 50);
+        setTimeout(t.step_func(function() {
+            assert_approx_equals(player.currentTime, 150, TIME_EPSILON, 'The value of ' +
+                'AnimationPlayer.currentTime should correspond to startTime');
+            t.done();
+        }), 50);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test setting AnimationPlayer start time in the past shifts beginning of play');
 
@@ -96,7 +92,7 @@ async_test(function(t) {
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test setting AnimationPlayer start time to the value in the past that ' +
-    'earlier that current time minus animation length finishes the player');
+    'earlier than current time minus animation duration finishes the player');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
@@ -106,7 +102,7 @@ async_test(function(t) {
         assert_equals(plr, player, 'The current ready promise should be fulfilled with the player');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that if player has a pending play task player\'s current ready promise ' +
+}, 'Test that if player has a pending play task, player\'s current ready promise ' +
     'is fulfilled with player');
 </script>
 </body>
