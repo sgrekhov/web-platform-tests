@@ -3,7 +3,10 @@
 <title>AnimationPlayer currentTime attribute tests</title>
 <meta name="assert" content="The current time of this player unless this player has a pending pause task, in which case this attribute returns null">
 <link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-currenttime">
+<link rel="help" href="http://w3c.github.io/web-animations/#current-time">
+<link rel="help" href="http://w3c.github.io/web-animations/#set-the-current-time">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -11,7 +14,8 @@
 <body>
 <div id="log"></div>
 <script>
-var timesToTest = [-100,
+var timesToTest = [
+    -100,
     -1,
     0,
     1,
@@ -20,61 +24,89 @@ var timesToTest = [-100,
     ANIMATION_DURATION - 100,
     ANIMATION_DURATION,
     ANIMATION_DURATION + 1,
-    ANIMATION_DURATION + 100];
+    ANIMATION_DURATION + 100
+];
 
-function calculateCurrentTime(timelineTime, startTime, playbackRate) {
-    return (timelineTime - startTime) * playbackRate;
+// calculates expected current time for given player
+function expectedCurrentTime(player) {
+    return (player.timeline.currentTime - player.startTime) * player.playbackRate;
 }
 
-function calculateStartTime(timelineTime, seekTime, playbackRate) {
-    return timelineTime - seekTime / playbackRate;
+// calculates expected start time for given player and seek time
+function expectedStartTime(player, seekTime) {
+    return player.timeline.currentTime - ( seekTime / player.playbackRate );
 }
 
+// http://w3c.github.io/web-animations/#current-time
+//The current time is calculated from the first matching condition from below:
+// If the player’s hold time is resolved,
+// The current time is the player’s hold time.
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    player.pause();
+    player.ready.then(t.step_func(function() {
+        var holdTime = player.currentTime;
+        setTimeout(t.step_func(function() {
+            assert_equals(player.currentTime, holdTime, 'AnimationPlayer.currentTime ' +
+                'should return hold time');
+            t.done();
+        }), 100);
+    }),  t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test AnimationPlayer.currentTime attribute returns the player\'s hold time, ' +
+    'if player is paused');
+
+// If any of the following are true:
+//  1. the player has no associated timeline, or
 test(function() {
     var player = new AnimationPlayer();
     assert_equals(player.currentTime, null, 'AnimationPlayer.currentTime should be null');
-}, 'Test that AnimationPlayer.currentTime attribute is null if player has no associated timeline');
+}, 'Test AnimationPlayer.currentTime attribute is null if player has no associated timeline ' +
+    'and player\'s hold time is unresolved');
 
+// 2. the associated timeline is inactive, or
 test(function() {
-    var player = new AnimationPlayer();
-    var currentTime = document.timeline.currentTime + 100;
-    player.currentTime = currentTime;
-    assert_equals(player.currentTime, currentTime, 'AnimationPlayer.currentTime should be set');
-}, 'Test that AnimationPlayer.currentTime attribute is set to new value even if player ' +
-    'has no associated timeline');
+    var timeline = new InactiveTimeline();
+    var player = new AnimationPlayer(newAnimation(createDiv(this)), timeline);
+    assert_equals(player.currentTime, null, 'AnimationPlayer.currentTime should be null');
+}, 'Test AnimationPlayer.currentTime attribute is null if player is associated ' +
+    'with inactive timeline and player\'s hold time is unresolved');
 
-test(function() {
-    var player = new AnimationPlayer();
-    player.startTime = document.timeline.currentTime + 100;
-    var currentTime = document.timeline.currentTime + 200;
-    player.currentTime = currentTime;
-    assert_equals(player.currentTime, currentTime, 'AnimationPlayer.currentTime should be set');
-    assert_equals(player.startTime, null, 'AnimationPlayer.startTime should be unresolved');
-}, 'Test that setting AnimationPlayer.currentTime attribute makes start time unresolved ' +
-    'if player has no associated timeline');
+// 3. the player’s start time is unresolved.
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    player.startTime = null;
+    assert_equals(player.currentTime, null, 'AnimationPlayer.currentTime should be null');
+    player.ready.then(t.step_func(function() {
+        assert_equals(player.currentTime, null, 'AnimationPlayer.currentTime should be null');
+        t.done();
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test AnimationPlayer.currentTime attribute is null if player start time ' +
+    'is unresolved and player\'s hold time is unresolved');
 
+// Otherwise,
+//  current time = (timeline time - start time) × playback rate
+//  Where timeline time is the current time value of the associated timeline.
+//  The playback rate value is defined in §3.5.16 Speed control.
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
 
     player.ready.then(t.step_func(function() {
-        assert_equals(player.currentTime, calculateCurrentTime(
-            player.timeline.currentTime, player.startTime, player.playbackRate),
+        assert_equals(player.currentTime, expectedCurrentTime(player),
             'AnimationPlayer.currentTime value should be calculated as defined');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'AnimationPlayer.currentTime value is (timeline time - start time) × playback rate');
+}, 'Test AnimationPlayer.currentTime value is (timeline time - start time) × playback rate');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
     player.playbackRate = 0.4;
 
     player.ready.then(t.step_func(function() {
-        setTimeout(function() {
-            assert_equals(player.currentTime, calculateCurrentTime(
-                player.timeline.currentTime, player.startTime, player.playbackRate),
+        setTimeout(t.step_func(function() {
+            assert_equals(player.currentTime, expectedCurrentTime(player),
                 'AnimationPlayer.currentTime value should be calculated as defined');
             t.done();
-        }, 50);
+        }), 50);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'AnimationPlayer.currentTime value is (timeline time - start time) × playback rate. ' +
     'Test 0 < playbackRate < 1');
@@ -84,12 +116,11 @@ async_test(function(t) {
     player.playbackRate = 2;
 
     player.ready.then(t.step_func(function() {
-        setTimeout(function() {
-            assert_equals(player.currentTime, calculateCurrentTime(
-                player.timeline.currentTime, player.startTime, player.playbackRate),
+        setTimeout(t.step_func(function() {
+            assert_equals(player.currentTime, expectedCurrentTime(player),
                 'AnimationPlayer.currentTime value should be calculated as defined');
             t.done();
-        }, 50);
+        }), 50);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'AnimationPlayer.currentTime value is (timeline time - start time) × playback rate. ' +
     'Test playbackRate > 1');
@@ -100,16 +131,21 @@ async_test(function(t) {
     player.playbackRate = -1.5;
 
     player.ready.then(t.step_func(function() {
-        setTimeout(function() {
-            assert_equals(player.currentTime, calculateCurrentTime(
-                player.timeline.currentTime, player.startTime, player.playbackRate),
+        setTimeout(t.step_func(function() {
+            assert_equals(player.currentTime, expectedCurrentTime(player),
                 'AnimationPlayer.currentTime value should be calculated as defined');
             t.done();
-        }, 50);
+        }), 50);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'AnimationPlayer.currentTime value is (timeline time - start time) × playback rate. ' +
     'Test playbackRate < 0');
 
+// http://w3c.github.io/web-animations/#set-the-current-time
+//  The procedure to set the current time of a player, player, to seek time is as follows:
+//  Run the steps to silently set the current time of player to seek time.
+//   http://w3c.github.io/web-animations/#silently-set-the-current-time
+// The procedure to silently set the current time of a player, player, to seek time is as follows:
+//  1. If seek time is an unresolved time value, throw a NotSupportedError.
 test(function() {
     var player = newAnimationPlayer(createDiv(this));
     assert_throws('NotSupportedError', function() {
@@ -117,29 +153,78 @@ test(function() {
     }, 'NotSupportedError should be thrown if value to set is unresolved');
 }, 'Setting AnimationPlayer.currentTime to unresolved value throws NotSupportedError');
 
+// 2. Update either player’s hold time or start time as follows:
+// If any of the following conditions are true:
+//  player’s hold time is resolved ... Set player’s hold time to seek time.
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
+    player.pause();
 
     player.ready.then(t.step_func(function() {
-        timesToTest.forEach(function(val) {
-            player.currentTime = val;
-            assert_equals(player.currentTime, val,
-                'AnimationPlayer.currentTime value should be set to the new value');
-            assert_equals(player.currentTime, calculateCurrentTime(
-                player.timeline.currentTime, player.startTime, player.playbackRate),
-                'AnimationPlayer.currentTime value should be calculated as defined');
+        var startTime = player.startTime;
+        timesToTest.forEach(function(seekTime) {
+            player.currentTime = seekTime;
+            assert_equals(player.currentTime, seekTime, 'AnimationPlayer.currentTime ' +
+                'should set player\'s hold time and return it on reading');
+            assert_equals(player.startTime, startTime,
+                'The value of AnimationPlayer.startTime attribute should not be updated');
+            t.done();
+        });
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that setting value of AnimationPlayer.currentTime attribute set player\'s ' +
+    'hold time to seek time if player hold time is resolved');
+
+//  or player has no associated timeline ... Set player’s hold time to seek time.
+test(function() {
+    var player = new AnimationPlayer();
+    var currentTime = document.timeline.currentTime + 100;
+    player.currentTime = currentTime;
+    assert_equals(player.currentTime, currentTime, 'AnimationPlayer.currentTime ' +
+        'should set player\'s hold time and return it on reading');
+}, 'Test that setting value of AnimationPlayer.currentTime attribute set player\'s ' +
+    'hold time to seek time if player has no associated timeline');
+
+// or the associated timeline is inactive ... Set player’s hold time to seek time.
+test(function() {
+    var timeline = new InactiveTimeline();
+    var player = new AnimationPlayer(newAnimation(createDiv(this)), timeline);
+    var currentTime = document.timeline.currentTime + 100;
+    player.currentTime = currentTime;
+    assert_equals(player.currentTime, currentTime, 'AnimationPlayer.currentTime ' +
+        'should set player\'s hold time and return it on reading');
+}, 'Test that setting value of AnimationPlayer.currentTime attribute set player\'s ' +
+    'hold time to seek time if player is associated with inactive timeline');
+
+// or player’s playback rate is 0 ... Set player’s hold time to seek time.
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(this));
+    player.playbackRate = 0;
+
+    player.ready.then(t.step_func(function() {
+        var startTime = player.startTime;
+        timesToTest.forEach(function(seekTime) {
+            player.currentTime = seekTime;
+            assert_equals(player.currentTime, seekTime, 'AnimationPlayer.currentTime ' +
+                'should set player\'s hold time and return it on reading');
+            assert_equals(player.startTime, startTime,
+                'The value of AnimationPlayer.startTime attribute should not be updated');
         });
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test setting value of AnimationPlayer.currentTime attribute');
+}, 'Test that setting value of AnimationPlayer.currentTime attribute set player\'s ' +
+    'hold time to seek time if playback rate is 0');
 
+// or player has a pending pause task Set player’s hold time to seek time.
+//  Otherwise,
+//    Set player’s start time to the result of evaluating
+//       timeline time - (seek time / playback rate)
+//    where timeline time is the current time value of timeline associated with player.
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
 
     player.ready.then(t.step_func(function() {
         timesToTest.forEach(function(seekTime) {
-            var expectedTime = calculateStartTime(player.timeline.currentTime, seekTime,
-                player.playbackRate);
+            var expectedTime = expectedStartTime(player, seekTime);
             player.currentTime = seekTime;
 
             assert_equals(player.startTime, expectedTime,
@@ -148,7 +233,8 @@ async_test(function(t) {
         });
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that setting value of AnimationPlayer.currentTime attribute sets start time');
+}, 'Test that setting value of AnimationPlayer.currentTime attribute sets start time ' +
+    'to timeline time - (seek time / playback rate)');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
@@ -158,8 +244,7 @@ async_test(function(t) {
         playbackRates.forEach(function(playbackRate) {
             player.playbackRate = playbackRate;
             timesToTest.forEach(function(seekTime) {
-                var expectedTime = calculateStartTime(player.timeline.currentTime, seekTime,
-                    player.playbackRate);
+                var expectedTime = expectedStartTime(player, seekTime);
                 player.currentTime = seekTime;
 
                 assert_equals(player.startTime, expectedTime,
@@ -169,41 +254,47 @@ async_test(function(t) {
         });
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that setting value of AnimationPlayer.currentTime attribute correctly ' +
-    'sets start time for different playback rates');
-
-async_test(function(t) {
-    var player = newAnimationPlayer(createDiv(this));
-    player.playbackRate = 0;
-
-    player.ready.then(t.step_func(function() {
-        var startTime = player.startTime;
-        timesToTest.forEach(function(seekTime) {
-            player.currentTime = seekTime;
-            assert_equals(player.startTime, startTime,
-                'The value of AnimationPlayer.startTime attribute should not be updated');
-        });
-        t.done();
-    }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that setting value of AnimationPlayer.currentTime attribute does not ' +
-    'change start time if playback rate is 0');
+}, 'Test that setting value of AnimationPlayer.currentTime attribute sets start time' +
+    'to timeline time - (seek time / playback rate) for different playback rates');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
-    player.pause();
 
     player.ready.then(t.step_func(function() {
-        var startTime = player.startTime;
-        timesToTest.forEach(function(seekTime) {
-            player.currentTime = seekTime;
-            assert_equals(player.startTime, startTime,
-                'The value of AnimationPlayer.startTime attribute should not be updated');
-            t.done();
+        timesToTest.forEach(function(val) {
+            player.currentTime = val;
+            assert_equals(player.currentTime, val,
+                'AnimationPlayer.currentTime value should be set to the new value');
+            assert_equals(player.currentTime, expectedCurrentTime(player),
+                'AnimationPlayer.currentTime value should be calculated as defined');
         });
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that setting value of AnimationPlayer.currentTime attribute does not ' +
-    'change start time if player hold time is resolved');
+}, 'Test setting value of AnimationPlayer.currentTime attribute');
 
+// 3. If player has no associated timeline or the associated timeline is inactive,
+// make player’s start time unresolved.
+test(function() {
+    var player = new AnimationPlayer();
+    player.startTime = document.timeline.currentTime + 100;
+    var currentTime = document.timeline.currentTime + 200;
+    player.currentTime = currentTime;
+    assert_equals(player.startTime, null, 'AnimationPlayer.startTime should be unresolved');
+}, 'Test that setting AnimationPlayer.currentTime attribute makes start time unresolved ' +
+    'if player has no associated timeline');
+
+test(function() {
+    var timeline = new InactiveTimeline();
+    var player = new AnimationPlayer(newAnimation(createDiv(this)), timeline);
+    player.startTime = document.timeline.currentTime + 100;
+    var currentTime = document.timeline.currentTime + 200;
+    player.currentTime = currentTime;
+    assert_equals(player.startTime, null, 'AnimationPlayer.startTime should be unresolved');
+}, 'Test that setting AnimationPlayer.currentTime attribute makes start time unresolved ' +
+    'if player is associated with inactive timeline');
+
+// 3. Run the procedure to update a player’s finished state for player.
+// http://w3c.github.io/web-animations/#update-a-players-finished-state
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
 
@@ -212,8 +303,8 @@ async_test(function(t) {
         assert_equals(player.playState, 'finished', 'Player state should be finished');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that setting value of AnimationPlayer.currentTime attribute to time after end ' +
-    'finishes the player');
+}, 'Test that setting value of AnimationPlayer.currentTime attribute to time after ' +
+    'animation duration finishes the player, if playback rate > 0');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
@@ -225,7 +316,7 @@ async_test(function(t) {
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that setting value of AnimationPlayer.currentTime attribute to negative ' +
-    'value finishes player if playback rate < 0');
+    'value finishes player, if playback rate < 0');
 
 async_test(function(t) {
     var animation = newAnimation(createDiv(t));
@@ -238,7 +329,7 @@ async_test(function(t) {
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation effect is changed accordingly by setting ' +
-    'AnimationPlayer.currentTime attribute when current time is zero');
+    'AnimationPlayer.currentTime attribute if current time is zero');
 
 async_test(function(t) {
     var animation = newAnimation(createDiv(t));
@@ -265,7 +356,5 @@ async_test(function(t) {
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation effect is changed accordingly by setting ' +
     'AnimationPlayer.currentTime attribute when current time equals end time');
-
-// TODO Add tests for setting current time when player has no timeline associated
 </script>
 </body>

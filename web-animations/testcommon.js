@@ -527,4 +527,5 @@ function AnimationPlayer(source, timeline){
     } else {
         this.timeline = null;
     }
+    this.playbackRate = 1.0;
 }
