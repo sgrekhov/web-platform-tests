@@ -83,7 +83,6 @@ async_test(function(t) {
 }, 'Test that if value of AnimationTiming.duration attribute is Infinity animation ' +
     'never be ended');
 
-
 async_test(function(t) {
     var valuesToTest = [-1, -1000, -0.5, -Number.MAX_VALUE, Number.NaN, -Infinity, 'one'];
     var doneCounter = 0;
@@ -98,8 +97,12 @@ async_test(function(t) {
             'Animation.computedTiming.duration value should be zero');
 
          player.ready.then(t.step_func(function() {
+             player.currentTime = 0;
              assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
-                 'Animation should be finished');
+                 'Animation should not be performed');
+             player.currentTime = 1;
+             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+                 'Animation should not be performed');
              doneCounter++;
              if (doneCounter === valuesToTest.length) {
                  t.done();
@@ -173,5 +176,80 @@ async_test(function(t) {
     });
 }, 'Test that unsupported values of AnimationTiming.duration of AnimationSequence ' +
     'are treated as auto and intrinsic iteration duration is used for timing calculations');
+
+async_test(function(t) {
+    var timing = {
+        duration: 'auto'
+    };
+    var animation = new Animation(createDiv(test), KEYFRAMES, timing);
+    var player = document.timeline.play(animation);
+
+    assert_equals(animation.computedTiming.duration, 0,
+        'Animation.computedTiming.duration value should be zero');
+
+     player.ready.then(t.step_func(function() {
+         player.currentTime = 0;
+         assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+             'Animation should not be performed');
+         player.currentTime = 1;
+         assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+             'Animation should not be performed');
+     }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that if AnimationTiming.duration value is \'auto\' then Animation ' +
+    'duration is 0');
+
+async_test(function(t) {
+    var timing = {
+        duration: 'auto'
+    };
+    var animation1 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+    var animation2 = new Animation(createDiv(test), KEYFRAMES, 2 * ANIMATION_DURATION);
+    var animationGroup = new AnimationGroup([animation1, animation2]);
+    var player = document.timeline.play(animationGroup);
+
+    assert_equals(animationGroup.computedTiming.duration, 2 * ANIMATION_DURATION,
+        'Animation.computedTiming.duration value should be zero');
+
+     player.ready.then(t.step_func(function() {
+         player.currentTime = 2 * ANIMATION_DURATION;
+         assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
+             'Animation1 should be finished');
+         assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_1,
+             'Animation2 should not be finished');
+         player.currentTime = 2 * ANIMATION_DURATION + 1;
+         assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
+             'Animation1 should be finished');
+         assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_DEFAULT,
+             'Animation2 should be finished');
+     }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that if AnimationTiming.duration value is \'auto\' then AnimationGroup ' +
+    'duration is max of its child animations durations');
+
+async_test(function(t) {
+    var timing = {
+        duration: 'auto'
+    };
+    var animation1 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+    var animation2 = new Animation(createDiv(test), KEYFRAMES, 2 * ANIMATION_DURATION);
+    var animationSequence = new AnimationSequence([animation1, animation2]);
+    var player = document.timeline.play(animationSequence);
+
+    assert_equals(animationSequence.computedTiming.duration, 3 * ANIMATION_DURATION,
+        'Animation.computedTiming.duration value should be zero');
+
+     player.ready.then(t.step_func(function() {
+         player.currentTime = 3 * ANIMATION_DURATION;
+         assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
+             'Animation1 should be finished');
+         assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_1,
+             'Animation2 should not be finished');
+         player.currentTime = 3 * ANIMATION_DURATION + 1;
+         assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
+             'Animation1 should be finished');
+         assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_DEFAULT,
+             'Animation2 should be finished');
+     }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that if AnimationTiming.duration value is \'auto\' then AnimationSequence ' +
+    'duration is sum of its child animations durations');
 </script>
 </body>
