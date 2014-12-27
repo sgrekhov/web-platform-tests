@@ -40,7 +40,11 @@ async_test(function(t) {
                 'Wrong AnimationNode.computedTiming.iterations value');
 
             player.ready.then(t.step_func(function() {
-                player.currentTime = ANIMATION_DURATION + 1;
+                player.currentTime = ANIMATION_DURATION - 1;
+                assert_approx_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                    COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be close to ' +
+                    'the end point');
+                player.currentTime = ANIMATION_DURATION;
                 assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
                     'Animation ' + type(node) + ' should be finished');
                 doneCounter++;
@@ -71,10 +75,10 @@ async_test(function(t) {
             'Wrong AnimationNode.computedTiming.iterations value');
 
         player.ready.then(t.step_func(function() {
+            player.currentTime = ANIMATION_DURATION / 2 - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be close to 0.5');
             player.currentTime = ANIMATION_DURATION / 2;
-            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
-                'Animation ' + type(node) + ' should be at 0.5');
-            player.currentTime = ANIMATION_DURATION / 2 + 1;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
                 'Animation ' + type(node) + ' should be finished');
             doneCounter++;
@@ -104,13 +108,16 @@ async_test(function(t) {
             'Wrong AnimationNode.computedTiming.iterations value');
 
         player.ready.then(t.step_func(function() {
+            player.currentTime = ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be close to 1');
             player.currentTime = ANIMATION_DURATION;
-            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
-                'Animation ' + type(node) + ' should be at 1');
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0,
+                'Animation ' + type(node) + ' should be at 0');
+            player.currentTime = 1.5 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be close to 0.5');
             player.currentTime = 1.5 * ANIMATION_DURATION;
-            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0_5,
-                'Animation ' + type(node) + ' should be at 0.5');
-            player.currentTime = 1.5 * ANIMATION_DURATION + 1;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
                 'Animation ' + type(node) + ' should be finished');
             doneCounter++;

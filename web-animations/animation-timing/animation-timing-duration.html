@@ -39,10 +39,10 @@ async_test(function(t) {
             'Wrong AnimationNode.computedTiming.duration value for node ' + type(node));
 
         player.ready.then(t.step_func(function() {
+            player.currentTime = ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be close to 1');
             player.currentTime = ANIMATION_DURATION;
-            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
-                'Animation ' + type(node) + ' should be at 1');
-            player.currentTime = ANIMATION_DURATION + 1;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
                 'Animation ' + type(node) + ' should be finished');
             doneCounter++;
@@ -127,10 +127,10 @@ async_test(function(t) {
             'AnimationGroup.computedTiming.duration value should be intrinsic iteration duration');
 
          player.ready.then(t.step_func(function() {
+             player.currentTime = ANIMATION_DURATION - 1;
+             assert_approx_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                 COMPUTED_STYLE_EPSILON, 'Animation should be close to 1');
              player.currentTime = ANIMATION_DURATION;
-             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
-                 'Animation should be at 1');
-             player.currentTime = ANIMATION_DURATION + 1;
              assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
                  'Animation should be finished');
              doneCounter++;
@@ -158,12 +158,12 @@ async_test(function(t) {
             'AnimationSequence.computedTiming.duration value should be intrinsic iteration duration');
 
          player.ready.then(t.step_func(function() {
-             player.currentTime = 2 * ANIMATION_DURATION;
+             player.currentTime = 2 * ANIMATION_DURATION - 1;
              assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
                  'Animation1 should be finished');
-             assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_1,
-                 'Animation2 should be at 1');
-             player.currentTime = 2 * ANIMATION_DURATION + 1;
+             assert_approx_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_1,
+                 COMPUTED_STYLE_EPSILON, 'Animation2 should be close to 1');
+             player.currentTime = 2 * ANIMATION_DURATION;
              assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
                  'Animation1 should be finished');
              assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_DEFAULT,
@@ -211,12 +211,12 @@ async_test(function(t) {
         'Animation.computedTiming.duration value should be zero');
 
      player.ready.then(t.step_func(function() {
-         player.currentTime = 2 * ANIMATION_DURATION;
+         player.currentTime = 2 * ANIMATION_DURATION - 1;
          assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
              'Animation1 should be finished');
-         assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_1,
-             'Animation2 should not be finished');
-         player.currentTime = 2 * ANIMATION_DURATION + 1;
+         assert_approx_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_1,
+             COMPUTED_STYLE_EPSILON, 'Animation2 should not be finished');
+         player.currentTime = 2 * ANIMATION_DURATION;
          assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
              'Animation1 should be finished');
          assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_DEFAULT,
@@ -238,12 +238,12 @@ async_test(function(t) {
         'Animation.computedTiming.duration value should be zero');
 
      player.ready.then(t.step_func(function() {
-         player.currentTime = 3 * ANIMATION_DURATION;
+         player.currentTime = 3 * ANIMATION_DURATION - 1;
          assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
              'Animation1 should be finished');
-         assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_1,
-             'Animation2 should not be finished');
-         player.currentTime = 3 * ANIMATION_DURATION + 1;
+         assert_approx_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_1,
+             COMPUTED_STYLE_EPSILON, 'Animation2 should not be finished');
+         player.currentTime = 3 * ANIMATION_DURATION;
          assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
              'Animation1 should be finished');
          assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_DEFAULT,

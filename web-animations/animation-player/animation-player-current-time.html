@@ -299,7 +299,7 @@ async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_DURATION + 1;
+        player.currentTime = ANIMATION_DURATION;
         assert_equals(player.playState, 'finished', 'Player state should be finished');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
@@ -350,8 +350,8 @@ async_test(function(t) {
 
     player.ready.then(t.step_func(function() {
         player.currentTime = ANIMATION_DURATION;
-        assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
-            'Animation effect should take place');
+        assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_DEFAULT,
+            'Animation effect should be finished');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that animation effect is changed accordingly by setting ' +
