@@ -35,7 +35,7 @@ async_test(function(t) {
         }
         var player = document.timeline.play(node);
 
-        assert_equals(animation.computedTiming.duration, ANIMATION_DURATION,
+        assert_equals(node.computedTiming.duration, ANIMATION_DURATION,
             'Wrong AnimationNode.computedTiming.duration value for node ' + type(node));
 
         player.ready.then(t.step_func(function() {
@@ -67,7 +67,7 @@ async_test(function(t) {
         }
         var player = document.timeline.play(node);
 
-        assert_equals(animation.computedTiming.duration, Infinity,
+        assert_equals(node.computedTiming.duration, Infinity,
             'Wrong AnimationNode.computedTiming.duration value for node ' + type(node));
 
         player.ready.then(t.step_func(function() {
@@ -93,7 +93,7 @@ async_test(function(t) {
         var animation = new Animation(createDiv(test), KEYFRAMES, timing);
         var player = document.timeline.play(animation);
 
-        assert_equals(animation.computedTiming.duration, 0,
+        assert_equals(node.computedTiming.duration, 0,
             'Animation.computedTiming.duration value should be zero');
 
          player.ready.then(t.step_func(function() {

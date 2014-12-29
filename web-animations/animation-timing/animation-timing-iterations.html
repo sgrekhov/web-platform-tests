@@ -36,7 +36,7 @@ async_test(function(t) {
             }
             var player = document.timeline.play(node);
 
-            assert_equals(animation.computedTiming.iterations, 1,
+            assert_equals(node.computedTiming.iterations, 1,
                 'Wrong AnimationNode.computedTiming.iterations value');
 
             player.ready.then(t.step_func(function() {
@@ -71,7 +71,7 @@ async_test(function(t) {
         }
         var player = document.timeline.play(node);
 
-        assert_equals(animation.computedTiming.iterations, 0.5,
+        assert_equals(node.computedTiming.iterations, 0.5,
             'Wrong AnimationNode.computedTiming.iterations value');
 
         player.ready.then(t.step_func(function() {
@@ -104,7 +104,7 @@ async_test(function(t) {
         }
         var player = document.timeline.play(node);
 
-        assert_equals(animation.computedTiming.iterations, 1.5,
+        assert_equals(node.computedTiming.iterations, 1.5,
             'Wrong AnimationNode.computedTiming.iterations value');
 
         player.ready.then(t.step_func(function() {
@@ -143,7 +143,7 @@ async_test(function(t) {
         }
         var player = document.timeline.play(node);
 
-        assert_equals(animation.computedTiming.iterations, Infinity,
+        assert_equals(node.computedTiming.iterations, Infinity,
             'Wrong AnimationNode.computedTiming.iterations value');
 
         player.ready.then(t.step_func(function() {

@@ -125,12 +125,12 @@ function type(object) {
 }
 
 // Returns expected top of the target element at currentTime
-function getExpectedTop(currentTime, endTime) {
-    if (!endTime) {
-        endTime = ANIMATION_DURATION;
+function getExpectedTop(currentTime, duration) {
+    if (!duration) {
+        duration = ANIMATION_DURATION;
     }
     return ANIMATION_TOP_0 + (ANIMATION_TOP_1 - ANIMATION_TOP_0)
-        * (currentTime % endTime);
+        * (currentTime % duration);
 }
 
 // Compares actual and expected keyframes similar to
