@@ -322,7 +322,7 @@ async_test(function(t) {
     'value finishes player, if playback rate < 0');
 
 async_test(function(t) {
-    var animation = newAnimation(createDiv(t));
+    var animation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
     var player = document.timeline.play(animation);
 
     player.ready.then(t.step_func(function() {
@@ -335,7 +335,7 @@ async_test(function(t) {
     'AnimationPlayer.currentTime attribute if current time is zero');
 
 async_test(function(t) {
-    var animation = newAnimation(createDiv(t));
+    var animation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
     var player = document.timeline.play(animation);
 
     player.ready.then(t.step_func(function() {
@@ -348,7 +348,7 @@ async_test(function(t) {
     'AnimationPlayer.currentTime attribute when current time is > 0 and < end time');
 
 async_test(function(t) {
-    var animation = newAnimation(createDiv(t));
+    var animation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
     var player = document.timeline.play(animation);
 
     player.ready.then(t.step_func(function() {
