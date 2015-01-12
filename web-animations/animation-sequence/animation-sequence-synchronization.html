@@ -12,8 +12,8 @@
 <div id="log"></div>
 <script>
 async_test(function(t) {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([node1, node2]);
     var player = document.timeline.play(animationSequence);
 
@@ -54,7 +54,7 @@ async_test(function(t) {
 
 async_test(function(t) {
     var node1 = new AnimationGroup([]);
-    var node2 = newAnimation(createDiv(this));
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([node1, node2]);
     var player = document.timeline.play(animationSequence);
 
@@ -78,10 +78,10 @@ async_test(function(t) {
     'the first node in the sequence is empty group');
 
 async_test(function(t) {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node3 = new AnimationGroup([node1, node2]);
-    var node4 = newAnimation(createDiv(this));
+    var node4 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([node3, node4]);
     var player = document.timeline.play(animationSequence);
 
@@ -142,9 +142,9 @@ async_test(function(t) {
     'Test the case when the first node in the sequence is AnimationGroup');
 
 async_test(function(t) {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var node3 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node3 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node4 = new AnimationGroup([node1, node2]);
     var animationSequence = new AnimationSequence([node3, node4]);
     var player = document.timeline.play(animationSequence);

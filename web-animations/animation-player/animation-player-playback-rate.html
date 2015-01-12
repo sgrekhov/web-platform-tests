@@ -13,7 +13,7 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION));
     assert_equals(player.playbackRate, 1, 'The initial value of AnimationPlayer.playbackRate ' +
         'attribute should be 1');
 }, 'Test that initial value of playbackRate attribute of AnimationPlayer ' +

@@ -24,7 +24,10 @@ test(function() {
     'animation nodes in the list. Test empty AnimationNodeList');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)), newAnimation(createDiv(this))];
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
     var parents = [new AnimationGroup([nodes[0]]), new AnimationSequence([nodes[1]])];
 
     parents.forEach(function(parent, index) {
@@ -42,7 +45,7 @@ test(function() {
     var test = this;
     var parentCtors = [AnimationGroup, AnimationSequence];
     parentCtors.forEach(function(parentCtor) {
-        var node1 = newAnimation(createDiv(test));
+        var node1 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var node2 = new AnimationGroup([]);
         var node3 = new AnimationSequence([]);
         var parent = new parentCtor([node1, node2, node3]);
@@ -60,7 +63,7 @@ test(function() {
     var test = this;
     var nodes = [new AnimationGroup([]), new AnimationSequence([])];
     nodes.forEach(function(node1) {
-        var node2 = newAnimation(createDiv(test));
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         node1.append(node2);
         assert_equals(node1.children[0], node2, type(node1) + '.children[0] ' +
             'should be updated');
@@ -72,7 +75,7 @@ test(function() {
     var test = this;
     var nodes = [new AnimationGroup([]), new AnimationSequence([])];
     nodes.forEach(function(node1) {
-        var node2 = newAnimation(createDiv(test));
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         node1.prepend(node2);
         assert_equals(node1.children[0], node2, type(node1) + '.children[0] ' +
             'should be updated');
@@ -82,11 +85,14 @@ test(function() {
 
 test(function() {
     var test = this;
-    var nodes = [newAnimation(createDiv(this)), newAnimation(createDiv(this))];
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
     var parents = [new AnimationGroup([nodes[0]]), new AnimationSequence([nodes[1]])];
 
     nodes.forEach(function(node1, index) {
-        var node2 = newAnimation(createDiv(test));
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         node1.before(node2);
         assert_equals(parents[index].children[0], node2, type(parents[index]) +
             '.children[0] should be updated');
@@ -98,11 +104,14 @@ test(function() {
 
 test(function() {
     var test = this;
-    var nodes = [newAnimation(createDiv(this)), newAnimation(createDiv(this))];
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
     var parents = [new AnimationGroup([nodes[0]]), new AnimationSequence([nodes[1]])];
 
     nodes.forEach(function(node1, index) {
-        var node2 = newAnimation(createDiv(test));
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         node1.after(node2);
         assert_equals(parents[index].children[0], node1, type(parents[index]) +
             '.children[0] should be updated');
@@ -114,12 +123,15 @@ test(function() {
 
 test(function() {
     var test = this;
-    var nodes = [newAnimation(createDiv(this)), newAnimation(createDiv(this))];
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
     var parents = [new AnimationGroup([nodes[0]]), new AnimationSequence([nodes[1]])];
 
     nodes.forEach(function(node1, index) {
-        var node2 = newAnimation(createDiv(test));
-        var node3 = newAnimation(createDiv(test));
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+        var node3 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         node1.replace(node2, node3);
         assert_equals(parents[index].children[0], node2, type(parents[index]) +
             '.children[0] should be updated');
@@ -130,7 +142,10 @@ test(function() {
     'the list is changed by method AnimationNode.replace()');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)), newAnimation(createDiv(this))];
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
     var parents = [new AnimationGroup([nodes[0]]), new AnimationSequence([nodes[1]])];
 
     nodes.forEach(function(node, index) {

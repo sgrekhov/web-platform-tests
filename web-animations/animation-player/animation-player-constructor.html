@@ -45,7 +45,11 @@ test(function() {
     'AnimationPlayer instance with null source and null timeline');
 
 test(function() {
-    var sources = [newAnimation(createDiv(this)), new AnimationGroup([]), new AnimationSequence([])];
+    var sources = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new AnimationGroup([]),
+        new AnimationSequence([])
+    ];
     sources.forEach(function(source) {
         var player = new AnimationPlayer(source);
 
@@ -66,7 +70,7 @@ test(function() {
 
 test(function() {
     var nodes = [
-        newAnimation(createDiv(this)),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationSequence([])
     ];
@@ -87,7 +91,7 @@ test(function() {
 
 test(function() {
     var nodes = [
-        newAnimation(createDiv(this)),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationSequence([])
     ];
@@ -107,7 +111,11 @@ test(function() {
     'animation sequence, if any');
 
 test(function() {
-    var sources = [newAnimation(createDiv(this)), new AnimationGroup([]), new AnimationSequence([])];
+    var sources = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new AnimationGroup([]),
+        new AnimationSequence([])
+    ];
     sources.forEach(function(source) {
         var player1 = new AnimationPlayer(source);
         assert_equals(player1.source, source, 'First player should be associated ' +

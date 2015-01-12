@@ -12,8 +12,8 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationGroup = new AnimationGroup([node1, node2]);
     var player = document.timeline.play(animationGroup);
 
@@ -24,7 +24,7 @@ test(function() {
 }, 'Test AnimationGroup constructor sets start time to zero for each child');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node2 = new AnimationGroup([]);
     var node3 = new AnimationSequence([]);
     var animationGroup = new AnimationGroup([node1, node2, node3]);
@@ -40,10 +40,10 @@ test(function() {
     'Children are of different types');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
-    var node3 = newAnimation(createDiv(this));
-    var node4 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node3 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node4 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node5 = new AnimationGroup([node1, node2]);
     var node6 = new AnimationSequence([node3]);
     var animationGroup = new AnimationGroup([node4, node5, node6]);
@@ -63,8 +63,8 @@ test(function() {
     'Test tree structure');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationGroup = new AnimationGroup([node1]);
     var player = document.timeline.play(animationGroup);
 
@@ -76,8 +76,8 @@ test(function() {
 }, 'Test AnimationGroup.prepend() sets start time to zero on prepended node');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node3 = new AnimationGroup([]);
     var node4 = new AnimationSequence([]);
     var animationGroup = new AnimationGroup([node1]);
@@ -95,8 +95,8 @@ test(function() {
 }, 'Test AnimationGroup.prepend() sets start time to zero on different prepended nodes');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationGroup = new AnimationGroup([node1]);
     var player = document.timeline.play(animationGroup);
 
@@ -108,8 +108,8 @@ test(function() {
 }, 'Test AnimationGroup.append() sets start time to zero on appended node');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node3 = new AnimationGroup([]);
     var node4 = new AnimationSequence([]);
     var animationGroup = new AnimationGroup([node1]);
@@ -127,8 +127,8 @@ test(function() {
 }, 'Test AnimationGroup.append() sets start time to zero on different appended nodes');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationGroup = new AnimationGroup([node1]);
     var player = document.timeline.play(animationGroup);
 
@@ -141,8 +141,8 @@ test(function() {
     'if adding the node to animation group');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node3 = new AnimationGroup([]);
     var node4 = new AnimationSequence([]);
     var animationGroup = new AnimationGroup([node1]);
@@ -161,8 +161,8 @@ test(function() {
     'if adding nodes to animation group');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationGroup = new AnimationGroup([node1]);
     var player = document.timeline.play(animationGroup);
 
@@ -175,8 +175,8 @@ test(function() {
     'if adding the node to animation group');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node3 = new AnimationGroup([]);
     var node4 = new AnimationSequence([]);
     var animationGroup = new AnimationGroup([node1]);
@@ -195,8 +195,8 @@ test(function() {
     'if adding nodes to animation group');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationGroup = new AnimationGroup([node1]);
     var player = document.timeline.play(animationGroup);
 
@@ -207,8 +207,8 @@ test(function() {
     'if parent node is animation group');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node3 = new AnimationGroup([]);
     var node4 = new AnimationSequence([]);
     var animationGroup = new AnimationGroup([node1]);

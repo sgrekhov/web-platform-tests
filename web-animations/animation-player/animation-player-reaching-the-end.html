@@ -12,7 +12,7 @@
 <div id="log"></div>
 <script>
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(t)));
+    var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
     var pointsToTest = [
         {time: -100, finished: false},
         {time: -1, finished: false},
@@ -42,7 +42,7 @@ async_test(function(t) {
     'source content when player playback rate is 1');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(t)));
+    var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
     player.playbackRate = -1;
     var pointsToTest = [
         {time: -100, finished: true},
@@ -73,7 +73,7 @@ async_test(function(t) {
     'and player playback rate is -1');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(t)));
+    var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
     player.currentTime = ANIMATION_DURATION - 10;
 
     player.ready.then(t.step_func(function() {
@@ -91,7 +91,7 @@ async_test(function(t) {
 }, 'Test that AnimationPlayer does not play forwards beyond the end time');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(t)));
+    var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
     player.playbackRate = -1;
     player.currentTime = 10;
 
@@ -110,7 +110,7 @@ async_test(function(t) {
 }, 'Test that AnimationPlayer does not progress past time zero if playback rate is negative');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(t)));
+    var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
     player.currentTime = ANIMATION_DURATION / 2;
 
     player.ready.then(t.step_func(function() {

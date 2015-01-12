@@ -64,7 +64,7 @@ test(function() {
     var groups = [new AnimationGroup([]), new AnimationSequence([])];
     var test = this;
     groups.forEach(function(group) {
-        var node = newAnimation(createDiv(test));
+        var node = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         group.append(node);
 
         assert_array_equals(group.children, [node], type(group) + '.append() should insert ' +
@@ -78,8 +78,8 @@ test(function() {
     var ctors = [AnimationGroup, AnimationSequence];
     var test = this;
     ctors.forEach(function(ctor) {
-        var node1 = newAnimation(createDiv(test));
-        var node2 = newAnimation(createDiv(test));
+        var node1 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var group = new ctor([node1]);
 
         group.append(node2);
@@ -139,11 +139,11 @@ test(function() {
     var test = this;
     var ctors = [AnimationGroup, AnimationSequence];
     ctors.forEach(function(ctor) {
-        var node1 = newAnimation(createDiv(test));
-        var node2 = newAnimation(createDiv(test));
-        var node3 = newAnimation(createDiv(test));
+        var node1 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+        var node3 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var node4 = new AnimationGroup([node1, node2]);
-        var node5 = newAnimation(createDiv(test));
+        var node5 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var group = new ctor([node5]);
 
         group.append(node4);
@@ -174,12 +174,12 @@ test(function() {
     var test = this;
     var ctors = [AnimationGroup, AnimationSequence];
     ctors.forEach(function(ctor) {
-        var node1 = newAnimation(createDiv(test));
-        var node2 = newAnimation(createDiv(test));
-        var node3 = newAnimation(createDiv(test));
+        var node1 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+        var node3 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var node4 = new AnimationGroup([node1, node2]);
         var node5 = new AnimationSequence([]);
-        var node6 = newAnimation(createDiv(test));
+        var node6 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var group = new ctor([node6]);
 
         group.append(node3, node4, node5);
@@ -217,9 +217,9 @@ test(function() {
     var test = this;
     var ctors = [AnimationGroup, AnimationSequence];
     ctors.forEach(function(ctor) {
-        var node1 = newAnimation(createDiv(test));
+        var node1 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var group1 = new AnimationGroup([node1]);
-        var node2 = newAnimation(createDiv(test));
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var group2 = new ctor([node2]);
 
         group2.append(node1);
@@ -241,12 +241,12 @@ test(function() {
     var test = this;
     var ctors = [AnimationGroup, AnimationSequence];
     ctors.forEach(function(ctor) {
-        var node1 = newAnimation(createDiv(test));
-        var node2 = newAnimation(createDiv(test));
-        var node3 = newAnimation(createDiv(test));
+        var node1 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+        var node3 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var group1 = new AnimationGroup([node1, node2]);
         var group2 = new AnimationGroup([group1, node3]);
-        var node4 = newAnimation(createDiv(test));
+        var node4 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var group3 = new ctor([node4]);
 
         group3.append(group1);
@@ -270,12 +270,12 @@ test(function() {
     var test = this;
     var ctors = [AnimationGroup, AnimationSequence];
     ctors.forEach(function(ctor) {
-        var node1 = newAnimation(createDiv(test));
-        var node2 = newAnimation(createDiv(test));
-        var node3 = newAnimation(createDiv(test));
+        var node1 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+        var node3 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var sequence1 = new AnimationSequence([node1, node2]);
         var group1 = new AnimationGroup([sequence1, node3]);
-        var node4 = newAnimation(createDiv(test));
+        var node4 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var group2 = new ctor([node4]);
 
         group2.append(sequence1);
@@ -299,7 +299,7 @@ test(function() {
     var test = this;
     var ctors = [AnimationGroup, AnimationSequence];
     ctors.forEach(function(ctor) {
-        var node = newAnimation(createDiv(test));
+        var node = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var group1 = new ctor([node]);
         var group2 = new ctor([group1]);
 

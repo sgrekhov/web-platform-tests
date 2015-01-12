@@ -12,7 +12,7 @@
 <div id="log"></div>
 <script>
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(t)));
+    var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
     var readyPromise = player.ready;
     var finishedPromise = player.finished;
 
@@ -65,7 +65,7 @@ async_test(function(t) {
     'if player is cancelled');
 
 async_test(function(t) {
-    var source = newAnimation(createDiv(t));
+    var source = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
     var player = document.timeline.play(source);
 
     player.ready.then(t.step_func(function() {

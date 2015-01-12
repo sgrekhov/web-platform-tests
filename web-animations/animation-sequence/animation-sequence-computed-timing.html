@@ -20,7 +20,7 @@ test(function() {
     'iteration duration, which is zero for sequence without children');
 
 test(function() {
-    var node = newAnimation(createDiv(this));
+    var node = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var sequence = new AnimationSequence([node]);
 
     var duration = sequence.computedTiming.duration;
@@ -71,7 +71,7 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'auto'};
-    var node = newAnimation(createDiv(this));
+    var node = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var sequence = new AnimationSequence([node], timing);
 
     var duration = sequence.computedTiming.duration;
@@ -121,7 +121,7 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'some unsupported value'};
-    var node = newAnimation(createDiv(this));
+    var node = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var sequence = new AnimationSequence([node], timing);
 
     var duration = sequence.computedTiming.duration;
@@ -164,8 +164,8 @@ test(function() {
     var valuesToTest = [-1, -1000, -0.5, -Number.MAX_VALUE, Number.NaN, -Infinity];
     valuesToTest.forEach(function(durationValue) {
         var timing = {duration: durationValue};
-        var node1 = newAnimation(createDiv(this));
-        var node2 = newAnimation(createDiv(this));
+        var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+        var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
         var sequence = new AnimationSequence([node1, node2]);
 
         var duration = sequence.computedTiming.duration;

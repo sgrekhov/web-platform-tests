@@ -84,7 +84,7 @@ test(function() {
     'and with non-default timing');
 
 test(function() {
-    var node = newAnimation(createDiv(this));
+    var node = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var children = [node];
     var source = new AnimationSequence(children);
     var cloned = source.clone();
@@ -105,11 +105,11 @@ test(function() {
 }, 'Test AnimationSequence.clone() creates a copy of AnimationSequence object including children');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node3 = new AnimationSequence([node1,node2]);
-    var node4 = newAnimation(createDiv(this));
-    var node5 = newAnimation(createDiv(this));
+    var node4 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node5 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node6 = new AnimationGroup([node4, node5]);
 
     var source = new AnimationSequence([node3, node6]);
@@ -151,7 +151,7 @@ test(function() {
 }, 'Test AnimationSequence.clone() set parent attribute to null on cloned object');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node2 = new AnimationSequence([]);
     var node3 = new AnimationSequence([node1, node2]);
 
@@ -164,7 +164,7 @@ test(function() {
 
 test(function() {
     var node1 = new AnimationSequence([]);
-    var node2 = newAnimation(createDiv(this));
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node3 = new AnimationSequence([node1, node2]);
 
     var cloned = node1.clone();

@@ -13,7 +13,7 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION));
 
     assert_not_equals(player.timeline, null, 'AnimationPlayer.timeline attribute should ' +
         'not be null');
@@ -33,7 +33,7 @@ test(function() {
     'AnimationPlayer constructor ');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(t)));
+    var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
     var readyPromise = player.ready;
 
     player.ready.then(
@@ -55,7 +55,7 @@ async_test(function(t) {
     'resets a player\'s pending tasks');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(t)));
+    var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
     player.pause();
     var doc = newHTMLDocument();
     player.timeline = doc.timeline;
@@ -69,7 +69,7 @@ async_test(function(t) {
     'don\'t cancel pending play and pause tasks');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(t)));
+    var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
     player.finish();
     var doc = newHTMLDocument();
     player.timeline = doc.timeline;

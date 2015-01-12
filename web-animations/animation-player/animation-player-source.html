@@ -13,7 +13,7 @@
 <div id="log"></div>
 <script>
 test(function() {
-    var animation = newAnimation(createDiv(this));
+    var animation = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var player = document.timeline.play(animation);
 
     assert_equals(player.source, animation, 'AnimationPlayer.source ' +
@@ -22,7 +22,7 @@ test(function() {
     'to the AnimationTimeline.play()');
 
 test(function() {
-    var animation = newAnimation(createDiv(this));
+    var animation = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var player = new AnimationPlayer(animation);
 
     assert_equals(player.source, animation, 'AnimationPlayer.source ' +
@@ -31,7 +31,7 @@ test(function() {
     'to the AnimationPlayer constructor');
 
 test(function() {
-    var animation = newAnimation(createDiv(this));
+    var animation = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var player = new AnimationPlayer();
     player.source = animation;
 
@@ -41,8 +41,8 @@ test(function() {
     'the attribute is null');
 
 test(function() {
-    var oldSource = newAnimation(createDiv(this));
-    var newSource = newAnimation(createDiv(this));
+    var oldSource = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var newSource = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var player = new AnimationPlayer(oldSource);
     player.source = newSource;
 
@@ -53,7 +53,7 @@ test(function() {
 
 test(function() {
     var nodes = [
-        newAnimation(createDiv(this)),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationSequence([])
     ];
@@ -74,7 +74,7 @@ test(function() {
 
 test(function() {
     var nodes = [
-        newAnimation(createDiv(this)),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationSequence([])
     ];
@@ -94,7 +94,7 @@ test(function() {
     'from its parent animation sequence');
 
 test(function() {
-    var source = newAnimation(createDiv(this));
+    var source = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var player = document.timeline.play(source);
     var readyPromise = player.ready;
     player.source = source;
@@ -106,8 +106,8 @@ test(function() {
 }, 'Test that setting value of source attribute to the same value as old one does nothing');
 
 test(function() {
-    var source1 = newAnimation(createDiv(this));
-    var source2 = newAnimation(createDiv(this));
+    var source1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var source2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var player1 = document.timeline.play(source1);
     var player2 = document.timeline.play(source2);
 
@@ -118,7 +118,7 @@ test(function() {
     'then source content of the previous player should be set to null');
 
 async_test(function(t) {
-    var player = document.timeline.play(newAnimation(createDiv(this)));
+    var player = document.timeline.play(new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION));
     var readyPromise = player.ready;
 
     player.ready.then(
@@ -140,8 +140,8 @@ async_test(function(t) {
     'resets a player\'s pending tasks');
 
 async_test(function(t) {
-    var oldSource = newAnimation(createDiv(t));
-    var newSource = newAnimation(createDiv(t));
+    var oldSource = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var newSource = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
     var player = document.timeline.play(oldSource);
     player.pause();
     player.source = newSource;
@@ -155,8 +155,8 @@ async_test(function(t) {
     'reschedules player\'s pending play and pause tasks');
 
 async_test(function(t) {
-    var oldSource = newAnimation(createDiv(t));
-    var newSource = newAnimation(createDiv(t));
+    var oldSource = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var newSource = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
     var player = document.timeline.play(oldSource);
     player.finish();
     player.source = newSource;
@@ -171,8 +171,8 @@ async_test(function(t) {
     'does not change player finished state');
 
 async_test(function(t) {
-    var oldSource = newAnimation(createDiv(t));
-    var newSource = newAnimation(createDiv(t));
+    var oldSource = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var newSource = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
     var player = document.timeline.play(oldSource);
     player.source = newSource;
 
@@ -195,7 +195,7 @@ async_test(function(t) {
                 numOfCallsNullTime++;
             }
         }, 100);
-    var newSource = newAnimation(createDiv(this));
+    var newSource = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var player = document.timeline.play(oldSource);
     player.source = newSource;
 
@@ -210,8 +210,8 @@ async_test(function(t) {
     'if player source is changed');
 
 async_test(function(t) {
-    var oldSource = newAnimation(createDiv(t));
-    var newSource = newAnimation(createDiv(t));
+    var oldSource = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var newSource = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
     var player = document.timeline.play(oldSource);
 
     player.ready.then(t.step_func(function() {
@@ -246,7 +246,7 @@ async_test(function(t) {
     var player = document.timeline.play(null);
     var currentTime = ANIMATION_DURATION / 2;
     player.currentTime = currentTime;
-    var source = newAnimation(createDiv(t));
+    var source = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
     player.source = source;
 
     player.ready.then(t.step_func(function() {

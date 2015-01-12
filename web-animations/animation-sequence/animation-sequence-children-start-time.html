@@ -14,9 +14,11 @@
 <script>
 // First part If the child has no previous sibling the start time is zero
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
-        new AnimationSequence([])];
+        new AnimationSequence([])
+    ];
     nodes.forEach(function(node) {
         var animationSequence = new AnimationSequence([node]);
         assert_equals(node.computedTiming.startTime, 0, 'Animation sequence first ' +
@@ -25,9 +27,11 @@ test(function() {
 }, 'Test AnimationSequence constructor sets start time to zero for first child');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
-        new AnimationSequence([])];
+        new AnimationSequence([])
+    ];
     var animationSequence = new AnimationSequence([]);
     nodes.forEach(function(node) {
         animationSequence.prepend(node);
@@ -37,9 +41,11 @@ test(function() {
 }, 'Test AnimationSequence.prepend sets start time to zero for first child');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+         new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
          new AnimationGroup([]),
-         new AnimationSequence([])];
+         new AnimationSequence([])
+    ];
     nodes.forEach(function(node) {
         var animationSequence = new AnimationSequence([]);
         animationSequence.append(node);
@@ -49,10 +55,12 @@ test(function() {
 }, 'Test AnimationSequence.append sets start time to zero for first child');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+         new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
          new AnimationGroup([]),
-         new AnimationSequence([])];
-    var firstChild = newAnimation(createDiv(this));
+         new AnimationSequence([])
+    ];
+    var firstChild = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([firstChild]);
     nodes.forEach(function(node) {
         firstChild.before(node);
@@ -63,10 +71,12 @@ test(function() {
 }, 'Test AnimationNode.before sets start time to zero for first child');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
-        new AnimationSequence([])];
-    var firstChild = newAnimation(createDiv(this));
+        new AnimationSequence([])
+    ];
+    var firstChild = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([firstChild]);
     nodes.forEach(function(node) {
         firstChild.replace(node);
@@ -77,8 +87,9 @@ test(function() {
 }, 'Test AnimationNode.replace sets start time to zero for first child');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
-        newAnimation(createPseudoElement(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new Animation(createPseudoElement(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationSequence([])];
     var animationSequence = new AnimationSequence(nodes);
@@ -104,13 +115,13 @@ function checkAnimationSequenceChildrenStartTimes(animationSequence) {
 }
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createPseudoElement(this));
-    var node3 = newAnimation(createDiv(this));
-    var node4 = newAnimation(createPseudoElement(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createPseudoElement(this), KEYFRAMES, ANIMATION_DURATION);
+    var node3 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node4 = new Animation(createPseudoElement(this), KEYFRAMES, ANIMATION_DURATION);
     var node5 = new AnimationGroup([node1, node2]);
     var node6 = new AnimationSequence([node3]);
-    var node7 = newAnimation(createDiv(this));
+    var node7 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([node4, node5, node6, node7]);
     var player = document.timeline.play(animationSequence);
 
@@ -119,12 +130,14 @@ test(function() {
     'the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
-        new AnimationSequence([])];
+        new AnimationSequence([])
+    ];
     nodes.forEach(function(node1, index) {
         var animationSequence = new AnimationSequence([node1]);
-        var node2 = newAnimation(createDiv(this));
+        var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
         animationSequence.prepend(node2);
         assert_equals(node1.computedTiming.startTime, node2.computedTiming.endTime,
             'The start time of the animation node #' + index + ' of type ' + type(node1) +
@@ -134,10 +147,12 @@ test(function() {
     'previous sibling for children after first one');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
-        newAnimation(createPseudoElement(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new Animation(createPseudoElement(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
-        new AnimationSequence([])];
+        new AnimationSequence([])
+    ];
     var animationSequence = new AnimationSequence();
     animationSequence.prepend(nodes);
     checkAnimationSequenceChildrenStartTimes(animationSequence);
@@ -145,10 +160,12 @@ test(function() {
     'the end time of the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
-        new AnimationSequence([])];
-    var prevNode = newAnimation(createDiv(this));
+        new AnimationSequence([])
+    ];
+    var prevNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([prevNode]);
     nodes.forEach(function(node, index) {
         animationSequence.append(node);
@@ -161,10 +178,12 @@ test(function() {
     'previous sibling for children after first one');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
-        new AnimationSequence([])];
-    var prevNode = newAnimation(createDiv(this));
+        new AnimationSequence([])
+    ];
+    var prevNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([prevNode]);
     animationSequence.append(nodes);
     checkAnimationSequenceChildrenStartTimes(animationSequence);
@@ -172,17 +191,19 @@ test(function() {
     'the end time of the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationGroup([]),
-        newAnimation(createPseudoElement(this)),
+        new Animation(createPseudoElement(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationSequence([]),
         new AnimationSequence([]),
         new AnimationGroup([]),
         new AnimationSequence([]),
-        newAnimation(createDiv(this))];
-    var prevNode = newAnimation(createDiv(this));
-    var nextNode = newAnimation(createDiv(this));
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
+    var prevNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var nextNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([prevNode,nextNode]);
     nodes.forEach(function(node) {
         nextNode.before(node);
@@ -193,17 +214,19 @@ test(function() {
     'previous sibling for children after first one');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationGroup([]),
-        newAnimation(createPseudoElement(this)),
+        new Animation(createPseudoElement(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationSequence([]),
         new AnimationSequence([]),
         new AnimationGroup([]),
         new AnimationSequence([]),
-        newAnimation(createDiv(this))];
-    var prevNode = newAnimation(createDiv(this));
-    var nextNode = newAnimation(createDiv(this));
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
+    var prevNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var nextNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([prevNode,nextNode]);
     nextNode.before(nodes);
     checkAnimationSequenceChildrenStartTimes(animationSequence);
@@ -211,17 +234,19 @@ test(function() {
     'time of the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationGroup([]),
-        newAnimation(createPseudoElement(this)),
+        new Animation(createPseudoElement(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationSequence([]),
         new AnimationSequence([]),
         new AnimationGroup([]),
         new AnimationSequence([]),
-        newAnimation(createDiv(this))];
-    var prevNode = newAnimation(createDiv(this));
-    var nextNode = newAnimation(createDiv(this));
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
+    var prevNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var nextNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([prevNode,nextNode]);
     nodes.forEach(function(node) {
         prevNode.after(node);
@@ -232,17 +257,19 @@ test(function() {
     'previous sibling for children after first one');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationGroup([]),
-        newAnimation(createPseudoElement(this)),
+        new Animation(createPseudoElement(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationSequence([]),
         new AnimationSequence([]),
         new AnimationGroup([]),
         new AnimationSequence([]),
-        newAnimation(createDiv(this))];
-    var prevNode = newAnimation(createDiv(this));
-    var nextNode = newAnimation(createDiv(this));
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
+    var prevNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var nextNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([prevNode,nextNode]);
     prevNode.after(nodes);
     checkAnimationSequenceChildrenStartTimes(animationSequence);
@@ -250,18 +277,20 @@ test(function() {
     'time of the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationGroup([]),
-        newAnimation(createPseudoElement(this)),
+        new Animation(createPseudoElement(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationSequence([]),
         new AnimationSequence([]),
         new AnimationGroup([]),
         new AnimationSequence([]),
-        newAnimation(createDiv(this))];
-    var prevNode = newAnimation(createDiv(this));
-    var nextNode = newAnimation(createDiv(this));
-    var middleNode = newAnimation(createDiv(this));
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
+    var prevNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var nextNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var middleNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([prevNode, middleNode, nextNode]);
     nodes.forEach(function(node, index) {
         middleNode.replace(node);
@@ -277,18 +306,20 @@ test(function() {
     'previous sibling for children after first one');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationGroup([]),
-        newAnimation(createPseudoElement(this)),
+        new Animation(createPseudoElement(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationSequence([]),
         new AnimationSequence([]),
         new AnimationGroup([]),
         new AnimationSequence([]),
-        newAnimation(createDiv(this))];
-    var prevNode = newAnimation(createDiv(this));
-    var nextNode = newAnimation(createDiv(this));
-    var middleNode = newAnimation(createDiv(this));
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
+    var prevNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var nextNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var middleNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([prevNode, middleNode, nextNode]);
     middleNode.replace(nodes);
     checkAnimationSequenceChildrenStartTimes(animationSequence);
@@ -296,17 +327,19 @@ test(function() {
     'time of the child\'s previous sibling for children after first one');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)),
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationGroup([]),
         new AnimationGroup([]),
-        newAnimation(createPseudoElement(this)),
+        new Animation(createPseudoElement(this), KEYFRAMES, ANIMATION_DURATION),
         new AnimationSequence([]),
         new AnimationSequence([]),
         new AnimationGroup([]),
         new AnimationSequence([]),
-        newAnimation(createDiv(this))];
-    var prevNode = newAnimation(createDiv(this));
-    var nextNode = newAnimation(createDiv(this));
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
+    var prevNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var nextNode = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var animationSequence = new AnimationSequence([].concat(prevNode, nodes, nextNode));
     nodes.forEach(function(node) {
         node.remove();

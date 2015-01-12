@@ -66,7 +66,8 @@ test(function() {
 // 2. the associated timeline is inactive, or
 test(function() {
     var timeline = new InactiveTimeline();
-    var player = new AnimationPlayer(newAnimation(createDiv(this)), timeline);
+    var player = new AnimationPlayer(
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION), timeline);
     assert_equals(player.currentTime, null, 'AnimationPlayer.currentTime should be null');
 }, 'Test AnimationPlayer.currentTime attribute is null if player is associated ' +
     'with inactive timeline and player\'s hold time is unresolved');
@@ -187,7 +188,8 @@ test(function() {
 // or the associated timeline is inactive ... Set player’s hold time to seek time.
 test(function() {
     var timeline = new InactiveTimeline();
-    var player = new AnimationPlayer(newAnimation(createDiv(this)), timeline);
+    var player = new AnimationPlayer(
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION), timeline);
     var currentTime = document.timeline.currentTime + 100;
     player.currentTime = currentTime;
     assert_equals(player.currentTime, currentTime, 'AnimationPlayer.currentTime ' +
@@ -285,7 +287,8 @@ test(function() {
 
 test(function() {
     var timeline = new InactiveTimeline();
-    var player = new AnimationPlayer(newAnimation(createDiv(this)), timeline);
+    var player = new AnimationPlayer(
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION), timeline);
     player.startTime = document.timeline.currentTime + 100;
     var currentTime = document.timeline.currentTime + 200;
     player.currentTime = currentTime;

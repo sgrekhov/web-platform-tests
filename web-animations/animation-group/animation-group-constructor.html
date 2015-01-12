@@ -61,7 +61,7 @@ test(function() {
     'second argument creates AnimationGroup instance without children and with given timing');
 
 test(function() {
-    var node = newAnimation(createDiv(this));
+    var node = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var children = [node];
     var group = new AnimationGroup(children);
 
@@ -69,9 +69,9 @@ test(function() {
 }, 'Test AnimationGroup constructor creates AnimationGroup instance with a single child');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var node2 = new AnimationGroup([]);
-    var node3 = newAnimation(createDiv(this));
+    var node3 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var children = [node1, node2, node3];
     var group = new AnimationGroup(children);
 
@@ -80,7 +80,7 @@ test(function() {
 }, 'Test AnimationGroup constructor creates AnimationGroup instance with children');
 
 test(function() {
-    var node = newAnimation(createDiv(this));
+    var node = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var group = new AnimationGroup([node, node]);
 
     assert_array_equals(group.children, [node], 'AnimationGroup constructor should ' +
@@ -107,7 +107,7 @@ test(function() {
     'group before inserting to child list even this is the same group');
 
 test(function() {
-    var node = newAnimation(createDiv(this));
+    var node = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var group1 = new AnimationGroup([node]);
     var group2 = new AnimationGroup([node]);
 

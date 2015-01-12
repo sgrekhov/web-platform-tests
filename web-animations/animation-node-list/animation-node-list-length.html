@@ -21,8 +21,8 @@ test(function() {
 }, 'Test AnimationNodeList.length returns zero for empty AnimationNodeList');
 
 test(function() {
-    var node1 = newAnimation(createDiv(this));
-    var node2 = newAnimation(createDiv(this));
+    var node1 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var nodes = [new AnimationGroup([node1]), new AnimationSequence([node2])];
     nodes.forEach(function(node) {
         assert_equals(node.children.length, 1, type(node) + '.children.length ' +
@@ -34,7 +34,7 @@ test(function() {
     var test = this;
     var parents = [AnimationGroup, AnimationSequence];
     parents.forEach(function(parentCtor) {
-        var node1 = newAnimation(createDiv(test));
+        var node1 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         var node2 = new AnimationGroup([]);
         var node3 = new AnimationSequence([]);
         var parent = new parentCtor([node1, node2, node3]);
@@ -50,7 +50,7 @@ test(function() {
     nodes.forEach(function(node1) {
         assert_equals(node1.children.length, 0, type(node1) + '.children.length ' +
             'should return the number of animation nodes in the list');
-        var node2 = newAnimation(createDiv(test));
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         node1.append(node2);
         assert_equals(node1.children.length, 1, type(node1) + '.children.length ' +
             'should return the number of animation nodes in the list');
@@ -64,7 +64,7 @@ test(function() {
     nodes.forEach(function(node1) {
         assert_equals(node1.children.length, 0, type(node1) + '.children.length ' +
             'should return the number of animation nodes in the list');
-        var node2 = newAnimation(createDiv(test));
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         node1.prepend(node2);
         assert_equals(node1.children.length, 1, type(node1) + '.children.length ' +
             'should return the number of animation nodes in the list');
@@ -74,13 +74,16 @@ test(function() {
 
 test(function() {
     var test = this;
-    var nodes = [newAnimation(createDiv(this)), newAnimation(createDiv(this))];
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
     var parents = [new AnimationGroup([nodes[0]]), new AnimationSequence([nodes[1]])];
 
     nodes.forEach(function(node1, index) {
         assert_equals(parents[index].children.length, 1, type(parents[index]) + '.children.length ' +
             'should return the number of animation nodes in the list');
-        var node2 = newAnimation(createDiv(test));
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         node1.before(node2);
         assert_equals(parents[index].children.length, 2, type(parents[index]) + '.children.length ' +
             'should return the number of animation nodes in the list');
@@ -90,13 +93,16 @@ test(function() {
 
 test(function() {
     var test = this;
-    var nodes = [newAnimation(createDiv(this)), newAnimation(createDiv(this))];
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
     var parents = [new AnimationGroup([nodes[0]]), new AnimationSequence([nodes[1]])];
 
     nodes.forEach(function(node1, index) {
         assert_equals(parents[index].children.length, 1, type(parents[index]) + '.children.length ' +
             'should return the number of animation nodes in the list');
-        var node2 = newAnimation(createDiv(test));
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
         node1.after(node2);
         assert_equals(parents[index].children.length, 2, type(parents[index]) + '.children.length ' +
             'should return the number of animation nodes in the list');
@@ -106,14 +112,17 @@ test(function() {
 
 test(function() {
     var test = this;
-    var nodes = [newAnimation(createDiv(this)), newAnimation(createDiv(this))];
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
     var parents = [new AnimationGroup([nodes[0]]), new AnimationSequence([nodes[1]])];
 
     nodes.forEach(function(node1, index) {
         assert_equals(parents[index].children.length, 1, type(parents[index]) + '.children.length ' +
             'should return the number of animation nodes in the list');
-        var node2 = newAnimation(createDiv(test));
-        var node3 = newAnimation(createDiv(test));
+        var node2 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
+        var node3 = new Animation(createDiv(test), KEYFRAMES, ANIMATION_DURATION);
 
         node1.replace(node2, node3);
         assert_equals(parents[index].children.length, 2, type(parents[index]) + '.children.length ' +
@@ -123,7 +132,10 @@ test(function() {
     'the list is changed by method AnimationNode.replace()');
 
 test(function() {
-    var nodes = [newAnimation(createDiv(this)), newAnimation(createDiv(this))];
+    var nodes = [
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION),
+        new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)
+    ];
     var parents = [new AnimationGroup([nodes[0]]), new AnimationSequence([nodes[1]])];
 
     nodes.forEach(function(node, index) {

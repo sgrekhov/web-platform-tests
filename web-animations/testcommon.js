@@ -78,6 +78,7 @@ function createDiv(test, doc) {
     }
     var div = doc.createElement('div');
     doc.body.appendChild(div);
+    div.style.top = ANIMATION_TOP_DEFAULT + 'px';
     test.add_cleanup(function() {
         removeElement(div);
     });

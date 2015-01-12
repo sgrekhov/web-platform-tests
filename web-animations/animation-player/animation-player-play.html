@@ -303,7 +303,7 @@ async_test(function(t) {
     'when player is unpaused');
 
 async_test(function(t) {
-    var source = newAnimation(createDiv(t));
+    var source = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
     var player = new AnimationPlayer(source);
     player.playbackRate = 0;
     player.play();

@@ -22,7 +22,7 @@ test(function() {
     'iteration duration, which is zero for group without children');
 
 test(function() {
-    var node = newAnimation(createDiv(this));
+    var node = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var group = new AnimationGroup([node]);
     assert_equals(group.computedTiming.duration, node.computedTiming.endTime,
         'AnimationGroup.computedTiming.duration should return intrinsic iteration duration');
@@ -34,7 +34,7 @@ test(function() {
     var valuesToTest = [-1, -1000, -0.5, -Number.MAX_VALUE, Number.NaN, -Infinity, 'one'];
     valuesToTest.forEach(function(durationValue) {
         var timing = {duration: durationValue};
-        var node = newAnimation(createDiv(this));
+        var node = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
         var group = new AnimationGroup([node]);
 
         assert_equals(group.computedTiming.duration, node.computedTiming.endTime,
@@ -75,7 +75,7 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'auto'};
-    var node = newAnimation(createDiv(this));
+    var node = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var group = new AnimationGroup([node], timing);
     assert_equals(group.computedTiming.duration, node.computedTiming.endTime,
         'AnimationGroup.computedTiming.duration should return intrinsic iteration duration');
@@ -116,7 +116,7 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'some unsupported value'};
-    var node = newAnimation(createDiv(this));
+    var node = new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION);
     var group = new AnimationGroup([node], timing);
     assert_equals(group.computedTiming.duration, node.computedTiming.endTime,
         'AnimationGroup.computedTiming.duration should return intrinsic iteration duration');
