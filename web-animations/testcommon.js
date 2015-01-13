@@ -551,6 +551,7 @@ function AnimationPlayer(source, timeline){
     }, 0);
     this.finish = function() {};
     this.play = function() {};
+    this.pause = function() {};
 }
 
 
