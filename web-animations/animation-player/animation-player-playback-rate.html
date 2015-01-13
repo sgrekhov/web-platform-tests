@@ -16,26 +16,48 @@ test(function() {
     var player = document.timeline.play(new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION));
     assert_equals(player.playbackRate, 1, 'The initial value of AnimationPlayer.playbackRate ' +
         'attribute should be 1');
-}, 'Test that initial value of playbackRate attribute of AnimationPlayer ' +
-    'created by AnimationTimeline.play() method is 1');
+}, 'Test AnimationTimeline.play() creates AnimationPlayer instance with initial ' +
+    'value of playbackRate attribute equal to 1');
 
 test(function() {
     var player = new AnimationPlayer(createDiv(this), document.timeline);
     assert_equals(player.playbackRate, 1, 'The initial value of AnimationPlayer.playbackRate ' +
         'attribute should be 1');
-}, 'Test that initial value of playbackRate attribute of AnimationPlayer ' +
-    'created by constructor is 1');
+}, 'Test AnimationPlayer constructor sets playbackRate attribute of  value to 1');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
-    var times = [-100, -1, 0, 100, ANIMATION_DURATION / 2, ANIMATION_DURATION - 100,
-                 ANIMATION_DURATION, ANIMATION_DURATION + 100];
+    var playbackRates = [0, 0.5, 1, 1.5, 2, -1.8, -1.3, -0.8, -0.4, 0];
+    var rateIndex = 0;
+    player.ready.then(t.step_func(function() {
+        var intervalId = setInterval(t.step_func(function() {
+            var currentTime = player.currentTime;
+            player.playbackRate = playbackRates[rateIndex];
+            assert_equals(player.playbackRate, playbackRates[rateIndex],
+                'Unexpected playbackRate value');
+            assert_equals(player.currentTime, currentTime, 'Unexpected currentTime value');
+
+            rateIndex++;
+            if (rateIndex>=playbackRates.length){
+                clearInterval(intervalId);
+                player.finish();
+                t.done();
+            }
+        }), 50);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+
+}, 'Test changing AnimationPlayer.playbackRate to new value');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    var times = [-100, -1, 0, ANIMATION_DURATION * 0.1, ANIMATION_DURATION / 2,
+        ANIMATION_DURATION * 0.9, ANIMATION_DURATION, ANIMATION_DURATION + 100];
     var playbackRates = [-2, -0.4, 0, 0.4, 2, -1];
 
     player.ready.then(t.step_func(function() {
         times.forEach(function(time) {
             playbackRates.forEach(function(playbackRate) {
-                player.curentTime = time;
+                player.currentTime = time;
                 player.playbackRate = playbackRate;
                 assert_equals(player.playbackRate, playbackRate, 'Wrong value of playbackRate ' +
                     'attribute for time ' + time);
@@ -45,7 +67,7 @@ async_test(function(t) {
         });
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that setting value of AnimationPlayer.playbackRate attribute does ' +
-    'not change current time');
+}, 'Test that setting value of AnimationPlayer.playbackRate attribute ' +
+    'preserves player\'s current time');
 </script>
 </body>
