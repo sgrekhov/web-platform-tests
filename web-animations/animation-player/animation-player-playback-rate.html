@@ -67,5 +67,46 @@ async_test(function(t) {
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that setting value of AnimationPlayer.playbackRate attribute ' +
     'preserves player\'s current time');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    player.playbackRate = 0;
+    var iteration = 10;
+    player.ready.then(t.step_func(function() {
+        var currentTime = player.currentTime;
+        var intervalId = setInterval(t.step_func(function() {
+            assert_equals(player.currentTime, currentTime, 'AnimationPlayer.currentTime ' +
+                'should not change with zero playback rate');
+
+            if (iteration-- === 0){
+                clearInterval(intervalId);
+                t.done();
+            }
+        }), 30);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test setting a player\'s playback rate to zero effectively pauses the player');
+
+async_test(function(t) {
+    var animation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var player = new AnimationPlayer(animation, new InactiveTimeline());
+    var playbackRates = [0, 0.5, 1, 1.5, 2, -1.8, -1.3, -0.8, -0.4, 0];
+    var rateIndex = 0;
+    player.ready.then(t.step_func(function() {
+        var intervalId = setInterval(t.step_func(function() {
+            player.playbackRate = playbackRates[rateIndex];
+            assert_equals(player.playbackRate, playbackRates[rateIndex],
+                'Unexpected playbackRate value');
+            assert_equals(player.currentTime, null, 'AnimationPlayer.currentTime ' +
+                'should be unresolved with inactive timeline');
+
+            rateIndex++;
+            if (rateIndex >= playbackRates.length){
+                clearInterval(intervalId);
+                t.done();
+            }
+        }), 30);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test changing AnimationPlayer.playbackRate to new value on player instance ' +
+    'with inactive timeline');
 </script>
 </body>
