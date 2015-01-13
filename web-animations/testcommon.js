@@ -53,14 +53,14 @@ function newHTMLDocument() {
     return document.implementation.createHTMLDocument('Test Document');
 }
 
-function newAnimation(animationTarget) {
-    animationTarget.style.top = ANIMATION_TOP_DEFAULT + 'px';
-    return new Animation(animationTarget, KEYFRAMES, ANIMATION_DURATION);
-}
-
 function newAnimationPlayer(animationTarget) {
-    var animation = newAnimation(animationTarget);
-    return  new AnimationPlayer(animation, document.timeline);//document.timeline.play(animation);
+	// FIXME replace this by document.timeline.play(animationTarget);
+	// when document.timeline.play(animationTarget) will return correct
+	// implementation of AnimationPlayer
+    var animation = new Animation(animationTarget, KEYFRAMES, ANIMATION_DURATION);
+    var player = new AnimationPlayer(animation, document.timeline);
+    player.play();
+    return  player;
 }
 
 function newKeyframeEffect(options) {
@@ -516,7 +516,20 @@ KeyframeEffect.prototype.getFrames = function() {
 
 KeyframeEffect.prototype.setFrames = function(frames) {
 };
+// Animation stub
+function Animation(target, effect, timing) {
+	this.target = target;
+	this.effect = effect;
+	this.timing = timing;
+}
 
+Animation.prototype = new AnimationNode();
+
+Animation.prototype.clone = function() {
+    return this;
+};
+
+// AnimationPlayer stub
 function AnimationPlayer(source, timeline){
     if (source){
         this.source = source;
@@ -537,6 +550,7 @@ function AnimationPlayer(source, timeline){
         readyPromise.resolve(player);
     }, 0);
     this.finish = function() {};
+    this.play = function() {};
 }
 
 

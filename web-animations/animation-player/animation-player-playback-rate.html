@@ -38,12 +38,11 @@ async_test(function(t) {
             assert_equals(player.currentTime, currentTime, 'Unexpected currentTime value');
 
             rateIndex++;
-            if (rateIndex>=playbackRates.length){
+            if (rateIndex >= playbackRates.length){
                 clearInterval(intervalId);
-                player.finish();
                 t.done();
             }
-        }), 50);
+        }), 30);
     }), t.unreached_func('Current ready promise should not be rejected'));
 
 }, 'Test changing AnimationPlayer.playbackRate to new value');
