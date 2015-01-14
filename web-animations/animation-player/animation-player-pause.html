@@ -11,6 +11,8 @@
 <body>
 <div id="log"></div>
 <script>
+var TIMEOUT = 50;
+
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
     var times = [-100, 0, 100, ANIMATION_DURATION, ANIMATION_DURATION + 100];
@@ -60,13 +62,13 @@ async_test(function(t) {
             player.pause();
             // wait for 50 ms
             setTimeout(t.step_func(function() {
-                assert_approx_equals(player.currentTime, 50, TIME_EPSILON,
+                assert_approx_equals(player.currentTime, TIMEOUT, TIME_EPSILON,
                     'Current time should be paused');
                 assert_equals(player.startTime, null, 'Start time should be unresolved');
                 assert_equals(player.playState, 'paused', 'AnimationPlayer should be paused');                
                 t.done();
-            }), 50);
-        }), 50);        
+            }), TIMEOUT);
+        }), TIMEOUT);        
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer.pause() call stops current time');
 
@@ -81,13 +83,13 @@ async_test(function(t) {
             player.pause();
             // wait for 50 ms
             setTimeout(t.step_func(function() {
-                assert_approx_equals(player.currentTime, ANIMATION_DURATION / 2 - 50,
+                assert_approx_equals(player.currentTime, ANIMATION_DURATION / 2 - TIMEOUT,
                     TIME_EPSILON, 'Current time should be paused');
                 assert_equals(player.startTime, null, 'Start time should be unresolved');
                 assert_equals(player.playState, 'paused', 'AnimationPlayer should be paused');                
                 t.done();
-            }), 50);
-        }), 50);        
+            }), TIMEOUT);
+        }), TIMEOUT);        
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer.pause() call stops current time when playback rate < 0');
 </script>

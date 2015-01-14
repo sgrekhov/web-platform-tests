@@ -11,6 +11,8 @@
 <body>
 <div id="log"></div>
 <script>
+var TIMEOUT = 50;
+
 test(function() {
     var player = new AnimationPlayer();
 
@@ -46,9 +48,10 @@ async_test(function(t) {
             assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
                 'with a DOMException named \'AbortError\'');
             assert_not_equals(player.ready, readyPromise, 'Current ready promise should be a ' +
-            'new Promise object');
-        t.done();
-        }));
+                'new Promise object');
+            t.done();
+        })
+    );
     player.cancel();
 }, 'Test that current ready promise is replaced by new Promise object every time when ' +
     'player is cancelled');
@@ -60,7 +63,7 @@ async_test(function(t) {
         t.unreached_func('Current ready promise should be rejected'));
     setTimeout(function() {
         t.done();
-    }, 50);
+    }, TIMEOUT);
 }, 'Test that current ready promise is not fulfilled if player is not ready (has no timeline ' +
     'associated)');
 
@@ -72,7 +75,7 @@ async_test(function(t) {
         t.unreached_func('Current ready promise should be rejected'));
     setTimeout(function() {
         t.done();
-    }, 50);
+    }, TIMEOUT);
 }, 'Test that current ready promise is not fulfilled if player is not ready (associated ' +
     'timeline is inactive)');
 </script>

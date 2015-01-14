@@ -12,6 +12,8 @@
 <body>
 <div id="log"></div>
 <script>
+var TIMEOUT = 50;
+
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
     var finishedCounter = 0;
@@ -38,7 +40,7 @@ async_test(function(t) {
         setTimeout(t.step_func(function() {
             assert_equals(finishedCounter, 0, 'Curent finished promise should not be fulfilled');
             t.done();
-        }), 50);
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that current finished promise is a pending Promise object and is not fulfilled ' +
     'while player is running');
@@ -56,7 +58,7 @@ async_test(function(t) {
         setTimeout(t.step_func(function() {
             assert_equals(finishedCounter, 1, 'Curent finished promise should not be fulfilled');
             t.done();
-        }), 50);
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that current finished promise is fulfilled when player is finished');
 
@@ -80,7 +82,7 @@ async_test(function(t) {
                     'promise should be replaced by new Promise object');
                 t.done();
             }), t.unreached_func('Current ready promise should not be rejected'));
-        }), 50);
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that current finished promise is replaced by new Promise object when player ' +
     'leaves the finished play state');
@@ -106,7 +108,7 @@ async_test(function(t) {
                     'promise should be replaced by new Promise object');
                 t.done();
             }), t.unreached_func('Current ready promise should not be rejected'));
-        }), 50);
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that current finished promise is replaced by new Promise object when player ' +
     'leaves the finished play state. Playback rate < 0');
@@ -295,7 +297,7 @@ async_test(function(t) {
     setTimeout(t.step_func(function() {
         assert_equals(finishedCounter, 0, 'Curent finished promise should not be fulfilled');
         t.done();
-    }), 50);
+    }), TIMEOUT);
 }, 'Test that current finished promise is not fulfilled if player has no timeline ' +
     'associated and no source content even if AnimationPlayer.finish() is called');
 

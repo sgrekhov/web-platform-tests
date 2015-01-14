@@ -12,6 +12,8 @@
 <body>
 <div id="log"></div>
 <script>
+var DELAY = 50;
+
 test(function() {
     var players = document.timeline.getAnimationPlayers();
     assert_true(players === null || players.length === 0,
@@ -173,7 +175,7 @@ async_test(function(t) {
 async_test(function(t) {
 	var doc = newHTMLDocument();
     var animationGroup = new AnimationGroup([new Animation(createDiv(t, doc), KEYFRAMES, ANIMATION_DURATION)],
-        {delay: 50, duration: ANIMATION_DURATION});
+        {delay: DELAY, duration: ANIMATION_DURATION});
 	var player = doc.timeline.play(animationGroup);
 
     player.ready.then(t.step_func(function() {
@@ -202,7 +204,7 @@ async_test(function(t) {
 async_test(function(t) {
 	var doc = newHTMLDocument();
     var animationGroup = new AnimationGroup([new Animation(createDiv(t, doc), KEYFRAMES, ANIMATION_DURATION)],
-        {delay: 50, duration: ANIMATION_DURATION, fill: 'none'});
+        {delay: DELAY, duration: ANIMATION_DURATION, fill: 'none'});
 	var player = doc.timeline.play(animationGroup);
 
     player.ready.then(t.step_func(function() {
@@ -231,7 +233,7 @@ async_test(function(t) {
 async_test(function(t) {
 	var doc = newHTMLDocument();
     var animationGroup = new AnimationGroup([new Animation(createDiv(t, doc), KEYFRAMES, ANIMATION_DURATION)],
-        {delay: 50, duration: ANIMATION_DURATION, fill: 'forwards'});
+        {delay: DELAY, duration: ANIMATION_DURATION, fill: 'forwards'});
 	var player = doc.timeline.play(animationGroup);
 
     player.ready.then(t.step_func(function() {
@@ -260,7 +262,7 @@ async_test(function(t) {
 async_test(function(t) {
 	var doc = newHTMLDocument();
     var animationGroup = new AnimationGroup([new Animation(createDiv(t, doc), KEYFRAMES, ANIMATION_DURATION)],
-        {delay: 50, duration: ANIMATION_DURATION, fill: 'backwards'});
+        {delay: DELAY, duration: ANIMATION_DURATION, fill: 'backwards'});
 	var player = doc.timeline.play(animationGroup);
 
     player.ready.then(t.step_func(function() {

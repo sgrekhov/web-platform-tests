@@ -69,7 +69,7 @@ async_test(function(t) {
     var player = document.timeline.play(source);
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = ANIMATION_DURATION/2;
+        player.currentTime = ANIMATION_DURATION / 2;
         player.cancel();
 
         assert_equals(window.getComputedStyle(source.target).top, ANIMATION_TOP_DEFAULT,
