@@ -11,6 +11,8 @@
 <body>
 <div id="log"></div>
 <script>
+var TIMEOUT = 50;
+
 test(function() {
     var player = new AnimationPlayer(createDiv(this));
     assert_throws('InvalidStateError', function() {
@@ -146,8 +148,8 @@ async_test(function(t) {
                 assert_approx_equals(player.currentTime, 0, TIME_EPSILON, 'Time should go ' +
                     'backward after reverse() call');
                 t.done();
-            }), 50);
-        }), 50);
+            }), TIMEOUT);
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer.reverse() call reverses player time');
 
@@ -160,11 +162,12 @@ async_test(function(t) {
         setTimeout(t.step_func(function() {
             player.reverse();
             setTimeout(t.step_func(function() {
-                assert_approx_equals(player.currentTime, player.source.computedTiming.endTime - 50, TIME_EPSILON,
+                assert_approx_equals(player.currentTime,
+                    player.source.computedTiming.endTime - TIMEOUT, TIME_EPSILON,
                     'Time should go backward after reverse() call');
                 t.done();
-            }), 50);
-        }), 50);
+            }), TIMEOUT);
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer.reverse() call reverses player time when current time > end time');
 
@@ -177,11 +180,11 @@ async_test(function(t) {
         setTimeout(t.step_func(function() {
             player.reverse();
             setTimeout(t.step_func(function() {
-                assert_approx_equals(player.currentTime, player.source.computedTiming.endTime / 2, TIME_EPSILON,
-                    'Time should go backward after reverse() call');
+                assert_approx_equals(player.currentTime, player.source.computedTiming.endTime / 2,
+                    TIME_EPSILON, 'Time should go backward after reverse() call');
                 t.done();
-            }), 50);
-        }), 50);
+            }), TIMEOUT);
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer.reverse() call reverses player time when playback rate < 0');
 
@@ -193,10 +196,10 @@ async_test(function(t) {
 
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
-            assert_approx_equals(player.currentTime, 50, TIME_EPSILON,
+            assert_approx_equals(player.currentTime, TIMEOUT, TIME_EPSILON,
                 'Time should go backward after reverse() call');
             t.done();
-        }), 50);
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer.reverse() call reverses player time when playback rate < 0 and ' +
     'current time < 0');

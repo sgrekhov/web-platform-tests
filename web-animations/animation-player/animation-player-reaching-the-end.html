@@ -11,6 +11,8 @@
 <body>
 <div id="log"></div>
 <script>
+var TIMEOUT = 50;
+
 async_test(function(t) {
     var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
     var pointsToTest = [
@@ -77,16 +79,14 @@ async_test(function(t) {
     player.currentTime = ANIMATION_DURATION - 10;
 
     player.ready.then(t.step_func(function() {
-        setTimeout(function() {
-            t.step(function () {
-                assert_equals(player.currentTime, player.source.computedTiming.endTime,
-                    'The value of AnimationPlayer.currentTime attribute should be ' +
-                    'hold on source content end time');
-                assert_equals(player.playState, 'finished', 'AnimationPlayer ' +
-                    'should be finished');
-                t.done();
-            });
-        }, 50);
+        setTimeout(t.step_func(function() {
+            assert_equals(player.currentTime, player.source.computedTiming.endTime,
+                'The value of AnimationPlayer.currentTime attribute should be ' +
+                'hold on source content end time');
+            assert_equals(player.playState, 'finished', 'AnimationPlayer ' +
+                'should be finished');
+            t.done();
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer does not play forwards beyond the end time');
 
@@ -96,16 +96,14 @@ async_test(function(t) {
     player.currentTime = 10;
 
     player.ready.then(t.step_func(function() {
-        setTimeout(function() {
-            t.step(function () {
+        setTimeout(t.step_func(function() {
                 assert_equals(player.currentTime, 0,
                     'The value of AnimationPlayer.currentTime attribute should be ' +
                     'hold on source content end time');
                 assert_equals(player.playState, 'finished', 'AnimationPlayer ' +
                     'should be finished');
                 t.done();
-            });
-        }, 50);
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that AnimationPlayer does not progress past time zero if playback rate is negative');
 
