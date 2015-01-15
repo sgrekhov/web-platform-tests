@@ -13,6 +13,7 @@
 <body>
 <div id="log"></div>
 <script>
+var TIMEOUT = ANIMATION_DURATION / 10;
 test(function() {
     var effect = newKeyframeEffect();
 
@@ -39,14 +40,14 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
             // After the first iteration target element top == 200px
-            // After 100 ms of the second iteration top should be
-            // 200 + 'top at 100 ms'
+            // After TIMEOUT ms of the second iteration top should be
+            // 200 + 'top at TIMEOUT ms'
             assert_approx_equals(window.getComputedStyle(target).top,
-                ANIMATION_TOP_1 + getExpectedTop(100), 10,
+                ANIMATION_TOP_1 + getExpectedTop(TIMEOUT), 10,
                 'Animated attribute \'top\' value should be accumulated ' +
                 'with the final value of the previous iteration');
             t.done();
-        }), 110);
+        }), TIMEOUT + 10);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test AnimationEffect.iterationComposite value \'accumulate\' forces animated value ' +
     'to accumulate with the final value of the previous iteration');
@@ -62,11 +63,11 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
             assert_approx_equals(window.getComputedStyle(target).top,
-                getExpectedTop(100), COMPUTED_STYLE_EPSILON,
+                getExpectedTop(TIMEOUT), COMPUTED_STYLE_EPSILON,
                 'Animated attribute \'top\' value should replace ' +
                 'the final value of the previous iteration');
             t.done();
-        }), 110);
+        }), TIMEOUT + 10);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test AnimationEffect.iterationComposite value \'repace\' forces animated value ' +
     'to be produced independent of the current iteration');
@@ -83,10 +84,10 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         setTimeout(t.step_func(function() {
             // After the first iteration target element top == 200px
-            // After 100 ms of the second iteration width should be
-            // 200 + 'width at 100 ms'
+            // After TIMEOUT ms of the second iteration width should be
+            // 200 + 'width at TIMEOUT ms'
             assert_approx_equals(window.getComputedStyle(target).top,
-                ANIMATION_TOP_1 + getExpectedTop(100), COMPUTED_STYLE_EPSILON,
+                ANIMATION_TOP_1 + getExpectedTop(TIMEOUT), COMPUTED_STYLE_EPSILON,
                 'Animated attribute \'top\' value should be accumulated ' +
                 'with the final value of the previous iteration');
 
@@ -96,12 +97,12 @@ async_test(function(t) {
             effect.iterationComposite = 'replace';
             setTimeout(t.step_func(function() {
                 assert_approx_equals(window.getComputedStyle(target).top,
-                    getExpectedTop(100), COMPUTED_STYLE_EPSILON,
+                    getExpectedTop(TIMEOUT), COMPUTED_STYLE_EPSILON,
                     'Animated attribute \'top\' value should replace ' +
                     'the final value of the previous iteration');
                 t.done();
-            }), 110);
-        }), 110);
+            }), TIMEOUT + 10);
+        }), TIMEOUT + 10);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test AnimationEffect.iterationComposite controls how values are combined ' +
     'between successive iterations of the same animation');

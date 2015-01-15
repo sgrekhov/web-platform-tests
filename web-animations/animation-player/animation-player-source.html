@@ -227,12 +227,12 @@ async_test(function(t) {
     'the new animation is played from the same position');
 
 async_test(function(t) {
-    var oldSource = new Animation(createDiv(t), KEYFRAMES, 1000);
-    var newSource = new Animation(createDiv(t), KEYFRAMES, 400);
+    var oldSource = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var newSource = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION / 4);
     var player = document.timeline.play(oldSource);
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = 500;
+        player.currentTime = ANIMATION_DURATION / 2;
         player.source = newSource;
         player.ready.then(t.step_func(function() {
             assert_equals(player.playState, 'finished', 'Player should be finished');

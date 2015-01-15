@@ -12,7 +12,7 @@
 <body>
 <div id="log"></div>
 <script>
-var DELAY = 50;
+var DELAY = ANIMATION_DURATION / 20;
 
 test(function() {
     var players = document.timeline.getAnimationPlayers();
@@ -183,11 +183,11 @@ async_test(function(t) {
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');
-        player.currentTime = 10;
+        player.currentTime = ANIMATION_DURATION / 100;
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');
-        player.currentTime = 110;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');
@@ -212,11 +212,11 @@ async_test(function(t) {
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');
-        player.currentTime = 10;
+        player.currentTime = ANIMATION_DURATION / 100;
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');
-        player.currentTime = 110;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');
@@ -241,11 +241,11 @@ async_test(function(t) {
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');
-        player.currentTime = 10;
+        player.currentTime = ANIMATION_DURATION / 100;
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');
-        player.currentTime = 110;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');
@@ -270,11 +270,11 @@ async_test(function(t) {
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');
-        player.currentTime = 10;
+        player.currentTime = ANIMATION_DURATION / 100;
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');
-        player.currentTime = 110;
+        player.currentTime = ANIMATION_DURATION / 2;
         assert_array_equals(doc.timeline.getAnimationPlayers(), [player],
             'AnimationTimeline.getAnimationPlayers() method should ' +
             'return players whose source content is current');

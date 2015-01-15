@@ -33,8 +33,8 @@ test(function() {
     'for sequence with single child');
 
 test(function() {
-    var node1 = new Animation(createDiv(this), [], 1000);
-    var node2 = new Animation(createDiv(this), [], 500);
+    var node1 = new Animation(createDiv(this), [], ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), [], ANIMATION_DURATION / 2);
     var sequence = new AnimationSequence([node1, node2]);
 
     var duration = sequence.computedTiming.duration;
@@ -47,8 +47,8 @@ test(function() {
     'for sequence several children');
 
 test(function() {
-    var node1 = new AnimationGroup([], -1000);
-    var node2 = new AnimationGroup([], -500);
+    var node1 = new AnimationGroup([], -1 * ANIMATION_DURATION);
+    var node2 = new AnimationGroup([], -1 * ANIMATION_DURATION / 2);
     var sequence = new AnimationSequence([node1, node2]);
 
     var duration = sequence.computedTiming.duration;
@@ -85,8 +85,8 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'auto'};
-    var node1 = new Animation(createDiv(this), [], 1000);
-    var node2 = new Animation(createDiv(this), [], 500);
+    var node1 = new Animation(createDiv(this), [], ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), [], ANIMATION_DURATION / 2);
     var sequence = new AnimationSequence([node1, node2], timing);
 
     var duration = sequence.computedTiming.duration;
@@ -100,8 +100,8 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'auto'};
-    var node1 = new AnimationGroup([], -1000);
-    var node2 = new AnimationGroup([], -500);
+    var node1 = new AnimationGroup([], -1 * ANIMATION_DURATION);
+    var node2 = new AnimationGroup([], -1 * ANIMATION_DURATION / 2);
     var sequence = new AnimationSequence([node1, node2], timing);
 
     assert_equals(sequence.computedTiming.duration, 0,
@@ -135,8 +135,8 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'some unsupported value'};
-    var node1 = new Animation(createDiv(this), [], 1000);
-    var node2 = new Animation(createDiv(this), [], 500);
+    var node1 = new Animation(createDiv(this), [], ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), [], ANIMATION_DURATION / 2);
     var sequence = new AnimationSequence([node1, node2], timing);
 
     var duration = sequence.computedTiming.duration;
@@ -150,8 +150,8 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'some unsupported value'};
-    var node1 = new AnimationGroup([], -1000);
-    var node2 = new AnimationGroup([], -500);
+    var node1 = new AnimationGroup([], -1 * ANIMATION_DURATION);
+    var node2 = new AnimationGroup([], -1 * ANIMATION_DURATION / 2);
     var sequence = new AnimationSequence([node1, node2], timing);
 
     assert_equals(sequence.computedTiming.duration, 0,

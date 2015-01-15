@@ -90,7 +90,7 @@ async_test(function(t) {
             if (timeFraction === null) {
                 numOfCallsNullTime++;
             }
-        }, 100);
+        }, ANIMATION_DURATION);
     var player = document.timeline.play(source);
     var doc = newHTMLDocument();
     player.timeline = doc.timeline;
@@ -100,7 +100,7 @@ async_test(function(t) {
             assert_equals(numOfCallsNullTime, 1, 'AnimationEffect callback should ' +
                 'be called with null timeFraction after changing of player source');
             t.done();
-        }), 50);
+        }), ANIMATION_DURATION / 20);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that EffectCallback is called with null timeFraction ' +
     'if player timeline is changed to new not null value');

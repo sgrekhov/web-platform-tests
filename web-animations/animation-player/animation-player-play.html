@@ -11,7 +11,7 @@
 <body>
 <div id="log"></div>
 <script>
-var TIMEOUT = 50;
+var TIMEOUT = ANIMATION_DURATION / 20;
 
 async_test(function(t) {
     var player = document.timeline.play(null);
@@ -87,13 +87,13 @@ async_test(function(t) {
     var player = newAnimationPlayer(createDiv(this));
 
     player.ready.then(t.step_func(function() {
-        // wait for 50 ms
+        // wait for TIMEOUT ms
         setTimeout(t.step_func(function() {
             player.pause();
-            // wait for 50 ms
+            // wait for TIMEOUT ms
             setTimeout(t.step_func(function() {
                 player.play();
-                // wait for 50 ms
+                // wait for TIMEOUT ms
                 setTimeout(t.step_func(function() {
                     assert_approx_equals(player.currentTime, 2 * TIMEOUT, TIME_EPSILON,
                         'After player is unpaused by AnimationPlayer.play() ' +
@@ -112,13 +112,13 @@ async_test(function(t) {
     player.currentTime = ANIMATION_DURATION / 2;
 
     player.ready.then(t.step_func(function() {
-        // wait for 50 ms
+        // wait for TIMEOUT ms
         setTimeout(t.step_func(function() {
             player.pause();
-            // wait for 50 ms
+            // wait for TIMEOUT ms
             setTimeout(t.step_func(function() {
                 player.play();
-                // wait for 50 ms
+                // wait for TIMEOUT ms
                 setTimeout(t.step_func(function() {
                     var expectedTime = ANIMATION_DURATION / 2 - 2 * TIMEOUT;
                     assert_approx_equals(player.currentTime, expectedTime, TIME_EPSILON,
@@ -203,12 +203,12 @@ async_test(function(t) {
     player.currentTime = player.source.computedTiming.endTime + 100;
 
     player.ready.then(t.step_func(function() {
-        // wait for 50 ms
+        // wait for TIMEOUT ms
         setTimeout(t.step_func(function() {
             assert_equals(player.currentTime, player.source.computedTiming.endTime + 100,
                 'currentTime value should not be changed');
             player.play();
-            // wait for 50 ms
+            // wait for TIMEOUT ms
             setTimeout(t.step_func(function() {
                 assert_approx_equals(player.currentTime, TIMEOUT, TIME_EPSILON,
                     'After AnimationPlayer.play() call ' +
@@ -226,11 +226,11 @@ async_test(function(t) {
     player.currentTime = -10;
 
     player.ready.then(t.step_func(function() {
-        // wait for 50 ms
+        // wait for TIMEOUT ms
         setTimeout(t.step_func(function() {
             assert_equals(player.currentTime, -10, 'currentTime value should not be changed');
             player.play();
-            // wait for 50 ms
+            // wait for TIMEOUT ms
             setTimeout(t.step_func(function() {
                 assert_approx_equals(player.currentTime,
                     player.source.computedTiming.endTime - TIMEOUT, TIME_EPSILON,

@@ -45,8 +45,8 @@ test(function() {
     'for nodes with negative, NaN and string values');
 
 test(function() {
-    var node1 = new Animation(createDiv(this), [], 1000);
-    var node2 = new Animation(createDiv(this), [], 500);
+    var node1 = new Animation(createDiv(this), [], ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), [], ANIMATION_DURATION / 2);
     var group = new AnimationGroup([node1, node2]);
     assert_equals(group.computedTiming.duration, node1.computedTiming.endTime,
         'AnimationGroup.computedTiming.duration should return intrinsic iteration duration');
@@ -55,8 +55,8 @@ test(function() {
     'for group several children');
 
 test(function() {
-    var node1 = new AnimationGroup([], -1000);
-    var node2 = new AnimationGroup([], -500);
+    var node1 = new AnimationGroup([], -1 * ANIMATION_DURATION);
+    var node2 = new AnimationGroup([], -1 * ANIMATION_DURATION / 2);
     var group = new AnimationGroup([node1, node2]);
     assert_equals(group.computedTiming.duration, 0,
         'AnimationGroup.computedTiming.duration should return zero');
@@ -85,8 +85,8 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'auto'};
-    var node1 = new Animation(createDiv(this), [], 1000);
-    var node2 = new Animation(createDiv(this), [], 500);
+    var node1 = new Animation(createDiv(this), [], ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), [], ANIMATION_DURATION / 2);
     var group = new AnimationGroup([node1, node2], timing);
     assert_equals(group.computedTiming.duration, node1.computedTiming.endTime,
         'AnimationGroup.computedTiming.duration should return intrinsic iteration duration');
@@ -96,8 +96,8 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'auto'};
-    var node1 = new AnimationGroup([], -1000);
-    var node2 = new AnimationGroup([], -500);
+    var node1 = new AnimationGroup([], -1 * ANIMATION_DURATION);
+    var node2 = new AnimationGroup([], -1 * ANIMATION_DURATION / 2);
     var group = new AnimationGroup([node1, node2], timing);
     assert_equals(group.computedTiming.duration, 0,
         'AnimationGroup.computedTiming.duration should return zero');
@@ -126,8 +126,8 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'some unsupported value'};
-    var node1 = new Animation(createDiv(this), [], 1000);
-    var node2 = new Animation(createDiv(this), [], 500);
+    var node1 = new Animation(createDiv(this), [], ANIMATION_DURATION);
+    var node2 = new Animation(createDiv(this), [], ANIMATION_DURATION / 2);
     var group = new AnimationGroup([node1, node2], timing);
     assert_equals(group.computedTiming.duration, node1.computedTiming.endTime,
         'AnimationGroup.computedTiming.duration should return intrinsic iteration duration');
@@ -137,8 +137,8 @@ test(function() {
 
 test(function() {
     var timing = {duration: 'some unsupported value'};
-    var node1 = new AnimationGroup([], -1000);
-    var node2 = new AnimationGroup([], -500);
+    var node1 = new AnimationGroup([], -1 * ANIMATION_DURATION);
+    var node2 = new AnimationGroup([], -1 * ANIMATION_DURATION / 2);
     var group = new AnimationGroup([node1, node2], timing);
     assert_equals(group.computedTiming.duration, 0,
         'AnimationGroup.computedTiming.duration should return zero');
