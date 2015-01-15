@@ -11,7 +11,7 @@
 <body>
 <div id="log"></div>
 <script>
-var TIMEOUT = 50;
+var TIMEOUT = ANIMATION_DURATION / 20;
 
 async_test(function(t) {
     var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
