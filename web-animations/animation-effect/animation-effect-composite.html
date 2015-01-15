@@ -11,6 +11,8 @@
 <body>
 <div id="log"></div>
 <script>
+var TIMEOUT = ANIMATION_DURATION / 10;
+
 test(function() {
     var effect = newKeyframeEffect();
     assert_equals(effect.composite, 'replace', 'Wrong default value of ' +
@@ -42,11 +44,11 @@ async_test(function(t) {
             // player2 is created later than player1
             // so it has greater sequence number and higher priority
             setTimeout(t.step_func(function() {
-                assert_approx_equals(window.getComputedStyle(target).top, getExpectedTop(100), 10,
+                assert_approx_equals(window.getComputedStyle(target).top, getExpectedTop(TIMEOUT), 10,
                     'Animation effect should replace the underlying value ' +
                     'in the animation stack');
                 t.done();
-            }), 110);
+            }), TIMEOUT + 10);
         }), t.unreached_func('Current ready promise should not be rejected'));
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test AnimationEffect.composite: value \'replace\' forces the effect to replace ' +
@@ -72,11 +74,11 @@ async_test(function(t) {
                 // Expected top property value is
                 // 2 * (Animation top at the moment ANIMATION_DURATION / 2 + 100)
                 assert_approx_equals(window.getComputedStyle(target).top,
-                    2 * getExpectedTop(ANIMATION_DURATION / 2 + 100), 10,
+                    2 * getExpectedTop(ANIMATION_DURATION / 2 + TIMEOUT), 10,
                     'Animation effect should add its intermediate animation value ' +
                     'to an underlying value in the animation stack');
                 t.done();
-            }), 110);
+            }), TIMEOUT + 10);
         }), t.unreached_func('Current ready promise should not be rejected'));
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test AnimationEffect.composite: value \'add\' forces the effect to add ' +
