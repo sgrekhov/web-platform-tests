@@ -79,7 +79,7 @@ async_test(function(t) {
             assert_approx_equals(window.getComputedStyle(animation.target).top,
                 getExpectedTop(ANIMATION_DURATION / 2 - 1, ANIMATION_DURATION / 2),
                 COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be in effect');
-            player.currentTime = ANIMATION_DURATION;
+            player.currentTime = ANIMATION_DURATION / 2;
             assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
                 'Animation ' + type(node) + ' should not be in effect');
             doneCounter++;
@@ -89,6 +89,251 @@ async_test(function(t) {
         }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test that setting value of AnimationTiming.playbackRate changes ' +
-    'active duration of the animation node');
+    'active duration of the animation node. New value is more than 1');
+
+async_test(function(t) {
+    var timing = {
+        playbackRate: 0.5,
+        duration: ANIMATION_DURATION
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        assert_equals(node.computedTiming.playbackRate, 0.5,
+            'Wrong AnimationNode.computedTiming.iterationStart value');
+        assert_equals(node.computedTiming.activeDuration, 2 * ANIMATION_DURATION,
+            'Wrong AnimationNode.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = 2 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(2 * ANIMATION_DURATION - 1, 2 * ANIMATION_DURATION),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be in effect');
+            player.currentTime = 2 * ANIMATION_DURATION;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+                'Animation ' + type(node) + ' should not be in effect');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that setting value of AnimationTiming.playbackRate changes ' +
+    'active duration of the animation node. New value is less than 1');
+
+async_test(function(t) {
+    var timing = {
+        playbackRate: 0,
+        duration: ANIMATION_DURATION
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        assert_equals(node.computedTiming.playbackRate, 0,
+            'Wrong AnimationNode.computedTiming.iterationStart value');
+        assert_equals(node.computedTiming.activeDuration, Infinity,
+            'Wrong AnimationNode.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            setTimeout(t.step_func(function() {
+                assert_equals(player.currentTime, 0,
+                    'AnimationPlayer should be paused');
+                assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_),
+                    'Animation ' + type(node) + ' should not be paused at zero');
+                doneCounter++;
+                if (doneCounter === animations.length) {
+                    t.done();
+                }
+            }, ANIMATION_DURATION / 20);
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that setting zero value of AnimationTiming.playbackRate changes ' +
+    'active duration to Infinity and pauses AnimationPlayer');
+
+async_test(function(t) {
+    var timing = {
+        playbackRate: -0.5,
+        duration: ANIMATION_DURATION
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        assert_equals(node.computedTiming.playbackRate, -0.5,
+            'Wrong AnimationNode.computedTiming.iterationStart value');
+        assert_equals(node.computedTiming.activeDuration, 2 * ANIMATION_DURATION,
+            'Wrong AnimationNode.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(2 * ANIMATION_DURATION - 1, 2 * ANIMATION_DURATION),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be in effect and ' +
+                'go in backward direction');
+            player.currentTime = 2 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1, 2 * ANIMATION_DURATION),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be in effect and ' +
+                'go in backward direction');
+            player.currentTime = 2 * ANIMATION_DURATION;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+                'Animation ' + type(node) + ' should not be in effect');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that setting negative value of AnimationTiming.playbackRate changes ' +
+    'active duration of the animation node. New value is more than -1');
+
+async_test(function(t) {
+    var timing = {
+        playbackRate: -2,
+        duration: ANIMATION_DURATION
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        assert_equals(node.computedTiming.playbackRate, -2,
+            'Wrong AnimationNode.computedTiming.iterationStart value');
+        assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION / 2,
+            'Wrong AnimationNode.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 2 - 1, ANIMATION_DURATION / 2),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be in effect and ' +
+                'go in backward direction');
+            player.currentTime = ANIMATION_DURATION / 2 - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1, ANIMATION_DURATION / 2),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be in effect and ' +
+                'go in backward direction');
+            player.currentTime = ANIMATION_DURATION / 2;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+                'Animation ' + type(node) + ' should not be in effect');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that setting negative value of AnimationTiming.playbackRate changes ' +
+    'active duration of the animation node. New value is less than -1');
+
+async_test(function(t) {
+    var delayValue = ANIMATION_DURATION / 20;
+    var timing = {
+        delay: delayValue,
+        playbackRate: 2,
+        duration: ANIMATION_DURATION
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        assert_equals(node.computedTiming.playbackRate, 2,
+            'Wrong AnimationNode.computedTiming.iterationStart value');
+        assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION / 2,
+            'Wrong AnimationNode.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = delayValue - 1;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+                'Animation ' + type(node) + ' should not be in effect');
+            player.currentTime = delayValue;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0,
+                'Animation ' + type(node) + ' should be in effect');
+            player.currentTime = delayValue + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1, ANIMATION_DURATION / 2), COMPUTED_STYLE_EPSILON,
+                'Animation ' + type(node) + ' should be in effect');
+            player.currentTime = ANIMATION_DURATION / 2 - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 2 - 1, ANIMATION_DURATION / 2),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be in effect');
+            player.currentTime = ANIMATION_DURATION / 2;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_DEFAULT,
+                'Animation ' + type(node) + ' should not be in effect');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that AnimationTiming.playbackRate is applied only to the active interval ' +
+    'of an animation node and not to the time while it is delayed');
+
+
+async_test(function(t) {
+    var delayValue = ANIMATION_DURATION / 20;
+    var timing = {
+        fill: 'forwards',
+        playbackRate: 2,
+        duration: ANIMATION_DURATION
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        assert_equals(node.computedTiming.playbackRate, 2,
+            'Wrong AnimationNode.computedTiming.iterationStart value');
+        assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION / 2,
+            'Wrong AnimationNode.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = ANIMATION_DURATION / 2 - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 2 - 1, ANIMATION_DURATION / 2),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be in effect');
+            player.currentTime = ANIMATION_DURATION / 2;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                'Animation ' + type(node) + ' should be in effect at the end point');
+            player.currentTime = ANIMATION_DURATION;
+            assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                'Animation ' + type(node) + ' should not be in effect at the end point');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that AnimationTiming.playbackRate is applied only to the active interval ' +
+    'of an animation node and not to the time while it is filled');
 </script>
 </body>
