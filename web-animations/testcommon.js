@@ -549,7 +549,10 @@ function AnimationPlayer(source, timeline){
     setTimeout(function(){
         readyPromise.resolve(player);
     }, 0);
-    this.finish = function() {};
+    this.finished = new Promise();
+    this.finish = function() {
+        this.finished.resolve(this);
+    };
     this.play = function() {};
     this.pause = function() {};
     this.cancel = function() {};
