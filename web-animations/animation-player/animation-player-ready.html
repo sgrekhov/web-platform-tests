@@ -69,25 +69,25 @@ async_test(function(t) {
 async_test(function(t) {
     var player = new AnimationPlayer();
 
+    player.play();
     player.ready.then(t.unreached_func('Current ready promise should not be fulfilled'),
         t.unreached_func('Current ready promise should be rejected'));
-    player.play();
     setTimeout(function() {
         t.done();
     }, TIMEOUT);
-}, 'Test that current ready promise is not fulfilled if player is not ready (has no timeline ' +
+}, 'Test that current ready promise is pending if player is not ready (has no timeline ' +
     'associated)');
 
 async_test(function(t) {
     var player = new AnimationPlayer(null, new InactiveTimeline());
 
+    player.play();
     player.ready.then(t.unreached_func('Current ready promise should not be fulfilled'),
         t.unreached_func('Current ready promise should be rejected'));
-    player.play();
     setTimeout(function() {
         t.done();
     }, TIMEOUT);
-}, 'Test that current ready promise is not fulfilled if player is not ready (associated ' +
+}, 'Test that current ready promise is pending if player is not ready (associated ' +
     'timeline is inactive)');
 </script>
 </body>
