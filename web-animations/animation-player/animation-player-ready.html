@@ -4,6 +4,7 @@
 <meta name="assert" content="Returns the current ready promise for this object">
 <link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-ready">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -14,11 +15,21 @@
 var TIMEOUT = ANIMATION_DURATION / 20;
 
 test(function() {
-    var player = new AnimationPlayer();
-
-    assert_class_string(player.ready, 'Promise', 'The current ready promise should be ' +
-        'initially a resolved Promise object');
-}, 'Test that the current ready promise is initially a resolved Promise object');
+    var players = [
+        new AnimationPlayer(),
+        new AnimationPlayer(new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION)),
+        new AnimationPlayer(new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION), document.timeline),
+        document.timeline.play(new Animation(createDiv(this), KEYFRAMES, ANIMATION_DURATION))
+    ];
+    players.forEach(function(player, index) {
+        assert_not_equals(player.ready, null, 'AnimationPlayer.ready should ' +
+            'not be null for player '+index);
+        assert_not_equals(player.ready.then, null, 'AnimationPlayer.ready.then should ' +
+            'not be null for player '+index);
+        assert_equals(typeof(player.ready.then), 'function', 'AnimationPlayer.ready.then should ' +
+            'be a function for player '+index);
+    });
+}, 'Test AnimationPlayer.ready is a Promise object');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
@@ -65,7 +76,6 @@ async_test(function(t) {
     }, TIMEOUT);
 }, 'Test that current ready promise is not fulfilled if player is not ready (has no timeline ' +
     'associated)');
-
 
 async_test(function(t) {
     var player = new AnimationPlayer(null, new InactiveTimeline());
