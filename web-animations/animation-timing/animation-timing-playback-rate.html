@@ -150,13 +150,13 @@ async_test(function(t) {
             setTimeout(t.step_func(function() {
                 assert_equals(player.currentTime, 0,
                     'AnimationPlayer should be paused');
-                assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_),
-                    'Animation ' + type(node) + ' should not be paused at zero');
+                assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0,
+                    'Animation ' + type(node) + ' should be paused at zero');
                 doneCounter++;
                 if (doneCounter === animations.length) {
                     t.done();
                 }
-            }, ANIMATION_DURATION / 20);
+            }, ANIMATION_DURATION / 20));
         }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test that setting zero value of AnimationTiming.playbackRate changes ' +
@@ -294,9 +294,7 @@ async_test(function(t) {
 }, 'Test that AnimationTiming.playbackRate is applied only to the active interval ' +
     'of an animation node and not to the time while it is delayed');
 
-
 async_test(function(t) {
-    var delayValue = ANIMATION_DURATION / 20;
     var timing = {
         fill: 'forwards',
         playbackRate: 2,
@@ -335,5 +333,173 @@ async_test(function(t) {
     });
 }, 'Test that AnimationTiming.playbackRate is applied only to the active interval ' +
     'of an animation node and not to the time while it is filled');
+
+async_test(function(t) {
+    var delayValue = ANIMATION_DURATION / 10;
+    var timing = {
+        fill: 'both',
+        delay: delayValue,
+        playbackRate: 1,
+        duration: ANIMATION_DURATION
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        assert_equals(node.computedTiming.playbackRate, 1,
+            'Wrong AnimationNode.computedTiming.iterationStart value');
+        assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION,
+            'Wrong AnimationNode.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            setTimeout(t.step_func(function() {
+                assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0,
+                    'Animation ' + type(node) + ' should be in effect while delayed');
+                node.timing.playbackRate = 2;
+                setTimeout(t.step_func(function() {
+                    assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_0,
+                        'Animation ' + type(node) + ' should be in effect while delayed');
+                    assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION / 2,
+                        'Wrong AnimationNode.computedTiming.activeDuration value');
+
+                    player.currentTime = delayValue + ANIMATION_DURATION / 2;
+                    assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                        'Animation ' + type(node) + ' should be in effect at the end point');
+                    player.currentTime = delayValue + ANIMATION_DURATION;
+                    assert_equals(window.getComputedStyle(animation.target), ANIMATION_TOP_1,
+                        'Animation ' + type(node) + ' should not be in effect at the end point');
+                    doneCounter++;
+                    if (doneCounter === animations.length) {
+                        t.done();
+                    }
+                }, delayValue / 2));
+            }, delayValue / 2));
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that changing AnimationTiming.playbackRate not on active interval ' +
+    'does not affect animation');
+
+async_test(function(t) {
+    var timing = {
+        playbackRate: 1,
+        duration: ANIMATION_DURATION
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+
+        assert_equals(node.computedTiming.playbackRate, 1,
+            'Wrong AnimationNode.computedTiming.iterationStart value');
+        assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION,
+            'Wrong AnimationNode.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4, ANIMATION_DURATION),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should be in effect');
+
+            node.timing.playbackRate = 2;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4, ANIMATION_DURATION / 2),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should jump');
+
+            node.timing.playbackRate = 0.5;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4, 2 * ANIMATION_DURATION),
+                COMPUTED_STYLE_EPSILON, 'Animation ' + type(node) + ' should jump again');
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that changing the playback rate of an animation node whose local time is ' +
+    'within its active interval will cause it to jump');
+
+async_test(function(t) {
+    var animation1 = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var animation2 = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var animationSequence = new AnimationSequence([animation1, animation2]);
+
+    var player = document.timeline.play(animationSequence);
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = ANIMATION_DURATION / 2;
+        assert_approx_equals(window.getComputedStyle(animation1.target).top,
+            getExpectedTop(ANIMATION_DURATION / 2, ANIMATION_DURATION),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should be in effect');
+        assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect');
+
+        animation1.timing.playbackRate = 4;
+        assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect');
+        assert_approx_equals(window.getComputedStyle(animation2.target).top,
+            getExpectedTop(ANIMATION_DURATION / 4, ANIMATION_DURATION),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should jump');
+
+        animation1.timing.playbackRate = 0.5;
+        assert_approx_equals(window.getComputedStyle(animation1.target).top,
+            getExpectedTop(ANIMATION_DURATION / 4, 2 * ANIMATION_DURATION),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should jump again');
+        assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that if animation nodes depend on the animation node\'s active duration, ' +
+    'such as sibling animation node in a animation sequence, they too jump as a result ' +
+    'of setting the animation node\'s playback rate. Test changing playback rate of ' +
+    'the first node in the animation sequence');
+
+async_test(function(t) {
+    var animation1 = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var animation2 = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var animation3 = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var animationSequence = new AnimationSequence([animation1, animation2, animation3]);
+
+    var player = document.timeline.play(animationSequence);
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = 1.5 * ANIMATION_DURATION;
+        assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect');
+        assert_approx_equals(window.getComputedStyle(animation1.target).top,
+            getExpectedTop(ANIMATION_DURATION / 2, ANIMATION_DURATION),
+            COMPUTED_STYLE_EPSILON, 'Animation2 should be in effect');
+        assert_equals(window.getComputedStyle(animation3.target), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect');
+
+        animation2.timing.playbackRate = 4;
+        assert_equals(window.getComputedStyle(animation1.target), ANIMATION_TOP_DEFAULT,
+            'Animation1 should not be in effect');
+        assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect');
+        assert_approx_equals(window.getComputedStyle(animation3.target).top,
+            getExpectedTop(ANIMATION_DURATION / 4, ANIMATION_DURATION),
+            COMPUTED_STYLE_EPSILON, 'Animation3 should jump');
+
+        animation1.timing.playbackRate = 0.5;
+        assert_approx_equals(window.getComputedStyle(animation1.target).top,
+            getExpectedTop( 3 / 4 * ANIMATION_DURATION, 2 * ANIMATION_DURATION),
+            COMPUTED_STYLE_EPSILON, 'Animation1 should jump');
+        assert_equals(window.getComputedStyle(animation2.target), ANIMATION_TOP_DEFAULT,
+            'Animation2 should not be in effect');
+        assert_equals(window.getComputedStyle(animation3.target), ANIMATION_TOP_DEFAULT,
+            'Animation3 should not be in effect');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that if animation nodes depend on the animation node\'s active duration, ' +
+    'such as sibling animation node in a animation sequence, they too jump as a result ' +
+    'of setting the animation node\'s playback rate. Test changing playback rate of ' +
+    'the middle node in the animation sequence');
 </script>
 </body>
