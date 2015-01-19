@@ -24,11 +24,11 @@ test(function() {
     ];
     players.forEach(function(player, index) {
         assert_not_equals(player.finished, null, 'AnimationPlayer.finished should ' +
-            'not be null for player '+index);
+            'not be null for player ' + index);
         assert_not_equals(player.finished.then, null, 'AnimationPlayer.finished.then should ' +
-            'not be null for player '+index);
+            'not be null for player ' + index);
         assert_equals(typeof(player.finished.then), 'function', 'AnimationPlayer.finished.then should ' +
-            'be a function for player '+index);
+            'be a function for player ' + index);
     });
 }, 'Test AnimationPlayer.finished is a Promise object');
 
@@ -72,7 +72,7 @@ async_test(function(t) {
     }), t.unreached_func('Current finished promise should not be rejected'));
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = player.source.computedTiming.endTime - ( TIMEOUT / 2 );
+        player.currentTime = player.source.computedTiming.endTime - TIMEOUT / 2;
         setTimeout(t.step_func(function() {
             assert_equals(finishedCounter, 1, 'Curent finished promise should not be fulfilled');
             t.done();
@@ -90,7 +90,7 @@ async_test(function(t) {
     }), t.unreached_func('Current finished promise should not be rejected'));
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = player.source.computedTiming.endTime -  ( TIMEOUT / 2 );
+        player.currentTime = player.source.computedTiming.endTime - TIMEOUT / 2;
         setTimeout(t.step_func(function() {
             assert_equals(finishedCounter, 1, 'Curent finished promise should be fulfilled');
             player.play();
