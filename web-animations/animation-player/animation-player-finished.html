@@ -171,8 +171,8 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         player.finish();
         assert_equals(finishedCounter, 1, 'Curent finished promise should be fulfilled');
-        assert_equals(player.finished, finishedPromise, 'Curent finished promise should be ' +
-            'the same object');
+        assert_equals(player.finished, finishedPromise, 'Curent finished promise should not ' +
+            'be changed');
 
         player.play();
         assert_not_equals(player.finished, finishedPromise, 'The current finished ' +
@@ -182,8 +182,8 @@ async_test(function(t) {
 
         player.finish();
         assert_equals(finishedCounter, 1, 'Previous finished promise should not be fulfilled');
-        assert_equals(player.finished, finishedPromise2, 'Curent finished promise should be ' +
-            'the same object');
+        assert_equals(player.finished, finishedPromise2, 'Curent finished promise should not ' +
+            'be changed');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that current finished promise is replaced by new Promise object when player ' +
@@ -204,8 +204,8 @@ async_test(function(t) {
     player.ready.then(t.step_func(function() {
         player.finish();
         assert_equals(finishedCounter, 1, 'Curent finished promise should be fulfilled');
-        assert_equals(player.finished, finishedPromise, 'Curent finished promise should be ' +
-            'the same object');
+        assert_equals(player.finished, finishedPromise, 'Curent finished promise should not ' +
+            'be changed');
 
         player.play();
         assert_not_equals(player.finished, finishedPromise, 'The current finished ' +
@@ -213,10 +213,10 @@ async_test(function(t) {
         assert_equals(finishedCounter, 1, 'Previous finished promise should not be fulfilled');
         var finishedPromise2 = player.finished;
 
-        player.currentTime = 20;
+        player.currentTime = ANIMATION_DURATION / 50;
         assert_equals(finishedCounter, 1, 'Previous finished promise should not be fulfilled');
-        assert_equals(player.finished, finishedPromise2, 'Curent finished promise should be ' +
-            'the same object');
+        assert_equals(player.finished, finishedPromise2, 'Curent finished promise should not ' +
+            'be changed');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that current finished promise is replaced by new Promise object when player ' +
@@ -232,10 +232,10 @@ async_test(function(t) {
     }), t.unreached_func('Current finished promise should not be rejected'));
 
     player.ready.then(t.step_func(function() {
-        player.currentTime = 100;
+        player.currentTime = ANIMATION_DURATION / 10;
         assert_equals(finishedCounter, 0, 'Curent finished promise should not be fulfilled');
 
-        player.currentTime = -100;
+        player.currentTime = - ANIMATION_DURATION / 10;
         assert_equals(finishedCounter, 0, 'Curent finished promise should not be fulfilled');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
@@ -305,15 +305,14 @@ async_test(function(t) {
 
 async_test(function(t) {
     var player = new AnimationPlayer();
-    var finishedCounter = 0;
 
-    player.finished.then(t.step_func(function() {
-        finishedCounter++;
-    }), t.unreached_func('Current finished promise should not be rejected'));
+    player.finished.then(
+        t.unreached_func('Current finished promise should not be fulfilled'),
+        t.unreached_func('Current finished promise should not be rejected')
+    );
     player.finish();
 
     setTimeout(t.step_func(function() {
-        assert_equals(finishedCounter, 0, 'Curent finished promise should not be fulfilled');
         t.done();
     }), TIMEOUT);
 }, 'Test that current finished promise is not fulfilled if player has no timeline ' +
