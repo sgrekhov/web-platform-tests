@@ -2,7 +2,7 @@
 <meta charset=utf-8>
 <title>AnimationTiming playbackRate attribute test</title>
 <meta name="assert" content="The animation node’s playback rate property. This is a multiplier applied to the local time potentially causing the node to run at a different rate to its natural speed">
-<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationtimingreadonly-playbackrate">
+<link rel="help" href="http://w3c.github.io/web-animations/#dom-animationtiming-playbackrate">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -501,5 +501,7 @@ async_test(function(t) {
     'such as sibling animation node in a animation sequence, they too jump as a result ' +
     'of setting the animation node\'s playback rate. Test changing playback rate of ' +
     'the middle node in the animation sequence');
+
+// TODO add test for animation groups where group and children have different playback rates
 </script>
 </body>
