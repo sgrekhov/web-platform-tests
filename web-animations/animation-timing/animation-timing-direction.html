@@ -557,78 +557,78 @@ async_test(function(t) {
     var groups = [animationGroup, animationSequence];
     var doneCounter = 0;
     groups.forEach(function(group) {
-	    var player = document.timeline.play(group);
+        var player = document.timeline.play(group);
 
-	    assert_equals(animation.computedTiming.direction, 'alternate-reverse',
-	        'Wrong Animation.computedTiming.direction value');
-	    assert_equals(group.computedTiming.direction, 'alternate-reverse',
-	        'Wrong ' + type(group) + '.computedTiming.direction value');
+        assert_equals(animation.computedTiming.direction, 'alternate-reverse',
+            'Wrong Animation.computedTiming.direction value');
+        assert_equals(group.computedTiming.direction, 'alternate-reverse',
+            'Wrong ' + type(group) + '.computedTiming.direction value');
 
-	    player.ready.then(t.step_func(function() {
-	        // First iteration of the group. Direction is normal
-	        // First iteration of the animation. Direction is normal 
-	        player.currentTime = 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
+        player.ready.then(t.step_func(function() {
+            // First iteration of the group. Direction is normal
+            // First iteration of the animation. Direction is normal
+            player.currentTime = 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
 
-	        // Second iteration of the animation. Direction is reversed
-	        player.currentTime = ANIMATION_DURATION + 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = ANIMATION_DURATION + ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = 2 * ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
+            // Second iteration of the animation. Direction is reversed
+            player.currentTime = ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 2 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
 
-	        // Second iteration of the group. Direction - reversed.
-	        // So the second iteration of the animation goes first.
-	        // Direction is reversed but because of the group - normal 
-	        player.currentTime = 2 * ANIMATION_DURATION + 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = 2 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = 3 * ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
+            // Second iteration of the group. Direction is reversed.
+            // So the second iteration of the animation goes first.
+            // Direction is reversed but because of the group - normal
+            player.currentTime = 2 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 2 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 3 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
 
-	        // The first iteration of the animation.
-	        // Direction is normal but reversed because of the group
-	        player.currentTime = 3 * ANIMATION_DURATION + 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = 3 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = 4 * ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        doneCounter++;
-	        if (doneCounter === groups.length) {
-	            t.done();
-	        }
-	    }), t.unreached_func('Current ready promise should not be rejected'));
+            // The first iteration of the animation.
+            // Direction is normal but reversed because of the group
+            player.currentTime = 3 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 3 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 4 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            doneCounter++;
+            if (doneCounter === groups.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test that animation is performed in appropriate directions if both animation and ' +
     'it\'s parent group have \'alternate-reverse\' direction');
@@ -650,81 +650,81 @@ async_test(function(t) {
     var groups = [animationGroup, animationSequence];
     var doneCounter = 0;
     groups.forEach(function(group) {
-	    var player = document.timeline.play(group);
+        var player = document.timeline.play(group);
 
-	    assert_equals(animation.computedTiming.direction, 'alternate',
-	        'Wrong Animation.computedTiming.direction value');
-	    assert_equals(group.computedTiming.direction, 'reverse',
-	        'Wrong ' + type(group) + '.computedTiming.direction value');
+        assert_equals(animation.computedTiming.direction, 'alternate',
+            'Wrong Animation.computedTiming.direction value');
+        assert_equals(group.computedTiming.direction, 'reverse',
+            'Wrong ' + type(group) + '.computedTiming.direction value');
 
-	    player.ready.then(t.step_func(function() {
-	        // First iteration of the group. Direction is reversed.
-	        // So the second iteration of the animation goes first
-	        // Second iteration of the animation. Direction is normal
-	        // but reversed because of the group
-	        player.currentTime = 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
+        player.ready.then(t.step_func(function() {
+            // First iteration of the group. Direction is reversed.
+            // So the second iteration of the animation goes first
+            // Second iteration of the animation. Direction is normal
+            // but reversed because of the group
+            player.currentTime = 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
 
-	        // First iteration of the animation. Direction is reversed
-	        // but normal because of the group
-	        player.currentTime = ANIMATION_DURATION + 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = ANIMATION_DURATION + ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = 2 * ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
+            // First iteration of the animation. Direction is reversed
+            // but normal because of the group
+            player.currentTime = ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 2 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
 
-	        // Second iteration of the group. Direction - reversed.
-	        // So the second iteration of the animation goes first.
-	        // Direction is normal but reversed because of the group
-	        player.currentTime = 2 * ANIMATION_DURATION + 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = 2 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = 3 * ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
+            // Second iteration of the group. Direction is reversed.
+            // So the second iteration of the animation goes first.
+            // Direction is normal but reversed because of the group
+            player.currentTime = 2 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 2 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 3 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
 
-	        // The first iteration of the animation.
-	        // Direction is reversed but normal because of the group
-	        player.currentTime = 3 * ANIMATION_DURATION + 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = 3 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = 4 * ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        doneCounter++;
-	        if (doneCounter === groups.length) {
-	            t.done();
-	        }
-	    }), t.unreached_func('Current ready promise should not be rejected'));
+            // The first iteration of the animation.
+            // Direction is reversed but normal because of the group
+            player.currentTime = 3 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 3 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 4 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            doneCounter++;
+            if (doneCounter === groups.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test that animation is performed in appropriate directions when animation is played ' +
     'in \'alternate\' direction and it\'s parent group in \'reverse\' direction');
@@ -758,69 +758,69 @@ async_test(function(t) {
             // So the second iteration of the animation goes first
             // For the second iteration of the animation direction is reversed
             // but normal because of the group
-	        player.currentTime = 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
+            player.currentTime = 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
 
-	        // First iteration of the animation. Direction is normal
-	        // but reversed because of the group
-	        player.currentTime = ANIMATION_DURATION + 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = ANIMATION_DURATION + ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = 2 * ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
+            // First iteration of the animation. Direction is normal
+            // but reversed because of the group
+            player.currentTime = ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 2 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
 
-	        // Second iteration of the group. Direction is reversed.
-	        // So the second iteration of the animation goes first.
-	        // Direction is reversed but normal because of the group
-	        player.currentTime = 2 * ANIMATION_DURATION + 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = 2 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
-	        player.currentTime = 3 * ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in normal direction');
+            // Second iteration of the group. Direction is reversed.
+            // So the second iteration of the animation goes first.
+            // Direction is reversed but normal because of the group
+            player.currentTime = 2 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 2 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 3 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
 
-	        // The first iteration of the animation.
-	        // Direction is normal but reversed because of the group
-	        player.currentTime = 3 * ANIMATION_DURATION + 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = 3 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        player.currentTime = 4 * ANIMATION_DURATION - 1;
-	        assert_approx_equals(window.getComputedStyle(animation.target).top,
-	            getExpectedTop(1), COMPUTED_STYLE_EPSILON,
-	            'Animation should be performed in reversed direction');
-	        doneCounter++;
-	        if (doneCounter === groups.length) {
-	            t.done();
-	        }
-	    }), t.unreached_func('Current ready promise should not be rejected'));
+            // The first iteration of the animation.
+            // Direction is normal but reversed because of the group
+            player.currentTime = 3 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 3 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 4 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            doneCounter++;
+            if (doneCounter === groups.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test that animation is performed in appropriate directions when animation is played ' +
     'in \'alternate-reverse\' direction and it\'s parent group in \'reverse\' direction');
@@ -917,6 +917,288 @@ async_test(function(t) {
         }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Test that animation is performed in appropriate directions when animation is played ' +
-    'in \'reverse\' direction and it\'s parent group in \'alternare\' direction');
+    'in \'reverse\' direction and it\'s parent group in \'alternate\' direction');
+
+async_test(function(t) {
+    var animationTiming = {
+        direction: 'alternate-reverse',
+        duration: ANIMATION_DURATION,
+        iterations: 2
+    };
+    var groupTiming = {
+        direction: 'alternate',
+        duration: ANIMATION_DURATION,
+        iterations: 2
+    };
+    var animation = new Animation(createDiv(t), KEYFRAMES, animationTiming);
+    var animationGroup = new AnimationGroup([animation], groupTiming);
+    var animationSequence = new AnimationSequence([animation], groupTiming);
+    var groups = [animationGroup, animationSequence];
+    var doneCounter = 0;
+    groups.forEach(function(group) {
+        var player = document.timeline.play(group);
+
+        assert_equals(animation.computedTiming.direction, 'alternate-reverse',
+            'Wrong Animation.computedTiming.direction value');
+        assert_equals(group.computedTiming.direction, 'alternate',
+            'Wrong ' + type(group) + '.computedTiming.direction value');
+
+        player.ready.then(t.step_func(function() {
+            // First iteration of the group. Direction is reversed.
+            // So the second iteration of the animation goes first
+            // For the second iteration of the animation direction is reversed
+            // but normal because of the group
+            player.currentTime = 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                   'Animation should be performed in normal direction');
+
+            // First iteration of the animation. Direction is normal
+            // but reversed because of the group
+            player.currentTime = ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 2 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+
+            // Second iteration of the group. Direction is normal.
+            // The first iteration of the animation, direction is reversed
+            player.currentTime = 2 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 2 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 3 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+
+            // The second iteration of the animation. Direction is normal
+            player.currentTime = 3 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 3 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 4 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            doneCounter++;
+            if (doneCounter === groups.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that animation is performed in appropriate directions when animation is played ' +
+    'in \'alternate-reverse\' direction and it\'s parent group in \'alternate\' direction');
+
+async_test(function(t) {
+    var animationTiming = {
+        direction: 'reverse',
+        duration: ANIMATION_DURATION,
+        iterations: 2
+    };
+    var groupTiming = {
+        direction: 'alternate-reverse',
+        duration: ANIMATION_DURATION,
+        iterations: 2
+    };
+    var animation = new Animation(createDiv(t), KEYFRAMES, animationTiming);
+    var animationGroup = new AnimationGroup([animation], groupTiming);
+    var animationSequence = new AnimationSequence([animation], groupTiming);
+    var groups = [animationGroup, animationSequence];
+    var doneCounter = 0;
+    groups.forEach(function(group) {
+        var player = document.timeline.play(group);
+
+        assert_equals(animation.computedTiming.direction, 'reverse',
+            'Wrong Animation.computedTiming.direction value');
+        assert_equals(group.computedTiming.direction, 'alternate-reverse',
+            'Wrong ' + type(group) + '.computedTiming.direction value');
+
+        player.ready.then(t.step_func(function() {
+            // First iteration of the group. Direction is normal.
+            // For the first iteration of the animation direction is reversed
+            player.currentTime = 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                   'Animation should be performed in reversed direction');
+
+            // Second iteration of the animation. Direction is reversed
+            player.currentTime = ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 2 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+
+            // Second iteration of the group. Direction is reversed.
+            // So the second iteration of the animation goes first
+            // For the second iteration of the animation direction is reversed
+            // but normal because of the group
+            player.currentTime = 2 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 2 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 3 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+
+            // The first iteration of the animation. Direction is reversed
+            // but normal because of the group
+            player.currentTime = 3 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 3 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 4 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            doneCounter++;
+            if (doneCounter === groups.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that animation is performed in appropriate directions when animation is played ' +
+    'in \'reverse\' direction and it\'s parent group in \'alternate-reverse\' direction');
+
+async_test(function(t) {
+    var animationTiming = {
+        direction: 'alternate',
+        duration: ANIMATION_DURATION,
+        iterations: 2
+    };
+    var groupTiming = {
+        direction: 'alternate-reverse',
+        duration: ANIMATION_DURATION,
+        iterations: 2
+    };
+    var animation = new Animation(createDiv(t), KEYFRAMES, animationTiming);
+    var animationGroup = new AnimationGroup([animation], groupTiming);
+    var animationSequence = new AnimationSequence([animation], groupTiming);
+    var groups = [animationGroup, animationSequence];
+    var doneCounter = 0;
+    groups.forEach(function(group) {
+        var player = document.timeline.play(group);
+
+        assert_equals(animation.computedTiming.direction, 'alternate',
+            'Wrong Animation.computedTiming.direction value');
+        assert_equals(group.computedTiming.direction, 'alternate-reverse',
+            'Wrong ' + type(group) + '.computedTiming.direction value');
+
+        player.ready.then(t.step_func(function() {
+            // First iteration of the group. Direction is normal.
+            // For the first iteration of the animation direction is reversed
+            player.currentTime = 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                   'Animation should be performed in reversed direction');
+
+            // Second iteration of the animation. Direction is normal
+            player.currentTime = ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 2 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+
+            // Second iteration of the group. Direction is reversed.
+            // So the second iteration of the animation goes first
+            // For the second iteration of the animation direction is normal
+            // but reversed because of the group
+            player.currentTime = 2 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 2 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION * 3 / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+            player.currentTime = 3 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in reversed direction');
+
+            // The first iteration of the animation. Direction is reversed
+            // but normal because of the group
+            player.currentTime = 3 * ANIMATION_DURATION + 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 3 * ANIMATION_DURATION + ANIMATION_DURATION / 4;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            player.currentTime = 4 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1), COMPUTED_STYLE_EPSILON,
+                'Animation should be performed in normal direction');
+            doneCounter++;
+            if (doneCounter === groups.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that animation is performed in appropriate directions when animation is played ' +
+    'in \'alternate\' direction and it\'s parent group in \'alternate-reverse\' direction');
 </script>
 </body>
