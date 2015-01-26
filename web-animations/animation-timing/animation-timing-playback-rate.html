@@ -582,8 +582,7 @@ async_test(function(t) {
             assert_equals(window.getComputedStyle(animation.target).top,
                 ANIMATION_TOP_DEFAULT, type(group) + ': Animation should be finished');
             player.currentTime = ANIMATION_DURATION / 2 - 1;
-            assert_approx_equals(window.getComputedStyle(animation.target).top,
-                assert_equals(window.getComputedStyle(animation.target).top,
+            assert_equals(window.getComputedStyle(animation.target).top,
                 ANIMATION_TOP_DEFAULT, type(group) + ': Animation should be finished');
             doneCounter++;
             if (doneCounter === groups.length) {
