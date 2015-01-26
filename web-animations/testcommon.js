@@ -555,7 +555,13 @@ function AnimationPlayer(source, timeline){
     };
     this.play = function() {};
     this.pause = function() {};
-    this.cancel = function() {};
+    this.cancel = function() {
+        this.ready.reject(new Error('AbortError'));
+        this.ready = new Promise();
+        this.ready.resolve();
+        this.finished.reject(new Error('AbortError'));
+        this.finished = new Promise();
+    };
 }
 
 
@@ -613,7 +619,7 @@ Promise.prototype = {
 			function (resolve, reject) { reject && reject(arg); };
 		// disallow multiple calls to resolve or reject
 		this.resolve = this.reject =
-			function () { throw new Error('Promise already completed.'); };
+			function () { /*throw new Error('Promise already completed.');*/ };
 		// complete all waiting (async) then()s
 		var aThen, i = 0;
 		while (aThen = this._thens[i++]) { aThen[which] && aThen[which](arg); }
