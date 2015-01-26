@@ -34,7 +34,7 @@ async_test(function(t) {
         var player = document.timeline.play(node);
 
         assert_equals(node.computedTiming.playbackRate, 1.0,
-            'Wrong AnimationNode.computedTiming.iterationStart value');
+            'Wrong AnimationNode.computedTiming.playbackRate value');
         assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION,
             'Wrong AnimationNode.computedTiming.activeDuration value');
 
@@ -70,7 +70,7 @@ async_test(function(t) {
         var player = document.timeline.play(node);
 
         assert_equals(node.computedTiming.playbackRate, 2.0,
-            'Wrong AnimationNode.computedTiming.iterationStart value');
+            'Wrong AnimationNode.computedTiming.playbackRate value');
         assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION / 2,
             'Wrong AnimationNode.computedTiming.activeDuration value');
 
@@ -106,7 +106,7 @@ async_test(function(t) {
         var player = document.timeline.play(node);
 
         assert_equals(node.computedTiming.playbackRate, 0.5,
-            'Wrong AnimationNode.computedTiming.iterationStart value');
+            'Wrong AnimationNode.computedTiming.playbackRate value');
         assert_equals(node.computedTiming.activeDuration, 2 * ANIMATION_DURATION,
             'Wrong AnimationNode.computedTiming.activeDuration value');
 
@@ -142,7 +142,7 @@ async_test(function(t) {
         var player = document.timeline.play(node);
 
         assert_equals(node.computedTiming.playbackRate, 0,
-            'Wrong AnimationNode.computedTiming.iterationStart value');
+            'Wrong AnimationNode.computedTiming.playbackRate value');
         assert_equals(node.computedTiming.activeDuration, Infinity,
             'Wrong AnimationNode.computedTiming.activeDuration value');
 
@@ -177,7 +177,7 @@ async_test(function(t) {
         var player = document.timeline.play(node);
 
         assert_equals(node.computedTiming.playbackRate, -0.5,
-            'Wrong AnimationNode.computedTiming.iterationStart value');
+            'Wrong AnimationNode.computedTiming.playbackRate value');
         assert_equals(node.computedTiming.activeDuration, 2 * ANIMATION_DURATION,
             'Wrong AnimationNode.computedTiming.activeDuration value');
 
@@ -219,7 +219,7 @@ async_test(function(t) {
         var player = document.timeline.play(node);
 
         assert_equals(node.computedTiming.playbackRate, -2,
-            'Wrong AnimationNode.computedTiming.iterationStart value');
+            'Wrong AnimationNode.computedTiming.playbackRate value');
         assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION / 2,
             'Wrong AnimationNode.computedTiming.activeDuration value');
 
@@ -263,7 +263,7 @@ async_test(function(t) {
         var player = document.timeline.play(node);
 
         assert_equals(node.computedTiming.playbackRate, 2,
-            'Wrong AnimationNode.computedTiming.iterationStart value');
+            'Wrong AnimationNode.computedTiming.playbackRate value');
         assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION / 2,
             'Wrong AnimationNode.computedTiming.activeDuration value');
 
@@ -310,7 +310,7 @@ async_test(function(t) {
         var player = document.timeline.play(node);
 
         assert_equals(node.computedTiming.playbackRate, 2,
-            'Wrong AnimationNode.computedTiming.iterationStart value');
+            'Wrong AnimationNode.computedTiming.playbackRate value');
         assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION / 2,
             'Wrong AnimationNode.computedTiming.activeDuration value');
 
@@ -352,7 +352,7 @@ async_test(function(t) {
         var player = document.timeline.play(node);
 
         assert_equals(node.computedTiming.playbackRate, 1,
-            'Wrong AnimationNode.computedTiming.iterationStart value');
+            'Wrong AnimationNode.computedTiming.playbackRate value');
         assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION,
             'Wrong AnimationNode.computedTiming.activeDuration value');
 
@@ -399,7 +399,7 @@ async_test(function(t) {
         var player = document.timeline.play(node);
 
         assert_equals(node.computedTiming.playbackRate, 1,
-            'Wrong AnimationNode.computedTiming.iterationStart value');
+            'Wrong AnimationNode.computedTiming.playbackRate value');
         assert_equals(node.computedTiming.activeDuration, ANIMATION_DURATION,
             'Wrong AnimationNode.computedTiming.activeDuration value');
 
@@ -502,6 +502,194 @@ async_test(function(t) {
     'of setting the animation node\'s playback rate. Test changing playback rate of ' +
     'the middle node in the animation sequence');
 
-// TODO add test for animation groups where group and children have different playback rates
+async_test(function(t) {
+    var timing = {
+        playbackRate: 0.5,
+        duration: ANIMATION_DURATION
+    };
+    var animation = new Animation(createDiv(t), KEYFRAMES, timing);
+    var animationGroup = new AnimationGroup([animation], timing);
+    var animationSequence = new AnimationSequence([animation], timing);
+    var groups = [animationGroup, animationSequence];
+    var doneCounter = 0;
+    groups.forEach(function(group) {
+        var player = document.timeline.play(group);
+
+        assert_equals(animation.computedTiming.playbackRate, 0.5,
+            'Wrong Animation.computedTiming.playbackRate value');
+        assert_equals(group.computedTiming.playbackRate, 0.5,
+            'Wrong ' + type(group) + '.computedTiming.playbackRate value');
+        assert_equals(animation.computedTiming.activeDuration, 2 * ANIMATION_DURATION,
+            'Wrong Animation.computedTiming.activeDuration value');
+        assert_equals(group.computedTiming.activeDuration, 2 * ANIMATION_DURATION,
+            'Wrong ' + type(group) + '.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = 2 * ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION, 2 * ANIMATION_DURATION),
+                COMPUTED_STYLE_EPSILON, type(group) + ': Animation should be ' +
+                'in effect on a half way');
+            player.currentTime = 2 * ANIMATION_DURATION;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION, 2 * ANIMATION_DURATION),
+                COMPUTED_STYLE_EPSILON, type(group) + ': Animation should be ' +
+                'frozen on a half way');
+            player.currentTime = 4 * ANIMATION_DURATION;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION, 2 * ANIMATION_DURATION),
+                COMPUTED_STYLE_EPSILON, type(group) + ': Animation should be ' +
+                'still frozen on a half way');
+            doneCounter++;
+            if (doneCounter === groups.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test setting playback rate value less than 1 for child node of animation group ' +
+    'increases active duration and multiplies the time inherited from ' +
+    'the group');
+
+async_test(function(t) {
+    var timing = {
+        playbackRate: 2,
+        duration: ANIMATION_DURATION
+    };
+    var animation = new Animation(createDiv(t), KEYFRAMES, timing);
+    var animationGroup = new AnimationGroup([animation], timing);
+    var animationSequence = new AnimationSequence([animation], timing);
+    var groups = [animationGroup, animationSequence];
+    var doneCounter = 0;
+    groups.forEach(function(group) {
+        var player = document.timeline.play(group);
+
+        assert_equals(animation.computedTiming.playbackRate, 2,
+            'Wrong Animation.computedTiming.playbackRate value');
+        assert_equals(group.computedTiming.playbackRate, 2,
+            'Wrong ' + type(group) + '.computedTiming.playbackRate value');
+        assert_equals(animation.computedTiming.activeDuration, ANIMATION_DURATION / 2,
+            'Wrong Animation.computedTiming.activeDuration value');
+        assert_equals(group.computedTiming.activeDuration, ANIMATION_DURATION / 2,
+            'Wrong ' + type(group) + '.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = ANIMATION_DURATION / 4 - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 4 - 1, ANIMATION_DURATION / 4),
+                COMPUTED_STYLE_EPSILON, type(group) + ': Animation should be ' +
+                'in effect close to the end');
+            player.currentTime = ANIMATION_DURATION / 4;
+            assert_equals(window.getComputedStyle(animation.target).top,
+                ANIMATION_TOP_DEFAULT, type(group) + ': Animation should be finished');
+            player.currentTime = ANIMATION_DURATION / 2 - 1;
+            assert_equals(window.getComputedStyle(animation.target).top,
+                ANIMATION_TOP_DEFAULT, type(group) + ': Animation should be finished');
+            doneCounter++;
+            if (doneCounter === groups.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test setting playback rate value more than 1 for child node of animation group ' +
+    'shortes active duration and multiplies the time inherited from ' +
+    'the group');
+
+async_test(function(t) {
+    var animationTiming = {
+        playbackRate: 2,
+        duration: ANIMATION_DURATION
+    };
+    var animation = new Animation(createDiv(t), KEYFRAMES, animationTiming);
+    var groupTiming = {
+            playbackRate: 0.5,
+            duration: ANIMATION_DURATION
+        };
+    var animationGroup = new AnimationGroup([animation], groupTiming);
+    var animationSequence = new AnimationSequence([animation], groupTiming);
+    var groups = [animationGroup, animationSequence];
+    var doneCounter = 0;
+    groups.forEach(function(group) {
+        var player = document.timeline.play(group);
+
+        assert_equals(animation.computedTiming.playbackRate, 2,
+            'Wrong Animation.computedTiming.playbackRate value');
+        assert_equals(group.computedTiming.playbackRate, 0.5,
+            'Wrong ' + type(group) + '.computedTiming.playbackRate value');
+        assert_equals(animation.computedTiming.activeDuration, ANIMATION_DURATION / 2,
+            'Wrong Animation.computedTiming.activeDuration value');
+        assert_equals(group.computedTiming.activeDuration, 2 * ANIMATION_DURATION,
+            'Wrong ' + type(group) + '.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = ANIMATION_DURATION / 2;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 2, ANIMATION_DURATION),
+                COMPUTED_STYLE_EPSILON, type(group) + ': Animation should be ' +
+                'in effect on a half way');
+            player.currentTime = ANIMATION_DURATION - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION - 1, ANIMATION_DURATION),
+                COMPUTED_STYLE_EPSILON, type(group) + ': Animation should be ' +
+                'in effect close to the end');
+            player.currentTime = ANIMATION_DURATION;
+            assert_equals(window.getComputedStyle(animation.target).top,
+                ANIMATION_TOP_DEFAULT, type(group) + ': Animation should be finished');
+            doneCounter++;
+            if (doneCounter === groups.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that after setting playback rate of the group 0.5 and playback ' +
+    'rate of the child node to 2 animation plays with normal speed');
+
+async_test(function(t) {
+    var animationTiming = {
+        playbackRate: 2,
+        duration: ANIMATION_DURATION
+    };
+    var animation = new Animation(createDiv(t), KEYFRAMES, animationTiming);
+    var groupTiming = {
+            playbackRate: 3,
+            duration: ANIMATION_DURATION
+        };
+    var animationGroup = new AnimationGroup([animation], groupTiming);
+    var animationSequence = new AnimationSequence([animation], groupTiming);
+    var groups = [animationGroup, animationSequence];
+    var doneCounter = 0;
+    groups.forEach(function(group) {
+        var player = document.timeline.play(group);
+
+        assert_equals(animation.computedTiming.playbackRate, 2,
+            'Wrong Animation.computedTiming.playbackRate value');
+        assert_equals(group.computedTiming.playbackRate, 3,
+            'Wrong ' + type(group) + '.computedTiming.playbackRate value');
+        assert_equals(animation.computedTiming.activeDuration, ANIMATION_DURATION / 2,
+            'Wrong Animation.computedTiming.activeDuration value');
+        assert_equals(group.computedTiming.activeDuration, ANIMATION_DURATION / 3,
+            'Wrong ' + type(group) + '.computedTiming.activeDuration value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = ANIMATION_DURATION / 12;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 12, ANIMATION_DURATION / 6),
+                COMPUTED_STYLE_EPSILON, type(group) + ': Animation should be ' +
+                'in effect on a half way');
+            player.currentTime = ANIMATION_DURATION / 6 - 1;
+            assert_approx_equals(window.getComputedStyle(animation.target).top,
+                getExpectedTop(ANIMATION_DURATION / 6 - 1, ANIMATION_DURATION / 6),
+                COMPUTED_STYLE_EPSILON, type(group) + ': Animation should be ' +
+                'in effect close to the end');
+            player.currentTime = ANIMATION_DURATION / 6;
+            assert_equals(window.getComputedStyle(animation.target).top,
+                ANIMATION_TOP_DEFAULT, type(group) + ': Animation should be finished');
+            doneCounter++;
+            if (doneCounter === groups.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that after setting different playback rate of the group and ' +
+    'the child node animation plays as expected');
 </script>
 </body>
