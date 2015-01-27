@@ -87,22 +87,18 @@ test(function(t) {
 // 6. Queue a task to call any custom effects associated with inclusive
 // descendants of player’s source content with an unresolved time fraction.
 async_test(function(t) {
-    var numOfCallsNullTime = 0;
+    var playerCanceled = false;
     var source = new Animation(createDiv(t),
-        function(timeFraction, currentTarget, animationObject) {
-            if (timeFraction === null) {
-                numOfCallsNullTime++;
+        t.step_func(function(timeFraction, currentTarget, animationObject) {
+            if (playerCanceled && timeFraction === null) {
+                t.done();
             }
-        }, 100);
+        }), ANIMATION_DURATION);
     var player = document.timeline.play(source);
 
     player.ready.then(t.step_func(function() {
+        playerCanceled = true;
         player.cancel();
-        setTimeout(t.step_func(function() {
-            assert_equals(numOfCallsNullTime, 1, 'AnimationEffect callback should ' +
-                'be called with null timeFraction after cancelling of the player');
-            t.done();
-        }), 50);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that EffectCallback is called with null timeFraction ' +
     'if player is cancelled');
