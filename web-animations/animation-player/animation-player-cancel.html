@@ -3,6 +3,7 @@
 <title>Animation player cancel method test</title>
 <meta name="assert" content="Clears all effects caused by this player and aborts its playback by running the cancel a player procedure for this object">
 <link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-cancel">
+<link rel="help" href="http://w3c.github.io/web-animations/#cancel-a-player">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -11,55 +12,93 @@
 <body>
 <div id="log"></div>
 <script>
+// 1.Run the procedure to reset a player’s pending tasks on player.
+//   http://w3c.github.io/web-animations/#reset-a-players-pending-tasks
+//   1. If player has a pending play task, cancel that task.
+//   2. If player has a pending pause task, cancel that task.
+//   3. Reject player’s current ready promise with a DOMException named "AbortError".
 async_test(function(t) {
-    var player = document.timeline.play(new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION));
-    var readyPromise = player.ready;
-    var finishedPromise = player.finished;
-
-    player.ready.then(t.unreached_func('Current ready promise should be rejected'),
+    var animation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var player = new AnimationPlayer(animation, new InactiveTimeline());
+    // inactive timeline keeps player.ready pending
+    player.ready.then(
+        t.unreached_func('Current ready promise should be rejected'),
         t.step_func(function(error) {
             assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
                 'with a DOMException named \'AbortError\'');
-            return player.ready;
-        }).then(t.step_func(function() {
-            assert_equals(player.startTime, null, 'Player start time should be unresolved');
-            assert_not_equals(player.ready, readyPromise, 'Current ready promise should be a ' +
-                'new Promise object');
-            assert_not_equals(player.finished, finishedPromise, 'Current finished promise ' +
-                'should be a new Promise object');
-            assert_equals(player.playState, 'idle', 'Player should be in idle state');
             t.done();
-        }), t.unreached_func('Current ready promise should be rejected')));
-
-    player.finished.then(t.unreached_func('Current finished promise should be rejected'),
-        t.step_func(function(error) {
-                assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
-                    'with a DOMException named \'AbortError\'');
-        }));
+        })
+    );
     player.cancel();
-}, 'Test that AnimationPlayer.cancel() method rejects current ready and finished promises, ' +
-    'makes start time unresolved and replaces ready and finished promises by new Promise ' +
-    'objects');
+}, 'Test AnimationPlayer.cancel() rejects current ready promise with a DOMException ' +
+    'named \'AbortError\'');
 
+// 4. Let player’s current ready promise be the result of creating a new resolved Promise object.
+test(function(t) {
+    var animation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var player = new AnimationPlayer(animation, document.timeline);
+    player.play();
+    var previousReady = player.ready;
+    player.cancel();
+    assert_not_equals(player.ready, previousReady, 'AnimationPlayer.ready ' +
+        'should be replaced with new Promise object');
+}, 'Test AnimationPlayer.cancel() assigns new promise object to ' +
+    'AnimationPlayer.ready attribute');
+
+// 2. Reject the current finished promise with a DOMException named "AbortError".
 async_test(function(t) {
-    var numOfCallsNullTime = 0;
+    var animation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var player = new AnimationPlayer(animation, new InactiveTimeline());
+    player.finished.then(
+        t.unreached_func('Current ready promise should be rejected'),
+        t.step_func(function(error) {
+            assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
+                'with a DOMException named \'AbortError\'');
+            t.done();
+        })
+    );
+    player.cancel();
+}, 'Test AnimationPlayer.cancel() rejects current finished promise with a DOMException ' +
+    'named \'AbortError\'');
+
+// 3. Let current finished promise be a new (pending) Promise object.
+test(function(t) {
+    var animation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var player = new AnimationPlayer(animation, document.timeline);
+    player.play();
+    var previousFinished = player.finished;
+    player.cancel();
+    assert_not_equals(player.finished, previousFinished, 'AnimationPlayer.finished ' +
+        'should be replaced with new Promise object');
+}, 'Test AnimationPlayer.cancel() assigns new promise object to ' +
+    'AnimationPlayer.finished attribute');
+
+// 4. Make player’s hold time unresolved.
+// 5. Make player’s start time unresolved.
+test(function(t) {
+    var animation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
+    var player = new AnimationPlayer(animation, document.timeline);
+    player.play();
+    player.cancel();
+    assert_equals(player.startTime, null, 'AnimationPlayer.finished ' +
+        'should be replaced with new Promise object');
+}, 'Test AnimationPlayer.cancel() makes player start time unresolved');
+
+// 6. Queue a task to call any custom effects associated with inclusive
+// descendants of player’s source content with an unresolved time fraction.
+async_test(function(t) {
+    var playerCanceled = false;
     var source = new Animation(createDiv(t),
-        function(timeFraction, currentTarget, animationObject) {
-            if (timeFraction === null) {
-                numOfCallsNullTime++;
+        t.step_func(function(timeFraction, currentTarget, animationObject) {
+            if (playerCanceled && timeFraction === null) {
+                t.done();
             }
-        }, 100);
+        }), ANIMATION_DURATION);
     var player = document.timeline.play(source);
 
     player.ready.then(t.step_func(function() {
+        playerCanceled = true;
         player.cancel();
-        setTimeout(function() {
-            t.step(function() {
-                assert_equals(numOfCallsNullTime, 1, 'AnimationEffect callback should ' +
-                    'be called with null timeFraction after cancelling of the player');
-                t.done();
-            });
-        }, 50);
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test that EffectCallback is called with null timeFraction ' +
     'if player is cancelled');
