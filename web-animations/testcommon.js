@@ -126,12 +126,18 @@ function type(object) {
 }
 
 // Returns expected top of the target element at currentTime
-function getExpectedTop(currentTime, duration) {
-    if (!duration) {
-        duration = ANIMATION_DURATION;
+function getExpectedTop(currentTime, iterationDuration) {
+    if (!iterationDuration) {
+        iterationDuration = ANIMATION_DURATION;
     }
-    return ANIMATION_TOP_0 + (ANIMATION_TOP_1 - ANIMATION_TOP_0)
-        * (currentTime % duration);
+    var iterationFraction = (currentTime / iterationDuration) % 1;
+    if (iterationFraction <= 0.5) {
+        return ANIMATION_TOP_0 + (ANIMATION_TOP_0_5 - ANIMATION_TOP_0) *
+            iterationFraction * 2;
+    } else {
+        return ANIMATION_TOP_0_5 + (ANIMATION_TOP_1 - ANIMATION_TOP_0_5) *
+            (iterationFraction - 0.5) * 2;
+    }
 }
 
 // Compares actual and expected keyframes similar to
