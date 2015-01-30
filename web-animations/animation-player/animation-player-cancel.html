@@ -18,20 +18,25 @@
 //   2. If player has a pending pause task, cancel that task.
 //   3. Reject player’s current ready promise with a DOMException named "AbortError".
 async_test(function(t) {
-    var animation = new Animation(createDiv(t), KEYFRAMES, ANIMATION_DURATION);
-    var player = new AnimationPlayer(animation, new InactiveTimeline());
-    // inactive timeline keeps player.ready pending
-    player.ready.then(
-        t.unreached_func('Current ready promise should be rejected'),
-        t.step_func(function(error) {
-            assert_class_string(error, 'AbortError', 'Promise should be rejected ' +
-                'with a DOMException named \'AbortError\'');
+    var numOfCallsNullTime = 0;
+    var source = new Animation(createDiv(t),
+        function(timeFraction, currentTarget, animationObject) {
+            if (timeFraction === null) {
+                numOfCallsNullTime++;
+            }
+        }, ANIMATION_DURATION);
+    var player = document.timeline.play(source);
+
+    player.ready.then(t.step_func(function() {
+        player.cancel();
+        setTimeout(t.step_func(function() {
+            assert_equals(numOfCallsNullTime, 1, 'AnimationEffect callback should ' +
+                'be called with null timeFraction after cancelling of the player');
             t.done();
-        })
-    );
-    player.cancel();
-}, 'Test AnimationPlayer.cancel() rejects current ready promise with a DOMException ' +
-    'named \'AbortError\'');
+        }), ANIMATION_DURATION / 20);
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test that EffectCallback is called with null timeFraction ' +
+    'if player is cancelled');
 
 // 4. Let player’s current ready promise be the result of creating a new resolved Promise object.
 test(function(t) {
