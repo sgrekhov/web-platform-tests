@@ -558,6 +558,7 @@ function AnimationPlayer(source, timeline){
     this.finished = new Promise();
     this.finish = function() {
         this.finished.resolve(this);
+        this.finished = new Promise();
     };
     this.play = function() {};
     this.pause = function() {};

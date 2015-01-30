@@ -3,6 +3,7 @@
 <title>AnimationPlayer finish method tests</title>
 <meta name="assert" content="Seeks the player to the end of the source content in the current direction by running the finish a player procedure for this object">
 <link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-finish">
+<link rel="help" href="http://w3c.github.io/web-animations/#finish-a-player">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
 <link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
@@ -82,7 +83,7 @@ async_test(function(t) {
         var expectedStartTime = player.timeline.currentTime -
             ANIMATION_DURATION / player.playbackRate;
         assert_equals(player.startTime, expectedStartTime,  'AnimationPlayer.finish() should ' +
-            'update player\'s start time'');
+            'update player\'s start time');
         t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'AnimationPlayer.finish() updates player\'s start time to ' +
@@ -106,15 +107,26 @@ async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
     var counter = 0;
 
-    player.finish.then(t.step_func(function(plr) {
+    player.finished.then(t.step_func(function(plr) {
         counter++;
         assert_equals(plr, player, 'Finished promise should be resolved with player');
     }), t.unreached_func('Current finished promise should not be rejected'));
 
     player.ready.then(t.step_func(function() {
         player.finish();
-        assert_equals(counter, 1, 'Current finished promise should be resolved');
+        setTimeout(t.step_func(function(){
+            assert_equals(counter, 1, 'Current finished promise should be resolved');
+            t.done();
+        }), ANIMATION_DURATION / 20);
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Check that AnimationPlayer.finish() resolves curent finished promise');
+}, 'Check that AnimationPlayer.finish() resolves curent finished promise with player');
+
+test(function(t){
+    var player = newAnimationPlayer(createDiv(t));
+    var previousFinished = player.finished;
+    player.finish();
+    assert_not_equals(player.finished, previousFinished, 'AnimationPlayer.finished ' +
+        'should be replaced with new Promise object');
+}, 'Test AnimationPlayer.finish() set curent finished promise to a new (pending) Promise object');
 </script>
 </body>
