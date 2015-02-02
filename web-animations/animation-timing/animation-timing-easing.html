@@ -21,29 +21,73 @@ function createAnimationsToTest(test, timing) {
 }
 
 function testLinearEasing(player, animation, node) {
+	player.currentTime = 1;
     assert_approx_equals(window.getComputedStyle(animation.target).top,
         getExpectedTop(player.currentTime), COMPUTED_STYLE_EPSILON,
         'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
     player.currentTime = ANIMATION_DURATION / 4;
     assert_approx_equals(window.getComputedStyle(animation.target).top,
         getExpectedTop(player.currentTime), COMPUTED_STYLE_EPSILON,
         'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
     player.currentTime = ANIMATION_DURATION / 2;
     assert_approx_equals(window.getComputedStyle(animation.target).top,
         getExpectedTop(player.currentTime), COMPUTED_STYLE_EPSILON,
         'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
     player.currentTime = ANIMATION_DURATION * 3 / 4;
     assert_approx_equals(window.getComputedStyle(animation.target).top,
         getExpectedTop(player.currentTime), COMPUTED_STYLE_EPSILON,
         'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
     player.currentTime = ANIMATION_DURATION - 1;
     assert_approx_equals(window.getComputedStyle(animation.target).top,
         getExpectedTop(player.currentTime), COMPUTED_STYLE_EPSILON,
         'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
 }
 
-function bezierCurve(p1, p2, t) {
-    return 3 * t * ((1 - t) ^ 2) * p1 + 3 * (t ^ 2) * (1 - t) * p2 + t ^ 3;
+function testBezierEasing(player, animation, node, p1x, p1y, p2x, p2y) {
+	player.currentTime = 1;
+	var transformedTime = bezierCurve(player.currentTime / ANIMATION_DURATION,
+        p1x, p1y, p2x, p2y) * ANIMATION_DURATION;
+    assert_approx_equals(window.getComputedStyle(animation.target).top,
+        getExpectedTop(transformedTime), COMPUTED_STYLE_EPSILON,
+        'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
+    player.currentTime = ANIMATION_DURATION / 4;
+    var transformedTime = bezierCurve(player.currentTime / ANIMATION_DURATION,
+        p1x, p1y, p2x, p2y) * ANIMATION_DURATION;
+    assert_approx_equals(window.getComputedStyle(animation.target).top,
+        getExpectedTop(transformedTime), COMPUTED_STYLE_EPSILON,
+        'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
+    player.currentTime = ANIMATION_DURATION / 2;
+    var transformedTime = bezierCurve(player.currentTime / ANIMATION_DURATION,
+        p1x, p1y, p2x, p2y) * ANIMATION_DURATION;
+    assert_approx_equals(window.getComputedStyle(animation.target).top,
+        getExpectedTop(transformedTime), COMPUTED_STYLE_EPSILON,
+        'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
+    player.currentTime = ANIMATION_DURATION * 3 / 4;
+    var transformedTime = bezierCurve(player.currentTime / ANIMATION_DURATION,
+        p1x, p1y, p2x, p2y) * ANIMATION_DURATION;
+    assert_approx_equals(window.getComputedStyle(animation.target).top,
+        getExpectedTop(transformedTime), COMPUTED_STYLE_EPSILON,
+        'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
+    player.currentTime = ANIMATION_DURATION - 1;
+    var transformedTime = bezierCurve(player.currentTime / ANIMATION_DURATION,
+        p1x, p1y, p2x, p2y) * ANIMATION_DURATION;
+    assert_approx_equals(window.getComputedStyle(animation.target).top,
+        getExpectedTop(transformedTime), COMPUTED_STYLE_EPSILON,
+        'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+}
+
+function bezierCurve(x, p1x, p1y, p2x, p2y) {
+	// FIXME this is a stub for the function that should return
+	// cubic bezier curve y value for x value and p1 and p2 points
+    return 0;
 }
 
 async_test(function(t) {
@@ -126,5 +170,112 @@ async_test(function(t) {
 }, 'Test that unsupported value of AnimationTiming.easing is treated ' +
     'as \'linear\' and animations goes as linear');
 
+async_test(function(t) {
+    var timing = {
+        duration: ANIMATION_DURATION,
+        easing: 'ease'
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+        assert_equals(node.computedTiming.easing, 'ease',
+            'Wrong AnimationNode.computedTiming.easing value');
+
+        player.ready.then(t.step_func(function() {
+            testBezierEasing(player, animation, node, 0.25, 0.1, 0.25, 1);
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that if value of AnimationTiming.easing is \'ease\' ' +
+    'then animation goes as cubic-bezier(0.25, 0.1, 0.25, 1)');
+
+async_test(function(t) {
+    var timing = {
+        duration: ANIMATION_DURATION,
+        easing: 'ease-in'
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+        assert_equals(node.computedTiming.easing, 'ease-in',
+            'Wrong AnimationNode.computedTiming.easing value');
+
+        player.ready.then(t.step_func(function() {
+            testBezierEasing(player, animation, node, 0.42, 0, 1, 1);
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that if value of AnimationTiming.easing is \'ease-in\' ' +
+    'then animation goes as cubic-bezier(0.42, 0, 1, 1)');
+
+async_test(function(t) {
+    var timing = {
+        duration: ANIMATION_DURATION,
+        easing: 'ease-out'
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+        assert_equals(node.computedTiming.easing, 'ease-out',
+            'Wrong AnimationNode.computedTiming.easing value');
+
+        player.ready.then(t.step_func(function() {
+            testBezierEasing(player, animation, node, 0, 0, 0.58, 1);
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that if value of AnimationTiming.easing is \'ease-out\' ' +
+    'then animation goes as cubic-bezier(0, 0, 0.58, 1)');
+
+async_test(function(t) {
+    var timing = {
+        duration: ANIMATION_DURATION,
+        easing: 'ease-in-out'
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+        assert_equals(node.computedTiming.easing, 'ease-in-out',
+            'Wrong AnimationNode.computedTiming.easing value');
+
+        player.ready.then(t.step_func(function() {
+            testBezierEasing(player, animation, node, 0.42, 0, 0.58, 1);
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that if value of AnimationTiming.easing is \'ease-in-out\' ' +
+    'then animation goes as cubic-bezier(0.42, 0, 0.58, 1)');
 </script>
 </body>
