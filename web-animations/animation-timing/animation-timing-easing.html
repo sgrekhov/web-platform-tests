@@ -173,6 +173,33 @@ async_test(function(t) {
 async_test(function(t) {
     var timing = {
         duration: ANIMATION_DURATION,
+        easing: 'cubic-bezier(2, 2, 3, 3)'
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+        assert_equals(node.computedTiming.easing, 'linear',
+            'Wrong AnimationNode.computedTiming.easing value');
+
+        player.ready.then(t.step_func(function() {
+            testLinearEasing(player, animation, node);
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that invalid cubic bezier function as a value of AnimationTiming.easing is treated ' +
+    'as \'linear\' and animations goes as linear');
+
+async_test(function(t) {
+    var timing = {
+        duration: ANIMATION_DURATION,
         easing: 'ease'
     };
     var animations = createAnimationsToTest(t, timing);
@@ -277,5 +304,172 @@ async_test(function(t) {
     });
 }, 'Test that if value of AnimationTiming.easing is \'ease-in-out\' ' +
     'then animation goes as cubic-bezier(0.42, 0, 0.58, 1)');
+
+async_test(function(t) {
+    var timing = {
+        duration: ANIMATION_DURATION,
+        easing: 'cubic-bezier(0.4, 0, 0.6, 1)'
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+        assert_equals(node.computedTiming.easing, 'cubic-bezier(0.4, 0, 0.6, 1)',
+            'Wrong AnimationNode.computedTiming.easing value');
+
+        player.ready.then(t.step_func(function() {
+            testBezierEasing(player, animation, node, 0.4, 0, 0.6, 1);
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that if value of AnimationTiming.easing is \'cubic-bezier(0.4, 0, 0.6, 1)\' ' +
+    'then animation goes as cubic-bezier(0.4, 0, 0.6, 1)');
+
+async_test(function(t) {
+    var timing = {
+        duration: ANIMATION_DURATION,
+        easing: 'cubic-bezier(0.4, 2, 0.6, -1)'
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+        assert_equals(node.computedTiming.easing, 'cubic-bezier(0.4, 2, 0.6, -1)',
+            'Wrong AnimationNode.computedTiming.easing value');
+
+        player.ready.then(t.step_func(function() {
+            testBezierEasing(player, animation, node, 0.4, 2, 0.6, -1);
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that if value of AnimationTiming.easing is \'cubic-bezier(0.4, 2, 0.6, -1)\' ' +
+    'then animation goes as cubic-bezier(0.4, 2, 0.6, -1)');
+
+async_test(function(t) {
+    var timing = {
+        duration: ANIMATION_DURATION,
+        easing: 'cubic-bezier(0.4, 1000, 0.6, 500)'
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+        assert_equals(node.computedTiming.easing, 'cubic-bezier(0.4, 1000, 0.6, 500)',
+            'Wrong AnimationNode.computedTiming.easing value');
+
+        player.ready.then(t.step_func(function() {
+            testBezierEasing(player, animation, node, 0.4, 1000, 0.6, 500);
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that if value of AnimationTiming.easing is \'cubic-bezier(0.4, 1000, 0.6, 500)\' ' +
+    'then animation goes as cubic-bezier(0.4, 1000, 0.6, 500)');
+
+async_test(function(t) {
+    var timing = {
+        duration: ANIMATION_DURATION,
+        easing: 'step-start'
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+        assert_equals(node.computedTiming.easing, 'step-start',
+            'Wrong AnimationNode.computedTiming.easing value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = 1;
+            assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
+                'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
+            player.currentTime = ANIMATION_DURATION / 2;
+            assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
+                'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
+            player.currentTime = ANIMATION_DURATION - 1;
+            assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
+                'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that if value of AnimationTiming.easing is \'step-start\' ' +
+    'then animation goes as steps(1, start)');
+
+async_test(function(t) {
+    var timing = {
+        duration: ANIMATION_DURATION,
+        easing: 'step-middle'
+    };
+    var animations = createAnimationsToTest(t, timing);
+    var doneCounter = 0;
+    animations.forEach(function(animation) {
+        var node = animation;
+        if (animation.parent !== null) {
+            node = node.parent;
+        }
+        var player = document.timeline.play(node);
+        assert_equals(node.computedTiming.easing, 'step-middle',
+            'Wrong AnimationNode.computedTiming.easing value');
+
+        player.ready.then(t.step_func(function() {
+            player.currentTime = 1;
+            assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0,
+                'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
+            player.currentTime = ANIMATION_DURATION / 4;
+            assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0,
+                'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
+            player.currentTime = ANIMATION_DURATION / 2 - 1;
+            assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_0,
+                'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
+            player.currentTime = ANIMATION_DURATION / 2;
+            assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
+                'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
+            player.currentTime = ANIMATION_DURATION * 3 / 4;
+            assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
+                'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+
+            player.currentTime = ANIMATION_DURATION - 1;
+            assert_equals(window.getComputedStyle(animation.target).top, ANIMATION_TOP_1,
+                'Wrong effect for node ' + type(node) + ' at time ' + player.currentTime);
+            doneCounter++;
+            if (doneCounter === animations.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    });
+}, 'Test that if value of AnimationTiming.easing is \'step-middle\' ' +
+    'then animation goes as steps(1, middle)');
 </script>
 </body>
