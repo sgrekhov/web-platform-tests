@@ -10,14 +10,14 @@
 interface AnimationPlayer {
 };
 
-interface AnimationNode {
+interface AnimationNodeReadonly {
 };
 </script>
 <script type="text/plain" id="AnimationTimeline-IDL">
 interface AnimationTimeline {
     readonly attribute double? currentTime;
-    AnimationPlayer           play (optional AnimationNode? source = null);
-    sequence<AnimationPlayer> getAnimationPlayers ();
+    AnimationPlayer            play (optional AnimationNodeReadonly? source = null);
+    sequence<AnimationPlayer>  getAnimationPlayers ();
 };
 </script>
 <script>
