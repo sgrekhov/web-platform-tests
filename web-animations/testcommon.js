@@ -561,7 +561,9 @@ function AnimationPlayer(source, timeline){
         this.finished = new Promise();
     };
     this.play = function() {};
-    this.pause = function() {};
+    this.pause = function() {
+        this.startTime = null;
+    };
     this.cancel = function() {
         this.ready.reject(new Error('AbortError'));
         this.ready = new Promise();

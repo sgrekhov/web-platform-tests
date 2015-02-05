@@ -3,7 +3,9 @@
 <title>Animation player pause() method test</title>
 <meta name="assert" content="Suspends the playback of this player by running the procedure to pause a player for this object">
 <link rel="help" href="http://w3c.github.io/web-animations/#dom-animationplayer-pause">
+<link rel="help" href="http://w3c.github.io/web-animations/#pause-a-player">
 <link rel="author" title="Sergey G. Grekhov" href="mailto:sgrekhov@unipro.ru">
+<link rel="author" title="Aleksei Yu. Semenov" href="mailto:a.semenov@unipro.ru">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="../testcommon.js"></script>
@@ -17,41 +19,69 @@ async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
     var times = [-100, 0, 100, ANIMATION_DURATION, ANIMATION_DURATION + 100];
 
-    player.ready.then(t.step_func(function() {
-        times.forEach(function(time) {
+    var rejectHandler = t.unreached_func('Current ready promise should not be rejected');
+    var playHandler = t.step_func(function() {
+        player.currentTime = times[index];
+        assert_not_equals(player.startTime, null, 'Start time should not be null ' +
+            'while playing');
+        player.pause();
+        player.ready.then(pauseHandler, rejectHandler);
+    });
+    var pauseHandler = t.step_func(function() {
+        assert_equals(player.currentTime, times[index], 'Unexpected currentTime value');
+        assert_equals(player.startTime, null, 'Start time should be unresolved ' +
+            'for time ' + times[index]);
+        assert_equals(player.playState, 'paused', 'AnimationPlayer should be ' +
+            'paused for time ' + times[index]);
+
+        index++;
+        if (index < times.length){
             player.play();
-            player.currentTime = time;
-            player.pause();
-            assert_equals(player.currentTime, time, 'Wrong current time for time ' + time);
-            assert_equals(player.startTime, null, 'Start time should be unresolved ' +
-                'for time ' + time);
-            assert_equals(player.playState, 'paused', 'AnimationPlayer should be ' +
-                'paused for time ' + time);
-        });
-        t.done();
-    }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that AnimationPlayer.pause() sets start time to unresolved and pauses the player');
+            player.ready.then(playHandler, rejectHandler);
+        } else {
+            t.done();
+        }
+    });
+
+    // initially player is playing
+    var index = 0;
+    player.ready.then(playHandler, rejectHandler);
+}, 'Test AnimationPlayer.pause() sets start time to unresolved and pauses the player');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
     player.playbackRate = -1;
     var times = [-100, 0, 100, ANIMATION_DURATION, ANIMATION_DURATION + 100];
 
-    player.ready.then(t.step_func(function() {
-        times.forEach(function(time) {
+   var rejectHandler = t.unreached_func('Current ready promise should not be rejected');
+    var playHandler = t.step_func(function() {
+        player.currentTime = times[index];
+        assert_not_equals(player.startTime, null, 'Start time should not be null ' +
+            'while playing');
+        player.pause();
+        player.ready.then(pauseHandler, rejectHandler);
+    });
+    var pauseHandler = t.step_func(function() {
+        assert_equals(player.currentTime, times[index], 'Unexpected currentTime value');
+        assert_equals(player.startTime, null, 'Start time should be unresolved ' +
+            'for time ' + times[index]);
+        assert_equals(player.playState, 'paused', 'AnimationPlayer should be ' +
+            'paused for time ' + times[index]);
+
+        index++;
+        if (index < times.length){
             player.play();
-            player.currentTime = time;
-            player.pause();
-            assert_equals(player.currentTime, time, 'Wrong current time for time ' + time);
-            assert_equals(player.startTime, null, 'Start time should be unresolved ' +
-                'for time ' + time);
-            assert_equals(player.playState, 'paused', 'AnimationPlayer should be ' +
-                'paused for time ' + time);
-        });
-        t.done();
-    }), t.unreached_func('Current ready promise should not be rejected'));
+            player.ready.then(playHandler, rejectHandler);
+        } else {
+            t.done();
+        }
+    });
+
+    // initially player is playing
+    var index = 0;
+    player.ready.then(playHandler, rejectHandler);
 }, 'Test that AnimationPlayer.pause() sets start time to unresolved and pauses the player ' +
-    'when playbackRate < 0');
+    'if playbackRate < 0');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
@@ -60,17 +90,21 @@ async_test(function(t) {
         // wait for TIMEOUT ms
         setTimeout(t.step_func(function () {
             player.pause();
-            // wait for TIMEOUT ms
-            setTimeout(t.step_func(function() {
+            player.ready.then(t.step_func(function () {
                 assert_approx_equals(player.currentTime, TIMEOUT, TIME_EPSILON,
                     'Current time should be paused');
-                assert_equals(player.startTime, null, 'Start time should be unresolved');
-                assert_equals(player.playState, 'paused', 'AnimationPlayer should be paused');                
-                t.done();
-            }), TIMEOUT);
-        }), TIMEOUT);        
+                // wait for TIMEOUT ms
+                setTimeout(t.step_func(function() {
+                    assert_approx_equals(player.currentTime, TIMEOUT, TIME_EPSILON,
+                        'Current time should be paused');
+                    assert_equals(player.startTime, null, 'Start time should be unresolved');
+                    assert_equals(player.playState, 'paused', 'AnimationPlayer should be paused');
+                    t.done();
+                }), TIMEOUT);
+            }), t.unreached_func('Current ready promise should not be rejected'));
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that AnimationPlayer.pause() call stops current time');
+}, 'Test AnimationPlayer.pause() stops current time');
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
@@ -81,16 +115,44 @@ async_test(function(t) {
         // wait for TIMEOUT ms
         setTimeout(t.step_func(function () {
             player.pause();
-            // wait for TIMEOUT ms
-            setTimeout(t.step_func(function() {
-                assert_approx_equals(player.currentTime, ANIMATION_DURATION / 2 - TIMEOUT,
-                    TIME_EPSILON, 'Current time should be paused');
-                assert_equals(player.startTime, null, 'Start time should be unresolved');
-                assert_equals(player.playState, 'paused', 'AnimationPlayer should be paused');                
-                t.done();
-            }), TIMEOUT);
-        }), TIMEOUT);        
+            player.ready.then(t.step_func(function () {
+                assert_approx_equals(player.currentTime, TIMEOUT, TIME_EPSILON,
+                    'Current time should be paused');
+                // wait for TIMEOUT ms
+                setTimeout(t.step_func(function() {
+                    assert_approx_equals(player.currentTime, ANIMATION_DURATION / 2 - TIMEOUT,
+                        TIME_EPSILON, 'Current time should be paused');
+                    assert_equals(player.startTime, null, 'Start time should be unresolved');
+                    assert_equals(player.playState, 'paused', 'AnimationPlayer should be paused');
+                    t.done();
+                }), TIMEOUT);
+            }), t.unreached_func('Current ready promise should not be rejected'));
+        }), TIMEOUT);
     }), t.unreached_func('Current ready promise should not be rejected'));
-}, 'Test that AnimationPlayer.pause() call stops current time when playback rate < 0');
+}, 'Test AnimationPlayer.pause() stops current time if playback rate < 0');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+    player.ready.then(t.step_func(function() {
+        var previousReady = player.ready;
+        player.pause();
+        assert_not_equals(player.ready, previousReady, 'AnimationPlayer.ready ' +
+            'should be a new Promise object');
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test AnimationPlayer.pause() set player’s current ready promise to a new ' +
+    '(pending) Promise object if player has no pending play task');
+
+async_test(function(t) {
+    var player = newAnimationPlayer(createDiv(t));
+
+    player.ready.then(t.step_func(function() {
+        player.currentTime = ANIMATION_DURATION / 2;
+        player.pause();
+        player.ready.then(t.step_func(function(plr) {
+            assert_equals(plr, player, 'Current ready promise should be resolved with the player');
+            t.done();
+        }), t.unreached_func('Current ready promise should not be rejected'));
+    }), t.unreached_func('Current ready promise should not be rejected'));
+}, 'Test AnimationPlayer.pause() resolves current ready promise with the player');
 </script>
 </body>
