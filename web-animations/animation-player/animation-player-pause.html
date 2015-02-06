@@ -17,7 +17,7 @@ var TIMEOUT = ANIMATION_DURATION / 20;
 
 async_test(function(t) {
     var player = newAnimationPlayer(createDiv(t));
-    var times = [-100, 0, 100, ANIMATION_DURATION, ANIMATION_DURATION + 100];
+    var times = [-100, 0, ANIMATION_DURATION / 10, ANIMATION_DURATION, ANIMATION_DURATION + 100];
 
     var rejectHandler = t.unreached_func('Current ready promise should not be rejected');
     var playHandler = t.step_func(function() {
@@ -53,7 +53,7 @@ async_test(function(t) {
     player.playbackRate = -1;
     var times = [-100, 0, 100, ANIMATION_DURATION, ANIMATION_DURATION + 100];
 
-   var rejectHandler = t.unreached_func('Current ready promise should not be rejected');
+    var rejectHandler = t.unreached_func('Current ready promise should not be rejected');
     var playHandler = t.step_func(function() {
         player.currentTime = times[index];
         assert_not_equals(player.startTime, null, 'Start time should not be null ' +
@@ -138,6 +138,7 @@ async_test(function(t) {
         player.pause();
         assert_not_equals(player.ready, previousReady, 'AnimationPlayer.ready ' +
             'should be a new Promise object');
+        t.done();
     }), t.unreached_func('Current ready promise should not be rejected'));
 }, 'Test AnimationPlayer.pause() set player’s current ready promise to a new ' +
     '(pending) Promise object if player has no pending play task');

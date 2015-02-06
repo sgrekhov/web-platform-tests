@@ -11,70 +11,101 @@
 <body>
 <div id="log"></div>
 <script>
-test(function() {
-    var animatableElements = [createDiv(this), createPseudoElement(this)];
+async_test(function(t) {
+    var animatableElements = [createDiv(t), createPseudoElement(t)];
+    var doneCounter = 0;
     animatableElements.forEach(function(animatable, index) {
         var player = animatable.animate(null);
-        var players = animatable.getAnimationPlayers();
-        assert_array_equals(players, [player], 'Element ' + index + ': ' +
-            'Animatable.getAnimationPlayers() method should return all players whose ' +
-            'source content contains animation whose animation target is this object');
+        player.ready.then(t.step_func(function() {
+            var players = animatable.getAnimationPlayers();
+            assert_array_equals(players, [player], 'Element ' + index + ': ' +
+                'Animatable.getAnimationPlayers() method should return all players whose ' +
+                'source content contains animation and whose animation target is this object');
+            doneCounter++;
+            if (doneCounter === animatableElements.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Animatable.getAnimationPlayers() method returns single player whose source content ' +
     'contains animation whose animation target is this object. Animation is created ' +
     'by Animatable.animate() call');
 
-test(function() {
-    var animatableElements = [createDiv(this), createPseudoElement(this)];
+async_test(function(t) {
+    var animatableElements = [createDiv(t), createPseudoElement(t)];
+    var doneCounter = 0;
     animatableElements.forEach(function(animatable, index) {
         var animation = new Animation(animatable, KEYFRAMES, ANIMATION_DURATION);
         var player = document.timeline.play(animation);
-        var players = animatable.getAnimationPlayers();
-        assert_array_equals(players, [player], 'Element ' + index + ': ' +
-            'Animatable.getAnimationPlayers() method should return all players whose ' +
-            'source content contains animation whose animation target is this object');
+        player.ready.then(t.step_func(function() {
+            var players = animatable.getAnimationPlayers();
+            assert_array_equals(players, [player], 'Element ' + index + ': ' +
+                'Animatable.getAnimationPlayers() method should return all players whose ' +
+                'source content contains animation whose animation target is this object');
+            doneCounter++;
+            if (doneCounter === animatableElements.length) {
+                t.done();
+            }
+        }), t.unreached_func('Current ready promise should not be rejected'));
     });
 }, 'Animatable.getAnimationPlayers() method returns single player whose source content ' +
     'contains animation whose animation target is this object. Animation is created ' +
     'by Animation constructor');
 
-test(function() {
-    var animatableElements = [[createDiv(this), createDiv(this)],
-        [createPseudoElement(this), createPseudoElement(this)]];
+async_test(function(t) {
+    var animatableElements = [[createDiv(t), createDiv(t)],
+        [createPseudoElement(t), createPseudoElement(t)]];
+    var doneCounter = 0;
     animatableElements.forEach(function(animatables, index) {
         var player1 = animatables[0].animate(null);
         var player2 = animatables[0].animate(null);
         var player3 = animatables[1].animate(null);
-        var players = animatables[0].getAnimationPlayers();
 
-        assert_array_equals(players, [player1, player2], 'Element ' + index + ': ' +
-            'Animatable.getAnimationPlayers() method should return all players whose ' +
-            'source content contains animation whose animation target is this object ' +
-            'and sorted in increasing order by player sequence number');
+        Promise.all([player1.ready, player2.ready, player3.ready]).then(t.step_func(function() {
+            var players = animatables[0].getAnimationPlayers();
+
+            assert_array_equals(players, [player1, player2], 'Element ' + index + ': ' +
+                'Animatable.getAnimationPlayers() method should return all players whose ' +
+                'source content contains animation whose animation target is this object ' +
+                'and sorted in increasing order by player sequence number');
+            doneCounter++;
+            if (doneCounter === animatableElements.length) {
+                t.done();
+            }
+        }), t.unreached_func('Player ready promise should not be rejected'));
     });
 }, 'Animatable.getAnimationPlayers() method should return all players whose source ' +
     'content contains animation whose animation target is this object and sorted in ' +
     'increasing order by player sequence number. Players are created by Animatable.animate()');
 
-test(function() {
-    var animatableElements = [[createDiv(this), createDiv(this)],
-        [createPseudoElement(this), createPseudoElement(this)]];
+async_test(function(t) {
+    var animatableElements = [[createDiv(t), createDiv(t)],
+        [createPseudoElement(t), createPseudoElement(t)]];
+    var doneCounter = 0;
     animatableElements.forEach(function(animatables, index) {
         var player1 = document.timeline.play(new Animation(animatables[0], KEYFRAMES, ANIMATION_DURATION));
         var player2 = document.timeline.play(new Animation(animatables[0], KEYFRAMES, ANIMATION_DURATION));
         var player3 = document.timeline.play(new Animation(animatables[1], KEYFRAMES, ANIMATION_DURATION));
-        var players = animatables[0].getAnimationPlayers();
 
-        assert_array_equals(players, [player1, player2], 'Element ' + index + ': ' +
-            'Animatable.getAnimationPlayers() method should return all players whose ' +
-            'source content contains animation whose animation target is this object ' +
-            'and sorted in increasing order by player sequence number');
+        Promise.all([player1.ready, player2.ready, player3.ready]).then(t.step_func(function() {
+            var players = animatables[0].getAnimationPlayers();
+
+            assert_array_equals(players, [player1, player2], 'Element ' + index + ': ' +
+                'Animatable.getAnimationPlayers() method should return all players whose ' +
+                'source content contains animation whose animation target is this object ' +
+                'and sorted in increasing order by player sequence number');
+            doneCounter++;
+            if (doneCounter === animatableElements.length) {
+                t.done();
+            }
+        }), t.unreached_func('Player ready promise should not be rejected'));
     });
 }, 'Animatable.getAnimationPlayers() method should return all players whose source ' +
     'content contains animation whose animation target is this object and sorted in ' +
     'increasing order by player sequence number. Animations are created by ' +
     'Animation constructor');
 
+// Finished here
 test(function() {
     var animatableElements = [createDiv(this), createPseudoElement(this)];
     animatableElements.forEach(function(animatable, index) {
